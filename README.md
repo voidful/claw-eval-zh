@@ -94,15 +94,16 @@ export PINCHBENCH_OFFICIAL_KEY=your_official_key
 | Flag                     | Description                                                                   |
 | ------------------------ | ----------------------------------------------------------------------------- |
 | `--model MODEL`          | Model to test (e.g., `openrouter/anthropic/claude-sonnet-4`)                  |
-| `--judge MODEL`          | Judge model for LLM grading; uses direct API when set (see below)                 |
+| `--judge MODEL`          | Judge model for LLM grading; uses direct API when set (see below)             |
 | `--suite SUITE`          | `all`, `automated-only`, or comma-separated task IDs                          |
 | `--runs N`               | Number of runs per task for averaging                                         |
 | `--timeout-multiplier N` | Scale timeouts for slower models                                              |
+| `--thinking LEVEL`       | Reasoning depth: `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, `adaptive` |
 | `--output-dir DIR`       | Where to save results (default: `results/`)                                   |
 | `--no-upload`            | Skip uploading to leaderboard                                                 |
 | `--register`             | Request an API token for submissions                                          |
 | `--upload FILE`          | Upload a previous results JSON                                                |
-| `--official-key KEY`     | Mark submission as official (or use `PINCHBENCH_OFFICIAL_KEY` env var)         |
+| `--official-key KEY`     | Mark submission as official (or use `PINCHBENCH_OFFICIAL_KEY` env var)        |
 
 ### Judge
 

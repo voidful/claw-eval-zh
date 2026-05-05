@@ -35,6 +35,7 @@ from lib_agent import (
     ModelValidationError,
     slugify_model,
     validate_openrouter_model,
+    VALID_THINKING_LEVELS,
 )
 from lib_axiom import init_axiom
 from lib_grading import (
@@ -284,6 +285,12 @@ def _parse_args() -> argparse.Namespace:
         help="Clear the judge cache before running",
     )
     parser.add_argument(
+        "--thinking",
+        type=str,
+        default=None,
+        help="Thinking level for reasoning depth (off, minimal, low, medium, high, xhigh, adaptive)",
+    )
+    parser.add_argument(
         "--trend",
         action="store_true",
         help="Run trend analysis after benchmark completes (requires ≥2 runs in output dir)",
@@ -306,6 +313,13 @@ def _parse_args() -> argparse.Namespace:
     # Validate --trend-window
     if args.trend_window < 2:
         parser.error("--trend-window must be >= 2")
+
+    # Validate --thinking
+    if args.thinking and args.thinking not in VALID_THINKING_LEVELS:
+        parser.error(
+            f"Invalid thinking level '{args.thinking}'. "
+            f"Valid levels: {', '.join(VALID_THINKING_LEVELS)}"
+        )
 
     return args
 
@@ -993,6 +1007,7 @@ def main():
                     skill_dir=skill_dir,
                     output_dir=Path(args.output_dir) / f"{run_id}_transcripts",
                     verbose=args.verbose,
+                    thinking_level=args.thinking,
                 )
             except Exception as exc:
                 execution_error = str(exc)
