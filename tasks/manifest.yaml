@@ -153,6 +153,30 @@ categories:
     - task_log_apache_critical
     - task_log_apache_timeline
     - task_log_syslog_boot
+    - task_log_nginx_status_codes
+    - task_log_nginx_traffic
+    - task_log_nginx_slow_requests
+    - task_log_nginx_user_agents
+    - task_log_nginx_errors
+    - task_log_ssh_failed_logins
+    - task_log_ssh_brute_force
+    - task_log_ssh_successful
+    - task_log_ssh_user_activity
+    - task_log_ssh_unusual_times
+    - task_log_hdfs_failures
+    - task_log_hdfs_connections
+    - task_log_hdfs_slow_ops
+    - task_log_hdfs_block_ops
+    - task_log_hdfs_storage
+    - task_log_mapreduce_jobs
+    - task_log_mapreduce_failures
+    - task_log_mapreduce_slow_tasks
+    - task_log_mapreduce_resources
+    - task_log_mapreduce_timeline
+    - task_log_syslog_anomalies
+    - task_log_syslog_services
+    - task_log_syslog_cron
+    - task_log_syslog_auth_failures
 
   meeting_analysis:
     - task_meeting_council_votes
