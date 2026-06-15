@@ -1,0 +1,155 @@
+task_id: T062tw_csv_life_exp_change
+task_name: 平均壽命隨時間的變化
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_life_exp_change.md
+  original_task_id: task_csv_life_exp_change
+  original_file: tasks/task_csv_life_exp_change.md
+prompt:
+  text: |-
+    我的工作區中有一個 CSV 檔 `gapminder_life_expectancy.csv`，內含取自 Gapminder
+    資料集的平均壽命資料。該檔有下列欄位：`country`、`year`、`pop`、`continent`、
+    `lifeExp` 與 `gdpPercap`。資料涵蓋 5 大洲的 142 個國家，自 1952 至 2007 每 5 年
+    一筆。
+
+    請分析平均壽命隨時間的變化，並將你的發現寫入名為 `life_exp_change.md` 的檔案。
+    你的報告應包含：
+
+    - **全球趨勢**：計算每一年（1952 至 2007）的全球平均壽命，並描述整體走勢
+    - **大洲層級趨勢**：計算每一年各大洲的平均壽命，並比較不同大洲的進展
+    - **進步最多者**：找出自 1952 至 2007 平均壽命絕對增幅最大的 10 個國家，附上
+      起始值、結束值與總變化
+    - **進步最慢者／衰退者**：找出自 1952 至 2007 平均壽命改善最小（或衰退）的
+      10 個國家
+    - **收斂或發散**：分析最高與最低大洲平均之間的差距隨時間是縮小還是擴大
+    - 一段簡短的**總結**，說明關鍵重點
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/gapminder_life_expectancy.csv
+  dest: gapminder_life_expectancy.csv
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `life_exp_change.md`
+- 計算各年（或多數年份）的全球平均壽命
+- 正確描述全球上升趨勢（55 年間自約 49 升至約 67）
+- 計算並比較大洲層級趨勢
+- 找出進步最多者，以 Oman 為第 1（+38 年）
+- 找出進步最慢者／衰退者
+- 找出 Zimbabwe 與 Swaziland 為唯二淨衰退的國家
+- 包含收斂／發散分析
+- 提供含關鍵重點的總結
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：資料分析正確性（權重 35%）
+
+  **1.0 分**：所有計算數值皆正確——全球平均符合資料，前／後進步者皆正確找出且
+  幅度準確，大洲趨勢準確。
+  **0.75 分**：多數數值正確，僅有一、兩處輕微數值錯誤。
+  **0.5 分**：整體趨勢正確，但數個具體數值錯誤或缺漏。
+  **0.25 分**：有重大計算錯誤，或多數數值不正確。
+  **0.0 分**：無任何正確計算。
+
+  ### 評分項 2：趨勢分析深度（權重 30%）
+
+  **1.0 分**：在全球、大洲與國家層級皆有完整分析。指出 1990 年後全球增幅趨緩、
+  Africa 因 HIV/AIDS 而進展停滯、Asia 戲劇性追趕，以及少數倒退的國家。討論各大洲
+  間的收斂／發散。
+  **0.75 分**：多層級分析良好，但缺少一個維度或對成因著墨不足。
+  **0.5 分**：在一、兩個層級有基本趨勢描述，但缺乏深度。
+  **0.25 分**：分析流於表面，洞見甚少。
+  **0.0 分**：無趨勢分析。
+
+  ### 評分項 3：比較洞見（權重 20%）
+
+  **1.0 分**：有效對比進步最多者與衰退者，說明中東／亞洲國家何以進步最多（起點低、
+  快速發展），而南部非洲國家何以衰退（HIV/AIDS）。指出 Norway 增幅小（+7.5）是因
+  其起點本就很高（1952 年 72.7）。
+  **0.75 分**：比較良好，但缺少一些細緻之處。
+  **0.5 分**：嘗試一些比較，但缺乏深度。
+  **0.25 分**：比較分析極少。
+  **0.0 分**：未在各群組間作比較。
+
+  ### 評分項 4：完整性與呈現（權重 15%）
+
+  **1.0 分**：所有要求元素皆齊備（全球趨勢、大洲趨勢、進步最多者、衰退者、收斂
+  分析、總結），組織良好並含表格或排版過的資料。
+  **0.75 分**：多數元素齊備且組織良好。
+  **0.5 分**：缺少數個元素或組織不佳。
+  **0.25 分**：不完整或雜亂。
+  **0.0 分**：報告缺漏或無法使用。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔
+  2. 計算各年全球平均：1952 (49.058)、1957 (51.507)、1962 (53.609)、1967 (55.678)、
+     1972 (57.647)、1977 (59.570)、1982 (61.533)、1987 (63.213)、1992 (64.160)、
+     1997 (65.015)、2002 (65.695)、2007 (67.007)
+  3. 計算各大洲平均，呈現 Europe／Oceania 居頂、Africa 居底，而 Asia 增幅最大
+  4. 找出前 10 名進步者：Oman (+38.062)、Vietnam (+33.837)、Indonesia (+33.182)、
+     Saudi Arabia (+32.902)、Libya (+31.229)、Korea Rep. (+31.170)、
+     Nicaragua (+30.585)、West Bank and Gaza (+30.262)、Yemen Rep. (+30.150)、
+     Gambia (+29.448)
+  5. 找出後 10 名：Norway (+7.526)、Congo Dem. Rep. (+7.319)、Liberia (+7.198)、
+     Rwanda (+6.242)、South Africa (+4.330)、Botswana (+3.106)、Lesotho (+0.454)、
+     Zambia (+0.346)、Swaziland (-1.794)、Zimbabwe (-4.964)
+  6. 分析收斂／發散：指出最高（Oceania/Europe）與最低（Africa）大洲平均之間的差距
+     持續存在，且可能因 HIV/AIDS 而在 1990–2000 年代略為擴大
+
+  預期關鍵數值：
+
+  - 全球平均 1952：約 49.06，2007：約 67.01
+  - 整體全球增幅：約 17.95 年
+  - 進步最多者：Oman（+38.062，自 37.578 至 75.640）
+  - 衰退最多者：Zimbabwe（-4.964，自 48.451 至 43.487）
+  - 1952-2007 間僅有 2 國淨變化為負：Swaziland (-1.794)、Zimbabwe (-4.964)
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/gapminder_life_expectancy.csv
+    dest: gapminder_life_expectancy.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

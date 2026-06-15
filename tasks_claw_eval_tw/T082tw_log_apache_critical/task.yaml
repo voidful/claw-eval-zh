@@ -1,0 +1,121 @@
+task_id: T082tw_log_apache_critical
+task_name: Apache 錯誤日誌 — 找出關鍵資安問題
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_apache_critical.md
+  original_task_id: task_log_apache_critical
+  original_file: tasks/task_log_apache_critical.md
+prompt:
+  text: |-
+    你是一名資安分析師，正在檢視位於 `apache_error.log` 的 Apache 錯誤日誌。你的任務是找出所有**與資安相關**的條目——也就是顯示針對此伺服器的主動攻擊、漏洞掃描或漏洞利用嘗試的條目。
+
+    請將每個發現分類到下列其中一個嚴重性等級：
+
+    | 嚴重性 | 定義 |
+    |---|---|
+    | `critical` | 主動的漏洞利用嘗試（例如命令執行、帶編碼酬載的目錄路徑穿越） |
+    | `high` | 針對特定已知漏洞的漏洞掃描 |
+    | `medium` | 偵察活動（目錄探測、來自單一 IP 反覆的 forbidden 請求） |
+    | `low` | 可能代表組態錯誤、但並非攻擊的偶發錯誤 |
+
+    請把你的發現寫到 `security_findings.json`，以 JSON 陣列呈現。每個元素必須是一個物件，包含：
+
+    ```json
+    {
+      "severity": "critical",
+      "category": "Brief category name",
+      "source_ips": ["1.2.3.4", "5.6.7.8"],
+      "evidence": "Description of what was found and why it's a security concern",
+      "sample_entry": "One example log line"
+    }
+    ```
+
+    請依嚴重性由 critical 到 low 排序。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/apache_error.log
+  dest: apache_error.log
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `security_findings.json`
+- 已將命令執行／目錄路徑穿越嘗試判定為 critical（cmd.exe、root.exe 樣式）
+- 已找出 Awstats 掃描（202.133.98.6 或 awstats 關鍵字）
+- 至少找出 3 種不同的攻擊類別
+- 發現結果使用嚴重性分類系統
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `security_findings.json`
+  - 已將命令執行／目錄路徑穿越嘗試判定為 critical（cmd.exe、root.exe 樣式）
+  - 已找出 Awstats 掃描（202.133.98.6 或 awstats 關鍵字）
+  - 至少找出 3 種不同的攻擊類別
+  - 發現結果使用嚴重性分類系統
+reference_solution: |-
+  助手至少應找出下列發現：
+
+  **Critical：**
+  - **IIS 目錄路徑穿越／命令執行嘗試**：多個 IP 送出含有如 `/scripts/..%c0%af../winnt/system32/cmd.exe?/c+dir` 路徑的「Invalid method」請求。這些利用 Unicode 編碼漏洞（CVE-2000-0884、CVE-2001-0333）嘗試遠端命令執行。來源 IP 包括：63.203.254.140、213.61.135.6、201.252.246.11、62.221.237.83、213.205.73.192、64.147.69.59、207.181.126.3、12.216.230.125、220.228.80.199、64.60.251.53、63.197.230.242、61.72.66.8、202.118.167.71。
+  - **IIS 蠕蟲傳播探測**：IP 掃描 root.exe、MSADC、_vti_bin、_mem_bin、msadc，以及路徑穿越路徑（`..%5c..`、`..\xc1\x1c..`、`..\xc0\xaf..`、`..\xc1\x9c..`、`..%2f..`）。這些符合 Nimda/Code Red 蠕蟲行為。
+
+  **High：**
+  - **Awstats 漏洞掃描**：202.133.98.6 送出約 184 次請求，在多個路徑（cgi-bin、/awstats/、/stats/、/cgi/）探測 awstats.pl。AWStats 曾有已知的遠端命令執行漏洞。
+  - **OpenWebMail 掃描**：212.238.198.203 探測 /var/www/cgi-bin/openwebmail 共 20 次。
+  - **緩衝區溢位（buffer overflow）嘗試**：IP 210.91.137.35、211.211.14.224 與 150.161.187.25 送出觸發「URI too long (longer than 8190)」錯誤的請求，並伴隨 _vti_bin 探測。
+
+  **Medium：**
+  - **大規模目錄探測**：多個 IP 反覆請求目錄索引（195.23.79.241 約 22 次、219.133.246.207 約 15 次、218.82.188.130 約 13 次等）
+
+  可接受的變化：
+  - 嚴重性分類可略有不同（例如將 awstats 列為「critical」而非「high」）
+  - 超出預期清單之外的額外發現無妨
+  - 只要關鍵攻擊者被找出，IP 清單不完整亦可
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: apache_error.log
+    source: logs/apache_error.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

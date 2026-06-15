@@ -1,0 +1,138 @@
+task_id: P018zh_it_procurement
+task_name: IT 採購研究
+version: 0.2.0
+category: research
+difficulty: hard
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- research
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_it_procurement
+  original_file: tasks/task_it_procurement.md
+prompt:
+  text: |-
+    有一家成長中的新創公司（50 位工程師）需要為新進人員採購 **開發者筆電
+    （developer laptops）**。請協助他們研究選項並提出建議。
+
+    **要求：**
+    - 至少 32 GB RAM
+    - 至少 512 GB SSD
+    - 現代 CPU（近兩代以內）
+    - 良好的做工（供每日專業使用）
+    - 預算：每台 $1,500–$2,500
+    - 需兼顧 macOS 與 Linux 相容性（部分開發者各有偏好）
+
+    請研究至少 5 款具體的筆電型號，並製作一份採購建議。針對每款型號，記錄：
+
+    1. **確切的型號名稱與配置**（CPU、RAM、儲存、螢幕）
+    2. **目前價格**（以及購買通路——原廠直購、CDW 等）
+    3. **可維修性與保固**——標準保固期、延長保固選項、維修難易度
+    4. **與開發者相關的規格**——鍵盤手感、連接埠配置、螢幕品質、電池續航
+    5. **Linux 相容性**（非 Mac 選項）——WiFi、藍牙、休眠（suspend）等已知問題
+    6. **大量採購選項**——量大折扣、商用／教育定價、車隊管理（fleet management）工具
+
+    請將報告儲存至 `laptop_procurement.md`，內容須包含：
+    - 一份比較表格
+    - 分別針對 macOS 與 Linux 使用者的建議
+    - 一份「車隊建議（fleet recommendation）」，為 50 人團隊建議理想的機型組合
+    - 估算的總預算
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 300
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 laptop_procurement.md
+- 至少記錄 5 款具體的筆電型號
+- 每款型號皆含價格
+- 規格符合所述要求
+- 針對非 Mac 選項探討 Linux 相容性
+- 包含比較表格
+- 分別有 macOS 與 Linux 的建議
+- 車隊建議並附估算總預算
+- 提及大量採購／商用定價
+- 型號為現行款（未停產）
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：產品研究品質（權重 30%）
+
+  **1.0 分**：具體的型號及確切配置（例如「ThinkPad T14s Gen 5 — AMD Ryzen 7 PRO
+  8840U, 32GB, 512GB, 14\" 2.8K」）。價格為最新且來源可辨識。所有型號目前皆可購買。
+  **0.75 分**：多數型號具體性良好。少數可能配置或價格較為概略。
+  **0.5 分**：有列出型號，但配置或價格含糊或可能過時。
+  **0.25 分**：僅列出籠統的產品線，無具體配置。
+  **0.0 分**：未研究任何具體產品。
+
+  ### 評分項 2：實際採購價值（權重 25%）
+
+  **1.0 分**：報告對 IT 管理者可付諸行動。涵蓋車隊管理、保固、維修、大量定價與部署
+  考量。包含通路建議（原廠直購、CDW、SHI 等）。總預算計算切合實際。
+  **0.75 分**：採購細節良好。在通路或車隊考量上有小幅缺口。
+  **0.5 分**：處理了部分採購面向，但讀起來較像消費者評測。
+  **0.25 分**：與採購相關的內容極少。
+  **0.0 分**：無任何採購考量。
+
+  ### 評分項 3：Linux 相容性評估（權重 20%）
+
+  **1.0 分**：為每個非 Mac 選項提供具體的 Linux 相容性說明。提及特定發行版的支援
+  （Ubuntu 認證、Fedora 測試過）、已知硬體問題與驅動程式狀態。引用實際的 Linux 硬體
+  資料庫或社群回報。
+  **0.75 分**：Linux 相容性涵蓋良好，並有部分具體細節。
+  **0.5 分**：有提及 Linux 相容性，但缺乏具體內容。僅有「與 Linux 相容良好」之類的
+  籠統說法。
+  **0.25 分**：幾乎未提及 Linux。
+  **0.0 分**：未探討 Linux 相容性。
+
+  ### 評分項 4：車隊建議（權重 15%）
+
+  **1.0 分**：提供具體的車隊組合（例如「30× MacBook Pro 14\"、20× ThinkPad T14s」），
+  並依團隊組成附上理由。計算總預算。權衡標準化效益 vs. 開發者選擇權。
+  **0.75 分**：車隊建議良好並附預算估算。理由有小幅缺口。
+  **0.5 分**：泛泛的建議，無具體的車隊組合或預算。
+  **0.25 分**：車隊指引含糊。
+  **0.0 分**：無車隊建議。
+
+  ### 評分項 5：比較品質（權重 10%）
+
+  **1.0 分**：乾淨的比較表格，涵蓋規格、價格、作業系統、關鍵差異化要點。易於用於
+  快速決策。
+  **0.75 分**：表格良好，僅有小幅缺口。
+  **0.5 分**：有表格，但不完整。
+  **0.25 分**：表格不佳。
+  **0.0 分**：無比較表格。
+reference_solution: |-
+  助手應該：
+
+  1. 研究符合規格的現行筆電型號
+  2. 找出具體配置與價格
+  3. 查核非 Mac 選項的 Linux 相容性
+  4. 考量企業／大量採購因素
+  5. 產出一份實用的採購文件
+  6. 儲存至 `laptop_procurement.md`
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

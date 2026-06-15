@@ -1,0 +1,114 @@
+task_id: P099zh_log_hdfs_storage
+task_name: HDFS DataNode 日誌 — 儲存與容量分析
+version: 0.2.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_log_hdfs_storage
+  original_file: tasks/task_log_hdfs_storage.md
+prompt:
+  text: |-
+    請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，產出一份以儲存（storage）為
+    重點的分析。檢視區塊大小、跨節點的資料分布，以及儲存型態。
+
+    你的報告應包含：
+
+    1. **資料量（Data Volume）**：所有已確認區塊接收（大小已知者）所儲存的總位元組數
+    2. **區塊大小分布（Block Size Distribution）**：列出所有已知區塊大小，計算最小/最大/平均/中位數
+    3. **依節點的資料分布（Data Distribution by Node）**：對每個確認接收區塊的節點
+       （PacketResponder「Received」條目），統計其儲存的位元組總數
+    4. **儲存路徑分析（Storage Path Analysis）**：使用了哪些儲存路徑？（從 allocateBlock 的檔案路徑擷取）
+    5. **複製係數（Replication Factor）**：依同一區塊被多少節點接收，推算有效複製係數為何？
+    6. **容量規劃（Capacity Planning）**：依觀察到的資料寫入速率，推估 1 小時類似活動所需的儲存空間
+
+    請將報告寫入 `hdfs_storage_report.md`，以結構良好的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hdfs_datanode.log
+  dest: hdfs_datanode.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `hdfs_storage_report.md`
+- 列出已知的區塊大小（91178、233217、11971、11977）
+- 計算區塊大小統計（最小、最大、平均）
+- 辨識出複製係數（3）
+- 從日誌擷取儲存路徑
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `hdfs_storage_report.md`
+  - 列出已知的區塊大小（91178、233217、11971、11977）
+  - 計算區塊大小統計（最小、最大、平均）
+  - 辨識出複製係數（3）
+  - 從日誌擷取儲存路徑
+reference_solution: |-
+  助手應解析日誌並計算：
+
+  **已確認的區塊大小：**
+  - blk_-1608999687919862906：91,178 bytes（被 3+ 個節點接收）
+  - blk_7503483334202473044：233,217 bytes（被 3 個節點接收）
+  - blk_-3544583377289625738：11,971 bytes（被 3 個節點接收）
+  - blk_-9073992586687739851：11,977 bytes（被 3 個節點接收）
+
+  **區塊大小統計：**
+  - 最小：11,971 bytes（約 12 KB）
+  - 最大：233,217 bytes（約 228 KB）
+  - 平均：約 87,086 bytes（約 85 KB）
+  - 已確認資料總量：每個副本約 348,343 bytes
+
+  **複製係數：**
+  - 每個已確認區塊皆被 3 個節點接收 → 複製係數為 3
+  - 這是標準的 HDFS 預設複製設定
+
+  **儲存路徑：**
+  - `/mnt/hadoop/mapred/system/job_200811092030_0001/` — MapReduce 工作的暫存目錄
+  - 檔案：job.jar、job.split
+
+  **容量規劃：**
+  - 約 28 秒的活動產生了約 390 筆區塊配置
+  - 若每個區塊平均約 85 KB、複製係數為 3，則約為每分鐘 100 MB 的原始儲存
+  - 1 小時推估：約 6 GB（概略）
+
+  可接受的差異：
+  - 在已確認大小有限的情況下，容量推估將相當粗略
+  - 外推（extrapolation）的做法會有所不同
+  - 統計應僅以已確認大小為基礎
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: hdfs_datanode.log
+    source: logs/hdfs_datanode.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

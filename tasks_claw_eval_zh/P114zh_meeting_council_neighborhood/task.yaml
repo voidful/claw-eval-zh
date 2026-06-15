@@ -1,0 +1,85 @@
+task_id: P114zh_meeting_council_neighborhood
+task_name: Tampa City Council — 辨識社區與行政區提及
+version: 0.2.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_meeting_council_neighborhood
+  original_file: tasks/task_meeting_council_neighborhood.md
+prompt:
+  text: 我這裡有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。請產生 `neighborhoods_report.md`，辨識出所有提及的社區、行政區、地理區域與特定地點。請包含地點名稱、背景脈絡、相關發言者/議項，以及相關議題。整理時請納入以行政區（district）為基礎的概覽、出現次數統計，以及主題交叉對照。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2026-04-02-tampa-city-council-transcript.md
+  dest: transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔案 neighborhoods_report.md
+- Temple Crest 與 McNeil / 犯罪
+- West Tampa 與 Rome Yard / Rays
+- South Howard 與街道封閉 / 管線
+- East Tampa 與開發
+- Highland Pines 與遊民問題
+- 3 個以上變更分區地址
+- 提及 MacDill AFB
+- 已記下 Riverwalk 連通關係
+- 出現次數統計或交叉對照
+- 15 個以上不同地點
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：完整度（權重 35%）
+  **1.0 分**：20 個以上地點。**0.75 分**：15-19 個。**0.5 分**：10-14 個。**0.0 分**：少於 5 個。
+
+  ### 評分項 2：背景脈絡（權重 25%）
+  **1.0 分**：每一地點皆有準確的背景脈絡。**0.5 分**：部分含糊。**0.0 分**：完全沒有。
+
+  ### 評分項 3：組織（權重 25%）
+  **1.0 分**：依行政區分組、有出現次數、有交叉對照。**0.5 分**：部分。**0.0 分**：完全沒有。
+
+  ### 評分項 4：廣度（權重 15%）
+  **1.0 分**：涵蓋多種尺度（從門牌地址到區域）。**0.5 分**：單一尺度。**0.0 分**：極少。
+reference_solution: 關鍵地點：Districts 1-5、Tampa Heights、Temple Crest（犯罪下降/McNeil）、Highland Pines（遊民問題）、West
+  Tampa（Rome Yard、Rays stadium）、South Howard（街道封閉、管線）、Culbreath Bayou（人行道）、East Tampa（22nd St 開發）、Downtown、Bayshore、MacDill
+  AFB、Riverwalk、變更分區地址（4102 N 22nd St、2707 E 22nd Ave、110 S Boulevard）、Marion/Franklin Streets、區域比較（Orlando、Fort
+  Myers、Fort Lauderdale）。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.5
+    llm_judge: 0.5
+  workspace_files:
+  - source: meetings/2026-04-02-tampa-city-council-transcript.md
+    dest: transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

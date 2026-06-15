@@ -1,0 +1,138 @@
+task_id: T102tw_log_mapreduce_slow_tasks
+task_name: MapReduce 日誌 — 慢速任務辨識
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_mapreduce_slow_tasks.md
+  original_task_id: task_log_mapreduce_slow_tasks
+  original_file: tasks/task_log_mapreduce_slow_tasks.md
+prompt:
+  text: "請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，找出最慢的 map 與\nreduce 任務。比較各任務的完成時間以找出落後者（straggler）。\n\
+    \n你的報告應包含：\n\n1. **任務完成時間（Task Completion Times）**：對每個已完成的任務，計算從容器（container）\n   指派到任務完成的時間\n2. **最快與最慢（Fastest\
+    \ vs Slowest）**：辨識最快與最慢的 map 任務，以及 reduce 任務的時序\n3. **落後者分析（Straggler Analysis）**：是否有任務明顯比平均耗時更長？量化其偏差\n\
+    4. **重試影響（Retry Impact）**：對於被重試的任務（attempt > 0），重試時間與原始嘗試相比如何？\n5. **Reduce 階段時序（Reduce Phase Timing）**：reduce\
+    \ 任務相對於各 map 完成是在何時開始？耗時多久？\n6. **瓶頸辨識（Bottleneck Identification）**：關鍵路徑（critical path）為何？哪些任務決定了整體工作時長？\n\
+    \n請將報告寫入 `slow_tasks_report.md`，以結構良好的 markdown 文件呈現。"
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hadoop_mapreduce.log
+  dest: mapreduce.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `slow_tasks_report.md`
+- 列出個別任務的完成時間
+- 辨識出最快與最慢的 map 任務
+- 將被重試的任務（m_000006、m_000007）標記為較慢
+- 另行分析 reduce 任務的時序
+user_agent:
+  enabled: false
+judge_rubric: '依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+
+  - 已在工作區建立 `slow_tasks_report.md`
+
+  - 列出個別任務的完成時間
+
+  - 辨識出最快與最慢的 map 任務
+
+  - 將被重試的任務（m_000006、m_000007）標記為較慢
+
+  - 另行分析 reduce 任務的時序'
+reference_solution: '助手應擷取任務完成時間戳並計算：
+
+
+  **Map 任務完成（依順序）：**
+
+  1. m_000009：完成於 15:39:24（最先）
+
+  2. m_000005：完成於 15:40:28
+
+  3. m_000003：完成於 15:40:32
+
+  4. m_000000：完成於 15:40:34
+
+  5. m_000001：完成於 15:40:50
+
+  6. m_000002：完成於 15:40:50
+
+  7. m_000004：完成於 15:40:50
+
+  8. m_000008：完成於 15:40:52
+
+  9. m_000007：完成於 15:41:12（重試 — _1 次嘗試）
+
+  10. m_000006：完成於 15:41:25（重試 — _1 次嘗試，最慢/最後）
+
+
+  **Reduce 任務：**
+
+  - r_000000：完成於 15:42:46
+
+
+  **重點發現：**
+
+  - m_000009 最先完成於 15:39:24 — 工作開始後約 1.5 分鐘
+
+  - m_000006 最後完成於 15:41:25 — 工作開始後約 3.5 分鐘（它是重試）
+
+  - 被重試的任務（m_000006、m_000007）最慢，因為必須重新啟動
+
+  - 首個與最後 map 之間的時間跨度：約 2 分鐘
+
+  - reduce 在足夠多的 map 完成後才開始，約 1.3 分鐘後結束
+
+
+  可接受的差異：
+
+  - 確切時長取決於以哪個時間戳作為開始基準
+
+  - 對「任務開始」的不同定義皆可接受
+
+  - 落後者的判定門檻可能不同'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: mapreduce.log
+    source: logs/hadoop_mapreduce.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

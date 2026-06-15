@@ -1,0 +1,874 @@
+# Meeting-analysis tasks — Traditional Chinese (繁體中文 / zh-TW). Phase 10.
+# User-facing translation overrides for 14 PinchBench meeting-analysis tasks.
+# Grader / Python code, exact required output / file / transcript names,
+# proper nouns (people, companies, places, committees), URLs, emails, phone
+# numbers, identifiers, dates, dollar amounts are kept verbatim. The source
+# meeting transcripts remain in English; the agent analyzes the English
+# transcript and the output report keeps required English proper nouns/quotes.
+tasks:
+
+  task_meeting_council_votes:
+    task_name: "Tampa City Council — 列出動議與表決結果"
+    prompt: |
+      我這裡有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。這是一份即時聽打字幕稿，並非逐字的正式紀錄。
+
+      請分析這份逐字稿，並產生一個名為 `votes_report.md` 的檔案，列出會議期間發生的每一項動議（motion）與表決（vote）。針對每一次表決，請包含：
+
+      - **議項或主題**（例如議程項目編號、主題）
+      - **動議提出人**（由誰提出）
+      - **附議人**（由誰附議）
+      - **表決結果**（全體通過、逐一唱名表決的票數分布，或口頭表決結果）
+      - **任何棄權、迴避或反對票**
+
+      請依時間先後（chronologically）整理報告。最後附上一個**彙總統計**：表決總次數、其中有多少次為全體通過、有多少次出現反對。
+    expected_behavior: |
+      助手應該找出所有動議與表決，擷取提出人與附議人，記下口頭表決與唱名表決，並指出反對票/迴避（Carlson 對第 12 項棄權；Carlson 與 Clendenin 對第 14/15 項投反對票；Carlson 對第 25 項投反對票）。
+
+      關鍵表決：會議紀錄採認（Miranda 提出／Maniscalco 附議）、第 12 項（Carlson 棄權）、第 14/15 項 Rome Yard（5-2）、第 19 項變更分區（全體通過）、第 22 項 Veterans Committee（延至 April 16）、第 23 項容量費（一讀）、第 25 項（6-1，Carlson 反對）、第 26-28 項（重新審議，移至 April 16）。
+
+      議會議員：Alan Clendenin（Chair）、Charlie Miranda、Guido Maniscalco、Lynn Hurtak、Naya Young、Luis Viera、Bill Carlson。
+    grading_criteria:
+      - "已建立報告檔案 votes_report.md"
+      - "已辨識會議紀錄採認的表決（Miranda 提出，Maniscalco 附議）"
+      - "第 12 項正確記下 Carlson 棄權"
+      - "已掌握第 14/15 項唱名表決（5-2，Carlson 與 Clendenin 投反對票）"
+      - "第 19 項變更分區表決掌握為全體通過"
+      - "已記下第 22 項 Veterans Committee 延至 April 16"
+      - "已掌握第 23 項 water/wastewater 容量費一讀"
+      - "已掌握第 25 項決議，Carlson 投反對票（6-1）"
+      - "已掌握第 26-28 項的重新審議與重新排程"
+      - "已包含表決總次數的彙總統計"
+    llm_judge_rubric: |
+      ### 評分項 1：表決辨識完整度（權重 40%）
+      **1.0 分**：辨識出 20 項以上不同的表決。**0.75 分**：15-19 項。**0.5 分**：10-14 項。**0.0 分**：完全沒有。
+
+      ### 評分項 2：表決細節準確度（權重 30%）
+      **1.0 分**：提出人、附議人、結果皆正確。反對/棄權皆有掌握。**0.5 分**：部分有誤。**0.0 分**：多數錯誤。
+
+      ### 評分項 3：組織（權重 15%）
+      **1.0 分**：依時間先後、條理清晰。**0.5 分**：組織不佳。**0.0 分**：難以閱讀。
+
+      ### 評分項 4：彙總（權重 15%）
+      **1.0 分**：總計數字準確。**0.5 分**：有附上但不準確。**0.0 分**：完全沒有。
+
+  task_meeting_council_public_comment:
+    task_name: "Tampa City Council — 摘要公眾意見"
+    prompt: |
+      我這裡有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。這是一份即時聽打字幕稿。
+
+      請分析公眾意見（public comment）的部分，並產生一個名為 `public_comments_report.md` 的檔案，摘要每一位公眾發言者的意見。針對每位發言者，請包含：
+
+      - **發言者姓名**
+      - **提及的主題或議程項目**（若適用）
+      - **提出的重點或關切事項**
+      - **對議會提出的任何具體請求或要求**
+
+      最後也請附上一個**主題摘要（thematic summary）**，依主題領域（例如基礎建設、住房、歷史保存、警政、交通等）將意見分組，並指出哪些主題引發最多公眾關注。
+    expected_behavior: |
+      助手應辨識出公眾意見的部分，並擷取每位發言者的發言內容。關鍵發言者：
+
+      - **Jeraldine Williams** — Zion Cemetery（第 16 項），感謝議會
+      - **Reva Iman** — Zion Cemetery，請求 $8 million 用於紀念/族譜中心
+      - **Daryl Hych** — Veterans Advisory Committee（第 22 項），DEI 相關評論
+      - **Pam Cannella** — 雨水/颶風整備，市府疏於處理
+      - **David Moss Cornell** — Highland Pines（District 5）的遊民問題
+      - **Joseph Citro** — 交通、tri-county MPO、Rays stadium 交通
+      - **Ashley Morrow** — Tampa 黑人歷史（1877 Hernando County）
+      - **Carroll Ann Bennett** — 人行道法規漏洞、Culbreath Bayou
+      - **Tiffany Poole** — TPD 事件、15 歲的兒子、8 名警員對付兩名未成年人
+      - **Steve Michelini** — South Howard 街道封閉、管線/雨水
+      - **James Adair** — 市府自 2020 年起未使用的發電機
+      - **Robin Lockett** — Zion Cemetery 與 Yellow Jackets
+      - **Valerie Bullock** — 第 19-21 項分區、Aquino Property Management
+      - **Stephanie Poynor** — Rome Yard 延宕（1436 days）、veterans board
+      - **Michael Randolph**（線上）— West Tampa CDC、Rome Yard CBA
+      - **Adrian Rodriguez**（線上）— Colon Cemetery、Florida Statute 872
+    grading_criteria:
+      - "已建立報告檔案 public_comments_report.md"
+      - "已辨識 Jeraldine Williams 與 Zion Cemetery 的關聯"
+      - "已辨識 Reva Iman 與 $8 million 請求"
+      - "已辨識 Pam Cannella 與雨水/颶風"
+      - "已辨識 Tiffany Poole 與 TPD 事件"
+      - "已辨識 Stephanie Poynor 與 Rome Yard（1436 days）"
+      - "16 位發言者中至少辨識出 12 位"
+      - "依主題分組的主題摘要"
+      - "Zion Cemetery 被記為多位發言者共同提及的主題"
+    llm_judge_rubric: |
+      ### 評分項 1：發言者辨識（權重 35%）
+      **1.0 分**：辨識出全部 16 位發言者且主題正確。**0.75 分**：12-15 位。**0.5 分**：8-11 位。**0.0 分**：完全沒有。
+
+      ### 評分項 2：摘要品質（權重 30%）
+      **1.0 分**：準確掌握重點與請求。**0.5 分**：有附上但細節缺漏。**0.0 分**：完全沒有。
+
+      ### 評分項 3：主題分組（權重 20%）
+      **1.0 分**：清楚辨識出主題。**0.5 分**：有部分分組。**0.0 分**：完全沒有。
+
+      ### 評分項 4：組織（權重 15%）
+      **1.0 分**：格式良好、依時間先後。**0.5 分**：組織不佳。**0.0 分**：難以閱讀。
+
+  task_meeting_council_budget:
+    task_name: "Tampa City Council — 擷取預算討論"
+    prompt: |
+      我這裡有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。請產生 `budget_report.md`，擷取所有與預算相關的討論，包含金額、背景脈絡、議會行動與關切事項。最後附上一個**財務彙總（financial summary）**。
+    expected_behavior: |
+      關鍵財務項目：Water/Wastewater Capacity Fees（$3B 投資、$170M 補助、目前每單位 $1,020/$1,237、提議 $1,530/$1,847、每年額外 $1.5-2M 收入）、Rome Yard（$94M Phase 4、開發商投資 $3M）、Howard Avenue Annex（總計 $34.2M、已支出 $7M、Phase 2 為 $27.2M）、Fire Station 24（GMP 於 May 15）、$650K gas settlement、Zion Cemetery 請求 $8M、管線計畫每月 $8+$8。
+    grading_criteria:
+      - "已建立報告檔案 budget_report.md"
+      - "已辨識容量費金額"
+      - "已提及 $3 billion 投資"
+      - "已記下 $1.5-2 million 收入增加"
+      - "已辨識 Rome Yard $94 million"
+      - "已辨識 Annex $34.2 million"
+      - "已記下 $7 million Phase 1"
+      - "已提及 $650,000 settlement"
+      - "已掌握 Zion $8 million"
+      - "已包含財務彙總"
+    llm_judge_rubric: |
+      ### 評分項 1：財務資料擷取（權重 40%）
+      **1.0 分**：所有主要金額皆正確擷取。**0.5 分**：部分缺漏。**0.0 分**：完全沒有。
+
+      ### 評分項 2：背景脈絡（權重 25%）
+      **1.0 分**：每一項目皆有清楚的背景脈絡。**0.5 分**：部分有。**0.0 分**：完全沒有。
+
+      ### 評分項 3：周延度（權重 20%）
+      **1.0 分**：涵蓋所有會議段落。**0.5 分**：僅主要部分。**0.0 分**：不完整。
+
+      ### 評分項 4：彙總（權重 15%）
+      **1.0 分**：彙總清楚。**0.5 分**：不完整。**0.0 分**：完全沒有。
+
+  task_meeting_council_upcoming:
+    task_name: "Tampa City Council — 擷取後續事件與截止期限"
+    prompt: |
+      我這裡有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。請產生 `upcoming_events.md`，依時間先後列出所有後續事件、截止期限與未來日期。請包含日期、事件、負責方，以及狀態（confirmed/proposed/tentative）。最後以一個**「What to watch」**重點區段作結。
+    expected_behavior: |
+      關鍵項目：April 16（Veterans Committee、第 26-28 項、$650K 重新分配）、April 20（East Tampa Town Hall，地點 Fair Oaks）、May 7（倫理報告、LDC 更新）、May 15（Fire Station 24 GMP）、August 3/10/17（預算工作坊）、March 1 2027（容量費開始）、September 2027（Fire Station 24 完工）、September 2028（Rome Yard Phase 4）、March 2030（費用全面分階段到位）、下週（HART Board）、約 60 天內（Rome Yard 交割）。
+    grading_criteria:
+      - "已建立報告檔案 upcoming_events.md"
+      - "已辨識 April 16 的各項目"
+      - "April 20 East Tampa Town Hall"
+      - "May 7 倫理報告"
+      - "Fire Station 24 GMP（May 15）"
+      - "預算工作坊（August）"
+      - "March 2027 容量費"
+      - "September 2028 Rome Yard"
+      - "依時間先後組織"
+      - "重點區段"
+    llm_judge_rubric: |
+      ### 評分項 1：完整度（權重 35%）
+      **1.0 分**：12 項以上事件。**0.75 分**：9-11 項。**0.5 分**：5-8 項。**0.0 分**：完全沒有。
+
+      ### 評分項 2：準確度（權重 25%）
+      **1.0 分**：所有日期皆正確。**0.5 分**：有若干錯誤。**0.0 分**：錯誤。
+
+      ### 評分項 3：背景脈絡（權重 25%）
+      **1.0 分**：每一事件皆有清楚的背景脈絡。**0.5 分**：基本。**0.0 分**：完全沒有。
+
+      ### 評分項 4：優先排序（權重 15%）
+      **1.0 分**：重點整理有效。**0.5 分**：薄弱。**0.0 分**：完全沒有。
+
+  task_meeting_council_contact_info:
+    task_name: "Tampa City Council — 擷取聯絡資訊"
+    prompt: |
+      我這裡有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。請產生 `contacts_report.md`，列出所有具名提及的人物，並附上職稱/角色、所屬組織與背景脈絡。請分類整理為：**Council Members**、**City Staff**、**Presenters and Experts**、**Community Members / Public Speakers**、**Other People Mentioned**。
+    expected_behavior: |
+      60 位以上的具名人物，包含 7 位議會議員、市府職員（Shelby、Perry、Baird、Johns、Brody、DeManche、Kopesky）、簡報者（Hamilton/Raftelis、Guyette/Colliers、Chief Bercaw、晉升的 TPD 人員：DeFelice、Messmer、Purcell、McCormick）、16 位以上的公眾發言者，以及其他人（Officer McNeil、Milo/Related Urban、社區致贈禮物者）。
+    grading_criteria:
+      - "已建立報告檔案 contacts_report.md"
+      - "已列出全部 7 位議會議員"
+      - "Shelby 列為 Council Attorney"
+      - "Hamilton 列為 Raftelis 顧問"
+      - "Bercaw 列為 Police Chief"
+      - "McNeil 列為 Officer of the Month"
+      - "已辨識 12 位以上公眾發言者"
+      - "TPD 晉升人員（DeFelice、Messmer、Purcell、McCormick）"
+      - "已分類整理為各區段"
+      - "Milo 列為 Related Urban president"
+    llm_judge_rubric: |
+      ### 評分項 1：人物辨識（權重 35%）
+      **1.0 分**：40 位以上人物。**0.75 分**：30-39 位。**0.5 分**：20-29 位。**0.0 分**：少於 10 位。
+
+      ### 評分項 2：角色準確度（權重 30%）
+      **1.0 分**：職稱/隸屬正確。**0.5 分**：部分缺漏。**0.0 分**：錯誤。
+
+      ### 評分項 3：分類（權重 20%）
+      **1.0 分**：區段清楚。**0.5 分**：部分。**0.0 分**：完全沒有。
+
+      ### 評分項 4：背景脈絡（權重 15%）
+      **1.0 分**：每位人物皆有簡要背景脈絡。**0.5 分**：部分。**0.0 分**：完全沒有。
+
+  task_meeting_council_neighborhood:
+    task_name: "Tampa City Council — 辨識社區與行政區提及"
+    prompt: |
+      我這裡有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。請產生 `neighborhoods_report.md`，辨識出所有提及的社區、行政區、地理區域與特定地點。請包含地點名稱、背景脈絡、相關發言者/議項，以及相關議題。整理時請納入以行政區（district）為基礎的概覽、出現次數統計，以及主題交叉對照。
+    expected_behavior: |
+      關鍵地點：Districts 1-5、Tampa Heights、Temple Crest（犯罪下降/McNeil）、Highland Pines（遊民問題）、West Tampa（Rome Yard、Rays stadium）、South Howard（街道封閉、管線）、Culbreath Bayou（人行道）、East Tampa（22nd St 開發）、Downtown、Bayshore、MacDill AFB、Riverwalk、變更分區地址（4102 N 22nd St、2707 E 22nd Ave、110 S Boulevard）、Marion/Franklin Streets、區域比較（Orlando、Fort Myers、Fort Lauderdale）。
+    grading_criteria:
+      - "已建立報告檔案 neighborhoods_report.md"
+      - "Temple Crest 與 McNeil / 犯罪"
+      - "West Tampa 與 Rome Yard / Rays"
+      - "South Howard 與街道封閉 / 管線"
+      - "East Tampa 與開發"
+      - "Highland Pines 與遊民問題"
+      - "3 個以上變更分區地址"
+      - "提及 MacDill AFB"
+      - "已記下 Riverwalk 連通關係"
+      - "出現次數統計或交叉對照"
+      - "15 個以上不同地點"
+    llm_judge_rubric: |
+      ### 評分項 1：完整度（權重 35%）
+      **1.0 分**：20 個以上地點。**0.75 分**：15-19 個。**0.5 分**：10-14 個。**0.0 分**：少於 5 個。
+
+      ### 評分項 2：背景脈絡（權重 25%）
+      **1.0 分**：每一地點皆有準確的背景脈絡。**0.5 分**：部分含糊。**0.0 分**：完全沒有。
+
+      ### 評分項 3：組織（權重 25%）
+      **1.0 分**：依行政區分組、有出現次數、有交叉對照。**0.5 分**：部分。**0.0 分**：完全沒有。
+
+      ### 評分項 4：廣度（權重 15%）
+      **1.0 分**：涵蓋多種尺度（從門牌地址到區域）。**0.5 分**：單一尺度。**0.0 分**：極少。
+
+  task_meeting_tech_action_items:
+    task_name: "會議行動項目擷取"
+    prompt: |
+      我有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議涵蓋多個主題，包括企業活動、GitLab Commit 的產品發布、競爭分析、一份新的資訊圖（infographic）設計，以及一套訊息架構（messaging framework）。
+
+      請從這場會議中擷取所有行動項目（action items），並寫入一個名為 `action_items.md` 的檔案。針對每一個行動項目，請包含：
+
+      - **負責人（Owner）**（負責的人，具名）
+      - **行動（Action）**（他們需要做什麼）
+      - **截止期限（Deadline）**（若有提及）
+      - **背景脈絡（Context）**（與哪一個討論主題相關）
+
+      請依主題領域將行動項目分組。並在最上方附上行動項目總數的彙總計數。
+    expected_behavior: |
+      助手應該：
+
+      1. 讀取並解析會議逐字稿
+      2. 從討論中辨識出所有明確與隱含的行動項目
+      3. 將每個行動項目與正確的人/負責人關聯
+      4. 依主題分組
+
+      應擷取的關鍵行動項目：
+
+      - **企業活動（Corporate Events）**：各 PMM 需向其活動經理（campaign manager）取得對特定活動的承諾（platform→re:Invent、CI/CD→Google Next、GitOps→KubeCon），並在 issue 上留言
+      - **產品發布（Product Announcements）**：Cormac 需為 Plan stage 補上一份 top five；團隊成員需檢視並挑出整體前 5 名功能；此項截止為 Tuesday
+      - **競爭分析（Competitive Analysis）**：Samia 需僅就與她負責 stages 相關的 tier one 競爭對手進行比較；團隊需在競爭比較表（competitive sheet）加上一個 GitLab 的項目（line item）
+      - **訊息架構（Messaging Framework）**：William 需以「more speed less risk」作為選定標語（tagline）來定稿訊息；截止為 end of day
+      - **一般事項（General）**：團隊應觀看 Talladega Nights（一項詼諧的回家作業）
+    grading_criteria:
+      - "已建立檔案 action_items.md"
+      - "至少辨識出 5 個不同的行動項目"
+      - "行動項目與特定負責人關聯（例如 Cormac、Samia、William、Cindy）"
+      - "已掌握企業活動的行動項目（取得活動經理的承諾）"
+      - "已掌握產品發布的行動項目（top 5 功能，截止 Tuesday）"
+      - "已掌握競爭分析的行動項目（tier one 競爭對手，加上 GitLab 列）"
+      - "已掌握訊息架構的行動項目（標語定稿，截止 end of day）"
+      - "行動項目依主題或類別分組"
+      - "在有提及處記下截止期限（產品發布為 Tuesday，訊息架構為 end of day）"
+    llm_judge_rubric: |
+      ### 評分項 1：行動項目擷取的完整度（權重 35%）
+
+      **1.0 分**：辨識出橫跨所有討論主題（活動、發布、競爭、訊息）的所有主要行動項目。明確指派與隱含承諾皆有掌握。
+      **0.75 分**：掌握多數行動項目，但漏掉一兩個次要的。
+      **0.5 分**：掌握部分主題的行動項目，但漏掉整個主題領域。
+      **0.25 分**：僅掌握少數顯而易見的行動項目。
+      **0.0 分**：未擷取出有意義的行動項目。
+
+      ### 評分項 2：負責人歸屬準確度（權重 30%）
+
+      **1.0 分**：每個行動項目皆正確指出負責人。姓名依對話脈絡準確歸屬。
+      **0.75 分**：多數負責人正確辨識，僅一兩處小誤植。
+      **0.5 分**：辨識出部分負責人，但有數處錯誤或缺漏。
+      **0.25 分**：負責人多半缺漏或歸屬錯誤。
+      **0.0 分**：完全未嘗試歸屬負責人。
+
+      ### 評分項 3：組織與結構（權重 20%）
+
+      **1.0 分**：行動項目依主題清楚分組、格式一致，並附上彙總計數。易於瀏覽，可直接作為後續追蹤清單。
+      **0.75 分**：組織良好，僅有少許格式不一致。
+      **0.5 分**：有部分組織，但項目跨主題混雜或難以追蹤。
+      **0.25 分**：組織極少，項目未分組逐條列出。
+      **0.0 分**：毫無結構或組織。
+
+      ### 評分項 4：背景脈絡與截止期限準確度（權重 15%）
+
+      **1.0 分**：在有提及處記下截止期限（發布為 Tuesday，訊息為 end of day）。每個行動項目的背景脈絡準確且有幫助。
+      **0.75 分**：多數截止期限與背景脈絡有掌握，僅少數遺漏。
+      **0.5 分**：提供部分背景脈絡，但截止期限缺漏或不準確。
+      **0.25 分**：背景脈絡極少，無截止期限。
+      **0.0 分**：無背景脈絡或截止期限資訊。
+
+  task_meeting_tech_decisions:
+    task_name: "會議決議擷取"
+    prompt: |
+      我有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議涵蓋企業活動贊助、GitLab Commit 的產品發布、競爭分析方法論、資訊圖設計回饋，以及一場訊息架構練習。
+
+      請辨識出會議期間所做成的所有決議（或達成的共識），並寫入一個名為 `decisions.md` 的檔案。針對每一項決議，請包含：
+
+      - **決議（Decision）**（決定了什麼）
+      - **背景脈絡（Context）**（為何討論此事的簡要背景）
+      - **參與者（Participants involved）**（誰表達了意見）
+      - **狀態（Status）**（final、tentative，或 needs follow-up）
+
+      並在最上方附上一段彙總，說明決議總數，以及其中哪些可能需要進一步確認。
+    expected_behavior: |
+      助手應該：
+
+      1. 讀取並解析會議逐字稿
+      2. 區分決議（已達成的結論）與尚在進行的討論
+      3. 掌握每項決議背後的背景脈絡
+
+      應辨識出的關鍵決議：
+
+      1. **活動指派**：Platform team → AWS re:Invent、CI/CD → Google Next、GitOps → KubeCon
+      2. **產品發布方式**：將多個小型 MVC 整合為較大的主題（例如 vulnerability management），而非逐一條列個別功能；重用 GitLab 14.0 內容並加入新增項目
+      3. **Top 5 功能挑選**：團隊將從所有 stages 中挑出整體前 5 名功能用於 Commit keynote（而非每個 stage 取 3 個）
+      4. **競爭比較表方法論**：僅使用 tier one 競爭對手；僅納入與各特定 stage 相關的競爭對手（並非每個 stage 都放全部 5 個）；加入一個 GitLab 項目以供比較
+      5. **資訊圖配色**：維持只用綠色的配色方案（不用紅/黃），以保持比較（comparison）的調性而非競爭攻擊
+      6. **訊息標語挑選**：選定「More speed less risk」為最終標語（勝過「move fast with confidence」、「no trade-offs」等替代方案）
+      7. **Stage 命名**：承認如「configure」與「monitor」等 stage 名稱描述性不足，但目前先沿用；下一次迭代將加入可點擊進入的細節頁面
+    grading_criteria:
+      - "已建立檔案 decisions.md"
+      - "至少辨識出 5 項不同的決議"
+      - "已掌握活動指派的決議（re:Invent、Google Next、KubeCon）"
+      - "已掌握產品發布的整合（bundling）方式"
+      - "已掌握競爭方法論的決議（僅 tier one、相關 stages、GitLab 列）"
+      - "已掌握訊息標語的決議（「more speed less risk」）"
+      - "已掌握資訊圖配色的決議（只用綠色、不用紅色）"
+      - "每項決議皆提供背景脈絡"
+      - "已標示決議狀態（final 對比 needs follow-up）"
+    llm_judge_rubric: |
+      ### 評分項 1：決議辨識準確度（權重 35%）
+
+      **1.0 分**：辨識出所有主要決議，包含活動指派、發布方式、競爭方法論、資訊圖配色與訊息標語。正確區分決議與進行中的討論。
+      **0.75 分**：掌握多數決議，但漏掉一項，或誤把曾討論但未決定的項目納入。
+      **0.5 分**：掌握部分決議，但漏掉數項，或把討論與決議混為一談。
+      **0.25 分**：僅辨識出一兩項顯而易見的決議。
+      **0.0 分**：未辨識出有意義的決議。
+
+      ### 評分項 2：背景脈絡品質（權重 25%）
+
+      **1.0 分**：每項決議皆包含準確的背景脈絡，說明是什麼促成討論、考慮過哪些替代方案，以及為何選定該方案。
+      **0.75 分**：多數決議有良好背景脈絡，僅有少許缺口。
+      **0.5 分**：提供部分背景脈絡，但缺少關鍵推理或所考慮的替代方案。
+      **0.25 分**：背景脈絡極少，決議僅逐條列出而無說明。
+      **0.0 分**：未提供背景脈絡。
+
+      ### 評分項 3：參與者歸屬（權重 20%）
+
+      **1.0 分**：正確指出誰倡議每一立場、誰參與了達成共識。姓名準確取自逐字稿。
+      **0.75 分**：多數參與者正確辨識，僅有少許錯誤。
+      **0.5 分**：辨識出部分參與者，但有數位缺漏或誤植。
+      **0.25 分**：參與者辨識極少。
+      **0.0 分**：未歸屬參與者。
+
+      ### 評分項 4：結構與實用性（權重 20%）
+
+      **1.0 分**：決議格式清楚、結構一致，附上實用的彙總，並標示哪些決議為 final、哪些需 follow-up。可直接作為會議紀錄使用。
+      **0.75 分**：結構良好，僅有少許格式問題。
+      **0.5 分**：可讀，但結構不一致或缺少彙總。
+      **0.25 分**：組織不佳，難以作為參考。
+      **0.0 分**：無可用結構。
+
+  task_meeting_tech_competitors:
+    task_name: "會議競爭對手分析擷取"
+    prompt: |
+      我有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議的一部分涉及競爭定位（competitive positioning）、一份比較試算表，以及如何呈現 GitLab 對比競爭對手的詳細討論。
+
+      請分析這份逐字稿，並建立一個名為 `competitor_analysis.md` 的檔案，內容涵蓋：
+
+      1. **提及的競爭對手**：列出所有提及的競爭對手或競品，並附上有討論到的層級分類（tier classification）
+      2. **競爭定位方式**：團隊計畫如何將 GitLab 定位於這些競爭對手之上？
+      3. **各 stage 對應的競爭對手對照**：哪些競爭對手對應到哪些產品 stages（如討論所述）？
+      4. **方法論決議**：對於如何進行競爭分析做了哪些決定（例如聚焦哪些 tiers、如何處理競爭對手不適用的 stage）？
+      5. **關鍵競爭洞察**：討論中提到關於特定競爭對手的任何策略性洞察
+    expected_behavior: |
+      助手應該：
+
+      1. 仔細閱讀會議逐字稿
+      2. 擷取所有競爭對手名稱並予以分類
+
+      關鍵競爭對手與細節：
+
+      - **Tier 1 競爭對手**（目前分析的重點）：Azure DevOps（ADO）、Atlassian、GitHub、Jenkins、JFrog、CloudBees
+      - **層級分類**：團隊先前已將競爭對手分為 tier 1、2、3；目前僅聚焦於 tier 1
+      - **Stage 相關性**：並非所有 tier 1 競爭對手都適用於所有 stages（例如 CloudBees 可能與 Monitor 無關；GitHub 可能與 Monitor 無關）
+      - **Platform 定位**：部分競爭對手（Azure DevOps、GitHub、Atlassian、JFrog）將自己定位為 platform；Jenkins/CloudBees 則否
+      - **方法論**：競爭試算表是被複製貼上、每個 stage 分頁都放同樣的 6 個競爭對手，這被指出是錯的——每個 stage 應只出現相關的競爭對手
+      - **GitLab 項目**：團隊決定在比較表加入一個 GitLab 列，使該表不會只呈現 GitLab 較強之處
+      - **功能挑選視角**：功能應從市場視角（market lens，即買家會比較選購什麼）挑選，而非僅從 GitLab 視角；為求誠實，也應納入一些僅競爭對手才有的功能
+      - **資訊圖方式**：新設計只用綠色（不用紅色），呈現為有幫助的產業比較，而非競爭攻擊式素材
+    grading_criteria:
+      - "已建立檔案 competitor_analysis.md"
+      - "已列出所有 tier 1 競爭對手（ADO/Azure DevOps、Atlassian、GitHub、Jenkins、JFrog、CloudBees）"
+      - "已提及層級分類系統（tier 1、2、3）"
+      - "已討論各 stage 的相關性（並非所有競爭對手都適用於所有 stages）"
+      - "已掌握 platform 與非 platform 的區分（GitHub、ADO、Atlassian、JFrog 為 platform；Jenkins/CloudBees 則否）"
+      - "已掌握加入 GitLab 項目的決議"
+      - "已記下功能挑選的市場視角（market lens）方式"
+      - "已掌握資訊圖設計理念（只用綠色、比較而非攻擊）"
+      - "已掌握先聚焦 tier 1 的方法論決議"
+    llm_judge_rubric: |
+      ### 評分項 1：競爭對手辨識完整度（權重 30%）
+
+      **1.0 分**：辨識出全部六個 tier 1 競爭對手（Azure DevOps、Atlassian、GitHub、Jenkins、JFrog、CloudBees），並有準確的層級分類與對 tier 系統的討論。
+      **0.75 分**：辨識出多數競爭對手並附 tier 資訊，漏掉一兩個。
+      **0.5 分**：辨識出數個競爭對手，但 tier 系統說明不佳。
+      **0.25 分**：僅提及少數競爭對手且無分類。
+      **0.0 分**：未辨識出競爭對手。
+
+      ### 評分項 2：策略定位分析（權重 30%）
+
+      **1.0 分**：完整掌握 GitLab 定位方式的所有細微之處：功能採市場視角、platform 對比非 platform 的區分、只用綠色的資訊圖以呈現比較（而非攻擊）、加入 GitLab 列以誠實比較，以及打造有幫助的產業資源此一目標。
+      **0.75 分**：掌握多數定位要素，僅有少許缺口。
+      **0.5 分**：有部分定位洞察，但漏掉關鍵策略決議。
+      **0.25 分**：對競爭定位僅有表面提及。
+      **0.0 分**：無定位分析。
+
+      ### 評分項 3：各 stage 對照（權重 20%）
+
+      **1.0 分**：清楚說明並非所有競爭對手都適用於所有 stages，給出具體例子（例如 CloudBees/GitHub 與 Monitor 無關），並記下被指出的試算表複製貼上問題。
+      **0.75 分**：對 stage 相關性有良好理解，僅有少許缺口。
+      **0.5 分**：提及 stage 相關性但缺乏具體細節。
+      **0.25 分**：對 stages 僅含糊提及。
+      **0.0 分**：無各 stage 分析。
+
+      ### 評分項 4：方法論清晰度（權重 20%）
+
+      **1.0 分**：清楚記載議定的方法論：先聚焦 tier 1，再擴展；每個 stage 只放相關競爭對手；功能採市場視角；加入 GitLab 以供比較。並以可行動的指引方式呈現。
+      **0.75 分**：掌握多數方法論決議。
+      **0.5 分**：提及部分方法論但不完整。
+      **0.25 分**：方法論描述含糊。
+      **0.0 分**：未記載方法論。
+
+  task_meeting_tech_messaging:
+    task_name: "會議訊息架構擷取"
+    prompt: |
+      我有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議接近尾聲時，團隊進行一場協作式的訊息練習，為 GitLab 發展標語（taglines）與訊息支柱（messaging pillars）。
+
+      請擷取並整理會議中討論到的所有訊息架構選項，並寫入一個名為 `messaging_framework.md` 的檔案。你的輸出應包含：
+
+      1. **所有候選標語/語句**：所有被提出的標語/語句，依其所對應的訊息支柱分組
+      2. **評估準則（evaluation criteria）**：團隊所使用的準則（例如語句之間調性的對等性、是否朗朗上口、名詞片語對比動詞片語）
+      3. **每個選項所討論的優缺點**
+      4. **最終選定（final selections）**（團隊決定採用的）
+      5. **被否決的替代方案（rejected alternatives）及其被否決的原因**
+    expected_behavior: |
+      助手應該：
+
+      1. 解析逐字稿以找出訊息架構的討論
+      2. 辨識出三個訊息支柱與所有候選語句
+
+      關鍵訊息內容：
+
+      **支柱 1 — Transparency/Single Platform：**
+      - 「From roadmap to company vision, we are transparent」（原始版）
+      - 「A single source of truth, countless possibilities」（提議版，廣受好評）
+      - 「All-in-one for everyone」（提議版，William 喜歡但也承認並非人人都愛）
+
+      **支柱 2 — End-to-end control：**
+      - 「Automate nearly anything, collaborate on everything」（原始版）
+      - 「End to end control over your software factory」（提議版，被形容為較不朗朗上口但具描述性）
+
+      **支柱 3 — Speed/Security：**
+      - 「Scale up, speed up, test up」（原始版——William 很討厭，尤其是「test up」）
+      - 「Move fast with confidence」（提議版——喜歡其意涵，但與其他名詞片語的對等性不佳）
+      - 「More speed less risk」（提議版——團隊共識最愛）
+      - 「Increase speed and stay on track」（提議版——不受青睞）
+      - 「Velocity with confidence」（被當作一個概念提及）
+      - 「No trade-offs」（曾短暫考慮，因工程師心態認為總是有 trade-offs 而被否決）
+      - 「More speed less risk with confidence」（提議的組合版）
+
+      **討論到的評估準則：**
+      - 調性的對等性（名詞片語應與名詞片語相配）
+      - 朗朗上口/精煉有力
+      - 技術準確性（不做絕對化主張，如「no trade-offs」或「100% secure」）
+      - 可用於平行句構的能力（「With GitLab you get X」）
+
+      **最終選定：**
+      - 「A single source of truth, countless possibilities」
+      - 「End to end control over your software factory」
+      - 「More speed less risk」
+
+      **資安子標語：**
+      - 「Secure the factory and its deliverables」（出自 Cindy 的部落格文章）
+    grading_criteria:
+      - "已建立檔案 messaging_framework.md"
+      - "已辨識全部三個訊息支柱"
+      - "每個支柱列出多個候選語句"
+      - "「More speed less risk」被辨識為 speed/security 選定的標語"
+      - "「A single source of truth, countless possibilities」被辨識為 transparency 支柱選定的標語"
+      - "列出被否決的替代方案及原因（例如「test up」被否決、「no trade-offs」被否決）"
+      - "已掌握評估準則（對等性/調性、朗朗上口、準確性）"
+      - "已掌握「Secure the factory and its deliverables」作為資安子標語"
+      - "最終選定與替代方案清楚區分"
+    llm_judge_rubric: |
+      ### 評分項 1：選項掌握的完整度（權重 30%）
+
+      **1.0 分**：列出橫跨三個支柱的所有提議標語/語句，包含原始版與替代版。至少掌握 8-10 個不同語句並正確歸入支柱。
+      **0.75 分**：掌握多數語句並正確分組，漏掉一兩個。
+      **0.5 分**：掌握數個語句，但漏掉整批替代方案或某一支柱。
+      **0.25 分**：僅掌握最終選定而無替代方案。
+      **0.0 分**：未掌握有意義的選項。
+
+      ### 評分項 2：評估準則與推理（權重 25%）
+
+      **1.0 分**：準確掌握評估架構：調性對等性、朗朗上口、技術準確性、可用於平行句構。並包含否決的具體理由（例如「test up」聽起來蠢、「no trade-offs」違背工程師心態、「move fast with confidence」缺乏名詞片語對等性）。
+      **0.75 分**：掌握多數評估準則並有良好推理。
+      **0.5 分**：提及部分準則但推理不完整。
+      **0.25 分**：提供的推理極少。
+      **0.0 分**：無評估準則或推理。
+
+      ### 評分項 3：最終與否決的區分（權重 25%）
+
+      **1.0 分**：清楚區分最終選定與被否決的替代方案。容易辨識何者被選用、何者被捨棄。
+      **0.75 分**：區分良好，僅有少許模糊。
+      **0.5 分**：有部分區分，但讀者需自行推斷何者為最終。
+      **0.25 分**：所有選項混在一起且無明確結果。
+      **0.0 分**：未做區分。
+
+      ### 評分項 4：細微之處與歸屬（權重 20%）
+
+      **1.0 分**：掌握誰提出了什麼，包含「secure the factory and its deliverables」出自 Cindy 部落格文章的歸功、記下 Ash Withers 的啟發，並反映此練習的協作動態。
+      **0.75 分**：歸屬良好，僅有少許缺口。
+      **0.5 分**：有部分歸屬，但漏掉關鍵貢獻。
+      **0.25 分**：未將想法歸屬到個人。
+      **0.0 分**：無細微之處或歸屬。
+
+  task_meeting_tech_product_features:
+    task_name: "會議產品功能優先排序"
+    prompt: |
+      我有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議有相當篇幅在討論要在即將到來的 GitLab Commit 大會上重點呈現哪些產品功能與改進。
+
+      請分析這份逐字稿，並建立一個名為 `feature_priorities.md` 的檔案，內含一份依優先順序排列的功能清單。針對每個功能，請包含：
+
+      1. **功能名稱**
+      2. **Stage/領域**（例如 Create、Secure、Monitor、Plan、CI/CD、GitOps 等）
+      3. **興奮度（Excitement level）**（依會議討論為 1-3，3 為最令人興奮）
+      4. **描述**（該功能的作用或重要性）
+      5. **備註**（任何討論要點，例如是否為社群貢獻、是否已有媒體報導等）
+
+      此外也請包含：
+      - 團隊對 Commit keynote 的**整體 top 5 名選**
+      - 他們議定用來評估功能的**方法論**（整合 MVCs、興奮度等級、stack ranking）
+      - 任何被**明確降低優先序（deprioritized）**的功能及其原因
+    expected_behavior: |
+      助手應該：
+
+      1. 解析會議逐字稿以找出所有功能討論
+      2. 擷取並整理功能及其後設資料
+
+      討論到的關鍵功能：
+
+      **Top 5 / 高優先序：**
+      1. **UX improvements**（跨 stage）— 興奮度：3。Brian 指出這不僅限於 Create stage。依業界慣例屬常見的「big launch」類別。
+      2. **Vulnerability management**（Secure）— 興奮度：高。Cindy 提議把一整年的多個小型 MVC 整合為單一敘事。已是 14.0 發布的一部分。
+      3. **GitOps capabilities**（Configure/GitOps）— Kubernetes agent + HashiCorp/Terraform 整合，包裹在一起。
+      4. **Pipeline editor**（CI/CD）— 被提及為 CI/CD stage 的明確選項。
+      5. **Something from Plan** — 指派給 Cormac 補上；提到 epic boards（長期被要求的功能）、milestone burnup charts。
+
+      **其他值得注意的功能：**
+      - **Fuzzing acquisitions**（Secure）— 被降低優先序，因為已有兩次媒體報導（收購公告 + 整合後續），已「worn out」
+      - **Semgrep scanner replacement**（Secure）— 取代了既有掃描器；可作為一個項目
+      - **DAST Browser scanner**（Secure）— 用於單頁應用的專有 DAST，beta 階段；代號「Berserker」
+      - **VS Code integrations**（Create）— 兩個源自社群貢獻的整合；非官方的擴充功能轉為官方
+      - **Terraform module**（Configure）— 社群模組現已獲官方支援
+      - **Value Stream Analytics**（Plan）— 可能的題材，但可自訂版本來自 12.9（太舊）
+      - **Incident management**（Monitor）— 一批改進的整合，但核心來自更早之前
+
+      **方法論：**
+      - 將多個小型 MVC 整合為較大的主題，而非逐一列出個別功能
+      - 以興奮度 1-3 作為 stack rank（各取一個，而非原始分數）
+      - 回顧過去一年，找出當初為 beta、現已 GA-ready 的功能
+      - 重用 GitLab 14.0 發布內容並加入新增項目
+      - 目標：整體 top 5 供 PR 團隊作為 keynote 素材
+    grading_criteria:
+      - "已建立檔案 feature_priorities.md"
+      - "至少列出 8 個不同的功能或功能組合"
+      - "UX improvements 被辨識為 top pick"
+      - "Vulnerability management 被辨識為 top pick"
+      - "GitOps/Kubernetes agent 被辨識為 top pick"
+      - "提及 CI/CD 的 Pipeline editor"
+      - "Fuzzing 因先前媒體報導而被降低優先序"
+      - "已記下社群貢獻（VS Code、Terraform module）"
+      - "已掌握整合（bundling）方法論（把 MVCs 整合為主題）"
+      - "已包含整體 top 5 名選區段"
+    llm_judge_rubric: |
+      ### 評分項 1：功能擷取完整度（權重 30%）
+
+      **1.0 分**：列出所有討論到的功能，包含 UX improvements、vulnerability management、GitOps/K8s agent、pipeline editor、fuzzing、Semgrep、DAST Browser（Berserker）、VS Code integrations、Terraform module、value stream analytics、incident management 與 epic boards。每項皆有準確的 stage 歸屬。
+      **0.75 分**：掌握多數功能並有正確 stage 歸屬，漏掉一兩個。
+      **0.5 分**：掌握主要功能，但漏掉數個次要的。
+      **0.25 分**：僅掌握最顯而易見的功能。
+      **0.0 分**：未擷取出有意義的功能。
+
+      ### 評分項 2：優先排序準確度（權重 30%）
+
+      **1.0 分**：正確指出浮現的 top 5（UX、vulnerability management、GitOps bundle、CI/CD、Plan 待定）。準確反映興奮度等級與團隊的排序理由。記下哪些功能被降低優先序（fuzzing 因先前媒體報導）以及哪些需 follow-up。
+      **0.75 分**：top picks 大致正確，僅有少許排序問題。
+      **0.5 分**：有部分優先排序，但漏掉關鍵排名或理由。
+      **0.25 分**：功能逐條列出但無有意義的優先排序。
+      **0.0 分**：未嘗試優先排序。
+
+      ### 評分項 3：方法論記載（權重 20%）
+
+      **1.0 分**：清楚說明議定的方法論：把 MVCs 整合為主題、以 1-3 興奮度作為 stack rank、回顧過去一年找出 beta→GA 功能、重用 14.0 內容、目標整體 top 5 供 PR 使用。並記下從「每個 stage 取 3 個」改為「整體 top 5」的轉變。
+      **0.75 分**：掌握多數方法論要素。
+      **0.5 分**：提及部分方法論但不完整。
+      **0.25 分**：方法論提及含糊。
+      **0.0 分**：未記載方法論。
+
+      ### 評分項 4：背景脈絡與細節品質（權重 20%）
+
+      **1.0 分**：每個功能皆含相關背景脈絡：社群貢獻狀態、先前媒體報導、成熟度、客戶需求訊號（upvotes、MAU 討論）。並記下與 GitLab Commit keynote 的關聯。
+      **0.75 分**：背景脈絡良好，僅有少許缺口。
+      **0.5 分**：有部分背景脈絡，但許多功能缺乏細節。
+      **0.25 分**：提供的背景脈絡極少。
+      **0.0 分**：無背景脈絡或細節。
+
+  task_meeting_advisory_attendees:
+    task_name: "NTIA Advisory Board 與會者名單"
+    prompt: |
+      我這裡有一份政府諮詢委員會會議的逐字稿，存放在 `meeting-transcript.md`。這是 Commerce Spectrum Management Advisory Committee（CSMAC）於 2012 年 5 月 30 日舉行的會議。
+
+      請分析這份逐字稿，並在一個名為 `attendees.md` 的檔案中建立一份結構化的與會者名單。針對每位與會者，請包含：
+
+      - **全名**（若有提及頭銜，如 Dr.、Esq.，請一併附上）
+      - **會議中的角色**（Chair、Member、Also Present、Public Participant）
+      - **所屬組織與職稱**（依逐字稿所述）
+      - **與會方式**（In-person 或 Phone/Remote）
+      - **發言角色**（是否做了實質發言、提問，或僅報出自己的身分）
+
+      請將名單整理為以下區段：Committee Leadership、Committee Members (In-Person)、Committee Members (Remote)、Non-Member Officials、Public Participants。最後附上與會者總數的彙總計數。
+    expected_behavior: |
+      助手應該：
+
+      1. 讀取並解析會議逐字稿
+      2. 從「Members Present」名單、「Also Present」區段與對話中辨識出所有具名人物
+      3. 從星號標記（電話）與點名（roll call）判定與會方式
+      4. 將每位人物的角色與參與程度分類
+      5. 產出一份結構良好的 markdown 文件
+
+      預期的關鍵與會者：
+
+      - Dr. Brian Fontes（Chair，NENA）— In-person
+      - Larry Strickling（Asst. Secretary of Commerce）— In-person，Also Present
+      - Karl Nebbia（Associate Administrator，Office of Spectrum Management）— In-person，Also Present
+      - Tom Power（White House OSTP）— In-person，Also Present
+      - Bruce M. Washington（Designated Federal Officer）— In-person，Also Present
+      - Dale Hatfield（University of Colorado）— Remote（phone）
+      - Molly Feldman（Verizon Wireless）— Remote（phone）
+      - Doug McGinnis（Exelon）— Remote（phone）
+      - Dan Stancil（NC State）— Remote（phone）
+      - Rick Reaser（Raytheon）— Remote（phone）
+      - David Donovan — Remote（phone）
+      - Mr. Snider — Public participant（於公眾意見時段發言）
+      - 委員會成員總數：約 19-20 人
+      - 含官員與公眾的與會者總數：約 23-24 人
+    grading_criteria:
+      - "已建立檔案 attendees.md"
+      - "Brian Fontes 正確辨識為 Chair 並具 NENA 隸屬"
+      - "至少具名辨識出 15 位委員會成員"
+      - "正確辨識遠端/電話與會者（Hatfield、Feldman、McGinnis、Stancil、Reaser、Donovan）"
+      - "已列出非成員官員（Strickling、Nebbia、Power、Washington）"
+      - "多數與會者皆含所屬組織/隸屬"
+      - "正確記下與會方式（in-person 對比 phone）"
+      - "Mr. Snider 辨識為公眾參與者"
+      - "已包含與會者彙總計數"
+    llm_judge_rubric: |
+      ### 評分項 1：與會者辨識完整度（權重 35%）
+
+      **1.0 分**：所有委員會成員、官員與公眾參與者皆以正確姓名與角色辨識。無一遺漏。
+      **0.75 分**：辨識出多數與會者（18 位以上），僅有少許遺漏。
+      **0.5 分**：辨識出多數，但有數位與會者缺漏。
+      **0.25 分**：僅辨識出最突出的發言者。
+      **0.0 分**：辨識出的與會者不到一半。
+
+      ### 評分項 2：細節準確度（權重 30%）
+
+      **1.0 分**：所有組織、職稱與與會方式皆正確。Remote 對比 in-person 的狀態與逐字稿的星號標記及點名相符。
+      **0.75 分**：多數細節正確，僅一兩處小誤。
+      **0.5 分**：組織或與會方式有數處錯誤。
+      **0.25 分**：隸屬或角色有許多不準確之處。
+      **0.0 分**：細節大致錯誤或為杜撰。
+
+      ### 評分項 3：組織與結構（權重 20%）
+
+      **1.0 分**：清楚分區，分開 leadership、in-person 成員、remote 成員、官員與公眾。易於瀏覽與查閱。
+      **0.75 分**：組織良好，僅有少許結構問題。
+      **0.5 分**：有部分組織，但區段不清楚或不一致。
+      **0.25 分**：組織不佳，難以查找。
+      **0.0 分**：無有意義的結構。
+
+      ### 評分項 4：發言角色評估（權重 15%）
+
+      **1.0 分**：準確區分積極參與者（提問、做出發言）與僅在點名時報出身分者。
+      **0.75 分**：多數發言角色正確記下。
+      **0.5 分**：嘗試記下參與程度但不完整。
+      **0.25 分**：區分參與程度的努力極少。
+      **0.0 分**：未評估發言角色。
+
+  task_meeting_advisory_stakeholders:
+    task_name: "NTIA Advisory Board 利害關係人利益"
+    prompt: |
+      我這裡有一份政府諮詢委員會會議的逐字稿，存放在 `meeting-transcript.md`。這是 Commerce Spectrum Management Advisory Committee（CSMAC）於 2012 年 5 月 30 日舉行的會議，聚焦於在政府與商用無線寬頻之間共享聯邦頻譜（1755-1850 MHz band）。
+
+      請分析這份逐字稿，並在一個名為 `stakeholder_analysis.md` 的檔案中建立一份利害關係人分析。針對每個利害關係人群體或個人，請辨識：
+
+      - **利害關係人名稱/群體**（例如「Department of Defense」、「Commercial Wireless Carriers」、「NTIA」、立場鮮明的個別委員會成員）
+      - **主要利益**（他們希望從此程序中得到什麼）
+      - **提出的關切**（所表達的具體擔憂或反對）
+      - **對共享（sharing）對比遷移（relocation）的立場**（他們在這個關鍵問題上的立場）
+      - **影響力等級**（依其角色與參與程度判定為 high/medium/low）
+
+      此外也請辨識：
+
+      - 利害關係人之間的**共識領域**
+      - 利害關係人群體之間的**關鍵張力或衝突**
+      - 會議期間提出的**未解決問題**
+    expected_behavior: |
+      助手應該：
+
+      1. 讀取並分析會議逐字稿
+      2. 辨識主要利害關係人群體及其立場
+      3. 將個別成員對應到他們所代表的利益
+      4. 掌握共享對比遷移的細緻立場
+
+      關鍵利害關係人群體及其利益：
+
+      - **NTIA/Karl Nebbia**：偏好共享勝過遷移，希望建立政府與業界合作的框架，關切 $18B 的遷移成本
+      - **White House/OSTP（Tom Power）**：支持 Obama 政府的 500 MHz 目標，強調共享為關鍵途徑
+      - **商用電信業者（AT&T/Carl Povelites、Verizon/Molly Feldman）**：希望取得 3 GHz 以下的頻譜，關注遷移時程與成本準確性
+      - **國防/軍方利益（Jennifer Warren/Lockheed Martin、Rick Reaser/Raytheon）**：需保護訓練、UAV 操作、衛星上行鏈路、電子戰能力
+      - **科技公司（Kevin Kahn/Intel）**：對標準收斂（LTE）務實，希望有實際可行的技術參數
+      - **學界/獨立顧問（Charles Rush、Dale Hatfield、Dave Borth）**：力主嚴謹的技術分析、各 working group 之間採用共同參數
+      - **公共利益（Michael Calabrese/New America Foundation）**：倡議 small cell/較低功率的途徑、有效率的頻譜使用
+      - **公眾參與者（Mr. Snider）**：關切公眾意見機會的萎縮
+
+      關鍵張力：
+      - 共享對比完全遷移
+      - 轉換成本（$18B 估計遭質疑）
+      - 各 working group 之間需要共同的商用部署參數
+      - 機密/敏感資訊的存取
+      - 程序中的公眾參與
+    grading_criteria:
+      - "已建立檔案 stakeholder_analysis.md"
+      - "已辨識政府利害關係人（NTIA、DoD、DHS/Justice、White House/OSTP）"
+      - "已辨識商業界利害關係人（電信業者、設備製造商）"
+      - "已記下 NTIA 偏好共享勝過純遷移"
+      - "已提及 $18 billion 遷移成本為關鍵因素"
+      - "已描述共享與遷移途徑之間的張力"
+      - "已掌握共同技術參數的辯論（Rush/Warren/Kahn 的討論）"
+      - "已辨識至少 3 個共識或衝突領域"
+      - "個別成員立場連結到其組織利益"
+    llm_judge_rubric: |
+      ### 評分項 1：利害關係人辨識完整度（權重 30%）
+
+      **1.0 分**：辨識出所有主要利害關係人群體（政府機關、商用電信業者、設備製造商、國防承包商、學界、公共利益、公眾參與者），並在適用處附上具名代表。
+      **0.75 分**：辨識出多數利害關係人群體，僅有少許遺漏。
+      **0.5 分**：辨識出主要群體，但漏掉重要的次類別或代表。
+      **0.25 分**：僅辨識出最明顯的利害關係人（政府對比業界）。
+      **0.0 分**：利害關係人辨識不完整或不準確。
+
+      ### 評分項 2：利益與立場分析（權重 30%）
+
+      **1.0 分**：每個利害關係人的利益、關切，以及對共享對比遷移的立場皆清楚闡述，並有逐字稿佐證。細緻立場皆有掌握（例如 NTIA 從遷移轉向偏好共享、業界對確定性的渴望）。
+      **0.75 分**：對多數利害關係人立場分析良好，僅有少許缺口。
+      **0.5 分**：記下基本立場，但缺乏細緻度或佐證。
+      **0.25 分**：對利害關係人立場處理流於表面。
+      **0.0 分**：立場錯誤或未分析。
+
+      ### 評分項 3：衝突與共識對應（權重 25%）
+
+      **1.0 分**：清楚對應出關鍵張力（共享對比遷移、共同參數辯論、機密資訊存取、公眾參與、成本爭議）。共識領域亦有記下（需要合作、頻譜稀缺的現實）。
+      **0.75 分**：辨識出多數關鍵張力，僅有少許遺漏。
+      **0.5 分**：記下部分張力，但分析淺薄。
+      **0.25 分**：僅提及最明顯的衝突。
+      **0.0 分**：無衝突或共識分析。
+
+      ### 評分項 4：證據導向分析（權重 15%）
+
+      **1.0 分**：論點皆有具體引文或對逐字稿對話的引用佐證。個別成員的發言皆正確歸屬。
+      **0.75 分**：多數論點皆有逐字稿證據佐證。
+      **0.5 分**：提供部分證據，但許多論點無佐證。
+      **0.25 分**：大致為斷言式而無逐字稿支撐。
+      **0.0 分**：未使用逐字稿證據。
+
+  task_meeting_advisory_technical:
+    task_name: "NTIA Advisory Board 技術討論"
+    prompt: |
+      我這裡有一份政府諮詢委員會會議的逐字稿，存放在 `meeting-transcript.md`。這是 Commerce Spectrum Management Advisory Committee（CSMAC）於 2012 年 5 月 30 日舉行的會議，聚焦於 1755-1850 MHz band 的聯邦頻譜管理。
+
+      請分析這份逐字稿，並將所有技術討論擷取成一份名為 `technical_discussions.md` 的結構化報告。針對每個技術主題，請包含：
+
+      - **主題標題**（清楚、具描述性的名稱）
+      - **涉及的頻段**（討論到的具體 MHz 範圍）
+      - **受影響的聯邦系統/應用**（該頻段中有哪些政府用途）
+      - **所描述的技術挑戰**（具體的工程或干擾問題）
+      - **提議的途徑或解決方案**（為解決此問題所建議的做法）
+      - **Working group 指派**（由所提議的 5 個 working groups 中的哪一個處理）
+
+      此外也請提供：
+
+      - 對所提議的**五個 working groups** 的摘要，含其範圍與政府方共同主席（co-chair）指派
+      - 關於商用部署參數的**關鍵技術辯論**（需要哪些參數，以及為何這些參數對共享分析很重要）
+      - 提及的任何**具體技術量測或測試**（例如 T-Mobile/CTIA STA）
+    expected_behavior: |
+      助手應該：
+
+      1. 讀取並解析會議逐字稿
+      2. 擷取所有討論到的技術主題
+      3. 將主題對應到五個提議的 working groups
+      4. 掌握技術參數辯論
+
+      預期的關鍵技術主題：
+
+      - **氣象衛星接收器（1695-1710 MHz）**：接收器周邊的排除區（exclusion areas），有可能透過更佳的商用環境建模加以縮小（Working Group 1，co-chair：Yvonne Navarro/NOAA，NTIA 代表：Ed Drocella）
+      - **執法監視（Law enforcement surveillance）**：寬頻接收器、全國性授權、三步驟轉換計畫（先退出 1755-1780，再壓縮，最後離開該頻段）（Working Group 2，co-chair 來自 DHS/Justice，NTIA 代表：Rich Orsulak、Scott Jackson）
+      - **衛星控制上行鏈路（Satellite control uplinks）**：短期內無法遷移，干擾問題是「干擾進入業界」（而非來自業界），需要保護用的法規架構（Working Group 3）
+      - **電子戰訓練（Electronic warfare training）**：軍方需針對商用技術進行訓練（敵方以手機作為觸發器），需要有保障的存取（Working Group 3）
+      - **戰術無線電中繼與固定微波（Tactical Radio Relay and Fixed Microwave）**：來自 1710-1755 遷移的既有經驗，永久站址周邊的排除區可加以縮小，Gary Patrick 參與其中（Working Group 4）
+      - **空中操作（UAVs、precision-guided munitions、空戰訓練、telemetry）**：最大的挑戰，高功率空中發射源對比地面接收器，以 T-Mobile/CTIA STA 進行量測（Working Group 5，DoD 的 John Hunter）
+      - **商用部署參數辯論**：Rush/Warren/Kahn/Calabrese 討論需要統一參數（LTE 標準、macrocells 對比 small cells、功率位準）作為對所有 working groups 的共同輸入
+    grading_criteria:
+      - "已建立檔案 technical_discussions.md"
+      - "已涵蓋氣象衛星排除區主題（1695-1710 MHz）"
+      - "已描述執法監視轉換計畫（三步驟流程）"
+      - "已辨識衛星上行鏈路保護問題（並記下干擾方向）"
+      - "已提及電子戰訓練需求"
+      - "空中操作被辨識為最大的挑戰"
+      - "已列出五個 working groups 及其範圍"
+      - "已提及 T-Mobile/CTIA STA 量測請求"
+      - "已掌握商用參數辯論（LTE、small cells、macrocells）"
+    llm_judge_rubric: |
+      ### 評分項 1：技術準確度（權重 35%）
+
+      **1.0 分**：所有技術主題皆準確擷取，頻段、系統描述與干擾動態皆正確。干擾的方向（例如衛星上行鏈路——干擾是進入業界，而非來自業界）正確記下。
+      **0.75 分**：多數技術細節正確，僅有少許不準確。
+      **0.5 分**：辨識出概略主題，但技術細節含糊或部分不正確。
+      **0.25 分**：有數處技術錯誤或誤述。
+      **0.0 分**：技術內容大致不正確。
+
+      ### 評分項 2：技術主題完整度（權重 25%）
+
+      **1.0 分**：涵蓋所有主要技術主題：氣象衛星、執法監視、衛星上行鏈路、電子戰、戰術無線電中繼、固定微波、空中操作，以及商用參數辯論。
+      **0.75 分**：涵蓋多數主題，僅有一兩處遺漏。
+      **0.5 分**：涵蓋主要主題，但漏掉數個次要主題。
+      **0.25 分**：僅擷取出兩三個主題。
+      **0.0 分**：擷取出的技術內容極少。
+
+      ### 評分項 3：Working Group 對應（權重 20%）
+
+      **1.0 分**：五個 working groups 皆清楚描述，含其範圍、所指派的技術主題、具名人員（co-chairs、NTIA 代表）與目標完成日期（WG1 為 September，其餘為 January）。
+      **0.75 分**：working groups 皆有描述且多數細節正確。
+      **0.5 分**：提及 working groups 但細節不完整。
+      **0.25 分**：僅有部分 working group 資訊。
+      **0.0 分**：無 working group 資訊。
+
+      ### 評分項 4：結構與實用性（權重 20%）
+
+      **1.0 分**：報告組織良好，每個主題清楚劃分，易於作為參考。技術挑戰與提議的解決方案清楚分開。
+      **0.75 分**：結構良好，僅有少許組織問題。
+      **0.5 分**：內容齊備但組織不佳。
+      **0.25 分**：雜亂無章，難以查找特定主題。
+      **0.0 分**：無有意義的結構。

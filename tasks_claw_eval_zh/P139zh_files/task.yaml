@@ -1,0 +1,67 @@
+task_id: P139zh_files
+task_name: 檔案結構建立
+version: 0.2.0
+category: skills
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- skills
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_files
+  original_file: tasks/task_files.md
+prompt:
+  text: |-
+    請建立一個專案結構，包含：src/ 目錄、含 hello world 的 src/main.py、含專案標題的
+    README.md，以及一個會忽略 **pycache** 的 .gitignore。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 120
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立目錄 `src/`
+- 已建立檔案 `src/main.py`
+- '`src/main.py` 含有效的 Python hello world 程式碼'
+- 已建立檔案 `README.md`
+- '`README.md` 含專案標題／標頭'
+- 已建立檔案 `.gitignore`
+- '`.gitignore` 含 `__pycache__` 項目'
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 建立一個名為 `src/` 的目錄
+  2. 建立一個含 hello world 程式的檔案 `src/main.py`
+  3. 建立一個含專案標題的檔案 `README.md`
+  4. 建立一個包含 `__pycache__` 的檔案 `.gitignore`
+  5. 確保所有檔案都有適當的內容
+
+  這項任務測試助手執行基本檔案操作，以及建立標準專案結構的能力。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

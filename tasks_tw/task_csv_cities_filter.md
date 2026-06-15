@@ -1,0 +1,168 @@
+---
+id: task_csv_cities_filter
+name: 台灣縣市資料多條件篩選分析
+category: csv_analysis
+grading_type: hybrid
+timeout_seconds: 180
+language: zh
+locale: zh-TW
+region: TW
+source_task_id: task_csv_cities_filter
+source_benchmark: pinchbench
+source_locale: zh-TW
+localization: taiwan
+localization_strategy: fixture_replace
+claw_eval_tw_id: T073tw_csv_cities_filter
+workspace_files:
+- source: tw/csvs/tw_cities.csv
+  dest: tw_cities.csv
+grading_weights:
+  automated: 0.6
+  llm_judge: 0.4
+---
+
+# 台灣縣市資料多條件篩選分析
+
+## Prompt
+
+我的工作區裡有一個 CSV 檔案 tw_cities.csv，內含台灣 22 個縣市的資料。欄位為：
+City（縣市名）、Region（區域：北部／中部／南部／東部／外島）、Population（人口）、
+lat（緯度）、lon（經度）。
+
+請完成下列篩選分析，並把結果寫入 cities_filter_report.md：
+
+1. **直轄市（六都）人口篩選**：列出六都（新北市、臺中市、高雄市、臺北市、桃園市、
+   臺南市）中人口 ≥ 2,000,000 的縣市，依人口由大到小排序，並附該集合的數量與總人口。
+2. **南部大縣市**：找出 Region 為「南部」且人口 ≥ 1,000,000 的縣市，列出人口。
+3. **臺北市 vs 高雄市**：比較這兩個縣市的人口，指出哪一個較多。
+4. **中型縣市**：找出人口介於 500,000 與 1,000,000（含）之間的縣市，報告數量並依
+   縣市名列出。
+5. **北部區域合計**：篩選 Region 為「北部」的縣市，報告總數、總人口，以及人口前 5 名。
+
+注意：CSV 檔名、欄名與報告檔名 cities_filter_report.md 不可更改。
+
+## Expected Behavior
+
+助手應讀取 tw_cities.csv 並得出（已由程式從 fixture 驗算）：
+1. 六都 ≥ 2,000,000：新北市、臺中市、高雄市、臺北市、桃園市（共 5 個；臺南市約 186 萬
+   未達門檻被排除）；總人口約 14,427,922。
+2. 南部 ≥ 1,000,000：高雄市、臺南市。
+3. 高雄市（約 2,738,041）人口多於臺北市（約 2,494,813）。
+4. 中型（500,000–1,000,000）：屏東縣、新竹縣、苗栗縣、雲林縣（共 4 個）。
+5. 北部：共 7 個縣市（新北、臺北、桃園、新竹縣、新竹市、宜蘭、基隆），總人口約
+   10,690,039；前 5 名：新北市、臺北市、桃園市、新竹縣、新竹市。
+
+## Grading Criteria
+
+- [ ] 建立報告檔案 cities_filter_report.md
+- [ ] 六都人口篩選正確（5 個，含新北/臺中/高雄/臺北/桃園，排除臺南）
+- [ ] 南部大縣市正確（高雄市、臺南市）
+- [ ] 臺北市 vs 高雄市比較正確（高雄較多）
+- [ ] 中型縣市篩選正確（屏東/新竹縣/苗栗/雲林，共 4 個）
+- [ ] 北部區域合計正確（7 個縣市，前段含新北/臺北/桃園）
+
+## Automated Checks
+
+```python
+def grade(transcript: list, workspace_path: str) -> dict:
+    """Taiwan cities multi-filter grader. Values recomputed from tw_cities.csv."""
+    from pathlib import Path
+    import re
+    workspace = Path(workspace_path)
+    report = workspace / "cities_filter_report.md"
+    if not report.exists():
+        for alt in ["filter_report.md", "report.md", "cities_report.md"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
+                break
+    if not report.exists():
+        return {k: 0.0 for k in ["report_created", "six_cities_filter", "southern_filter",
+                                 "taipei_kaohsiung", "midsize_filter", "northern_filter"]}
+    scores = {"report_created": 1.0}
+    c = report.read_text(encoding="utf-8", errors="ignore")
+    # F1 六都>=2M: 5 cities incl 新北/臺中/高雄/臺北/桃園
+    six = sum(1 for x in ["新北", "臺中", "高雄", "臺北", "桃園"] if x in c)
+    has5 = bool(re.search(r'(?:5|五)\s*(?:個|縣市|都)', c))
+    scores["six_cities_filter"] = 1.0 if (six >= 5 and has5) else (0.5 if six >= 4 else 0.0)
+    # F2 南部>=1M: 高雄 + 臺南
+    scores["southern_filter"] = 1.0 if ("高雄" in c and "臺南" in c) else 0.0
+    # F3 臺北 vs 高雄
+    tk = ("臺北" in c and "高雄" in c)
+    # accept stating 高雄 larger, or both populations present
+    kbig = bool(re.search(r'高雄.{0,12}(?:多|大|高|>|超過)', c)) or "2,738,041" in c or "2738041" in c
+    scores["taipei_kaohsiung"] = 1.0 if (tk and kbig) else (0.5 if tk else 0.0)
+    # F4 中型 500k-1M: 屏東/新竹縣/苗栗/雲林, count 4
+    mid = sum(1 for x in ["屏東", "新竹縣", "苗栗", "雲林"] if x in c)
+    scores["midsize_filter"] = 1.0 if mid >= 4 else (0.5 if mid >= 2 else 0.0)
+    # F5 北部: 7 cities + 新北/臺北/桃園
+    n7 = bool(re.search(r'(?:7|七)\s*(?:個|縣市)', c))
+    ncities = sum(1 for x in ["新北", "臺北", "桃園"] if x in c)
+    scores["northern_filter"] = 1.0 if (n7 and ncities >= 3) else (0.5 if ncities >= 2 else 0.0)
+    return scores
+
+
+# --- Bilingual report normalization (中文 report -> English keywords) ---
+# See docs/claw_eval_zh_schema.md §8 and scripts/lib_zh.py. The English-only
+# path is unchanged (no CJK in reports -> direct passthrough, no shadow copy).
+try:
+    from lib_zh import normalize_zh_to_en as _zh_normalize
+except Exception:  # noqa: BLE001
+    def _zh_normalize(_text):
+        return _text
+
+_GRADE_IMPL = grade
+
+
+def grade(transcript, workspace_path):  # noqa: F811
+    """Shadow-normalize Chinese report text, then run the original grade()."""
+    import shutil
+    import tempfile
+    from pathlib import Path as _P
+
+    text_exts = (".md", ".txt", ".rst", ".markdown")
+    ws = workspace_path
+    try:
+        src = _P(workspace_path)
+        if src.exists() and src.is_dir():
+            needs = False
+            for f in src.rglob("*"):
+                if f.is_file() and f.suffix.lower() in text_exts:
+                    try:
+                        if any("一" <= c <= "鿿" for c in f.read_text(encoding="utf-8")):
+                            needs = True
+                            break
+                    except (OSError, UnicodeDecodeError):
+                        pass
+            if needs:
+                shadow = _P(tempfile.mkdtemp(prefix="cez_ws_")) / "ws"
+                shutil.copytree(src, shadow, dirs_exist_ok=True)
+                for f in shadow.rglob("*"):
+                    if f.is_file() and f.suffix.lower() in text_exts:
+                        try:
+                            f.write_text(
+                                _zh_normalize(f.read_text(encoding="utf-8")),
+                                encoding="utf-8",
+                            )
+                        except (OSError, UnicodeDecodeError):
+                            pass
+                ws = str(shadow)
+    except Exception:  # noqa: BLE001
+        ws = workspace_path
+    return _GRADE_IMPL(transcript, ws)
+
+```
+
+## LLM Judge Rubric
+
+### 評分項 1：篩選正確度（權重 60%）
+- 1.0：五項篩選的縣市清單、數量、總人口皆正確
+- 0.5：多數正確但有少量錯誤或遺漏
+- 0.0：篩選邏輯明顯錯誤
+### 評分項 2：呈現與排序（權重 25%）
+- 1.0：排序正確、表格清楚、數量與總和明確標示
+- 0.5：大致可讀但排序或標示有瑕疵
+- 0.0：雜亂或缺漏
+### 評分項 3：完整度（權重 15%）
+- 1.0：五項全做
+- 0.5：遺漏一兩項
+- 0.0：多數未做

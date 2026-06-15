@@ -1,0 +1,96 @@
+task_id: T105tw_log_syslog_anomalies
+task_name: Linux Syslog — 異常偵測
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_syslog_anomalies.md
+  original_task_id: task_log_syslog_anomalies
+  original_file: tasks/task_log_syslog_anomalies.md
+prompt:
+  text: "請分析位於 `syslog.log` 的 Linux syslog，找出異常或可疑的條目。此日誌來自一台名為\n「combo」、執行 Linux 2.6 核心的伺服器，涵蓋數個月的活動。\n\
+    \n你的報告應包含：\n\n1. **日誌總覽（Log Overview）**：總條目數、日期範圍、依量排序的主要服務\n2. **安全異常（Security Anomalies）**：顯示潛在攻擊、漏洞利用（exploit）或未授權存取\n\
+    \   嘗試的條目\n3. **格式字串攻擊偵測（Format String Attack Detection）**：尋找服務輸入中帶有異常二進位\n   內容或漏洞利用酬載（payload）的條目\n\
+    4. **FTP 異常（FTP Anomalies）**：此日誌有大量 FTP 流量 — 找出任何可疑的 FTP 連線型態\n   （爆量、異常來源）\n5. **rpc.statd 漏洞利用（rpc.statd\
+    \ Exploitation）**：檢查 rpc.statd 帶有畸形主機名的\n   gethostbyname 錯誤（緩衝區溢位嘗試）\n6. **異常總結（Anomaly Summary）**：依嚴重性與證據，排名最值得關注的前\
+    \ 5 個異常\n\n請將報告寫入 `syslog_anomalies.md`，以結構良好的 markdown 文件呈現。"
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/linux_syslog.log
+  dest: syslog.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `syslog_anomalies.md`
+- 提供含日期範圍與服務分布的日誌總覽
+- 辨識出 rpc.statd 格式字串攻擊為安全異常
+- 分析 FTP 連線型態
+- 標示出 SSH 驗證失敗
+user_agent:
+  enabled: false
+judge_rubric: '依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+
+  - 已在工作區建立 `syslog_anomalies.md`
+
+  - 提供含日期範圍與服務分布的日誌總覽
+
+  - 辨識出 rpc.statd 格式字串攻擊為安全異常
+
+  - 分析 FTP 連線型態
+
+  - 標示出 SSH 驗證失敗'
+reference_solution: "助手應解析 5000 筆條目並辨識出：\n\n**日誌總覽：**\n- 5000 筆條目，6 月 9 日到 9 月 14 日（依核心版本推斷為 2005 年）\n\
+  - 主要服務：ftpd（1655）、sshd/pam_unix（1610）、kernel（545）、su/pam_unix（394）\n\n**安全異常：**\n1. **rpc.statd 格式字串攻擊**（6\
+  \ 月 13 日約 9 筆）：\n   - `gethostbyname error for ^X...%8x%8x...%hn%51859x%hn` — 這是針對 rpc.statd 的\n   \
+  \  緩衝區溢位/格式字串漏洞利用嘗試\n   - 此酬載含格式字串指定符（%x、%hn），是典型的漏洞利用模式\n2. **SSH 暴力破解** — 大量 sshd(pam_unix) 驗證失敗\n\
+  3. **FTP 洪泛** — 1655 筆 FTP 連線條目，並出現爆量（例如 209.184.7.130 有多筆同時連線）\n4. **驗證失敗** — 跨 SSH 與其他服務共 2000+ 筆\
+  \ pam_unix 驗證失敗條目\n\n**rpc.statd 漏洞利用：**\n- 6 月 13 日 11:55:04–11:55:09 共 9 筆\n- 畸形主機名含 NOP sled（\\220\\\
+  220\\220\\220）與格式字串酬載\n- 這是一次嘗試遠端程式碼執行（remote code execution）的漏洞利用\n\n可接受的差異：\n- 異常的排名可能不同\n- 歡迎找出預期之外的額外異常\n\
+  - 嚴重性評估會有所不同"
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: syslog.log
+    source: logs/linux_syslog.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

@@ -1,0 +1,140 @@
+task_id: T128tw_meeting_blog_post
+task_name: |
+  會議轉部落格文章
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_blog_post.md
+  original_task_id: task_meeting_blog_post
+  original_file: tasks/task_meeting_blog_post.md
+prompt:
+  text: |-
+    我手上有一個檔案 `meeting_transcript.md`，內含 2021-06-28 舉行的 GitLab 產品行銷團隊會議逐字稿。團隊討論了他們如何處理產品公告、競品定位與訊息傳達。
+
+    請以這場會議作為素材，撰寫一篇部落格文章，談產品行銷團隊在公司採增量出貨（持續交付／開源模式）而非大爆炸式發布（big-bang releases）時，如何有效溝通產品上市。
+
+    請以英文撰寫這篇部落格文章，並寫入名為 `blog_post.md` 的檔案。要求：
+
+    - **標題（Title）**：取一個吸引人的標題
+    - **長度**：600-1000 字
+    - **讀者對象**：產品行銷專業人士與 DevOps 實務工作者
+    - **切入角度**：援引會議中關於「當路線圖公開、功能以 MVC／迭代方式出貨時，要如何做公告」這個挑戰的討論，提出洞見
+    - **必含**：至少 2-3 個其他團隊可套用的具體策略或經驗
+    - **語氣**：資訊性且務實，而非會議回顧
+
+    這篇請讀起來像一篇可獨立成篇的部落格文章，而非會議摘要。請把會議內容當作靈感與素材，但撰寫原創內容。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+  dest: meeting_transcript.md
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.4
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.6
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立 `blog_post.md` 檔案
+- 有吸引人的標題（非「Meeting Summary」之類）
+- 切中持續交付模式下做公告的核心挑戰
+- 包含至少 2 個具體策略或建議
+- 讀起來像可獨立成篇的部落格文章（而非會議回顧）
+- 長度適當（400-1200 字）
+- 針對目標讀者撰寫（產品行銷／DevOps）
+- 語氣專業且具資訊性
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：內容品質與洞見（權重 40%）
+
+  **1.0 分**：部落格文章從會議中萃取出真正有用的洞見，並以可執行建議的形式呈現。策略具體（把 MVC 打包成主題、運用成熟度里程碑、活動驅動的時機），並輔以推理。產品行銷專業人士會學到有用的東西。
+
+  **0.75 分**：洞見良好且建議扎實，僅在深度或具體性上有少許缺漏。
+
+  **0.5 分**：有一些有用內容，但大多停留在表層，或為未紮根於素材的通用行銷建議。
+
+  **0.25 分**：洞見薄弱，大多是空泛的老生常談。
+
+  **0.0 分**：沒有有意義的內容，或只是會議回顧。
+
+  ### 評分項 2：寫作品質（權重 35%）
+
+  **1.0 分**：以英文撰寫，讀起來像出自行銷刊物的成熟部落格文章。有吸睛的開頭、合乎邏輯的脈絡、清楚的結構與有力的結論。運用具體例子但不淪為會議逐字稿。適合目標讀者且不堆砌術語。
+
+  **0.75 分**：寫得好，結構良好，僅有少許粗糙之處。
+
+  **0.5 分**：可讀但像草稿——結構或脈絡仍需打磨。
+
+  **0.25 分**：寫作不佳、難以追隨，語氣不恰當，或未以英文撰寫。
+
+  **0.0 分**：無法辨識為一篇部落格文章。
+
+  ### 評分項 3：原創性與轉化（權重 25%）
+
+  **1.0 分**：成功把內部會議討論轉化為普遍適用的內容。會議是素材，而非主題。讀者不會知道這出自某次特定的會議逐字稿。加入了讓建議廣泛相關的脈絡與框架。
+
+  **0.75 分**：大致原創且歸納良好，偶有可再修飾的會議專屬指涉。
+
+  **0.5 分**：部分轉化，但仍略讀起來像會議回顧，或過於 GitLab 專屬。
+
+  **0.25 分**：幾乎未轉化——大多在描述會議中發生的事。
+
+  **0.0 分**：只是貼了「部落格文章」標籤的會議摘要。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取會議逐字稿
+  2. 辨識關鍵洞見：GitLab 採持續出貨且路線圖公開，使得傳統的「上市」公告變得困難
+  3. 擷取討論到的策略：
+     - 把小型 MVC 打包成較大的敘事主題（例如「vulnerability management」涵蓋許多小型發布）
+     - 回顧過去一年，找出哪些功能現在已達「GA-ready」，即使個別零件較早就已出貨
+     - 用興奮程度／堆疊排序（stack ranking）來決定優先突出哪些
+     - 建立敘事桶（narrative buckets，如 UX 改善、GitOps 能力、安全），把多個功能打包在一起
+     - 把公告時機安排在活動（Commit 大會）前後，以爭取媒體關注
+     - 以正面框架陳述改善（用「新能力」而非「我們修好了壞掉的東西」）
+  4. 撰寫一篇將上述歸納為可執行建議的部落格文章（以英文撰寫）
+  5. 維持適合行銷／DevOps 讀者的專業、資訊性語氣
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.4
+    llm_judge: 0.6
+  workspace_files:
+  - source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+    dest: meeting_transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

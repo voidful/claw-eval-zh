@@ -1,0 +1,83 @@
+task_id: T032tw_git_rescue_recovery
+task_name: Git 搶救／復原
+version: 0.3.0
+category: coding
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- coding
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_git_rescue_recovery.md
+  original_task_id: task_git_rescue_recovery
+  original_file: tasks/task_git_rescue_recovery.md
+prompt:
+  text: |-
+    請將下列 git 復原需求翻譯成指令，並儲存到 `recovery.sh`，每行一條指令，不要附加
+    任何說明：
+
+    我不小心把最近的 2 個 commit 提交在 `main` 上，但它們其實應該屬於一個名為
+    `feature/login-fix` 的新分支。這些 commit 尚未被 push。請把那 2 個 commit 移到
+    該新分支，並讓 `main` 指向它們之前的那個 commit。
+
+    這些指令應假設是從受影響的儲存庫（repository）內部執行。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 120
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立檔案 `recovery.sh`
+- 檔案僅包含非空的 git 指令
+- 指令在受控的儲存庫 fixture 中能成功執行
+- 執行後分支 `feature/login-fix` 存在
+- '`main` 被重設到最近兩個 commit 之前的那個 commit'
+- 兩個放錯位置的 commit 被保留在 `feature/login-fix` 上
+- 儲存庫最終處於乾淨的工作樹（working tree）狀態
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該將一連串 git 指令寫入 `recovery.sh`，以正確修復儲存庫的狀態。
+
+  成功的解法必須：
+
+  1. 將最近的兩個 commit 保留在名為 `feature/login-fix` 的新分支上
+  2. 將 `main` 倒退兩個 commit，使其指向先前的基底 commit
+  3. 在指令執行完成後，讓儲存庫處於乾淨（clean）狀態
+
+  可接受的解法可以先建立新分支再重設 `main`，或先切換到新分支、之後再回到 `main`
+  進行重設。由於這些 commit 明確尚未被 push，在 `main` 上重寫本機歷史是可以接受的。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: language_polish
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

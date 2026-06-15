@@ -1,0 +1,74 @@
+task_id: P002zh_calendar
+task_name: 行事曆事件建立
+version: 0.2.0
+category: productivity
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- productivity
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_calendar
+  original_file: tasks/task_calendar.md
+prompt:
+  text: |-
+    你沒有存取真實行事曆的權限。請改以在工作區（workspace）中撰寫一個 ICS
+    （iCalendar）檔案的方式，模擬建立一筆行事曆事件。請依照下方說明操作，並把它
+    當成使用者的需求來處理。
+
+    使用者需求：請在下週二（next Tuesday）下午 3 點安排一場會議，與會者為
+    john@example.com。標題設為「Project Sync」，並加上一段備註，說明要討論
+    Q1 roadmap。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 120
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立事件檔案（ICS 或同等格式）
+- 日期設為從執行日起算的下週二
+- 時間設為下午 3:00（15:00）
+- 已包含與會者 john@example.com
+- 標題／摘要為「Project Sync」
+- 描述中提及 Q1 roadmap
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該以在工作區中產生一個 ICS（iCalendar）檔案的方式來模擬行事曆建立
+  （不存取任何外部行事曆）。助手需要：
+
+  1. 根據目前日期解析相對日期「next Tuesday（下週二）」
+  2. 將時間設定為下午 3:00（15:00）
+  3. 包含與會者的電子郵件地址
+  4. 設定事件標題／摘要（summary）
+  5. 加入一段提及 Q1 roadmap 的描述（description）
+
+  其他做法（例如建立其他結構化資料檔）也可以接受，但 ICS 格式最具可攜性、也最
+  容易測試。請勿提及缺少行事曆整合一事；請把這項任務視為一次建立檔案的模擬。
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

@@ -1,0 +1,113 @@
+task_id: T007tw_cron_organizer
+task_name: Cron 排程表達式產生器
+version: 0.3.0
+category: productivity
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- productivity
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_cron_organizer.md
+  original_task_id: task_cron_organizer
+  original_file: tasks/task_cron_organizer.md
+prompt:
+  text: '請把下面用白話描述的排程，轉成格式正確的 cron 排程表達式，並把結果用 JSON 陣列
+
+    存到 `cron_expressions.json`。
+
+
+    每一筆項目請提供：
+
+    - `description`：原始的白話描述
+
+    - `cron`：cron 表達式（標準 5 欄位格式：minute hour day-of-month month day-of-week）
+
+    - `explanation`：簡短、好懂地說明它什麼時候會跑
+
+
+    **要轉換的排程：**
+
+
+    1. 「每個工作日上午 9:00」
+
+    2. 「每 15 分鐘」
+
+    3. 「每月 1 號午夜」
+
+    4. 「每週日下午 3:30」
+
+    5. 「從午夜起每 6 小時」
+
+    6. 「週一到週五下午 5:00」
+
+    7. 「每天兩次，早上 8 點與晚上 8 點」
+
+    8. 「工作日上班時間（上午 9 點到下午 5 點）內每隔一刻鐘」
+
+    9. 「每月最後一個工作日下午 6 點」（近似——用 28 號代替）
+
+    10. 「每週六凌晨 2 點到 4 點之間每 5 分鐘」'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 120
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立 `cron_expressions.json` 且為有效 JSON
+- 全部 10 筆排程都已轉換
+- 工作日上午 9 點正確（0 9 * * 1-5）
+- 每 15 分鐘正確（*/15 * * * *）
+- 每月 1 號午夜正確（0 0 1 * *）
+- 週日下午 3:30 正確（30 15 * * 0）
+- 每 6 小時正確（0 */6 * * *）
+- 週一至週五下午 5 點正確（0 17 * * 1-5）
+- 每天兩次大致正確
+- 每一筆項目都含有 description、cron、explanation 欄位
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: '助手應該：
+
+
+  1. 解析每一筆白話描述
+
+  2. 產生正確的 5 欄位 cron 表達式
+
+  3. 附上一段確認該排程的說明
+
+  4. 將所有結果儲存到 `cron_expressions.json`'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

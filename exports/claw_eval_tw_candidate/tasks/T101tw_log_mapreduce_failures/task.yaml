@@ -1,0 +1,155 @@
+task_id: T101tw_log_mapreduce_failures
+task_name: MapReduce 日誌 — 失敗任務分析
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_mapreduce_failures.md
+  original_task_id: task_log_mapreduce_failures
+  original_file: tasks/task_log_mapreduce_failures.md
+prompt:
+  text: '請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，找出任何任務失敗、
+
+    錯誤或異常。聚焦於執行期間出錯的任何狀況。
+
+
+    你的報告應包含：
+
+
+    1. **錯誤與警告條目（Error and Warning Entries）**：列出所有 WARN 與 ERROR 級別的日誌條目及完整脈絡
+
+    2. **任務重試（Task Retries）**：找出任何需要多次嘗試的任務（尋找嘗試編號 > 0 者）
+
+    3. **根因分析（Root Cause Analysis）**：針對每個錯誤，說明可能的成因
+
+    4. **I/O 錯誤（I/O Errors）**：詳述任何 IOException 或網路相關的失敗
+
+    5. **影響評估（Impact Assessment）**：是否有任何失敗影響了整體工作結果？
+
+    6. **失敗預防（Failure Prevention）**：建議可避免這些失敗在未來重現的變更
+
+
+    請將報告寫入 `mapreduce_failures.md`，以結構良好的 markdown 文件呈現。'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hadoop_mapreduce.log
+  dest: mapreduce.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `mapreduce_failures.md`
+- 列出 WARN 與 ERROR 條目（4 筆 WARN、1 筆 ERROR）
+- 辨識出任務重試（m_000006 與 m_000007 重試）
+- 分析 IOException / bad response 錯誤
+- 影響評估中記下工作仍然成功
+user_agent:
+  enabled: false
+judge_rubric: '依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+
+  - 已在工作區建立 `mapreduce_failures.md`
+
+  - 列出 WARN 與 ERROR 條目（4 筆 WARN、1 筆 ERROR）
+
+  - 辨識出任務重試（m_000006 與 m_000007 重試）
+
+  - 分析 IOException / bad response 錯誤
+
+  - 影響評估中記下工作仍然成功'
+reference_solution: '助手應辨識出：
+
+
+  **WARN 條目（共 4 筆）：**
+
+  1. ResponseProcessor，針對區塊 BP-1347369012-10.190.173.170-1444972147527:blk_1073742514_1708 — 與 I/O 問題相關
+
+  2. DataStreamer，針對檔案 /tmp/hadoop-yarn/staging/msrabi/.staging/job_1445062781478_0011/job — 寫入管線（pipeline）問題
+
+  3. CommitterEvent Processor — FileOutputCommitter 復原任務計數問題
+
+
+  **ERROR 條目（共 1 筆）：**
+
+  1. java.io.IOException: Bad response ERROR for block BP-1347369012-10.190.173.170-1444972147527:blk_1073742514_1708
+  from datanode — 區塊寫入期間的 I/O 錯誤
+
+
+  **任務重試：**
+
+  - attempt_1445062781478_0011_m_000006_1（m_000006_0 的重試）
+
+  - attempt_1445062781478_0011_m_000007_1（m_000007_0 的重試）
+
+  - 兩個 map 任務需要第二次嘗試，顯示為暫時性（transient）失敗
+
+
+  **根因：**
+
+  - IOException 與 WARN 條目皆與 HDFS 區塊寫入失敗有關
+
+  - 某個 DataNode 對區塊 blk_1073742514_1708 回傳「Bad response ERROR」
+
+  - 這是暫時性的 HDFS I/O 錯誤，可能由 DataNode 暫時無法使用或過載所致
+
+
+  **影響：**
+
+  - 儘管出現錯誤，整體工作仍 SUCCEEDED
+
+  - YARN 的重試機制透明地處理了這些暫時性失敗
+
+  - 10 個 map 任務中有 2 個需要重試 — 重試率 20%
+
+
+  可接受的差異：
+
+  - 根因分析的深度可能不同
+
+  - 預防建議會有所不同
+
+  - 部分助手可能找出錯誤周邊的額外脈絡'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: mapreduce.log
+    source: logs/hadoop_mapreduce.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

@@ -1,0 +1,100 @@
+task_id: P087zh_log_nginx_slow_requests
+task_name: Nginx 存取日誌 — 找出最大回應
+version: 0.2.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_log_nginx_slow_requests
+  original_file: tasks/task_log_nginx_slow_requests.md
+prompt:
+  text: |-
+    請分析位於 `nginx_access.log` 的 Nginx JSON 存取日誌，並找出產生最大回應（以傳輸位元組數計）的請求。每一行都是一個 JSON 物件，欄位有：`time`、`remote_ip`、`remote_user`、`request`、`response`、`bytes`、`referrer`、`agent`。
+
+    你的報告應包含：
+
+    1. **前 10 大回應（Top 10 Largest Responses）**：列出位元組數最高的請求，包含時間戳記、用戶端 IP、請求路徑、狀態碼與位元組數
+    2. **位元組分布摘要（Byte Distribution Summary）**：整體統計——傳輸位元組的最小值、最大值、平均數、中位數（排除零位元組回應）
+    3. **零位元組回應（Zero-Byte Responses）**：零位元組回應的計數，以及哪些狀態碼會產生這類回應
+    4. **大型回應分析（Large Response Analysis）**：哪些路徑與用戶端 IP 與最大的傳輸相關？
+    5. **效率評估（Efficiency Assessment）**：有多少百分比的請求造成實際資料傳輸，相對於快取命中（304）？
+
+    請把報告寫到 `large_responses_report.md`，以結構清晰的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/nginx_access_json.log
+  dest: nginx_access.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `large_responses_report.md`
+- 已列出最大的回應及其位元組數
+- 已將零位元組／304 回應另外分析
+- 已提供分布統計（最小值、最大值、平均數或中位數）
+- 已找出與最大回應相關的路徑
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `large_responses_report.md`
+  - 已列出最大的回應及其位元組數
+  - 已將零位元組／304 回應另外分析
+  - 已提供分布統計（最小值、最大值、平均數或中位數）
+  - 已找出與最大回應相關的路徑
+reference_solution: |-
+  助手應解析全部 1000 筆 JSON 日誌條目，並產生：
+
+  **最大回應：**
+  - 觀察到的最大位元組數：~3318 位元組
+  - 最大回應為針對 `/downloads/product_1` 與 `/downloads/product_2` 的 200 OK 回應
+  - 最高的位元組值包括：3318、3316、3301、2582、2578 等
+
+  **零位元組分析：**
+  - 304 Not Modified 回應全部為 0 位元組（274 筆）
+  - 404 回應的位元組數很小（通常落在 300-340 範圍）
+
+  **效率：**
+  - 1000 次請求中約有 274 次為 304（快取命中）—— 27.4%
+  - 帶資料的 200 OK：約 35 次請求 —— 3.5%
+  - 404 錯誤：688 次請求——這些傳輸的是小型錯誤頁面
+
+  可接受的變化：
+  - 精確的位元組值由日誌決定，具確定性
+  - 評估用語會有所不同
+  - 列前 10 名或前 20 名皆可
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: nginx_access.log
+    source: logs/nginx_access_json.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

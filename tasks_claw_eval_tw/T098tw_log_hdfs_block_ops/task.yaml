@@ -1,0 +1,124 @@
+task_id: T098tw_log_hdfs_block_ops
+task_name: HDFS DataNode 日誌 — 區塊操作摘要
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_hdfs_block_ops.md
+  original_task_id: task_log_hdfs_block_ops
+  original_file: tasks/task_log_hdfs_block_ops.md
+prompt:
+  text: |-
+    請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，產出一份所有區塊操作的完整
+    摘要。此日誌來自一個 HDFS 叢集，追蹤區塊生命週期事件。
+
+    你的報告應包含：
+
+    1. **區塊清單（Block Inventory）**：日誌中不重複區塊 ID 的總數，並附完整清單
+    2. **操作類型（Operation Types）**：針對每種操作類型（allocateBlock、Receiving、
+       Received、addStoredBlock、replicate、PacketResponder）計算總出現次數
+    3. **區塊生命週期追蹤（Block Lifecycle Tracking）**：對於每個具有完整生命週期
+       （allocate → receive → stored）的區塊，記錄完整的事件鏈
+    4. **複製鏈（Replication Chain）**：對於有複製事件的區塊，追蹤其跨節點的複製路徑
+    5. **相關工作（Associated Jobs）**：辨識觸發這些區塊操作的 MapReduce 工作（可從檔案路徑看出）
+    6. **逐區塊明細表（Per-Block Detail Table）**：建立一張表格，欄位包含：Block ID、
+       Size（如已知）、Allocated Path、Nodes Involved、Replication Count
+
+    請將報告寫入 `hdfs_block_ops_report.md`，以結構良好的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hdfs_datanode.log
+  dest: hdfs_datanode.log
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `hdfs_block_ops_report.md`
+- 提供不重複區塊計數（約 390）
+- 計數各操作類型（receiving、allocate、replicate 等）
+- 至少完整追蹤一個區塊的生命週期（allocate → receive → stored）
+- 辨識出相關的 MapReduce 工作（job_200811092030_0001）
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `hdfs_block_ops_report.md`
+  - 提供不重複區塊計數（約 390）
+  - 計數各操作類型（receiving、allocate、replicate 等）
+  - 至少完整追蹤一個區塊的生命週期（allocate → receive → stored）
+  - 辨識出相關的 MapReduce 工作（job_200811092030_0001）
+reference_solution: |-
+  助手應解析 2000 筆日誌條目並產出：
+
+  **區塊清單：**
+  - 約 390 個不重複區塊 ID
+
+  **操作計數：**
+  - Receiving block：約 1149
+  - allocateBlock：約 385
+  - Received block：約 19
+  - addStoredBlock：約 19
+  - PacketResponder：約 12
+  - Replicate：4
+
+  **完整區塊生命週期（資料完整的區塊）：**
+  - blk_-1608999687919862906：91178 bytes，為 job_200811092030_0001/job.jar 配置
+  - blk_7503483334202473044：233217 bytes，為 job_200811092030_0001/job.split 配置
+  - blk_-3544583377289625738：11971 bytes
+  - blk_-9073992586687739851：11977 bytes
+
+  **複製鏈：**
+  - blk_-1608999687919862906 在叢集中被複製 4 次：
+    10.250.14.224 → 10.251.215.16 → 10.251.74.79 → 10.251.31.5 → 10.251.90.64
+
+  **相關工作：**
+  - job_200811092030_0001 — MapReduce 工作，檔案：job.jar、job.split
+
+  可接受的差異：
+  - 區塊 ID 清單可能被截斷
+  - 不需要對全部 390 個區塊提供完整明細 — 僅需具完整生命週期資料者
+  - 表格格式可能不同
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: hdfs_datanode.log
+    source: logs/hdfs_datanode.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

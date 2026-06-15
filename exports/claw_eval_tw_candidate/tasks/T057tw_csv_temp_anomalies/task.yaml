@@ -1,0 +1,151 @@
+task_id: T057tw_csv_temp_anomalies
+task_name: 全球氣溫異常偵測
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_temp_anomalies.md
+  original_task_id: task_csv_temp_anomalies
+  original_file: tasks/task_csv_temp_anomalies.md
+prompt:
+  text: "我的工作區中有一個 CSV 檔 `global_temperature.csv`，內含全球氣溫距平\n（temperature anomaly）資料。該檔有三個欄位：`Source`（為\
+    \ \"GISTEMP\" 或\n\"gcag\"）、`Year`（格式為 YYYY-MM）與 `Mean`（相對於某基準期的氣溫距平，\n單位 °C）。\n\nGISTEMP 資料涵蓋 1880–2023，gcag\
+    \ 資料涵蓋 1850–2024。\n\n請分析此資料集的氣溫異常，並將你的發現寫入名為 `anomaly_report.md` 的檔案。\n請聚焦於 GISTEMP 來源資料。你的報告應包含：\n\
+    \n- **極端月度距平**：在 GISTEMP 紀錄中找出最熱與最冷的單一月份及其數值\n- **統計離群值（statistical outliers）**：計算每個曆月（例如所有的一月、所有的\n\
+    \  二月）跨各年的平均與標準差，找出距平超過其月平均 2 個標準差以上（z-score > 2）\n  的月份。至少列出最極端的前 10 個離群值及其 z-score\n- **最冷年份**：依年度平均距平找出最冷的\
+    \ 5 個年份\n- **最暖年份**：依年度平均距平找出最暖的 5 個年份\n- **最大的年對年變化**：找出年度平均距平中最大的 5 次年對年（year-over-year）\n  擺動（正向或負向）\n\
+    - 一段簡短的**總結**，解讀這些異常告訴我們什麼樣的氣溫型態"
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/global_temperature.csv
+  dest: global_temperature.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `anomaly_report.md`
+- 正確找出最熱月份為 2023-09，數值約 1.48°C
+- 正確找出最冷月份為 1893-01，數值約 -0.82°C
+- 最暖年份包含 2023、2016 與 2020
+- 最冷年份包含 1909 與 1904
+- 包含含 z-score 的統計離群值分析
+- 找出 2023 年 9 月為最大離群值（z-score 約 3.7–3.8）
+- 計算年對年變化並找出最大的擺動
+- 提供總結或解讀
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：資料分析正確性（權重 35%）
+
+
+  **1.0 分**：極端月份、最暖／最冷年份、z-score 與年對年變化在數值上皆正確，並以
+
+  具體數值清楚呈現。
+
+  **0.75 分**：多數數值正確，僅有一、兩處輕微落差。
+
+  **0.5 分**：部分數值正確，但有數個關鍵數字錯誤或缺漏。
+
+  **0.25 分**：少數數值正確；有重大計算錯誤。
+
+  **0.0 分**：無任何正確計算，或未嘗試分析。
+
+
+  ### 評分項 2：統計嚴謹性（權重 30%）
+
+
+  **1.0 分**：正確計算各月統計與 z-score，以正確門檻找出離群值，並以適當脈絡呈現
+
+  結果（例如解釋 z-score > 2 的意義）。
+
+  **0.75 分**：z-score 分析已具備且大致正確，僅有小問題。
+
+  **0.5 分**：有一些統計分析，但缺少 z-score 或計算錯誤。
+
+  **0.25 分**：統計分析極少，多為質性觀察。
+
+  **0.0 分**：無統計分析。
+
+
+  ### 評分項 3：報告結構與解讀（權重 20%）
+
+
+  **1.0 分**：markdown 組織良好，各分析元件分節清楚，並有一段周延的總結，將異常
+
+  連結到更廣的氣溫型態。
+
+  **0.75 分**：報告有條理，僅有小幅結構問題；有總結但較簡短。
+
+  **0.5 分**：含分析但組織不佳，或缺少總結。
+
+  **0.25 分**：雜亂或缺少主要章節。
+
+  **0.0 分**：無報告或為空。
+
+
+  ### 評分項 4：完整性（權重 15%）
+
+
+  **1.0 分**：所有要求元素皆齊備：極端月份、含 z-score 的離群值分析、最暖／最冷
+
+  年份、年對年變化與總結。
+
+  **0.75 分**：多數元素齊備，僅有一處小缺漏。
+
+  **0.5 分**：缺少數個元素。
+
+  **0.25 分**：僅有少數元素。
+
+  **0.0 分**：報告缺漏或近乎空白。'
+reference_solution: "助手應該：\n\n1. 讀取並解析 CSV 檔\n2. 篩選出 GISTEMP 紀錄（1880–2023）\n3. 找出最熱月份：2023 年 9 月，+1.48°C\n\
+  4. 找出最冷月份：1893 年 1 月，-0.82°C\n5. 計算各曆月統計並找出 z-score 離群值\n6. 計算年度平均並為年份排名\n7. 計算年度平均的年對年變化\n8. 撰寫一份結構化的\
+  \ markdown 報告\n\n預期關鍵數值：\n\n- 最熱月份（GISTEMP）：2023-09，+1.48°C\n- 最冷月份（GISTEMP）：1893-01，-0.82°C\n- 最暖的前\
+  \ 5 個年份：2023（約 1.17）、2016（約 1.01）、2020（約 1.01）、\n  2019（約 0.98）、2017（約 0.92）\n- 最冷的前 5 個年份：1909（約 -0.49）、1904（約\
+  \ -0.48）、1917（約 -0.46）、\n  1911（約 -0.45）、1910（約 -0.44）\n- 最極端的統計離群值：2023-09，z-score 約 3.76\n- 許多離群值集中在\
+  \ 2015–2023，反映暖化加速\n- 最大的年對年躍升包括 1976→1977（+0.28）與 2022→2023（+0.28）"
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/global_temperature.csv
+    dest: global_temperature.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

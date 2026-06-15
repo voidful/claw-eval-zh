@@ -1,0 +1,105 @@
+task_id: P137zh_memory
+task_name: 從情境中擷取記憶
+version: 0.2.0
+category: memory
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- memory
+- multi_turn
+source:
+  benchmark: pinchbench
+  original_task_id: task_memory
+  original_file: tasks/task_memory.md
+prompt:
+  text: |-
+    請閱讀 notes.md 中的專案筆記，並回答：beta 版發布的截止日期是哪一天？
+    請將你的答案儲存到 answer.txt。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 120
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立檔案 `answer.txt`
+- 答案包含日期「June 1, 2024」或等價寫法
+- 答案清楚並直接回答了問題
+- 助手確實讀取了 notes.md 檔案（可從對話記錄中看出）
+- 沒有杜撰或錯誤的資訊
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 從工作區（workspace）讀取檔案 `notes.md`
+  2. 解析內容，找出關於 beta 版發布截止日期的資訊
+  3. 擷取出正確的日期：June 1, 2024
+  4. 建立一個名為 `answer.txt` 的檔案，內含答案
+  5. 將答案清楚地表達出來
+
+  本任務測試助手從情境檔案中擷取特定資訊的能力。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - path: notes.md
+    content: |-
+      # Project Phoenix - Development Notes
+
+      ## Timeline
+
+      - **Alpha Release**: March 15, 2024
+      - **Beta Release**: June 1, 2024
+      - **Production Launch**: September 30, 2024
+
+      ## Team
+
+      - Lead Developer: Sarah Chen
+      - Backend: Marcus Rodriguez, Aisha Patel
+      - Frontend: James Kim, Elena Volkov
+      - QA: David Thompson
+
+      ## Key Features
+
+      1. Real-time collaboration
+      2. Advanced analytics dashboard
+      3. Mobile app integration
+      4. API v2 with GraphQL support
+
+      ## Current Status
+
+      We're currently in the alpha testing phase with 50 internal users. Feedback has been positive, particularly regarding the new UI. The beta release is scheduled for June 1, 2024, and we're on track to meet this deadline.
+
+      ## Technical Stack
+
+      - Frontend: React 18, TypeScript
+      - Backend: Node.js, Express, PostgreSQL
+      - Infrastructure: AWS (ECS, RDS, S3)
+      - CI/CD: GitHub Actions
+
+      ## Blockers
+
+      - Need to finalize API documentation before beta
+      - Mobile app needs performance optimization
+      - Waiting on security audit completion
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

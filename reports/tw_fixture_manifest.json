@@ -1,0 +1,121 @@
+{
+  "generated_by": "Phase 3 Taiwan localization",
+  "note": "新增的台灣 fixtures 登錄表。改 fixture 必同步重算 expected values 並更新 grader/reference。",
+  "fixtures": [
+    {
+      "path": "assets/tw/csvs/tw_stock_2330_2024.csv",
+      "source_task": [
+        "task_csv_stock_trend",
+        "task_csv_stock_volatility",
+        "task_csv_stock_best_worst"
+      ],
+      "origin": "adapted_real_public",
+      "data_source": "TWSE 臺灣證券交易所 STOCK_DAY open API（官方公開市場資料）",
+      "fetch_tool": "scripts/fetch_twse_stock.py --stock 2330 --year 2024",
+      "deterministic": true,
+      "columns": [
+        "date (YYYY-MM-DD)",
+        "close (收盤價, NT$)"
+      ],
+      "trading_days": 242,
+      "expected_values": {
+        "ticker": "2330 (台積電 TSMC)",
+        "start": {
+          "date": "2024-01-02",
+          "close": 593.0
+        },
+        "end": {
+          "date": "2024-12-31",
+          "close": 1075.0
+        },
+        "pct_change_pct": 81.28,
+        "trend": "bullish 看漲",
+        "longest_up_streak_days": 6,
+        "longest_up_streak_range": "2024-09-18 .. 2024-09-26",
+        "longest_down_streak_days": 4,
+        "longest_down_streak_range": "2024-05-27 .. 2024-05-31",
+        "year_high": {
+          "date": "2024-11-08",
+          "close": 1090.0
+        },
+        "year_low": {
+          "date": "2024-01-05",
+          "close": 576.0
+        }
+      },
+      "license": "TWSE 公開資料（政府公開資訊）；僅擷取日收盤價，無受版權限制之衍生內容",
+      "risk_notes": "真實歷史市場資料，僅供 benchmark；非投資建議。"
+    },
+    {
+      "path": "assets/tw/docs/tw_company_fy2024_financials.md",
+      "source_task": [
+        "task_financial_ratio_calculation"
+      ],
+      "origin": "synthetic_illustrative",
+      "data_source": "示例資料（虛構台灣製造公司），明確標示為說明用途",
+      "deterministic": true,
+      "expected_values": {
+        "company": "（示例）鼎新精密股份有限公司",
+        "cogs_2024_twd": 84000000000,
+        "inventory_begin_twd": 12000000000,
+        "inventory_end_twd": 16000000000,
+        "average_inventory_twd": 14000000000,
+        "inventory_turnover_ratio": 6.0
+      },
+      "license": "synthetic，無版權問題",
+      "risk_notes": "刻意使用虛構公司與整數財務數字，使存貨周轉率 = 84000 / 14000 = 6.0 可確定性驗算；非真實公司財報。"
+    },
+    {
+      "path": "assets/tw/csvs/tw_cities.csv",
+      "source_task": [
+        "task_csv_cities_filter"
+      ],
+      "origin": "synthetic_public_approx",
+      "data_source": "台灣 22 縣市；人口為公開概數（四捨五入），lat/lon 為縣市政府概略座標",
+      "deterministic": true,
+      "columns": [
+        "City",
+        "Region(北/中/南/東/外島)",
+        "Population",
+        "lat",
+        "lon"
+      ],
+      "rows": 22,
+      "license": "公開資料概數，無版權問題",
+      "risk_notes": "人口為概數，僅供篩選練習；grader 檢查的是對此固定 fixture 的篩選結果，非真實普查值。"
+    },
+    {
+      "path": "assets/tw/meetings/tw_tech_product_meeting.md",
+      "source_task": [
+        "task_meeting_tech_action_items"
+      ],
+      "origin": "synthetic_illustrative",
+      "data_source": "虛構台灣軟體公司產品會議逐字稿",
+      "deterministic": true,
+      "license": "synthetic",
+      "risk_notes": "人物/公司/事件全為杜撰；含 6 個明確行動項目供評分。"
+    },
+    {
+      "path": "assets/tw/meetings/tw_council_meeting.md",
+      "source_task": [
+        "task_meeting_council_votes"
+      ],
+      "origin": "synthetic_illustrative",
+      "data_source": "虛構『南港市議會』定期會逐字稿",
+      "deterministic": true,
+      "license": "synthetic",
+      "risk_notes": "虛構地方政府與議案，避免真實機關爭議；含 7 案表決結果供評分。"
+    },
+    {
+      "path": "assets/tw/contracts/tw_service_contract.md",
+      "source_task": [
+        "task_contract_analysis"
+      ],
+      "origin": "synthetic_illustrative",
+      "data_source": "虛構繁體中文軟體開發服務合約範本",
+      "deterministic": true,
+      "license": "synthetic",
+      "risk_notes": "虛構合約；非法律意見；用於合約審閱（llm_judge）。"
+    }
+  ]
+}

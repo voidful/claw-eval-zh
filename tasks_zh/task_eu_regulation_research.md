@@ -1,0 +1,112 @@
+---
+id: task_eu_regulation_research
+name: EU AI Act 合規研究
+category: research
+grading_type: llm_judge
+timeout_seconds: 300
+language: zh
+locale: zh-TW
+source_task_id: task_eu_regulation_research
+source_benchmark: pinchbench
+claw_eval_id: P019zh_eu_regulation_research
+workspace_files: []
+---
+
+# EU AI Act 合規研究
+
+## Prompt
+
+有一家打造 AI 驅動開發者工具的 SaaS 公司，需要了解其在 **EU AI Act
+（Regulation 2024/1689）** 下的義務。他們銷售給歐洲客戶，並透過 API 部署模型。
+
+請研究 EU AI Act，並製作一份合規簡報。你的報告應涵蓋：
+
+1. **風險分類**：EU AI Act 如何依風險等級對 AI 系統分類？一個 AI 程式碼助理
+   可能落在哪一級？
+2. **各風險等級的義務**：每個風險類別（prohibited、high-risk、limited risk、
+   minimal risk）有哪些具體要求？
+3. **時程**：不同條款何時生效？關鍵的合規期限有哪些？
+4. **通用型人工智慧（GPAI）**：針對通用型 AI 模型與基礎模型（foundation models）
+   有哪些具體規範？這些規範如何影響使用第三方模型（例如透過 API）的公司？
+5. **透明度要求**：須做哪些揭露？何時必須告知使用者其正在與 AI 互動？
+6. **罰則**：不合規的罰款為何？
+7. **實務步驟**：該公司現在應採取哪些行動以準備合規？
+
+請將報告儲存至 `eu_ai_act_briefing.md`。請盡可能引用該法規的具體條文（articles）
+或前言（recitals）。
+
+## Expected Behavior
+
+助手應該：
+
+1. 使用網路搜尋及／或官方 EU 來源研究 EU AI Act
+2. 找出具體的法規條文與關鍵條款
+3. 正確地分類風險等級與相應義務
+4. 找出 GPAI 特有的條款（與使用 LLM 的公司相關）
+5. 製作一份可付諸行動的合規簡報
+6. 儲存至 `eu_ai_act_briefing.md`
+
+## Grading Criteria
+
+- [ ] 已建立檔案 eu_ai_act_briefing.md
+- [ ] 正確描述風險分類體系
+- [ ] 指出四個風險等級（prohibited、high、limited、minimal）
+- [ ] 探討 GPAI／基礎模型條款
+- [ ] 附帶日期的合規時程
+- [ ] 提及罰款金額
+- [ ] 描述透明度要求
+- [ ] 建議實務合規步驟
+- [ ] 引用具體條文
+- [ ] 報告結構良好且可付諸行動
+
+## LLM Judge Rubric
+
+### 評分項 1：法律正確性（權重 30%）
+
+**1.0 分**：風險分類描述正確，各等級定義無誤。條文編號引用正確。GPAI 條款
+（Articles 51-56）摘要正確。罰款金額與法規一致（對 prohibited practices 最高
+€35M 或全球年營業額的 7%）。時程正確。
+**0.75 分**：大致正確，整體框架無誤。條文編號或具體門檻有小幅不準確。
+**0.5 分**：整體框架正確，但多項具體細節錯誤或缺漏。GPAI 規範等關鍵條款單薄。
+**0.25 分**：有重大不準確，或將 EU AI Act 與其他法規混淆。
+**0.0 分**：缺少報告，或根本上不準確。
+
+### 評分項 2：實務相關性（權重 25%）
+
+**1.0 分**：報告明顯針對該公司的處境（AI 開發者工具、API 部署、歐洲客戶）量身打造。
+風險分類分析具體考量程式碼助理會落在哪一級。GPAI 規範在使用第三方模型的脈絡下
+加以說明。實務步驟具體且可付諸行動。
+**0.75 分**：與該公司處境的相關性良好。實務步驟有用，但可更具體。
+**0.5 分**：涵蓋了該法規，但未強力連結到該公司的具體處境。
+**0.25 分**：籠統的法規概述，未做任何量身打造。
+**0.0 分**：與所述情境不相關。
+
+### 評分項 3：GPAI 涵蓋度（權重 20%）
+
+**1.0 分**：徹底涵蓋通用型 AI 條款——歸類為 GPAI、系統性風險（systemic risk）門檻、
+provider 與 deployer 各自的義務、model cards、技術文件要求，以及下游 provider 的
+義務。並說明以 API 為基礎使用模型如何影響合規。
+**0.75 分**：GPAI 涵蓋良好。處理了 provider 與 deployer 的區別。
+**0.5 分**：提及 GPAI 規範，但對 provider／deployer 的動態欠缺深度。
+**0.25 分**：GPAI 著墨極少。
+**0.0 分**：未處理 GPAI 條款。
+
+### 評分項 4：時程與結構（權重 15%）
+
+**1.0 分**：時程清楚並含關鍵日期（例如 February 2025 prohibited practices、
+August 2025 GPAI 規則、August 2026 全面適用）。報告組織良好、章節清楚、易於瀏覽。
+可作為參考文件使用。
+**0.75 分**：時程與結構良好。有小幅組織問題。
+**0.5 分**：有時程，但不完整。結構尚可。
+**0.25 分**：時程含糊。結構不佳。
+**0.0 分**：無時程，結構不佳。
+
+### 評分項 5：引用品質（權重 10%）
+
+**1.0 分**：引用法規的具體條文與前言（例如「Article 6 — Classification rules
+for high-risk AI systems」）。可能引用官方 EUR-Lex 公告或 EU 執委會指引文件。
+引用增添可信度與可追溯性。
+**0.75 分**：數處條文引用。有部分官方來源引用。
+**0.5 分**：提及少數條文編號。來源有限。
+**0.25 分**：具體參照極少。
+**0.0 分**：無引用或條文參照。

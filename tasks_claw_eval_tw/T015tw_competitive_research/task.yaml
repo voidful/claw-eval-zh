@@ -1,0 +1,169 @@
+task_id: T015tw_competitive_research
+task_name: 台灣電商平台競品分析
+version: 0.3.0
+category: research
+difficulty: hard
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- research
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_competitive_research.md
+  original_task_id: task_competitive_research
+  original_file: tasks/task_competitive_research.md
+prompt:
+  text: |-
+    請比較台灣 **電商平台** 領域中的三項競爭產品：
+
+    1. **蝦皮 Shopee**
+    2. **momo 購物網**
+    3. **PChome 24h 購物**
+
+    針對每項平台，研究並記錄：
+
+    - **定價／費用**：賣家上架／成交手續費、金物流費用、消費者運費門檻（以新臺幣
+      NT$ 計）。
+    - **功能**：關鍵能力——App 體驗、物流（超商取貨、宅配）、付款方式、直播購物、
+      會員制度。
+    - **品類與市場定位**：各平台主打的品類與目標客群。
+    - **物流與履約**：自有物流 vs. 第三方、到貨速度、超商整合。
+    - **市佔與流量**：在台灣的市佔率或流量地位（請指明來源年度）。
+
+    請將你的分析儲存至 `competitive_analysis.md`，內容須包含：
+    - 置於文件最上方、彙整關鍵差異的比較表格
+    - 各平台的詳細章節
+    - 一個「Bottom Line」章節，針對不同使用者類型（個人賣家、品牌商、消費者）
+      提出建議
+
+    注意：這是即時資料。請對費用、市佔與功能**標示資料來源、標示查詢日期**，並
+    說明**資料限制與不確定性**（費率方案常變動、市佔估算因來源而異）。切勿捏造
+    或寫死特定費率或市佔數字。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 300
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 competitive_analysis.md
+- 三項平台（蝦皮 Shopee、momo、PChome）皆有涵蓋
+- 每項平台皆含費用／定價細節（以新臺幣計）
+- 功能比較具體（非籠統）
+- 包含比較表格
+- 含物流／履約細節
+- 探討市佔或市場定位（並指明來源年度）
+- 針對不同使用者類型提出建議
+- 標示資料來源與查詢日期，並說明資料限制與不確定性
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：資訊正確性與時效性（權重 30%）
+
+  **1.0 分**：費用／定價具體且為最新（含金額與方案名稱，以新臺幣計）。功能描述
+  符合各平台目前的實際能力。無重大錯誤或過時資訊。有查閱官方來源的跡證。
+
+  **0.75 分**：大致正確且為最新資訊。少數細節可能略有出入或數月前的舊資訊。
+
+  **0.5 分**：方向大致正確，但部分費用或功能細節不準確或明顯過時。
+
+  **0.25 分**：多處重大不準確，或資訊嚴重過時。
+
+  **0.0 分**：資訊多為錯誤或缺失。
+
+  ### 評分項 2：比較深度（權重 20%）
+
+  **1.0 分**：超越表面功能，探討細膩之處——物流與超商整合、直播購物、會員與
+  點數制度、賣家費率結構、目標客群差異。指出對買賣雙方真正重要的差異化要點。
+
+  **0.75 分**：在多數面向有良好深度，但遺漏部分重要區別。
+
+  **0.5 分**：比較尚可，但停留在表面層次。僅列出功能而未探討其影響。
+
+  **0.25 分**：比較淺薄，多半只陳述顯而易見之事。
+
+  **0.0 分**：無具意義的比較。
+
+  ### 評分項 3：來源、查詢日期與不確定性（權重 20%）
+
+  **1.0 分**：費率、市佔與關鍵功能皆標示可追溯的資料來源，明確標示查詢日期，並
+  說明資料限制與不確定性（費率方案常變動、市佔估算因來源與年度而異）。明顯以
+  引用來源取代捏造或寫死的數值。
+
+  **0.75 分**：多數關鍵數據有標示來源並標示查詢日期，對不確定性有提及但較簡略。
+
+  **0.5 分**：有標示部分來源或查詢日期，但不一致，或未說明資料限制。
+
+  **0.25 分**：僅零星提及來源或日期，未說明不確定性。
+
+  **0.0 分**：完全未標示來源或查詢日期，或出現捏造／寫死且未加註的費率或市佔。
+
+  ### 評分項 4：比較表格與建議品質（權重 20%）
+
+  **1.0 分**：Markdown 表格乾淨、排版良好，涵蓋所有關鍵面向（費用、關鍵功能、
+  物流、市場定位）。建議具體、可付諸行動，並針對三種使用者類型（個人賣家、
+  品牌商、消費者）量身打造，立場明確。
+
+  **0.75 分**：表格良好、建議依使用者類型有合理區分，僅有小幅缺口。
+
+  **0.5 分**：有表格但不完整，建議籠統，未能依使用者類型強力區分。
+
+  **0.25 分**：表格嘗試極簡略，建議含糊或模稜兩可。
+
+  **0.0 分**：無比較表格，亦無任何建議。
+
+  ### 評分項 5：公平與平衡（權重 10%）
+
+  **1.0 分**：每項平台皆獲公允對待，同時指出優點與缺點。無明顯偏頗。在資訊難以
+  取得之處坦承不確定性。
+
+  **0.75 分**：大致平衡，僅有輕微傾向。
+
+  **0.5 分**：對某項平台有明顯偏好或偏見。
+
+  **0.25 分**：明顯偏頗或對待不公。
+
+  **0.0 分**：完全一面倒。
+reference_solution: |-
+  助手應該：
+
+  1. 使用網路搜尋研究各平台，造訪官方網站、賣家中心與相關報導
+  2. 找出具體、最新的費用／定價資訊（以新臺幣計）
+  3. 有系統地比較各項功能與物流履約
+  4. 建立一份結構化的比較文件
+  5. 提供有立場但公允的建議
+  6. 儲存至 `competitive_analysis.md`
+
+  因為是即時資料，正確行為是**標示資料來源、標示查詢日期，並說明資料限制與
+  不確定性**（費率與市佔隨時間與來源變動），而非捏造或寫死特定費率或市佔數字。
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: manual_review_only
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

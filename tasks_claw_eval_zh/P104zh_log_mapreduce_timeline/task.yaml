@@ -1,0 +1,121 @@
+task_id: P104zh_log_mapreduce_timeline
+task_name: MapReduce 日誌 — 工作時間軸視覺化
+version: 0.2.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_log_mapreduce_timeline
+  original_file: tasks/task_log_mapreduce_timeline.md
+prompt:
+  text: |-
+    請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，為整個工作執行建立
+    一份詳細的時間軸視覺化。依時間順序呈現所有主要事件。
+
+    你的輸出應包含：
+
+    1. **事件時間軸（Event Timeline）**：依時間順序列出每個重要事件及其時間戳，包括：
+       - 工作初始化事件
+       - 容器配置
+       - 任務開始與完成
+       - 錯誤與警告
+       - reduce 階段開始
+       - 工作完成
+    2. **階段圖（Phase Diagram）**：將工作劃分為各階段（初始化、map 階段、shuffle、
+       reduce 階段、清理），並附開始/結束時間與時長
+    3. **甘特式任務檢視（Gantt-Style Task View）**：以文字時間軸呈現每個任務
+       （m_000000 至 m_000009、r_000000）及其概略的開始與結束時間
+    4. **關鍵事件（Critical Events）**：標示出影響最大的事件（錯誤、重試、工作狀態轉換）
+    5. **併發分析（Concurrency Analysis）**：在每個時間點上，有多少任務平行執行？
+
+    請將報告寫入 `mapreduce_timeline.md`，以結構良好的 markdown 文件呈現，並附 ASCII/文字式視覺化。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hadoop_mapreduce.log
+  dest: mapreduce.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `mapreduce_timeline.md`
+- 依時間順序列出事件並附時間戳
+- 辨識出各階段（init、map、reduce、completion）
+- 嘗試呈現視覺化或結構化的時間軸/甘特圖
+- 標示關鍵事件（首個 map 完成、錯誤、工作成功）
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `mapreduce_timeline.md`
+  - 依時間順序列出事件並附時間戳
+  - 辨識出各階段（init、map、reduce、completion）
+  - 嘗試呈現視覺化或結構化的時間軸/甘特圖
+  - 標示關鍵事件（首個 map 完成、錯誤、工作成功）
+reference_solution: |-
+  助手應產出如下的時間軸：
+
+  **階段拆解：**
+  | Phase | Start | End | Duration |
+  |---|---|---|---|
+  | Initialization | 15:37:56 | 15:38:00 | ~4s |
+  | Map Phase | 15:38:00 | 15:41:25 | ~3m 25s |
+  | Reduce Phase | 15:39:24 | 15:42:46 | ~3m 22s |
+  | Cleanup | 15:42:46 | 15:42:47 | ~1s |
+  | **Total** | **15:37:56** | **15:42:47** | **~4m 51s** |
+
+  **關鍵事件：**
+  - 15:37:56 — MRAppMaster 建立
+  - 15:37:57 — 設定 OutputCommitter（FileOutputCommitter）
+  - 15:38:00 — 開始容器配置（10 個 map 待處理、1 個 reduce 待處理）
+  - 15:39:24 — 首個 map 完成（m_000009），Num completed: 1
+  - 15:40:28–15:40:52 — map 快速完成（任務 2-8）
+  - 15:40:45 — WARN：區塊 I/O 錯誤（ResponseProcessor、DataStreamer）
+  - 15:41:12 — m_000007 完成（重試嘗試）
+  - 15:41:25 — m_000006 完成（重試嘗試，最後一個 map）
+  - 15:42:46 — r_000000 完成，Num completed: 11
+  - 15:42:46 — 工作轉換為 SUCCEEDED
+  - 15:42:47 — 記錄最終統計
+
+  **併發：**
+  - 尖峰：最多達 10 個 map 任務同時執行
+  - 15:39:24 之後，隨 map 陸續完成，併發度下降
+
+  可接受的差異：
+  - ASCII 視覺化的風格會有所不同
+  - 並非每筆日誌條目都需放入時間軸 — 主要事件即可
+  - 階段定義可能略有不同
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: mapreduce.log
+    source: logs/hadoop_mapreduce.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

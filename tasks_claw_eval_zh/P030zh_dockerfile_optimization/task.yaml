@@ -1,0 +1,123 @@
+task_id: P030zh_dockerfile_optimization
+task_name: Dockerfile 最佳化
+version: 0.2.0
+category: coding
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- coding
+- multimodal
+source:
+  benchmark: pinchbench
+  original_task_id: task_dockerfile_optimization
+  original_file: tasks/task_dockerfile_optimization.md
+prompt:
+  text: |-
+    工作區中的 `Dockerfile` 用來建置一個 Python 網頁應用程式，但它過於臃腫且效率
+    不彰。請將它最佳化，以產生一個更小、更快、更適合正式環境（production）的 Docker
+    映像檔。
+
+    請將最佳化後的 Dockerfile 儲存為 `Dockerfile.optimized`。
+
+    目標：
+
+    1. 在適當的情況下合併 `RUN` 指令，以減少 layer 數量。
+    2. 使用更小或更合適的基礎映像檔（base image，例如 slim 或 Alpine 版本）。
+    3. 移除執行階段（runtime）不需要的套件（例如編輯器、僅在編譯時需要的建置工具）。
+    4. 調整指令順序以最大化 Docker layer 的快取（例如在複製完整原始碼之前先複製
+       相依性檔案）。
+    5. 在與安裝相同的 layer 中清理套件管理員的快取。
+    6. 移除 `DEBUG=true` 環境變數（不適合正式環境）。
+
+    請勿更動應用程式的執行指令或對外開放的連接埠（port）。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 120
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立檔案 `Dockerfile.optimized`
+- 使用比 `ubuntu:22.04` 更小的基礎映像檔
+- 合併 RUN 指令（layer 更少）
+- 移除不必要的編輯器／工具套件（vim、nano）
+- 在複製完整原始碼之前先複製 requirements.txt，以利 layer 快取
+- 在安裝的 layer 中清理套件管理員快取
+- 未包含 `DEBUG=true` 環境變數
+- 保留對外開放的連接埠與應用程式執行指令
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該分析原始的 Dockerfile，並產生套用常見 Docker 最佳實務的
+  `Dockerfile.optimized`：
+
+  - 改用更精簡的基礎映像檔，例如 `python:3.11-slim`、`python:3.12-slim` 或
+    Alpine 版本。
+  - 將眾多個別的 `apt-get install` 或 `apk add` 指令合併為單一 `RUN` layer，並在
+    同一個 layer 中清理快取。
+  - 移除執行階段不需要的套件：`vim`、`nano`、`wget`、`git`，以及可能的
+    `build-essential`（或使用 multi-stage build 來區分建置階段與執行階段的相依性）。
+  - 在複製完整原始碼之前先複製 `requirements.txt` 並安裝相依性，以利用 layer 快取。
+  - 移除 `ENV DEBUG=true`。
+  - 保留 `EXPOSE 8000` 與原本的 `CMD`。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - path: Dockerfile
+    content: |
+      FROM ubuntu:22.04
+
+      RUN apt-get update
+      RUN apt-get install -y python3
+      RUN apt-get install -y python3-pip
+      RUN apt-get install -y curl
+      RUN apt-get install -y wget
+      RUN apt-get install -y git
+      RUN apt-get install -y vim
+      RUN apt-get install -y nano
+      RUN apt-get install -y build-essential
+      RUN apt-get install -y libpq-dev
+
+      COPY requirements.txt /app/requirements.txt
+      COPY . /app
+
+      WORKDIR /app
+
+      RUN pip3 install -r requirements.txt
+
+      RUN apt-get install -y nodejs npm
+
+      EXPOSE 8000
+
+      ENV PYTHONUNBUFFERED=1
+      ENV DEBUG=true
+
+      CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+  - path: requirements.txt
+    content: |-
+      django==4.2
+      psycopg2==2.9.9
+      gunicorn==21.2.0
+      celery==5.3.6
+      redis==5.0.1
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

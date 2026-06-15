@@ -1,0 +1,134 @@
+task_id: T117tw_meeting_tech_competitors
+task_name: |
+  會議競爭對手分析擷取
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_tech_competitors.md
+  original_task_id: task_meeting_tech_competitors
+  original_file: tasks/task_meeting_tech_competitors.md
+prompt:
+  text: |-
+    我手上有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議的一部分涉及競爭定位（competitive positioning）、一份比較試算表，以及如何呈現 GitLab 對比競爭對手的詳細討論。
+
+    請幫我分析這份逐字稿，並建立一個名為 `competitor_analysis.md` 的檔案，內容涵蓋：
+
+    1. **提及的競爭對手**：列出所有提及的競爭對手或競品，並附上有討論到的層級分類（tier classification）
+    2. **競爭定位方式**：團隊計畫如何將 GitLab 定位於這些競爭對手之上？
+    3. **各 stage 對應的競爭對手對照**：哪些競爭對手對應到哪些產品 stages（如討論所述）？
+    4. **方法論決議**：對於如何進行競爭分析做了哪些決定（例如聚焦哪些 tiers、如何處理競爭對手不適用的 stage）？
+    5. **關鍵競爭洞察**：討論中提到關於特定競爭對手的任何策略性洞察
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+  dest: meeting_transcript.md
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 competitor_analysis.md
+- 已列出所有 tier 1 競爭對手（ADO/Azure DevOps、Atlassian、GitHub、Jenkins、JFrog、CloudBees）
+- 已提及層級分類系統（tier 1、2、3）
+- 已討論各 stage 的相關性（並非所有競爭對手都適用於所有 stages）
+- 已掌握 platform 與非 platform 的區分（GitHub、ADO、Atlassian、JFrog 為 platform；Jenkins/CloudBees 則否）
+- 已掌握加入 GitLab 項目的決議
+- 已記下功能挑選的市場視角（market lens）方式
+- 已掌握資訊圖設計理念（只用綠色、比較而非攻擊）
+- 已掌握先聚焦 tier 1 的方法論決議
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：競爭對手辨識完整度（權重 30%）
+
+  **1.0 分**：辨識出全部六個 tier 1 競爭對手（Azure DevOps、Atlassian、GitHub、Jenkins、JFrog、CloudBees），並有準確的層級分類與對 tier 系統的討論。
+  **0.75 分**：辨識出多數競爭對手並附 tier 資訊，漏掉一兩個。
+  **0.5 分**：辨識出數個競爭對手，但 tier 系統說明不佳。
+  **0.25 分**：僅提及少數競爭對手且無分類。
+  **0.0 分**：未辨識出競爭對手。
+
+  ### 評分項 2：策略定位分析（權重 30%）
+
+  **1.0 分**：完整掌握 GitLab 定位方式的所有細微之處：功能採市場視角、platform 對比非 platform 的區分、只用綠色的資訊圖以呈現比較（而非攻擊）、加入 GitLab 列以誠實比較，以及打造有幫助的產業資源此一目標。
+  **0.75 分**：掌握多數定位要素，僅有少許缺口。
+  **0.5 分**：有部分定位洞察，但漏掉關鍵策略決議。
+  **0.25 分**：對競爭定位僅有表面提及。
+  **0.0 分**：無定位分析。
+
+  ### 評分項 3：各 stage 對照（權重 20%）
+
+  **1.0 分**：清楚說明並非所有競爭對手都適用於所有 stages，給出具體例子（例如 CloudBees/GitHub 與 Monitor 無關），並記下被指出的試算表複製貼上問題。
+  **0.75 分**：對 stage 相關性有良好理解，僅有少許缺口。
+  **0.5 分**：提及 stage 相關性但缺乏具體細節。
+  **0.25 分**：對 stages 僅含糊提及。
+  **0.0 分**：無各 stage 分析。
+
+  ### 評分項 4：方法論清晰度（權重 20%）
+
+  **1.0 分**：清楚記載議定的方法論：先聚焦 tier 1，再擴展；每個 stage 只放相關競爭對手；功能採市場視角；加入 GitLab 以供比較。並以可行動的指引方式呈現。
+  **0.75 分**：掌握多數方法論決議。
+  **0.5 分**：提及部分方法論但不完整。
+  **0.25 分**：方法論描述含糊。
+  **0.0 分**：未記載方法論。
+reference_solution: |-
+  助手應該：
+
+  1. 仔細閱讀會議逐字稿
+  2. 擷取所有競爭對手名稱並予以分類
+
+  關鍵競爭對手與細節：
+
+  - **Tier 1 競爭對手**（目前分析的重點）：Azure DevOps（ADO）、Atlassian、GitHub、Jenkins、JFrog、CloudBees
+  - **層級分類**：團隊先前已將競爭對手分為 tier 1、2、3；目前僅聚焦於 tier 1
+  - **Stage 相關性**：並非所有 tier 1 競爭對手都適用於所有 stages（例如 CloudBees 可能與 Monitor 無關；GitHub 可能與 Monitor 無關）
+  - **Platform 定位**：部分競爭對手（Azure DevOps、GitHub、Atlassian、JFrog）將自己定位為 platform；Jenkins/CloudBees 則否
+  - **方法論**：競爭試算表是被複製貼上、每個 stage 分頁都放同樣的 6 個競爭對手，這被指出是錯的——每個 stage 應只出現相關的競爭對手
+  - **GitLab 項目**：團隊決定在比較表加入一個 GitLab 列，使該表不會只呈現 GitLab 較強之處
+  - **功能挑選視角**：功能應從市場視角（market lens，即買家會比較選購什麼）挑選，而非僅從 GitLab 視角；為求誠實，也應納入一些僅競爭對手才有的功能
+  - **資訊圖方式**：新設計只用綠色（不用紅色），呈現為有幫助的產業比較，而非競爭攻擊式素材
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+    dest: meeting_transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

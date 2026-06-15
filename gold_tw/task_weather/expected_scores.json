@@ -1,0 +1,16 @@
+{
+  "task_id": "task_weather",
+  "cases": {
+    "pass": {
+      "min_mean": 0.95
+    },
+    "partial": {
+      "min_mean": 0.2,
+      "max_mean": 0.75
+    },
+    "fail": {
+      "max_mean": 0.05
+    }
+  },
+  "note": ""
+}

@@ -1,0 +1,19 @@
+{
+  "opencc_available": true,
+  "tasks_checked": 147,
+  "error_count": 0,
+  "unresolved_warning_count": 0,
+  "accepted_warning_count": 1,
+  "us_residue_tasks": [
+    "T031tw_playwright_e2e"
+  ],
+  "errors": [],
+  "unresolved_warnings": [],
+  "accepted_warnings": [
+    {
+      "task": "task_playwright_e2e",
+      "type": "us_residue",
+      "msg": "[WARN]  T031tw_playwright_e2e: US-context residue in prompt: ['zip code'] (review localization depth)"
+    }
+  ]
+}

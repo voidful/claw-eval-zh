@@ -1,0 +1,103 @@
+task_id: T112tw_meeting_council_upcoming
+task_name: '市議會逐字稿 — 擷取後續事件與截止期限
+
+  '
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_council_upcoming.md
+  original_task_id: task_meeting_council_upcoming
+  original_file: tasks/task_meeting_council_upcoming.md
+prompt:
+  text: 我手邊有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。請幫我產生 `upcoming_events.md`，依時間先後列出所有後續事件、截止期限與未來日期。請包含日期、事件、負責方，以及狀態（confirmed/proposed/tentative）。最後以一個**「What
+    to watch」**重點區段作結。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2026-04-02-tampa-city-council-transcript.md
+  dest: transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔案 upcoming_events.md
+- 已辨識 April 16 的各項目
+- April 20 East Tampa Town Hall
+- May 7 倫理報告
+- Fire Station 24 GMP（May 15）
+- 預算工作坊（August）
+- March 2027 容量費
+- September 2028 Rome Yard
+- 依時間先後組織
+- 重點區段
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：完整度（權重 35%）
+
+  **1.0 分**：12 項以上事件。**0.75 分**：9-11 項。**0.5 分**：5-8 項。**0.0 分**：完全沒有。
+
+
+  ### 評分項 2：準確度（權重 25%）
+
+  **1.0 分**：所有日期皆正確。**0.5 分**：有若干錯誤。**0.0 分**：錯誤。
+
+
+  ### 評分項 3：背景脈絡（權重 25%）
+
+  **1.0 分**：每一事件皆有清楚的背景脈絡。**0.5 分**：基本。**0.0 分**：完全沒有。
+
+
+  ### 評分項 4：優先排序（權重 15%）
+
+  **1.0 分**：重點整理有效。**0.5 分**：薄弱。**0.0 分**：完全沒有。'
+reference_solution: 關鍵項目：April 16（Veterans Committee、第 26-28 項、$650K 重新分配）、April 20（East Tampa Town Hall，地點
+  Fair Oaks）、May 7（倫理報告、LDC 更新）、May 15（Fire Station 24 GMP）、August 3/10/17（預算工作坊）、March 1 2027（容量費開始）、September
+  2027（Fire Station 24 完工）、September 2028（Rome Yard Phase 4）、March 2030（費用全面分階段到位）、下週（HART Board）、約 60
+  天內（Rome Yard 交割）。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.5
+    llm_judge: 0.5
+  workspace_files:
+  - source: meetings/2026-04-02-tampa-city-council-transcript.md
+    dest: transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

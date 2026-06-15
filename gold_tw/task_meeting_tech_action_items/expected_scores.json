@@ -1,0 +1,16 @@
+{
+  "task_id": "task_meeting_tech_action_items",
+  "cases": {
+    "pass": {
+      "min_mean": 0.9
+    },
+    "partial": {
+      "min_mean": 0.2,
+      "max_mean": 0.8
+    },
+    "fail": {
+      "max_mean": 0.05
+    }
+  },
+  "note": ""
+}

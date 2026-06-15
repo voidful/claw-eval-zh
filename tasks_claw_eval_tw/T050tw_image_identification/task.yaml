@@ -1,0 +1,111 @@
+task_id: T050tw_image_identification
+task_name: |
+  影像辨識（手機、食物、菜單）
+version: 0.3.0
+category: analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- analysis
+- multimodal
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_image_identification.md
+  original_task_id: task_image_identification
+  original_file: tasks/task_image_identification.md
+prompt:
+  text: |-
+    `images/` 裡放了三張未標註的影像：
+
+    - `images/item_a.jpg`
+    - `images/item_b.jpg`
+    - `images/item_c.jpg`
+
+    請把每張影像分類到下列其中一個類別：
+
+    - `phone`
+    - `food`
+    - `menu`
+
+    然後在目前目錄建立一個名為 `image_categories.json` 的檔案，採用以下確切的 JSON 形狀：
+
+    ```json
+    {
+      "phone": "images/<filename>",
+      "food": "images/<filename>",
+      "menu": "images/<filename>"
+    }
+    ```
+
+    每張影像恰好使用一次。路徑必須包含 `images/` 前綴。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: images/img_0e5d267af744.jpg
+  dest: images/item_a.jpg
+- source: images/img_128030b75c71.jpg
+  dest: images/item_b.jpg
+- source: images/img_ddabd275f36a.jpg
+  dest: images/item_c.jpg
+environment:
+  timeout_seconds: 150
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立輸出檔 image_categories.json
+- 輸出為有效 JSON 且符合要求的形狀
+- 三個必要類別都存在（phone、food、menu）
+- 每個類別都對應到所提供的影像路徑之一
+- 每個所提供的影像路徑恰好使用一次
+- phone 分類正確
+- food 分類正確
+- menu 分類正確
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應檢視三張影像，並把它們對應到要求的類別。
+
+  可接受的類別含義：
+
+  - `phone`：智慧型手機／裝置照片
+  - `food`：可食用的食物
+  - `menu`：紙本菜單類的文件（收據式紙張亦可接受）
+
+  最終輸出應為 `image_categories.json` 中的有效 JSON，每個類別各對應一個獨一無二的影像路徑。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - source: images/img_0e5d267af744.jpg
+    dest: images/item_a.jpg
+  - source: images/img_128030b75c71.jpg
+    dest: images/item_b.jpg
+  - source: images/img_ddabd275f36a.jpg
+    dest: images/item_c.jpg
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

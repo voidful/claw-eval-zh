@@ -1,0 +1,106 @@
+task_id: T073tw_csv_cities_filter
+task_name: 台灣縣市資料多條件篩選分析
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_cities_filter.md
+  original_task_id: task_csv_cities_filter
+  original_file: tasks/task_csv_cities_filter.md
+prompt:
+  text: "我的工作區裡有一個 CSV 檔案 tw_cities.csv，內含台灣 22 個縣市的資料。欄位為：\nCity（縣市名）、Region（區域：北部／中部／南部／東部／外島）、Population（人口）、\n\
+    lat（緯度）、lon（經度）。\n\n請完成下列篩選分析，並把結果寫入 cities_filter_report.md：\n\n1. **直轄市（六都）人口篩選**：列出六都（新北市、臺中市、高雄市、臺北市、桃園市、\n\
+    \   臺南市）中人口 ≥ 2,000,000 的縣市，依人口由大到小排序，並附該集合的數量與總人口。\n2. **南部大縣市**：找出 Region 為「南部」且人口 ≥ 1,000,000 的縣市，列出人口。\n\
+    3. **臺北市 vs 高雄市**：比較這兩個縣市的人口，指出哪一個較多。\n4. **中型縣市**：找出人口介於 500,000 與 1,000,000（含）之間的縣市，報告數量並依\n   縣市名列出。\n\
+    5. **北部區域合計**：篩選 Region 為「北部」的縣市，報告總數、總人口，以及人口前 5 名。\n\n注意：CSV 檔名、欄名與報告檔名 cities_filter_report.md\
+    \ 不可更改。"
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: tw/csvs/tw_cities.csv
+  dest: tw_cities.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 建立報告檔案 cities_filter_report.md
+- 六都人口篩選正確（5 個，含新北/臺中/高雄/臺北/桃園，排除臺南）
+- 南部大縣市正確（高雄市、臺南市）
+- 臺北市 vs 高雄市比較正確（高雄較多）
+- 中型縣市篩選正確（屏東/新竹縣/苗栗/雲林，共 4 個）
+- 北部區域合計正確（7 個縣市，前段含新北/臺北/桃園）
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：篩選正確度（權重 60%）
+
+  - 1.0：五項篩選的縣市清單、數量、總人口皆正確
+
+  - 0.5：多數正確但有少量錯誤或遺漏
+
+  - 0.0：篩選邏輯明顯錯誤
+
+  ### 評分項 2：呈現與排序（權重 25%）
+
+  - 1.0：排序正確、表格清楚、數量與總和明確標示
+
+  - 0.5：大致可讀但排序或標示有瑕疵
+
+  - 0.0：雜亂或缺漏
+
+  ### 評分項 3：完整度（權重 15%）
+
+  - 1.0：五項全做
+
+  - 0.5：遺漏一兩項
+
+  - 0.0：多數未做'
+reference_solution: "助手應讀取 tw_cities.csv 並得出（已由程式從 fixture 驗算）：\n1. 六都 ≥ 2,000,000：新北市、臺中市、高雄市、臺北市、桃園市（共\
+  \ 5 個；臺南市約 186 萬\n   未達門檻被排除）；總人口約 14,427,922。\n2. 南部 ≥ 1,000,000：高雄市、臺南市。\n3. 高雄市（約 2,738,041）人口多於臺北市（約\
+  \ 2,494,813）。\n4. 中型（500,000–1,000,000）：屏東縣、新竹縣、苗栗縣、雲林縣（共 4 個）。\n5. 北部：共 7 個縣市（新北、臺北、桃園、新竹縣、新竹市、宜蘭、基隆），總人口約\n\
+  \   10,690,039；前 5 名：新北市、臺北市、桃園市、新竹縣、新竹市。"
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: tw/csvs/tw_cities.csv
+    dest: tw_cities.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: fixture_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

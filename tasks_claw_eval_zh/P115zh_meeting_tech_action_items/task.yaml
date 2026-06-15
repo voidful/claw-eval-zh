@@ -1,0 +1,124 @@
+task_id: P115zh_meeting_tech_action_items
+task_name: 會議行動項目擷取
+version: 0.2.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_meeting_tech_action_items
+  original_file: tasks/task_meeting_tech_action_items.md
+prompt:
+  text: |-
+    我有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議涵蓋多個主題，包括企業活動、GitLab Commit 的產品發布、競爭分析、一份新的資訊圖（infographic）設計，以及一套訊息架構（messaging framework）。
+
+    請從這場會議中擷取所有行動項目（action items），並寫入一個名為 `action_items.md` 的檔案。針對每一個行動項目，請包含：
+
+    - **負責人（Owner）**（負責的人，具名）
+    - **行動（Action）**（他們需要做什麼）
+    - **截止期限（Deadline）**（若有提及）
+    - **背景脈絡（Context）**（與哪一個討論主題相關）
+
+    請依主題領域將行動項目分組。並在最上方附上行動項目總數的彙總計數。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+  dest: meeting_transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 action_items.md
+- 至少辨識出 5 個不同的行動項目
+- 行動項目與特定負責人關聯（例如 Cormac、Samia、William、Cindy）
+- 已掌握企業活動的行動項目（取得活動經理的承諾）
+- 已掌握產品發布的行動項目（top 5 功能，截止 Tuesday）
+- 已掌握競爭分析的行動項目（tier one 競爭對手，加上 GitLab 列）
+- 已掌握訊息架構的行動項目（標語定稿，截止 end of day）
+- 行動項目依主題或類別分組
+- 在有提及處記下截止期限（產品發布為 Tuesday，訊息架構為 end of day）
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：行動項目擷取的完整度（權重 35%）
+
+  **1.0 分**：辨識出橫跨所有討論主題（活動、發布、競爭、訊息）的所有主要行動項目。明確指派與隱含承諾皆有掌握。
+  **0.75 分**：掌握多數行動項目，但漏掉一兩個次要的。
+  **0.5 分**：掌握部分主題的行動項目，但漏掉整個主題領域。
+  **0.25 分**：僅掌握少數顯而易見的行動項目。
+  **0.0 分**：未擷取出有意義的行動項目。
+
+  ### 評分項 2：負責人歸屬準確度（權重 30%）
+
+  **1.0 分**：每個行動項目皆正確指出負責人。姓名依對話脈絡準確歸屬。
+  **0.75 分**：多數負責人正確辨識，僅一兩處小誤植。
+  **0.5 分**：辨識出部分負責人，但有數處錯誤或缺漏。
+  **0.25 分**：負責人多半缺漏或歸屬錯誤。
+  **0.0 分**：完全未嘗試歸屬負責人。
+
+  ### 評分項 3：組織與結構（權重 20%）
+
+  **1.0 分**：行動項目依主題清楚分組、格式一致，並附上彙總計數。易於瀏覽，可直接作為後續追蹤清單。
+  **0.75 分**：組織良好，僅有少許格式不一致。
+  **0.5 分**：有部分組織，但項目跨主題混雜或難以追蹤。
+  **0.25 分**：組織極少，項目未分組逐條列出。
+  **0.0 分**：毫無結構或組織。
+
+  ### 評分項 4：背景脈絡與截止期限準確度（權重 15%）
+
+  **1.0 分**：在有提及處記下截止期限（發布為 Tuesday，訊息為 end of day）。每個行動項目的背景脈絡準確且有幫助。
+  **0.75 分**：多數截止期限與背景脈絡有掌握，僅少數遺漏。
+  **0.5 分**：提供部分背景脈絡，但截止期限缺漏或不準確。
+  **0.25 分**：背景脈絡極少，無截止期限。
+  **0.0 分**：無背景脈絡或截止期限資訊。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析會議逐字稿
+  2. 從討論中辨識出所有明確與隱含的行動項目
+  3. 將每個行動項目與正確的人/負責人關聯
+  4. 依主題分組
+
+  應擷取的關鍵行動項目：
+
+  - **企業活動（Corporate Events）**：各 PMM 需向其活動經理（campaign manager）取得對特定活動的承諾（platform→re:Invent、CI/CD→Google Next、GitOps→KubeCon），並在 issue 上留言
+  - **產品發布（Product Announcements）**：Cormac 需為 Plan stage 補上一份 top five；團隊成員需檢視並挑出整體前 5 名功能；此項截止為 Tuesday
+  - **競爭分析（Competitive Analysis）**：Samia 需僅就與她負責 stages 相關的 tier one 競爭對手進行比較；團隊需在競爭比較表（competitive sheet）加上一個 GitLab 的項目（line item）
+  - **訊息架構（Messaging Framework）**：William 需以「more speed less risk」作為選定標語（tagline）來定稿訊息；截止為 end of day
+  - **一般事項（General）**：團隊應觀看 Talladega Nights（一項詼諧的回家作業）
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+    dest: meeting_transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

@@ -1,0 +1,69 @@
+task_id: P009zh_stock
+task_name: 股價研究
+version: 0.2.0
+category: research
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- research
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_stock
+  original_file: tasks/task_stock.md
+prompt:
+  text: |-
+    請研究 Apple（AAPL）目前的股價，並將結果儲存到 stock_report.txt，內容須包含
+    股價、日期，以及一段簡短的市場摘要。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立檔案 stock_report.txt
+- 檔案包含股票代號「AAPL」
+- 檔案包含一個數值型的股價
+- 檔案包含日期參照
+- 檔案包含市場摘要或背景說明（至少 50 個字元）
+- 內容排版良好且易讀
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 使用網路搜尋或財經資料工具，查出 Apple 目前的股價
+  2. 取出股票代號（AAPL）、目前股價與日期
+  3. 蒐集一段關於該股票的簡短市場摘要或背景說明
+  4. 建立一個名為 `stock_report.txt` 的檔案，寫入上述資訊
+  5. 將輸出格式排版成易讀的形式
+
+  助手可採用多種方式，包括網路搜尋、財經 API 或網頁擷取（web scraping）。
+  重點在於資料擷取的正確性，以及正確建立檔案。
+primary_dimensions:
+- completion
+- safety
+- robustness
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

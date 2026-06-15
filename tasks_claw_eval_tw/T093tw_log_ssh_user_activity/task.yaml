@@ -1,0 +1,115 @@
+task_id: T093tw_log_ssh_user_activity
+task_name: SSH 認證日誌 — 使用者登入活動報告
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_ssh_user_activity.md
+  original_task_id: task_log_ssh_user_activity
+  original_file: tasks/task_log_ssh_user_activity.md
+prompt:
+  text: |-
+    請分析位於 `auth.log` 的 OpenSSH 認證日誌，並產生一份以使用者為核心的活動報告。對於日誌中提到的每個使用者名稱（無論有效或無效），請摘要其認證活動。
+
+    你的報告應包含：
+
+    1. **所有被嘗試的使用者名稱（All Usernames Attempted）**：列出日誌中出現的每個使用者名稱（包含有效的系統使用者與無效／不存在的使用者）
+    2. **有效 vs 無效使用者（Valid vs Invalid Users）**：將每個使用者名稱分類為有效（被系統接受）或無效（因不存在而被拒絕）
+    3. **各使用者摘要（Per-User Summary）**：對每個使用者名稱，列出：嘗試次數、來源 IP、成功／失敗、第一次與最後一次嘗試的時間戳記
+    4. **最常被鎖定的使用者（Most Targeted Users）**：依失敗嘗試次數排序使用者名稱
+    5. **使用者名稱樣態（Username Patterns）**：攻擊者是否在使用字典？有哪些常見樣態（admin、root、test、服務帳號）？
+    6. **使用者風險評估（User Risk Assessment）**：哪些使用者名稱若真實存在，會帶來最大的資安風險？
+
+    請把報告寫到 `user_activity_report.md`，以結構清晰的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/openssh_auth.log
+  dest: auth.log
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `user_activity_report.md`
+- 已同時列出有效與無效的使用者名稱
+- 已找出最常被鎖定的使用者名稱（admin）
+- 已分析使用者名稱樣態（字典攻擊、常見預設值）
+- 已對最危險的使用者名稱提供風險評估
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `user_activity_report.md`
+  - 已同時列出有效與無效的使用者名稱
+  - 已找出最常被鎖定的使用者名稱（admin）
+  - 已分析使用者名稱樣態（字典攻擊、常見預設值）
+  - 已對最危險的使用者名稱提供風險評估
+reference_solution: |-
+  助手應找出：
+
+  **無效使用者（依頻率前列）：**
+  - admin（18 次嘗試）、oracle（6）、support（5）、test（4）、inspur（3）、0（3）、matlab（3）、webmaster（2）、guest（2）、1234（2）等
+
+  **有效使用者：**
+  - fztu —— 唯一一個成功登入的使用者
+  - root —— 很可能是一個被鎖定的有效使用者（請檢查是「Failed password for root」還是「Failed password for invalid user root」）
+
+  **使用者名稱樣態：**
+  - 常見服務帳號：admin、oracle、support、webmaster
+  - 預設憑證：test、guest、1234、0
+  - 應用程式專屬：matlab、inspur
+  - 這顯然是使用常見使用者名稱清單的字典攻擊
+
+  **風險評估：**
+  - 「admin」與「root」風險最高——一旦遭洩漏即可取得完整系統存取權
+  - 「oracle」顯示攻擊者知道這很可能是一台執行資料庫的 Linux 伺服器
+  - 像「0」與「1234」這類數字使用者名稱顯示為自動化／腳本化攻擊
+
+  可接受的變化：
+  - 有效與無效使用者的區分取決於對「invalid user」訊息的解析
+  - 部分使用者名稱可能模稜兩可
+  - 風險評估語言會有所不同
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: auth.log
+    source: logs/openssh_auth.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

@@ -1,0 +1,194 @@
+task_id: P036zh_selector_fix
+task_name: 測試維護／選擇器修正
+version: 0.2.0
+category: coding
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- coding
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_selector_fix
+  original_file: tasks/task_selector_fix.md
+prompt:
+  text: |-
+    工作區中的 `dashboard_tests.py` 包含一個 Team Dashboard UI 元件
+    （`dashboard_component.html`）的 Playwright 端對端測試。在最近一次 UI 重構之後，
+    HTML 中所有的 class 名稱與結構性選擇器都改變了，但測試檔案卻從未更新。
+
+    目前每一個測試都使用**舊選擇器**，這些選擇器已不再與實際的標記（markup）相符。
+    你的工作是更新 `dashboard_tests.py` 中**所有**的選擇器，使其與
+    `dashboard_component.html` 中的實際元素相符。
+
+    規則：
+
+    1. 閱讀 `dashboard_component.html`，了解新的 DOM 結構與 class 名稱
+    2. 更新 `dashboard_tests.py` 中每一個失效的選擇器，使其符合新的標記
+    3. **請勿**更動測試邏輯、關於內容／數量的斷言，或測試結構——只修正選擇器
+    4. **請勿**修改 `dashboard_component.html`
+    5. 將更新後的測試檔案就地儲存為 `dashboard_tests.py`
+
+    以下是這次重構變更內容的快速對照表：
+
+    | 舊（失效） | 新（現行） |
+    |---|---|
+    | `.sidebar` | `.sidebar-nav` |
+    | `.menu-items` | `.nav-items` |
+    | `a.active` | `a[aria-current="page"]` |
+    | `.top-bar` | `.header-bar` |
+    | `.top-bar .title` | `.header-bar .page-title` |
+    | `.top-bar .avatar` | `.header-bar .avatar-btn` |
+    | `.dropdown-menu` | `.dropdown-panel` |
+    | `.stats-grid` / `.stat-card` | `.metrics-grid` / `.metric-card` |
+    | `.stat-label` / `.stat-value` / `.stat-change.positive` | `.metric-label` / `.metric-value` / `.metric-trend.trend-up` |
+    | `#searchBox` | `.search-input` |
+    | `.members-table` | `.data-section table`（或 `.data-section`） |
+    | `th.sortable` | `th[data-sort]` |
+    | `.badge` / `.badge-active` / `.badge-idle` / `.badge-offline` | `.status-badge` / `.status-active` / `.status-idle` / `.status-offline` |
+    | `.edit-btn` | `[data-action="edit-member"]` |
+    | `.notifications` / `.toast` | `.toast-container` / `.toast-message` |
+    | `.pager` / `.page-btn` / `.page-btn.active` | `.pagination-bar` / `.page-controls button` / `.page-controls button.is-active` |
+    | `.pager .info` | `.pagination-bar .page-info` |
+    | `.modal-backdrop` | `.modal-overlay` |
+    | `.modal-content` | `.modal-dialog` |
+    | `.cancel-btn` | `[data-action="close-modal"]` |
+    | `.submit-btn` | `button[type="submit"]` |
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: dashboard_component.html
+  dest: dashboard_component.html
+- source: dashboard_tests.py
+  dest: dashboard_tests.py
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 編輯後檔案 `dashboard_tests.py` 存在
+- 檔案包含有效的 Python 語法
+- Sidebar 選擇器已更新（`.sidebar-nav`、`.nav-items`、`aria-current`）
+- Header 選擇器已更新（`.header-bar`、`.page-title`）
+- 使用者選單選擇器已更新（`.avatar-btn`、`.dropdown-panel`）
+- Metric card 選擇器已更新（`.metrics-grid`、`.metric-card`、`.metric-label`、`.metric-value`、`.metric-trend`）
+- 搜尋輸入框選擇器已更新（以 `.search-input` 取代 `#searchBox`）
+- 表格選擇器已更新（以 `.data-section` 取代 `.members-table`）
+- 排序表頭選擇器已更新（`th[data-sort]` 或 `th[aria-sort]`）
+- 狀態標章選擇器已更新（`.status-badge`、`.status-active`、`.status-idle`、`.status-offline`）
+- 編輯按鈕選擇器已更新（`data-action="edit-member"`）
+- Toast 選擇器已更新（`.toast-container`、`.toast-message`）
+- 分頁選擇器已更新（`.pagination-bar`、`.page-controls`、`.is-active`、`.page-info`）
+- Modal 選擇器已更新（`.modal-overlay`、`.modal-dialog`、`data-action="close-modal"`、`button[type="submit"]`）
+- 檔案中沒有殘留任何舊選擇器
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：選擇器正確性與專一性（權重 40%）
+
+  **1.0 分**：更新後的測試檔案中，每一個選擇器都精準對應 `dashboard_component.html`
+  中的元素。選擇器使用正確的 class 名稱、data 屬性與結構性關係。沒有誤判——每個
+  選擇器都恰好鎖定預期的元素。在 HTML 使用 data／ARIA 屬性而非樣式化 class 之處，
+  適當使用了 `[aria-current="page"]`、`[data-action="edit-member"]` 與 `[data-sort]`
+  等屬性選擇器。
+
+  **0.75 分**：幾乎所有選擇器都正確。有一兩個小瑕疵（例如稍微過度指定但仍可運作的
+  選擇器，或在更適合使用 data 屬性處改用了父層 class）。
+
+  **0.5 分**：多數選擇器更新正確，但有數個不精準或部分錯誤（例如鎖定父層而非特定
+  元素，或使用了近似的 class 名稱）。
+
+  **0.25 分**：更新了部分選擇器，但有許多不準確，或在未對照實際 HTML 結構下憑空
+  猜測。
+
+  **0.0 分**：選擇器大致未變、捏造，或不對應實際的標記。
+
+  ### 評分項 2：選擇器風格的一致性（權重 20%）
+
+  **1.0 分**：更新後的選擇器在整個檔案中遵循一致的模式。若助手對互動元素使用 data
+  屬性、對樣式化元素使用 class，這項慣例就被一致地套用。選擇器專一性適中——不會
+  過於寬泛或不必要地深入。
+
+  **0.75 分**：大致一致，僅有一兩處風格偏差。
+
+  **0.5 分**：選擇器策略混雜——有些用 data 屬性、有些用深層巢狀路徑、有些用 class，
+  沒有明確的理由。
+
+  **0.25 分**：不一致且雜亂——選擇器的選擇沒有可辨識的模式。
+
+  **0.0 分**：完全沒有一致性。
+
+  ### 評分項 3：測試邏輯的保留（權重 25%）
+
+  **1.0 分**：所有測試函式都保留了原本的結構、斷言值、預期數量與行為檢查。沒有移除、
+  更動或破壞任何測試邏輯。註解與 docstring 都被保留。只有選擇器被修改。
+
+  **0.75 分**：測試邏輯完整保留，僅有微不足道的外觀變更（例如重新排版某一行、更新
+  某個註解）。
+
+  **0.5 分**：多數測試邏輯被保留，但有一兩個斷言被不必要地更動（例如改變了預期數量
+  或文字值）。
+
+  **0.25 分**：有數個測試在選擇器修正之外，其邏輯也被修改。
+
+  **0.0 分**：測試邏輯被大幅更動——測試可能不再驗證相同的行為。
+
+  ### 評分項 4：整體程式碼品質（權重 15%）
+
+  **1.0 分**：更新後的檔案是整潔、格式良好的 Python。import 維持不變。沒有語法
+  錯誤。選擇器字串有正確的引號，並在需要處正確跳脫（escape）。檔案能在無 import 或
+  語法錯誤的情況下執行。
+
+  **0.75 分**：程式碼整潔，僅有些微風格問題（例如屬性選擇器的引號不一致）。
+
+  **0.5 分**：有一些格式問題，或對非選擇器的程式碼做了不必要的更動。
+
+  **0.25 分**：有明顯的程式碼品質問題——引號不匹配、字串損壞，或不必要的重構。
+
+  **0.0 分**：檔案有語法錯誤，或無法 import。
+reference_solution: |-
+  助手應該：
+
+  1. 閱讀 `dashboard_component.html`，了解現行的 DOM 結構、class 名稱與 data 屬性
+  2. 閱讀 `dashboard_tests.py`，找出每一個失效的選擇器
+  3. 以對照表為指引，有系統地將每個選擇器更新為符合新的標記
+  4. 保留所有測試邏輯、斷言的值與結構性模式——只應更動選擇器
+  5. 將修正後的檔案儲存為 `dashboard_tests.py`
+
+  修正後的選擇器應使用 HTML 中實際存在的 class 名稱與屬性（例如 `.sidebar-nav`、
+  `.nav-items`、`[aria-current="page"]`、`.metric-card`、`.status-badge.status-active`、
+  `[data-action="edit-member"]`、`.toast-container .toast-message`、`.modal-overlay`
+  等）。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: dashboard_component.html
+    dest: dashboard_component.html
+  - source: dashboard_tests.py
+    dest: dashboard_tests.py
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

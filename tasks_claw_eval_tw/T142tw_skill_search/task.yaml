@@ -1,0 +1,132 @@
+task_id: T142tw_skill_search
+task_name: 設定檔內搜尋與取代（台灣團隊）
+version: 0.3.0
+category: skills
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- skills
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_skill_search.md
+  original_task_id: task_skill_search
+  original_file: tasks/task_skill_search.md
+prompt:
+  text: |-
+    我們的台灣開發團隊需要為正式環境部署更新設定檔。請對 `config/` 目錄中的所有
+    設定檔做以下變更：
+
+    1. 將所有 `localhost` 改為 `prod-db.example.com`
+    2. 將資料庫名稱由 `myapp_dev` 改為 `myapp_prod`（並將 `myapp_test` 改為
+       `myapp_prod`）
+    3. 將 log level 由 `debug` 改為 `warn`（在 settings.json 中）
+    4. 將 API 端點由 `http://localhost:3000` 更新為 `https://api.example.com`
+
+    請列出你對每個檔案所做的變更。
+
+    注意：請在變更摘要中**明確標示你檢視與修改了哪些檔案、標示你進行變更的日期**，
+    並說明任何**限制與不確定性**（例如某些值出現在多個檔案、是否有未涵蓋到的設定）。
+    切勿捏造未實際做出的變更，也不要更改檔名或 config 鍵名。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 助手讀取設定檔
+- 助手將 localhost 取代為 prod-db.example.com
+- 助手適當地更新資料庫名稱
+- 助手將 log level 改為 warn
+- 助手將 API 端點更新為 https
+- 助手摘要所做的變更，並標示所修改的檔案、變更日期與任何限制／不確定性
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 讀取 `config/` 目錄中的設定檔
+  2. 找出所有需要變更之處
+  3. 在每個檔案中進行適當的取代
+  4. 摘要所做的變更
+
+  這項任務測試助手以下能力：
+
+  - 讀取並理解設定檔格式（JSON、YAML）
+  - 執行有針對性的搜尋與取代操作
+  - 跨多個檔案作業
+  - 清楚地傳達變更內容
+
+  在摘要變更時，正確行為是**明確標示所檢視與修改的檔案、標示變更日期，並說明
+  任何限制與不確定性**（如重複值、未涵蓋的設定），而非聲稱做了未實際完成的變更。
+  檔名與 config 鍵名不可更改。
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - path: config/settings.json
+    content: |
+      {
+        "database": {
+          "host": "localhost",
+          "port": 5432,
+          "name": "myapp_dev",
+          "user": "devuser",
+          "password": "dev_password_123"
+        },
+        "api": {
+          "endpoint": "http://localhost:3000",
+          "timeout": 30
+        },
+        "logging": {
+          "level": "debug",
+          "file": "/var/log/myapp/dev.log"
+        }
+      }
+  - path: config/database.yml
+    content: |-
+      development:
+        adapter: postgresql
+        host: localhost
+        port: 5432
+        database: myapp_dev
+        username: devuser
+        password: dev_password_123
+
+      test:
+        adapter: postgresql
+        host: localhost
+        port: 5432
+        database: myapp_test
+        username: devuser
+        password: dev_password_123
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: manual_review_only
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

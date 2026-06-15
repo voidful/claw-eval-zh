@@ -1,0 +1,70 @@
+task_id: P013zh_executive_lookup
+task_name: 高階主管查詢
+version: 0.2.0
+category: research
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- research
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_executive_lookup
+  original_file: tasks/task_executive_lookup.md
+prompt:
+  text: |-
+    截至 2026 年 4 月 7 日，GitLab 的 CFO 是誰？
+
+    請研究答案，並將其儲存至 `gitlab_cfo.txt`。內容須包含該高階主管的全名，以及
+    一段簡短的來源說明或日期參照，以佐證該答案在 2026 年 4 月 7 日為現任資訊。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立檔案 gitlab_cfo.txt
+- 檔案指出 Jessica Ross 為 GitLab CFO
+- 檔案提及 GitLab 與 CFO 職位
+- 檔案包含 2026 年的日期或來源說明
+- 答案簡潔且易讀
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 找出截至 2026 年 4 月 7 日 GitLab 的財務長（chief financial officer）
+  2. 使用可靠來源，例如 GitLab 投資人關係（investor relations）、新聞稿，
+     或具公信力的財經報導
+  3. 在工作區建立 `gitlab_cfo.txt`
+  4. 寫入該 CFO 的全名與一段簡短的日期／來源說明
+
+  答案應簡潔且符合事實。若助手使用了網路工具，應依據 2026 年的最新資訊，而非
+  過時的歷史資料。
+primary_dimensions:
+- completion
+- safety
+- robustness
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

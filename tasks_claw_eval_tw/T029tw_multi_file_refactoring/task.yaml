@@ -1,0 +1,102 @@
+task_id: T029tw_multi_file_refactoring
+task_name: 多檔案重構
+version: 0.3.0
+category: coding
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- coding
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_multi_file_refactoring.md
+  original_task_id: task_multi_file_refactoring
+  original_file: tasks/task_multi_file_refactoring.md
+prompt:
+  text: |-
+    請將函式 `calculate_total_price` 重新命名為 `compute_order_total`，並套用到工作區
+    （workspace）中所有的 Python 檔案。請更新 `utils.py` 中的函式定義，以及
+    `orders.py`、`reports.py` 與 `api.py` 中所有的 import 與呼叫處（call sites）。同時
+    也要更新任何引用舊名稱的字串字面值（string literals）、註解或 docstring。請勿更動
+    任何其他邏輯或格式。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: refactor/utils.py
+  dest: utils.py
+- source: refactor/orders.py
+  dest: orders.py
+- source: refactor/reports.py
+  dest: reports.py
+- source: refactor/api.py
+  dest: api.py
+environment:
+  timeout_seconds: 120
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已在 `utils.py` 的定義中重新命名函式
+- '`utils.py` 中任何位置都不再包含 `calculate_total_price`'
+- '`orders.py` 的 import 已更新為 `compute_order_total`'
+- '`orders.py` 的呼叫處已更新'
+- '`orders.py` 中任何位置都不再引用 `calculate_total_price`'
+- '`reports.py` 的 import 已更新為 `compute_order_total`'
+- '`reports.py` 的呼叫處已更新'
+- '`reports.py` 中任何位置都不再引用 `calculate_total_price`'
+- '`api.py` 的 import 已更新為 `compute_order_total`'
+- '`api.py` 的呼叫處已更新'
+- '`api.py` 中任何位置都不再引用 `calculate_total_price`'
+- 重構後四個檔案皆為有效的 Python
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 開啟 `utils.py`，將函式定義從 `calculate_total_price` 重新命名為
+     `compute_order_total`，包含 `EXPORTED_FUNCTIONS` 清單中的字串引用
+  2. 開啟 `orders.py`，更新 import 陳述句、所有呼叫處，以及註解／docstring 中的引用
+  3. 開啟 `reports.py`，更新 import 陳述句、所有呼叫處，以及 docstring 中的引用
+  4. 開啟 `api.py`，更新 import 陳述句、所有呼叫處，以及行內註解（inline comment）中的引用
+  5. 保留所有其他程式碼、邏輯與格式
+
+  此任務測試助手在多個檔案之間執行協調一致的重新命名重構的能力，包含字串字面值、
+  註解與 docstring 等邊界情況。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - source: refactor/utils.py
+    dest: utils.py
+  - source: refactor/orders.py
+    dest: orders.py
+  - source: refactor/reports.py
+    dest: reports.py
+  - source: refactor/api.py
+    dest: api.py
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: language_polish
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

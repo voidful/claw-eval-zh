@@ -1,0 +1,145 @@
+task_id: P131zh_meeting_gov_speaker_summary
+task_name: NASA UAP 聽證會發言者摘要
+version: 0.2.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_meeting_gov_speaker_summary
+  original_file: tasks/task_meeting_gov_speaker_summary.md
+prompt:
+  text: |-
+    我有一份逐字稿檔案 `transcript.md`，來自 NASA 首場關於不明異常現象（Unidentified Anomalous Phenomena, UAPs/UFOs）的公開會議。這是 NASA 的 UAP 獨立研究小組依《聯邦諮詢委員會法》（Federal Advisory Committee Act, FACA）召開的審議會議。
+
+    請閱讀逐字稿，並產生一個名為 `speaker_summary.md` 的檔案，摘述每位發言者的重點。對於每位做了實質報告或發言的發言者，請列出：
+
+    - **發言者姓名與角色／所屬單位**（若有提及）
+    - **重點（Key points）**：條列式
+    - **值得注意的引言（Notable quotes）**：1-2 句能呈現其核心訊息的直接引言
+
+    請依發言者出場順序排列。把次要的插話或簡短的程序性發言歸入「Panel Q&A Contributions」區段，而非各給一個完整條目。聚焦於做了報告或實質發言的發言者。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2025-07-30-nasa-holds-first-public-meeting-on-ufos-transcript.md
+  dest: transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立輸出檔案 `speaker_summary.md`
+- 辨識 Dan Evans 並摘述其重點（開場、騷擾疑慮、FACA 合規）
+- 辨識 Nicola Fox 並摘述其重點（資料品質、機密與非機密之別）
+- 辨識 David Spergel 並摘述其重點（需要校準資料、小組主席角色）
+- 辨識 Sean Kirkpatrick 並摘述其重點（AARO 資料、800+ 案例、2-5% 異常）
+- 辨識 Mike Freie／FAA 並摘述其重點（監視能力、雷達涵蓋）
+- 至少摘述另外 3 位小組成員（Drake、Bontempi、Bianco、Grinspoon 等）
+- 至少 3 位發言者附有直接引言
+- 發言者大致依出場順序排列
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：發言者辨識完整性（權重 30%）
+
+  **1.0 分**：所有主要發言者皆被辨識，姓名、角色與所屬單位正確。至少涵蓋 8 位發言者。
+
+  **0.75 分**：多數主要發言者辨識正確。涵蓋 6-7 位。
+
+  **0.5 分**：核心發言者已辨識，但有些遺漏或角色有誤。涵蓋 4-5 位。
+
+  **0.25 分**：僅辨識少數發言者，許多遺漏。
+
+  **0.0 分**：未辨識發言者或完全錯誤。
+
+  ### 評分項 2：重點準確性（權重 35%）
+
+  **1.0 分**：每位發言者的重點準確、具體，掌握其主要論點。包含具體細節，如統計數字（800+ 案例、2-5% 異常、每日 45,000 架次飛行）。
+
+  **0.75 分**：多數重點準確，僅有少許遺漏或籠統概括。
+
+  **0.5 分**：重點部分準確，但漏掉重要細節或含不準確之處。
+
+  **0.25 分**：重點模糊或明顯不準確。
+
+  **0.0 分**：未擷取有意義的重點。
+
+  ### 評分項 3：引言品質（權重 15%）
+
+  **1.0 分**：包含相關、具啟發性的引言，能呈現每位發言者的觀點。引言準確或為貼近的轉述。
+
+  **0.75 分**：多數發言者附有良好引言。
+
+  **0.5 分**：包含一些引言，但可能籠統或選得不佳。
+
+  **0.25 分**：引言少或品質差。
+
+  **0.0 分**：未包含引言。
+
+  ### 評分項 4：組織與可讀性（權重 20%）
+
+  **1.0 分**：依發言者出場順序良好組織，格式清楚，易於瀏覽與查閱。
+
+  **0.75 分**：組織良好，僅有少許問題。
+
+  **0.5 分**：可讀但組織不佳。
+
+  **0.25 分**：雜亂且難以追隨。
+
+  **0.0 分**：沒有可用的結構。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析完整逐字稿
+  2. 辨識主要發言者：Dan Evans（NASA，指定聯邦官員）、Nicola Fox（NASA Associate Administrator）、David Spergel（小組主席，宇宙學家）、Sean Kirkpatrick（AARO 主任）、Mike Freie（FAA）、Nadia Drake（科學記者）、Paula Bontempi（地球科學家）、Federica Bianco（天體物理學家／資料科學家）、David Grinspoon（行星科學家／天體生物學家）等
+  3. 準確摘述每位發言者的重點
+  4. 包含值得注意的直接引言
+  5. 撰寫一份結構良好的 markdown 檔案
+
+  關鍵發言者及其要點：
+
+  - **Dan Evans**：開場、處理對小組成員的騷擾、說明 FACA 合規、描述 UAP 研究目的
+  - **Nicola Fox**：強調資料品質的侷限、解釋機密與非機密資料的區別（戰機／自由女神像的比喻）、推廣開放資料
+  - **David Spergel**：需要高品質的校準資料、快速電波爆發（fast radio bursts）的類比、異常作為發現的引擎、公民科學的機會
+  - **Sean Kirkpatrick**：AARO 的 800+ 案例、僅 2-5% 真正異常、展示解密影像、描述感測器校準需求、建議群眾外包與地基儀器
+  - **Mike Freie**：FAA 的監視能力與侷限、雷達涵蓋範圍圖、管制員每月 3-5 件 UAP 通報、過濾技術
+  - **Nadia Drake**：界定 UAP 問題、「大乾草堆裡的細針」、沒有外星起源的決定性證據
+  - **Paula Bontempi**：NASA 的獨特角色——60 年經驗、開放資料、公眾信任、跨領域團隊
+  - **Federica Bianco**：資料標準（FAIR）、異常偵測方法、群眾外包平台建議、機器學習的就緒程度
+  - **David Grinspoon**：技術特徵（technosignatures）、天體生物學連結、與 UAP 相關的地球以外觀測
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.5
+    llm_judge: 0.5
+  workspace_files:
+  - source: meetings/2025-07-30-nasa-holds-first-public-meeting-on-ufos-transcript.md
+    dest: transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

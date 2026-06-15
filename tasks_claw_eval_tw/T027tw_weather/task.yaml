@@ -1,0 +1,81 @@
+task_id: T027tw_weather
+task_name: 天氣腳本編寫（台北）
+version: 0.3.0
+category: coding
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- coding
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_weather.md
+  original_task_id: task_weather
+  original_file: tasks/task_weather.md
+prompt:
+  text: |-
+    請編寫一個名為 weather.py 的 Python 腳本：使用 wttr.in API 取得台北市（Taipei）的
+    天氣資料，並印出一段易讀的天氣摘要。請加入基本的網路錯誤處理。
+
+    wttr.in 的 JSON 介面為 https://wttr.in/Taipei?format=j1，簡易文字介面為
+    https://wttr.in/Taipei?format=3。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 建立檔案 weather.py
+- 含有效的 Python 語法
+- 程式碼向 wttr.in 或類似天氣 API 發出 HTTP 請求
+- 程式碼指定台北（Taipei / 台北 / 臺北）地點
+- 程式碼含錯誤處理（try/except）
+- 程式碼會印出或輸出天氣資訊
+- 腳本具可執行結構
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+  1. 建立一個名為 weather.py 的檔案
+  2. 寫出向 wttr.in 發出 HTTP 請求的 Python 程式碼（地點為台北 Taipei）
+  3. 解析回應並印出易讀的天氣摘要
+  4. 包含基本的網路錯誤處理（try/except）
+  5. 使用標準函式庫或常見函式庫（requests、urllib）
+
+  注意：檔名 weather.py 與 wttr.in 網址不可更改；地點為台北（Taipei）。
+  天氣為即時資料：程式應標明資料來源（wttr.in）與查詢時間，並對即時資料的不確定性
+  有基本容錯；grader 不檢查特定天氣數值。
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

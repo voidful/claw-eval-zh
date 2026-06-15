@@ -1,0 +1,56 @@
+task_id: P001zh_sanity
+task_name: 健全性檢查
+version: 0.2.0
+category: productivity
+difficulty: easy
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- productivity
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_sanity
+  original_file: tasks/task_sanity.md
+prompt:
+  text: 請回覆「你好，我已準備好了！」以確認你可以正常回應。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 60
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 助手成功回應（任何回應都算）
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+  1. 回覆一句問候或確認訊息
+  2. 證明自己能夠處理並回應簡單指令
+
+  這是一個基礎的健全性檢查，用來確認評測系統運作正常。評分只看「是否有任何
+  助手回應」，不檢查精確字串。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

@@ -1,0 +1,151 @@
+task_id: T069tw_csv_iris_summary
+task_name: 鳶尾花統計摘要
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_iris_summary.md
+  original_task_id: task_csv_iris_summary
+  original_file: tasks/task_csv_iris_summary.md
+prompt:
+  text: '我的工作區裡有一個 CSV 檔案 `iris_flowers.csv`，內含經典的鳶尾花（Iris）資料集。它有 150 列、5 個欄位：`SepalLength`、`SepalWidth`、`PetalLength`、`PetalWidth`，以及
+    `Name`（物種）。
+
+
+    請計算統計摘要並寫到 `iris_summary.md`。你的報告應包含：
+
+
+    - **資料集概覽（dataset overview）**：總列數、欄位數，以及三個物種名稱與各自的數量
+
+    - 每個數值欄位的**整體統計（overall statistics）**：平均值（mean）、中位數（median）、標準差（standard deviation）、最小值（min）、最大值（max）
+
+    - **各物種統計（per-species statistics）**：依物種分組，計算每個數值欄位的平均值與標準差
+
+    - **相關性洞見（correlation insight）**：哪一對數值特徵之間的線性相關最強，這代表什麼意義
+
+    - 一個簡短的**關鍵發現（key findings）**區段，點出資料中最值得注意的模式'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/iris_flowers.csv
+  dest: iris_flowers.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔案 `iris_summary.md`
+- 資料集概覽：正確說明 150 列、3 個物種、各 50 列
+- 每個數值欄位都有報告整體 mean、median、stdev、min、max
+- 每個數值欄位都有報告各物種統計（至少平均值）
+- 已指出相關性最強者（PetalLength–PetalWidth）
+- 關鍵發現：setosa 可依花瓣量測值與 versicolor/virginica 區分
+- 報告結構清晰、有 markdown 排版
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：統計正確性（權重 35%）
+
+
+  - 1.0：所有統計值（mean、median、stdev、min/max）在整體與各物種層級皆數值正確。
+
+  - 0.75：多數統計正確，僅有一兩處小幅四捨五入差異。
+
+  - 0.5：部分統計正確，但有多項關鍵數值錯誤或缺漏。
+
+  - 0.25：僅少數統計正確，存在重大計算錯誤。
+
+  - 0.0：沒有正確統計，或未進行分析。
+
+
+  ### 評分項 2：分析洞見（權重 30%）
+
+
+  - 1.0：正確指出 PetalLength–PetalWidth 相關性最強，注意到 setosa 的可分性，並對資料模式做出有意義的詮釋。
+
+  - 0.75：指出關鍵相關性與物種差異，有合理的細節。
+
+  - 0.5：提到相關性或物種差異，但分析淺薄或部分有誤。
+
+  - 0.25：洞見模糊或不正確。
+
+  - 0.0：沒有提供洞見，或分析完全錯誤。
+
+
+  ### 評分項 3：報告結構與呈現（權重 20%）
+
+
+  - 1.0：markdown 組織良好，分區清楚，統計以表格呈現，且從概覽到細部分析再到關鍵發現流程合理。
+
+  - 0.75：組織良好、易讀，僅有小幅排版問題。
+
+  - 0.5：有分析，但組織不佳、不易閱讀。
+
+  - 0.25：雜亂或缺少主要區段。
+
+  - 0.0：沒有報告，或空白／無法使用。
+
+
+  ### 評分項 4：完整性（權重 15%）
+
+
+  - 1.0：所有要求的元素皆具備：概覽、整體統計、各物種統計、相關性、關鍵發現。
+
+  - 0.75：多數元素具備，僅有一兩處小幅缺漏。
+
+  - 0.5：有多項要求的元素缺漏。
+
+  - 0.25：只有少數元素。
+
+  - 0.0：報告缺漏或幾乎空白。'
+reference_solution: "助手應該：\n\n1. 讀取並解析 CSV 檔案\n2. 確認共 150 列、三個物種（Iris-setosa、Iris-versicolor、Iris-virginica），各\
+  \ 50 列\n3. 計算整體統計：\n   - SepalLength：mean≈5.84、median=5.80、stdev≈0.83、min=4.3、max=7.9\n   - SepalWidth：mean≈3.05、median=3.00、stdev≈0.43、min=2.0、max=4.4\n\
+  \   - PetalLength：mean≈3.76、median=4.35、stdev≈1.76、min=1.0、max=6.9\n   - PetalWidth：mean≈1.20、median=1.30、stdev≈0.76、min=0.1、max=2.5\n\
+  4. 計算各物種平均值（例如 setosa PetalLength mean≈1.46、virginica PetalLength mean≈5.55）\n5. 指出 PetalLength 與 PetalWidth\
+  \ 之間的相關性最強\n6. 注意到 setosa 可依花瓣量測值清楚與其他兩個物種區分\n7. 撰寫一份結構清晰的 markdown 報告\n\n關鍵預期數值：\n\n- 150 列、3 個物種、各\
+  \ 50 列\n- 整體 SepalLength 平均值：~5.84\n- 整體 PetalLength 平均值：~3.76\n- Setosa PetalLength 平均值：~1.46\n- Virginica\
+  \ PetalLength 平均值：~5.55\n- 相關性最強：PetalLength–PetalWidth"
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/iris_flowers.csv
+    dest: iris_flowers.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

@@ -1,0 +1,113 @@
+task_id: P081zh_log_apache_error_summary
+task_name: Apache 錯誤日誌 — 產生錯誤摘要報告
+version: 0.2.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_log_apache_error_summary
+  original_file: tasks/task_log_apache_error_summary.md
+prompt:
+  text: |-
+    請分析位於 `apache_error.log` 的 Apache 錯誤日誌，並產生一份完整的摘要報告。此日誌來自一台執行於 Fedora、版本為 Apache 2.0.49 的伺服器，涵蓋 2005 年 6 月約一週的時間。
+
+    你的報告應包含以下區段：
+
+    1. **概觀（Overview）**：日誌條目總數、涵蓋的日期範圍、各日誌等級的分布（error 與 notice）
+    2. **伺服器組態問題（Server Configuration Issues）**：與伺服器啟動、模組初始化或組態問題相關的錯誤（非由用戶端請求引起）
+    3. **用戶端錯誤摘要（Client Error Summary）**：不重複用戶端 IP 總數、與用戶端相關的錯誤總數，以及用戶端錯誤類別的分布
+    4. **資安評估（Security Assessment）**：摘要說明日誌中偵測到的任何掃描、探測或攻擊活動，並附上具體證據
+    5. **建議（Recommendations）**：提出 3 項可降低錯誤量或提升資安的可執行建議
+
+    請把報告寫到 `error_summary.md`，以結構清晰的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/apache_error.log
+  dest: apache_error.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `error_summary.md`
+- 報告包含日期範圍與日誌等級分布（error 與 notice 的計數）
+- 將伺服器端組態問題（mod_jk、createBean）與用戶端錯誤分開辨識
+- 以具體證據指出資安威脅（IIS 蠕蟲、目錄路徑穿越、掃描器 IP）
+- 提供至少 2 項可執行的建議
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `error_summary.md`
+  - 報告包含日期範圍與日誌等級分布（error 與 notice 的計數）
+  - 將伺服器端組態問題（mod_jk、createBean）與用戶端錯誤分開辨識
+  - 以具體證據指出資安威脅（IIS 蠕蟲、目錄路徑穿越、掃描器 IP）
+  - 提供至少 2 項可執行的建議
+reference_solution: |-
+  助手應解析整份日誌，並產生涵蓋下列內容的報告：
+
+  **概觀：**
+  - 約 1000 行日誌
+  - 日期範圍：Thu Jun 9 至 Thu Jun 16, 2005
+  - 約 753 條 error 條目、約 247 條 notice 條目
+
+  **伺服器組態問題：**
+  - JK connector（mod_jk/jk2）初始化失敗——在 scoreboard 中找不到子處理程序
+  - 針對 channel.jni、vm、worker.jni 的 env.createBean2() 工廠錯誤（每次啟動皆重複出現）
+  - 這些發生於 3 次伺服器啟動（Jun 9、Jun 10、Jun 12）以及一次平順重啟（graceful restart，Jun 12）
+
+  **用戶端錯誤摘要：**
+  - 約 159 個不重複用戶端 IP
+  - 約 630 條與用戶端相關的錯誤條目
+  - 主要類別：Directory index forbidden（~224）、File does not exist（~200+）、script not found（~66+）、Invalid method（~17）
+
+  **資安評估：**
+  - 透過 Invalid method 請求進行的 IIS 蠕蟲探測（Nimda/Code Red），攻擊目標為 cmd.exe、root.exe
+  - 使用編碼路徑（%5c、%c0%af、%c1%9c、%e0%80%af、%252e）的目錄路徑穿越（directory traversal）嘗試
+  - 來自 202.133.98.6 的 awstats 漏洞掃描（~184 條錯誤）
+  - 多個 IP 對 FrontPage extensions（_vti_bin）的探測
+  - 來自 212.238.198.203 的 OpenWebMail 掃描
+
+  **建議應涵蓋：**
+  - 新增 DirectoryIndex 或預設頁面，以消除「Directory index forbidden」的雜訊
+  - 封鎖已知掃描器 IP 或實施速率限制
+  - 修正 JK connector 組態以消除啟動錯誤
+
+  可接受的變化：
+  - 精確計數可能有 ±10% 的差異
+  - 只要建議具可執行性且切題，內容可有所不同
+  - 資安評估對同一攻擊可採用不同的用語
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: apache_error.log
+    source: logs/apache_error.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

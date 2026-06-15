@@ -1,0 +1,138 @@
+task_id: T129tw_meeting_tldr
+task_name: |
+  會議 TL;DR 速覽
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_tldr.md
+  original_task_id: task_meeting_tldr
+  original_file: tasks/task_meeting_tldr.md
+prompt:
+  text: |-
+    我手上有一個檔案 `meeting_transcript.md`，內含 GitLab 產品行銷團隊會議的逐字稿。我錯過了這場會議，需要快速跟上進度。
+
+    請幫我把一份 TL;DR 寫入名為 `meeting_tldr.md` 的檔案。它應該**極度精簡**——就像你會貼在 Slack 上給沒參加通話的同事看的那種摘要。要求：
+
+    - **最多 150 字**（硬性上限）
+    - 最上方有一句**一行總結**（用一句話說明這場會議在談什麼）
+    - **3-5 個重點**，涵蓋最重要的結論
+    - 提及任何**期限**
+
+    不要廢話、不要前言、不要「In this meeting, the team discussed...」之類——只要必要的事實。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+  dest: meeting_transcript.md
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立 `meeting_tldr.md` 檔案
+- 最上方有一句一行總結
+- 包含 3-5 個重點
+- 提及活動分工（re:Invent、Google Next 或 KubeCon）
+- 提及訊息決議（「more speed, less risk」）
+- 提及期限（週二 Tuesday）
+- 總字數在 200 字以內
+- 沒有不必要的填充或前言
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：資訊密度（權重 40%）
+
+  **1.0 分**：每一句都承載必要資訊。掌握了會議最重要的 5 項結論。沒有贅字。同事讀完即能掌握所有需要知道的事。
+
+  **0.75 分**：掌握多數重要結論，僅有少許遺漏或略嫌冗長。
+
+  **0.5 分**：關鍵結論俱在，但漏掉部分重要項目，或塞入不必要的脈絡。
+
+  **0.25 分**：漏掉主要結論，或對 TL;DR 而言過於囉嗦。
+
+  **0.0 分**：作為快速摘要沒有用處。
+
+  ### 評分項 2：精簡度（權重 35%）
+
+  **1.0 分**：150 字以內。讀起來像一則 Slack 訊息——有力、直接、不拖泥帶水。適當使用簡寫（用 → 表示分工、對熟知術語用縮寫）。
+
+  **0.75 分**：200 字以內，大致精簡，仍有可刪減之處。
+
+  **0.5 分**：200-300 字，內容合理，但稱不上真正的 TL;DR。
+
+  **0.25 分**：超過 300 字——這是摘要，不是 TL;DR。
+
+  **0.0 分**：超過 500 字，或完全未達精簡要求。
+
+  ### 評分項 3：可掃描性（權重 25%）
+
+  **1.0 分**：能在 30 秒內完全吸收。視覺結構清楚（重點符號、用粗體強調、期限被標示出來）。最上方的一行總結立即讓讀者定位。
+
+  **0.75 分**：結構良好，大致可掃描，仍有少許可改進。
+
+  **0.5 分**：包含資訊，但需要仔細閱讀才能擷取重點。
+
+  **0.25 分**：一大片文字或結構不佳。
+
+  **0.0 分**：沒有結構或內容缺失。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取逐字稿
+  2. 把整場會議濃縮到約 150 字以內
+  3. 產出類似這樣的內容：
+
+     **每週 PMM sync——活動分工、Commit 公告、訊息傳達。**
+
+     - 活動歸屬確定：Platform→re:Invent、CI/CD→Google Next、GitOps→KubeCon。請向你的 campaign managers 確認並在 issue 上留言。
+     - Commit 需要前 5 大產品公告。Vulnerability management 是安全領域的首選。團隊正在票選最終名單。
+     - 訊息標語定案：「more speed, less risk」。公司層級：「single source of truth, countless possibilities」。
+     - 競品資訊圖改為僅用綠色（不用紅色）——design 團隊的建議。
+     - 競品表：只採用與你 stage 相關的 tier 1 競爭對手。把 GitLab 也列為一個項目。
+
+     **⏰ 產品公告試算表週二（Tuesday）截止。**
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+    dest: meeting_transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

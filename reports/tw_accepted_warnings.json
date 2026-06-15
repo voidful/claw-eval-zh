@@ -1,0 +1,18 @@
+{
+  "generated_by": "Phase 4 release hardening",
+  "note": "Structured accepted warnings. validate_tw_localization.py 會把這些 (task_id, warning_type) 從 unresolved_warnings 移到 accepted_warnings，不計入 strict-release gate。每筆都有理由、風險與後續行動。",
+  "items": [
+    {
+      "task_id": "task_playwright_e2e",
+      "warning_type": "us_residue",
+      "status": "accepted_with_rationale",
+      "severity": "low",
+      "reason": "prompt 中的 'ZIP code' 是受測表單（form.html，固定英文 UI asset）的欄位名稱；E2E 測試必須對應該表單的實際欄位（street / city / state / ZIP code）。把欄位名改成中文會與固定表單 asset 脫鉤、破壞測試語意。",
+      "why_not_fixed_now": "需同步替換 form.html 為台灣地址表單（縣市/郵遞區號下拉），屬 fixture 變更（Phase D）；且 grader 不檢查 zip literal，故非功能性錯誤。",
+      "risk": "低。grader 不依賴 'ZIP code' 字串；任務行為不受影響。",
+      "future_action": "Phase D 可選擇性新增台灣地址表單 fixture 並改寫步驟，移除本 accepted warning。",
+      "owner": "dataset-maintainer",
+      "review_required_before_leaderboard": false
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+task_id: T010tw_events
+task_name: 台灣科技研討會研究
+version: 0.3.0
+category: research
+difficulty: hard
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- research
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_events.md
+  original_task_id: task_events
+  original_file: tasks/task_events.md
+prompt:
+  text: '請找出 5 場台灣近期即將舉辦的科技／開源研討會或活動（例如 COSCUP、SITCON、
+
+    PyCon Taiwan、MOPCON、JSDC 等），並建立 events.md，為每一場列出名稱、日期、
+
+    地點與官方網站。
+
+
+    注意：這是即時資料。請務必對每一場活動**標示資料來源、標示你的查詢日期**，
+
+    並在開頭或結尾說明**資料限制與不確定性**（活動日期可能調整、報名狀態可能變動）。
+
+    若某項資訊無法查證，請明白註記，切勿捏造活動或日期。檔名 events.md 不可更改。'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 300
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 events.md
+- 恰好包含 5 筆台灣科技／開源研討會或活動項目
+- 每筆項目皆有活動名稱
+- 每筆項目皆有日期資訊
+- 每筆項目皆有地點資訊（台灣城市／場館）
+- 每筆項目皆有官方網站／網址
+- 標示資料來源與查詢日期，並說明資料限制與不確定性
+- 資訊看起來正確且可查證
+- 排版清楚且一致
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：資訊正確性（權重 30%）
+
+
+  **1.0 分**：5 場活動皆為真實、可查證的台灣科技／開源研討會或活動。所有資訊
+
+  （名稱、日期、地點、網站）皆正確且可查證，無任何捏造的活動。
+
+
+  **0.75 分**：4～5 場活動可查證且資訊正確。日期或細節有些微不準確，但不影響
+
+  整體有效性。
+
+
+  **0.5 分**：3～4 場活動可查證。部分資訊可能已過時或含有不準確之處，但活動
+
+  確實存在。
+
+
+  **0.25 分**：僅有 1～2 場活動可查證，或多筆項目含有明顯不準確之處，可能包含
+
+  捏造的活動。
+
+
+  **0.0 分**：所有或大多數活動看似捏造，或資訊完全不正確。
+
+
+  ### 評分項 2：完整性（權重 20%）
+
+
+  **1.0 分**：5 場活動皆有完整資訊：名稱、具體日期（不只是月份）、台灣的地點
+
+  （城市／場館），以及可正常開啟的官方網站網址。
+
+
+  **0.75 分**：5 場活動皆有列出，資訊大致完整。僅有小幅缺漏（例如日期較為概略、
+
+  缺少具體場館）。
+
+
+  **0.5 分**：列出 4～5 場活動，但有明顯的資訊缺漏。部分項目缺少日期、地點或
+
+  網站。
+
+
+  **0.25 分**：少於 4 場活動，或多筆項目有重大資訊缺漏。
+
+
+  **0.0 分**：少於 3 場活動，或多數項目嚴重不完整。
+
+
+  ### 評分項 3：來源、查詢日期與不確定性（權重 20%）
+
+
+  **1.0 分**：每筆活動皆標示可追溯的資料來源（官方網站或官方公告連結），明確
+
+  標示查詢日期，並說明資料限制與不確定性（例如日期或報名狀態可能異動）。明顯
+
+  以引用來源取代捏造或寫死的資訊。
+
+
+  **0.75 分**：多數活動有標示來源並標示查詢日期，對不確定性有提及但較簡略。
+
+
+  **0.5 分**：有標示部分來源或查詢日期，但不一致，或未說明資料限制。
+
+
+  **0.25 分**：僅零星提及來源或日期，未說明不確定性。
+
+
+  **0.0 分**：完全未標示來源或查詢日期，或出現捏造／寫死且未加註的資訊。
+
+
+  ### 評分項 4：相關性與品質（權重 15%）
+
+
+  **1.0 分**：所有活動皆為台灣重要、知名的科技／開源研討會或活動（例如 COSCUP、
+
+  SITCON、PyCon Taiwan 等具規模的系列活動）。在主題或地區上具有良好的多樣性。
+
+
+  **0.75 分**：多數活動皆為值得關注的台灣科技活動。整體選擇良好，僅在重要性或
+
+  多樣性上有小瑕疵。
+
+
+  **0.5 分**：知名與較不知名的活動混雜。多樣性有限，或部分活動與「科技／開源」
+
+  的相關性令人存疑。
+
+
+  **0.25 分**：多為冷門或令人存疑的活動，與台灣科技社群的相關性不佳。
+
+
+  **0.0 分**：活動與科技無關，或完全不恰當。
+
+
+  ### 評分項 5：排版與任務完成度（權重 15%）
+
+
+  **1.0 分**：排版優異，結構一致。善用 markdown（標題、清單、連結）。建立了
+
+  檔名正確的檔案（events.md），包含 5 場活動，所有要求皆達成。
+
+
+  **0.75 分**：排版良好，檔案已建立，僅有小瑕疵，但基本上完整。
+
+
+  **0.5 分**：具備基本排版，檔案已建立，但缺少重要要求。
+
+
+  **0.25 分**：排版不佳，或檔案嚴重不足。
+
+
+  **0.0 分**：未建立檔案，或檔案為空。'
+reference_solution: '助手應該：
+
+
+  1. 使用網路搜尋或研究工具，找出真實存在的台灣科技／開源研討會或活動
+
+  2. 找出 5 場近期即將舉辦的活動
+
+  3. 擷取關鍵資訊：名稱、日期、地點、官方網站
+
+  4. 建立一個名為 `events.md` 的檔案，寫入上述資訊
+
+  5. 以清楚且一致的方式排版這些資訊
+
+  6. 確保這些活動真實存在，且資訊正確無誤
+
+
+  因為是即時資料，正確行為是**標示資料來源、標示查詢日期，並說明資料限制與
+
+  不確定性**，而非捏造活動、日期或寫死過時資訊。助手可採用多種搜尋策略，並應
+
+  從可靠來源（官方網站、官方社群公告）查證資訊。'
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: manual_review_only
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

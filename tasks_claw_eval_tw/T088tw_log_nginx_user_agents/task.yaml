@@ -1,0 +1,116 @@
+task_id: T088tw_log_nginx_user_agents
+task_name: Nginx 存取日誌 — 使用者代理分析
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_nginx_user_agents.md
+  original_task_id: task_log_nginx_user_agents
+  original_file: tasks/task_log_nginx_user_agents.md
+prompt:
+  text: |-
+    請分析位於 `nginx_access.log` 的 Nginx JSON 存取日誌，並產生一份完整的使用者代理（user agent）分析。每一行都是一個 JSON 物件，欄位有：`time`、`remote_ip`、`remote_user`、`request`、`response`、`bytes`、`referrer`、`agent`。
+
+    你的報告應包含：
+
+    1. **不重複使用者代理（Unique User Agents）**：相異使用者代理字串的總數
+    2. **使用者代理排名（User Agent Ranking）**：依請求數排序列出所有使用者代理，並附計數與百分比
+    3. **用戶端類型分類（Client Type Classification）**：將代理分類（套件管理工具、網頁瀏覽器、機器人／爬蟲、命令列工具、未知／空白）
+    4. **代理對 IP 的對應（Agent-to-IP Mapping）**：對於每個使用者代理，有多少個不重複 IP 使用它？
+    5. **各代理的成功與錯誤率（Success vs Error Rate by Agent）**：對於每個代理，有多少百分比的請求造成錯誤（4xx/5xx）？
+    6. **結論（Conclusions）**：根據使用者代理的樣貌，這是何種類型的伺服器？
+
+    請把報告寫到 `user_agent_report.md`，以結構清晰的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/nginx_access_json.log
+  dest: nginx_access.log
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `user_agent_report.md`
+- 已列出所有使用者代理及其計數
+- 代理已依類型分類（套件管理工具、機器人等）
+- 已將主要代理（Debian APT）判定為首要用戶端
+- 已正確推論伺服器用途（套件儲存庫／下載鏡像站）
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `user_agent_report.md`
+  - 已列出所有使用者代理及其計數
+  - 代理已依類型分類（套件管理工具、機器人等）
+  - 已將主要代理（Debian APT）判定為首要用戶端
+  - 已正確推論伺服器用途（套件儲存庫／下載鏡像站）
+reference_solution: |-
+  助手應解析全部 1000 筆 JSON 日誌條目，並產生：
+
+  **不重複使用者代理：** 14 個相異代理字串（包含代表空白的「-」）
+
+  **主要使用者代理：**
+  - `Debian APT-HTTP/1.3 (0.9.7.9)` —— 370 次請求（37.0%）
+  - `Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.16)` —— 177（17.7%）
+  - `Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.22)` —— 118（11.8%）
+  - `Debian APT-HTTP/1.3 (1.0.1ubuntu2)` —— 116（11.6%）
+  - `Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.21)` —— 64（6.4%）
+  - 其他 APT 變體及少數其他代理（Go 1.1 package http、urlgrabber 等）
+
+  **分類：**
+  - 套件管理工具（Debian APT）：絕大多數（約 95%+）
+  - 其他自動化工具：Go HTTP client、urlgrabber
+  - 空白／缺漏代理（「-」）：少量
+
+  **結論：**
+  - 這顯然是一台 Debian/Ubuntu 套件儲存庫或軟體下載鏡像站
+  - 多個 APT 版本顯示用戶端執行不同的 Ubuntu/Debian 發行版
+  - 幾乎沒有人為瀏覽器流量
+
+  可接受的變化：
+  - 精確計數由日誌決定，具確定性
+  - 分類類別可使用不同名稱
+  - 評估語言會有所不同
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: nginx_access.log
+    source: logs/nginx_access_json.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

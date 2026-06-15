@@ -1,0 +1,834 @@
+# 日誌分析類任務（第二批）— 繁體中文（zh-TW）翻譯覆寫。
+# 僅翻譯使用者可見內容（任務名稱、prompt、預期行為、評分標準）。
+# 本批 15 個任務皆為 hybrid 評分，但原始 .md 僅含 ## Automated Checks（Python），
+# 並無 ## LLM Judge Rubric 區段，故均不含 llm_judge_rubric。
+# 不包含任何 grader / Python 程式碼；日誌檔名、輸出報告檔名、IP、區塊 ID、工作 ID、
+# 主機名、服務名（sshd、cron、systemd…）、使用者名、時間戳、識別字、shell 指令、
+# 環境變數、HDFS/MapReduce 技術詞彙、確切的必填輸出字串一律保留原文。
+# 所有數字、計數、ID、日期一律與原文完全相同，不更動。
+tasks:
+
+  task_log_ssh_unusual_times:
+    task_name: "SSH 驗證日誌 — 異常時段登入偵測"
+    prompt: |
+      請分析位於 `auth.log` 的 OpenSSH 驗證日誌，找出發生在異常時段的登入活動。
+      假設正常上班時間為伺服器本地時間 08:00–18:00。
+
+      你的報告應包含：
+
+      1. **每小時分布（Hourly Distribution）**：每個小時的驗證事件計數
+      2. **非上班時段活動（Off-Hours Activity）**：所有發生在 08:00 之前或 18:00 之後的驗證事件
+      3. **清晨分析（Early Morning Analysis）**：詳細拆解 06:00–08:00 之間的事件（日誌中最早的時段）
+      4. **成功登入時點（Successful Logins Timing）**：成功登入發生在什麼時候？是否在上班時間內？
+      5. **攻擊時點型態（Attack Timing Patterns）**：攻擊者是否偏好特定時段？是否有規律？
+      6. **時間性風險評估（Temporal Risk Assessment）**：依時點型態判斷，哪些時段應最密切監控？
+
+      請將報告寫入 `unusual_hours_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析日誌並產出：
+
+      **每小時分布：**
+      - 06:xx — 7 筆（日誌從 06:55 開始）
+      - 07:xx — 169 筆
+      - 08:xx — 118 筆
+      - 09:xx — 676 筆（尖峰小時）
+      - 10:xx — 530 筆（日誌於 10:59 結束）
+
+      **非上班時段活動：**
+      - 08:00 之前有 7 筆（在 06:55–06:56）
+      - 所有 08:00 之前的條目皆為攻擊流量（登入失敗、BREAK-IN 警告）
+
+      **成功登入時點：**
+      - 使用者 fztu 於 09:32:20 登入 — 在上班時間內
+
+      **攻擊時點型態：**
+      - 攻擊量從 07:xx 到 09:xx 急遽升高
+      - 尖峰攻擊量出現在 09:xx，共 676 筆
+      - 這可能代表攻擊者位於另一個時區，當地 09:00（LabSZ 時間）正是其工作時段
+      - 清晨的條目（06:55）代表一波攻擊行動的尾聲或起點
+
+      可接受的差異：
+      - 「異常時段」的定義可能不同
+      - 時區假設可能不同
+      - 評估用語會有所不同
+    grading_criteria:
+      - "已在工作區建立 `unusual_hours_report.md`"
+      - "提供事件的每小時分布"
+      - "另行標示出非上班時段（08:00 之前）的事件"
+      - "記下成功登入的時點（09:32:20，在上班時間內）"
+      - "分析攻擊時點型態"
+
+  task_log_hdfs_failures:
+    task_name: "HDFS DataNode 日誌 — 區塊與複製失敗分析"
+    prompt: |
+      請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，找出任何區塊（block）操作
+      失敗、複製（replication）問題或錯誤狀況。此日誌來自一個 HDFS 叢集，內含 DataNode、
+      FSNamesystem 與 PacketResponder 的條目。
+
+      你的報告應包含：
+
+      1. **日誌總覽（Log Overview）**：總條目數、日期/時間範圍、日誌級別分布（INFO、WARN、ERROR）
+      2. **區塊操作摘要（Block Operation Summary）**：區塊接收、配置、已儲存區塊確認與複製的計數
+      3. **錯誤與警告分析（Error and Warning Analysis）**：列出任何 WARN 或 ERROR 級別的條目及其細節
+      4. **複製活動（Replication Activity）**：詳列所有複製請求 — 哪些區塊正在被複製，從何處複製到何處？
+      5. **失敗或未完成的操作（Failed or Incomplete Operations）**：是否有區塊開始接收但從未記錄確認？
+      6. **健康狀態評估（Health Assessment）**：依日誌判斷，此 HDFS 叢集是否運作正常？
+
+      請將報告寫入 `hdfs_failure_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析 2000 筆日誌條目並產出：
+
+      **日誌總覽：**
+      - 2000 筆條目，全部來自 2008 年 11 月 9 日（081109），涵蓋約 28 秒（203518–203546）
+      - 所有條目皆為 INFO 級別 — 無 WARN 或 ERROR 條目
+
+      **區塊操作：**
+      - Receiving block：約 1149 筆
+      - Allocate block：約 385 筆
+      - Received block（已確認）：約 19 筆
+      - addStoredBlock：約 19 筆
+      - PacketResponder：約 12 筆
+      - 複製請求：4 筆
+
+      **複製細節：**
+      - 區塊 blk_-1608999687919862906 有 4 筆複製請求：
+        - 10.250.14.224 → 10.251.215.16
+        - 10.251.215.16 → 10.251.74.79
+        - 10.251.107.19 → 10.251.31.5
+        - 10.251.31.5 → 10.251.90.64
+
+      **健康狀態評估：**
+      - 無任何錯誤或警告 — 叢集看似健康
+      - 大量「Receiving block」條目（1149）卻只有相對少量的確認（19），顯示高度併發（concurrency）
+      - 單一區塊跨多個節點的複製活動是正常的 HDFS 行為
+
+      可接受的差異：
+      - 確切計數可能因解析方式而略有不同
+      - 評估用語會有所不同
+      - 將狀況描述為「無失敗」或「可能有未完成操作」皆屬有效
+    grading_criteria:
+      - "已在工作區建立 `hdfs_failure_report.md`"
+      - "提供含條目數與時間範圍的日誌總覽"
+      - "將區塊操作分類並計數（接收、配置、複製）"
+      - "記下沒有 WARN/ERROR 條目（或詳述任何發現的條目）"
+      - "提供健康狀態評估"
+
+  task_log_hdfs_connections:
+    task_name: "HDFS DataNode 日誌 — 連線型態分析"
+    prompt: |
+      請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，產出一份關於節點之間連線與
+      通訊型態的報告。此日誌包含 DataNode、FSNamesystem 與 PacketResponder 元件的條目。
+
+      你的報告應包含：
+
+      1. **網路拓撲（Network Topology）**：列出日誌中出現的所有不重複 IP 位址，並依其角色
+         分類（來源、目的地，或兩者皆是）
+      2. **子網分析（Subnet Analysis）**：依子網（subnet）將 IP 分組（例如 10.250.x.x 與
+         10.251.x.x）。每個子網有多少節點？
+      3. **最活躍的節點（Most Active Nodes）**：依出現頻率（作為來源或目的地）排名前 10 的 IP
+      4. **通訊型態（Communication Patterns）**：哪些節點對之間通訊最頻繁？
+      5. **DataNode 與 NameSystem**：將活動拆分 — 哪些來自 DataNode 操作、哪些來自
+         FSNamesystem 操作？
+      6. **叢集規模推估（Cluster Size Estimate）**：依觀察到的 IP，推估叢集規模
+
+      請將報告寫入 `hdfs_connections_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析 2000 筆日誌條目並產出：
+
+      **網路拓撲：**
+      - 觀察到 202 個不重複 IP 位址
+      - IP 落在 10.250.x.x 與 10.251.x.x 範圍（私有網路）
+      - 所有節點皆使用通訊埠 50010（HDFS DataNode 資料傳輸埠）
+
+      **子網分析：**
+      - 10.250.x.x 子網 — 包含部分最活躍的節點
+      - 10.251.x.x 子網 — 包含其他 DataNode 叢集成員
+      - 此分割顯示這是多機架（multi-rack）的 HDFS 佈署
+
+      **最活躍的節點：**
+      - 10.250.19.102 — 極為活躍（在許多區塊傳輸中作為來源出現）
+      - 10.250.10.6、10.251.215.16、10.250.14.224 — 也相當活躍
+
+      **元件活動：**
+      - DataNode$DataXceiver：區塊接收操作（約 1149 筆）
+      - FSNamesystem：區塊配置與儲存追蹤（約 400+ 筆）
+      - DataNode$PacketResponder：附帶大小的區塊接收確認
+
+      可接受的差異：
+      - 確切的 IP 計數與排名可能因解析方式而異
+      - 子網分組的粒度可能不同
+      - 叢集規模推估將為概略值
+    grading_criteria:
+      - "已在工作區建立 `hdfs_connections_report.md`"
+      - "列出或計數不重複 IP（約 202）"
+      - "依子網將 IP 分組（10.250.x.x 與 10.251.x.x）"
+      - "辨識出最活躍的節點"
+      - "區分 DataNode 與 FSNamesystem 的活動"
+
+  task_log_hdfs_slow_ops:
+    task_name: "HDFS DataNode 日誌 — 慢速操作偵測"
+    prompt: |
+      請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，找出耗時超出預期的操作。此
+      日誌記錄了帶有時間戳的區塊接收、配置與複製。
+
+      你的報告應包含：
+
+      1. **區塊生命週期時序（Block Lifecycle Timing）**：對於同時有「Receiving block」與
+         「Received block」條目的區塊，計算經過時間
+      2. **配置到接收時序（Allocation-to-Receive Timing）**：對於同時有「allocateBlock」與
+         第一筆「Receiving block」條目的區塊，計算延遲
+      3. **複製時序（Replication Timing）**：複製請求在區塊配置後多快發出？
+      4. **最慢的操作（Slowest Operations）**：依經過時間排名前 5 慢的區塊操作
+      5. **區塊大小與時間的相關性（Block Size vs Time Correlation）**：較大的區塊是否耗時較長？
+         在兩者皆可取得時，將區塊大小與傳輸時間相關聯
+      6. **效能總結（Performance Summary）**：對此期間叢集效能的整體評估
+
+      請將報告寫入 `hdfs_slow_ops_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應從 `YYMMDD HHMMSS` 日誌格式解析時間戳並計算：
+
+      **區塊生命週期：**
+      - 此日誌僅涵蓋約 28 秒（203518 到 203546）
+      - 多數區塊操作在 1-3 秒內完成
+      - 已確認且附大小的區塊接收：91178 bytes、233217 bytes、11971 bytes、11977 bytes
+
+      **重點觀察：**
+      - blk_-1608999687919862906（91178 bytes）：於 203518 配置、203518 首次接收、203519 確認（約 1 秒）
+      - blk_7503483334202473044（233217 bytes）：於 203520 配置、203521 確認（約 1 秒）
+      - blk_-3544583377289625738（11971 bytes）：於 203522-203523 確認
+      - 區塊操作非常快速 — 與健康叢集在正常負載下的表現相符
+
+      **複製：**
+      - blk_-1608999687919862906 有 4 筆複製請求，分別於 203521、203524、203527、203530 發出
+      - 各複製躍程（hop）之間約間隔 3 秒
+
+      **效能：**
+      - 所有操作皆在 1-3 秒內完成 — 未偵測到慢速操作
+      - 此快照期間叢集表現良好
+
+      可接受的差異：
+      - 時間戳解析度為 1 秒，故部分時序分析將為概略值
+      - 配對開始/結束事件的不同做法皆屬有效
+      - 區塊大小相關性分析可能因資料不足而無法得出有意義結論
+    grading_criteria:
+      - "已在工作區建立 `hdfs_slow_ops_report.md`"
+      - "至少為一個區塊計算其生命週期時序"
+      - "在有資料時將區塊大小與操作時間相關聯"
+      - "正確辨識日誌的時間範圍（約 28 秒）"
+      - "提供效能評估"
+
+  task_log_hdfs_block_ops:
+    task_name: "HDFS DataNode 日誌 — 區塊操作摘要"
+    prompt: |
+      請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，產出一份所有區塊操作的完整
+      摘要。此日誌來自一個 HDFS 叢集，追蹤區塊生命週期事件。
+
+      你的報告應包含：
+
+      1. **區塊清單（Block Inventory）**：日誌中不重複區塊 ID 的總數，並附完整清單
+      2. **操作類型（Operation Types）**：針對每種操作類型（allocateBlock、Receiving、
+         Received、addStoredBlock、replicate、PacketResponder）計算總出現次數
+      3. **區塊生命週期追蹤（Block Lifecycle Tracking）**：對於每個具有完整生命週期
+         （allocate → receive → stored）的區塊，記錄完整的事件鏈
+      4. **複製鏈（Replication Chain）**：對於有複製事件的區塊，追蹤其跨節點的複製路徑
+      5. **相關工作（Associated Jobs）**：辨識觸發這些區塊操作的 MapReduce 工作（可從檔案路徑看出）
+      6. **逐區塊明細表（Per-Block Detail Table）**：建立一張表格，欄位包含：Block ID、
+         Size（如已知）、Allocated Path、Nodes Involved、Replication Count
+
+      請將報告寫入 `hdfs_block_ops_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析 2000 筆日誌條目並產出：
+
+      **區塊清單：**
+      - 約 390 個不重複區塊 ID
+
+      **操作計數：**
+      - Receiving block：約 1149
+      - allocateBlock：約 385
+      - Received block：約 19
+      - addStoredBlock：約 19
+      - PacketResponder：約 12
+      - Replicate：4
+
+      **完整區塊生命週期（資料完整的區塊）：**
+      - blk_-1608999687919862906：91178 bytes，為 job_200811092030_0001/job.jar 配置
+      - blk_7503483334202473044：233217 bytes，為 job_200811092030_0001/job.split 配置
+      - blk_-3544583377289625738：11971 bytes
+      - blk_-9073992586687739851：11977 bytes
+
+      **複製鏈：**
+      - blk_-1608999687919862906 在叢集中被複製 4 次：
+        10.250.14.224 → 10.251.215.16 → 10.251.74.79 → 10.251.31.5 → 10.251.90.64
+
+      **相關工作：**
+      - job_200811092030_0001 — MapReduce 工作，檔案：job.jar、job.split
+
+      可接受的差異：
+      - 區塊 ID 清單可能被截斷
+      - 不需要對全部 390 個區塊提供完整明細 — 僅需具完整生命週期資料者
+      - 表格格式可能不同
+    grading_criteria:
+      - "已在工作區建立 `hdfs_block_ops_report.md`"
+      - "提供不重複區塊計數（約 390）"
+      - "計數各操作類型（receiving、allocate、replicate 等）"
+      - "至少完整追蹤一個區塊的生命週期（allocate → receive → stored）"
+      - "辨識出相關的 MapReduce 工作（job_200811092030_0001）"
+
+  task_log_hdfs_storage:
+    task_name: "HDFS DataNode 日誌 — 儲存與容量分析"
+    prompt: |
+      請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，產出一份以儲存（storage）為
+      重點的分析。檢視區塊大小、跨節點的資料分布，以及儲存型態。
+
+      你的報告應包含：
+
+      1. **資料量（Data Volume）**：所有已確認區塊接收（大小已知者）所儲存的總位元組數
+      2. **區塊大小分布（Block Size Distribution）**：列出所有已知區塊大小，計算最小/最大/平均/中位數
+      3. **依節點的資料分布（Data Distribution by Node）**：對每個確認接收區塊的節點
+         （PacketResponder「Received」條目），統計其儲存的位元組總數
+      4. **儲存路徑分析（Storage Path Analysis）**：使用了哪些儲存路徑？（從 allocateBlock 的檔案路徑擷取）
+      5. **複製係數（Replication Factor）**：依同一區塊被多少節點接收，推算有效複製係數為何？
+      6. **容量規劃（Capacity Planning）**：依觀察到的資料寫入速率，推估 1 小時類似活動所需的儲存空間
+
+      請將報告寫入 `hdfs_storage_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析日誌並計算：
+
+      **已確認的區塊大小：**
+      - blk_-1608999687919862906：91,178 bytes（被 3+ 個節點接收）
+      - blk_7503483334202473044：233,217 bytes（被 3 個節點接收）
+      - blk_-3544583377289625738：11,971 bytes（被 3 個節點接收）
+      - blk_-9073992586687739851：11,977 bytes（被 3 個節點接收）
+
+      **區塊大小統計：**
+      - 最小：11,971 bytes（約 12 KB）
+      - 最大：233,217 bytes（約 228 KB）
+      - 平均：約 87,086 bytes（約 85 KB）
+      - 已確認資料總量：每個副本約 348,343 bytes
+
+      **複製係數：**
+      - 每個已確認區塊皆被 3 個節點接收 → 複製係數為 3
+      - 這是標準的 HDFS 預設複製設定
+
+      **儲存路徑：**
+      - `/mnt/hadoop/mapred/system/job_200811092030_0001/` — MapReduce 工作的暫存目錄
+      - 檔案：job.jar、job.split
+
+      **容量規劃：**
+      - 約 28 秒的活動產生了約 390 筆區塊配置
+      - 若每個區塊平均約 85 KB、複製係數為 3，則約為每分鐘 100 MB 的原始儲存
+      - 1 小時推估：約 6 GB（概略）
+
+      可接受的差異：
+      - 在已確認大小有限的情況下，容量推估將相當粗略
+      - 外推（extrapolation）的做法會有所不同
+      - 統計應僅以已確認大小為基礎
+    grading_criteria:
+      - "已在工作區建立 `hdfs_storage_report.md`"
+      - "列出已知的區塊大小（91178、233217、11971、11977）"
+      - "計算區塊大小統計（最小、最大、平均）"
+      - "辨識出複製係數（3）"
+      - "從日誌擷取儲存路徑"
+
+  task_log_mapreduce_jobs:
+    task_name: "MapReduce 日誌 — 工作完成摘要"
+    prompt: |
+      請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，產出一份完整的工作
+      完成摘要。此日誌來自一個 MapReduce v2（YARN）應用程式。
+
+      你的報告應包含：
+
+      1. **工作識別（Job Identification）**：Job ID、application attempt ID，以及工作名稱/類型
+      2. **工作組態（Job Configuration）**：OutputCommitter 類型、檔案系統，以及任何其他組態細節
+      3. **任務摘要（Task Summary）**：map 任務總數、reduce 任務總數，各有多少成功完成
+      4. **任務完成時間軸（Task Completion Timeline）**：每個任務在何時完成？建立一條按完成順序
+         並附時間戳的時間軸
+      5. **工作時長（Job Duration）**：從開始到結束的工作總執行時間
+      6. **最終狀態（Final Status）**：工作成功還是失敗？最終的狀態轉換為何？
+
+      請將報告寫入 `job_completion_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析 1282 筆日誌條目並產出：
+
+      **工作識別：**
+      - Job ID：job_1445062781478_0011
+      - Application Attempt：appattempt_1445062781478_0011_000001
+      - 工作類型：pagerank（可從 history 檔案路徑看出）
+      - 使用者：msrabi
+
+      **組態：**
+      - OutputCommitter：FileOutputCommitter
+      - 檔案系統：hdfs://msra-sa-41:9000
+      - API：mapred newApiCommitter
+
+      **任務摘要：**
+      - 10 個 map 任務（m_000000 至 m_000009），外加 2 次重試（m_000006_1、m_000007_1）
+      - 1 個 reduce 任務（r_000000）
+      - 全部 11 個任務皆成功完成（10 map + 1 reduce）
+      - 共 12 次 map 任務嘗試、1 次 reduce 任務嘗試
+
+      **時間軸：**
+      - 工作開始：15:37:56
+      - 首個 map 完成：15:39:24（m_000009）
+      - 最後 map 完成：15:41:25（m_000006）
+      - reduce 完成：15:42:46（r_000000）
+      - 工作結束：約 15:42:47
+
+      **時長：** 約 5 分鐘（15:37:56 到 15:42:47）
+
+      **最終狀態：** SUCCEEDED
+
+      可接受的差異：
+      - 時間軸的格式可能不同
+      - 時長計算方式可能不同
+      - 任務編號標記法可能不同
+    grading_criteria:
+      - "已在工作區建立 `job_completion_report.md`"
+      - "辨識出 Job ID（job_1445062781478_0011）"
+      - "map 與 reduce 任務計數正確（10 個 map 任務、1 個 reduce 任務）"
+      - "計算工作時長（約 5 分鐘）"
+      - "辨識最終狀態為 SUCCEEDED"
+
+  task_log_mapreduce_failures:
+    task_name: "MapReduce 日誌 — 失敗任務分析"
+    prompt: |
+      請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，找出任何任務失敗、
+      錯誤或異常。聚焦於執行期間出錯的任何狀況。
+
+      你的報告應包含：
+
+      1. **錯誤與警告條目（Error and Warning Entries）**：列出所有 WARN 與 ERROR 級別的日誌條目及完整脈絡
+      2. **任務重試（Task Retries）**：找出任何需要多次嘗試的任務（尋找嘗試編號 > 0 者）
+      3. **根因分析（Root Cause Analysis）**：針對每個錯誤，說明可能的成因
+      4. **I/O 錯誤（I/O Errors）**：詳述任何 IOException 或網路相關的失敗
+      5. **影響評估（Impact Assessment）**：是否有任何失敗影響了整體工作結果？
+      6. **失敗預防（Failure Prevention）**：建議可避免這些失敗在未來重現的變更
+
+      請將報告寫入 `mapreduce_failures.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應辨識出：
+
+      **WARN 條目（共 4 筆）：**
+      1. ResponseProcessor，針對區塊 BP-1347369012-10.190.173.170-1444972147527:blk_1073742514_1708 — 與 I/O 問題相關
+      2. DataStreamer，針對檔案 /tmp/hadoop-yarn/staging/msrabi/.staging/job_1445062781478_0011/job — 寫入管線（pipeline）問題
+      3. CommitterEvent Processor — FileOutputCommitter 復原任務計數問題
+
+      **ERROR 條目（共 1 筆）：**
+      1. java.io.IOException: Bad response ERROR for block BP-1347369012-10.190.173.170-1444972147527:blk_1073742514_1708 from datanode — 區塊寫入期間的 I/O 錯誤
+
+      **任務重試：**
+      - attempt_1445062781478_0011_m_000006_1（m_000006_0 的重試）
+      - attempt_1445062781478_0011_m_000007_1（m_000007_0 的重試）
+      - 兩個 map 任務需要第二次嘗試，顯示為暫時性（transient）失敗
+
+      **根因：**
+      - IOException 與 WARN 條目皆與 HDFS 區塊寫入失敗有關
+      - 某個 DataNode 對區塊 blk_1073742514_1708 回傳「Bad response ERROR」
+      - 這是暫時性的 HDFS I/O 錯誤，可能由 DataNode 暫時無法使用或過載所致
+
+      **影響：**
+      - 儘管出現錯誤，整體工作仍 SUCCEEDED
+      - YARN 的重試機制透明地處理了這些暫時性失敗
+      - 10 個 map 任務中有 2 個需要重試 — 重試率 20%
+
+      可接受的差異：
+      - 根因分析的深度可能不同
+      - 預防建議會有所不同
+      - 部分助手可能找出錯誤周邊的額外脈絡
+    grading_criteria:
+      - "已在工作區建立 `mapreduce_failures.md`"
+      - "列出 WARN 與 ERROR 條目（4 筆 WARN、1 筆 ERROR）"
+      - "辨識出任務重試（m_000006 與 m_000007 重試）"
+      - "分析 IOException / bad response 錯誤"
+      - "影響評估中記下工作仍然成功"
+
+  task_log_mapreduce_slow_tasks:
+    task_name: "MapReduce 日誌 — 慢速任務辨識"
+    prompt: |
+      請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，找出最慢的 map 與
+      reduce 任務。比較各任務的完成時間以找出落後者（straggler）。
+
+      你的報告應包含：
+
+      1. **任務完成時間（Task Completion Times）**：對每個已完成的任務，計算從容器（container）
+         指派到任務完成的時間
+      2. **最快與最慢（Fastest vs Slowest）**：辨識最快與最慢的 map 任務，以及 reduce 任務的時序
+      3. **落後者分析（Straggler Analysis）**：是否有任務明顯比平均耗時更長？量化其偏差
+      4. **重試影響（Retry Impact）**：對於被重試的任務（attempt > 0），重試時間與原始嘗試相比如何？
+      5. **Reduce 階段時序（Reduce Phase Timing）**：reduce 任務相對於各 map 完成是在何時開始？耗時多久？
+      6. **瓶頸辨識（Bottleneck Identification）**：關鍵路徑（critical path）為何？哪些任務決定了整體工作時長？
+
+      請將報告寫入 `slow_tasks_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應擷取任務完成時間戳並計算：
+
+      **Map 任務完成（依順序）：**
+      1. m_000009：完成於 15:39:24（最先）
+      2. m_000005：完成於 15:40:28
+      3. m_000003：完成於 15:40:32
+      4. m_000000：完成於 15:40:34
+      5. m_000001：完成於 15:40:50
+      6. m_000002：完成於 15:40:50
+      7. m_000004：完成於 15:40:50
+      8. m_000008：完成於 15:40:52
+      9. m_000007：完成於 15:41:12（重試 — _1 次嘗試）
+      10. m_000006：完成於 15:41:25（重試 — _1 次嘗試，最慢/最後）
+
+      **Reduce 任務：**
+      - r_000000：完成於 15:42:46
+
+      **重點發現：**
+      - m_000009 最先完成於 15:39:24 — 工作開始後約 1.5 分鐘
+      - m_000006 最後完成於 15:41:25 — 工作開始後約 3.5 分鐘（它是重試）
+      - 被重試的任務（m_000006、m_000007）最慢，因為必須重新啟動
+      - 首個與最後 map 之間的時間跨度：約 2 分鐘
+      - reduce 在足夠多的 map 完成後才開始，約 1.3 分鐘後結束
+
+      可接受的差異：
+      - 確切時長取決於以哪個時間戳作為開始基準
+      - 對「任務開始」的不同定義皆可接受
+      - 落後者的判定門檻可能不同
+    grading_criteria:
+      - "已在工作區建立 `slow_tasks_report.md`"
+      - "列出個別任務的完成時間"
+      - "辨識出最快與最慢的 map 任務"
+      - "將被重試的任務（m_000006、m_000007）標記為較慢"
+      - "另行分析 reduce 任務的時序"
+
+  task_log_mapreduce_resources:
+    task_name: "MapReduce 日誌 — 資源使用率分析"
+    prompt: |
+      請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，產出一份資源使用率
+      報告。聚焦於容器（container）配置、排程，以及資源使用型態。
+
+      你的報告應包含：
+
+      1. **容器清單（Container Inventory）**：列出為此工作配置的所有容器及其 ID
+      2. **容器配置時間軸（Container Allocation Timeline）**：每個容器在何時被請求與指派？
+      3. **排程分析（Scheduling Analysis）**：從 RMContainerAllocator 條目追蹤待處理
+         （pending）的 map 與 reduce 數量隨時間的變化
+      4. **Reduce 排程（Reduce Scheduling）**：reduce 的慢啟動（slow start）門檻在何時達到？
+         當時的完成百分比為何？
+      5. **容器重用（Container Reuse）**：是否有容器完成後被重新使用？
+      6. **資源效率（Resource Efficiency）**：依容器配置與任務完成型態，評估資源效率
+
+      請將報告寫入 `mapreduce_resources.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析 RMContainerAllocator 條目並產出：
+
+      **容器清單：**
+      - 使用 13 個不重複容器（container_1445062781478_0011_01_000001 至 000013）
+      - Application attempt：01
+
+      **排程進展：**
+      - 初始狀態：10 個待處理 map、1 個待處理 reduce
+      - reduce 慢啟動門檻從 15:38:00 到 15:39:24 反覆「not met」（未達標）
+      - 首個 map 於 15:39:24 完成（10% complete）— 仍不足以啟動 reduce
+      - 當 completedMapPercent 達到足夠門檻時，reduce 排程開始
+      - 15:39:24 記錄了「completedMapPercent 0.1 totalResources 2」
+
+      **容器生命週期：**
+      - 容器約於 15:38:00–15:38:15 配置
+      - 隨任務完成而釋放容器
+      - 「Received completed container」條目追蹤容器何時結束
+
+      **重點觀察：**
+      - reduce 任務必須等待足夠多的 map 完成（慢啟動）
+      - map 任務的完成時間各異（1.5 到 3.5 分鐘）
+      - 容器周轉：部分容器很快被釋放、其資源迅速被回收
+
+      可接受的差異：
+      - 容器 ID 的列舉方式可能不同
+      - 時間軸的粒度可能不同
+      - 資源效率評估帶有主觀性
+    grading_criteria:
+      - "已在工作區建立 `mapreduce_resources.md`"
+      - "列出容器（辨識出 13 個容器）"
+      - "追蹤排程進展（待處理 map/reduce 隨時間的變化）"
+      - "包含對 reduce 慢啟動門檻的討論"
+      - "分析容器完成事件"
+
+  task_log_mapreduce_timeline:
+    task_name: "MapReduce 日誌 — 工作時間軸視覺化"
+    prompt: |
+      請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，為整個工作執行建立
+      一份詳細的時間軸視覺化。依時間順序呈現所有主要事件。
+
+      你的輸出應包含：
+
+      1. **事件時間軸（Event Timeline）**：依時間順序列出每個重要事件及其時間戳，包括：
+         - 工作初始化事件
+         - 容器配置
+         - 任務開始與完成
+         - 錯誤與警告
+         - reduce 階段開始
+         - 工作完成
+      2. **階段圖（Phase Diagram）**：將工作劃分為各階段（初始化、map 階段、shuffle、
+         reduce 階段、清理），並附開始/結束時間與時長
+      3. **甘特式任務檢視（Gantt-Style Task View）**：以文字時間軸呈現每個任務
+         （m_000000 至 m_000009、r_000000）及其概略的開始與結束時間
+      4. **關鍵事件（Critical Events）**：標示出影響最大的事件（錯誤、重試、工作狀態轉換）
+      5. **併發分析（Concurrency Analysis）**：在每個時間點上，有多少任務平行執行？
+
+      請將報告寫入 `mapreduce_timeline.md`，以結構良好的 markdown 文件呈現，並附 ASCII/文字式視覺化。
+    expected_behavior: |
+      助手應產出如下的時間軸：
+
+      **階段拆解：**
+      | Phase | Start | End | Duration |
+      |---|---|---|---|
+      | Initialization | 15:37:56 | 15:38:00 | ~4s |
+      | Map Phase | 15:38:00 | 15:41:25 | ~3m 25s |
+      | Reduce Phase | 15:39:24 | 15:42:46 | ~3m 22s |
+      | Cleanup | 15:42:46 | 15:42:47 | ~1s |
+      | **Total** | **15:37:56** | **15:42:47** | **~4m 51s** |
+
+      **關鍵事件：**
+      - 15:37:56 — MRAppMaster 建立
+      - 15:37:57 — 設定 OutputCommitter（FileOutputCommitter）
+      - 15:38:00 — 開始容器配置（10 個 map 待處理、1 個 reduce 待處理）
+      - 15:39:24 — 首個 map 完成（m_000009），Num completed: 1
+      - 15:40:28–15:40:52 — map 快速完成（任務 2-8）
+      - 15:40:45 — WARN：區塊 I/O 錯誤（ResponseProcessor、DataStreamer）
+      - 15:41:12 — m_000007 完成（重試嘗試）
+      - 15:41:25 — m_000006 完成（重試嘗試，最後一個 map）
+      - 15:42:46 — r_000000 完成，Num completed: 11
+      - 15:42:46 — 工作轉換為 SUCCEEDED
+      - 15:42:47 — 記錄最終統計
+
+      **併發：**
+      - 尖峰：最多達 10 個 map 任務同時執行
+      - 15:39:24 之後，隨 map 陸續完成，併發度下降
+
+      可接受的差異：
+      - ASCII 視覺化的風格會有所不同
+      - 並非每筆日誌條目都需放入時間軸 — 主要事件即可
+      - 階段定義可能略有不同
+    grading_criteria:
+      - "已在工作區建立 `mapreduce_timeline.md`"
+      - "依時間順序列出事件並附時間戳"
+      - "辨識出各階段（init、map、reduce、completion）"
+      - "嘗試呈現視覺化或結構化的時間軸/甘特圖"
+      - "標示關鍵事件（首個 map 完成、錯誤、工作成功）"
+
+  task_log_syslog_anomalies:
+    task_name: "Linux Syslog — 異常偵測"
+    prompt: |
+      請分析位於 `syslog.log` 的 Linux syslog，找出異常或可疑的條目。此日誌來自一台名為
+      「combo」、執行 Linux 2.6 核心的伺服器，涵蓋數個月的活動。
+
+      你的報告應包含：
+
+      1. **日誌總覽（Log Overview）**：總條目數、日期範圍、依量排序的主要服務
+      2. **安全異常（Security Anomalies）**：顯示潛在攻擊、漏洞利用（exploit）或未授權存取
+         嘗試的條目
+      3. **格式字串攻擊偵測（Format String Attack Detection）**：尋找服務輸入中帶有異常二進位
+         內容或漏洞利用酬載（payload）的條目
+      4. **FTP 異常（FTP Anomalies）**：此日誌有大量 FTP 流量 — 找出任何可疑的 FTP 連線型態
+         （爆量、異常來源）
+      5. **rpc.statd 漏洞利用（rpc.statd Exploitation）**：檢查 rpc.statd 帶有畸形主機名的
+         gethostbyname 錯誤（緩衝區溢位嘗試）
+      6. **異常總結（Anomaly Summary）**：依嚴重性與證據，排名最值得關注的前 5 個異常
+
+      請將報告寫入 `syslog_anomalies.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析 5000 筆條目並辨識出：
+
+      **日誌總覽：**
+      - 5000 筆條目，6 月 9 日到 9 月 14 日（依核心版本推斷為 2005 年）
+      - 主要服務：ftpd（1655）、sshd/pam_unix（1610）、kernel（545）、su/pam_unix（394）
+
+      **安全異常：**
+      1. **rpc.statd 格式字串攻擊**（6 月 13 日約 9 筆）：
+         - `gethostbyname error for ^X...%8x%8x...%hn%51859x%hn` — 這是針對 rpc.statd 的
+           緩衝區溢位/格式字串漏洞利用嘗試
+         - 此酬載含格式字串指定符（%x、%hn），是典型的漏洞利用模式
+      2. **SSH 暴力破解** — 大量 sshd(pam_unix) 驗證失敗
+      3. **FTP 洪泛** — 1655 筆 FTP 連線條目，並出現爆量（例如 209.184.7.130 有多筆同時連線）
+      4. **驗證失敗** — 跨 SSH 與其他服務共 2000+ 筆 pam_unix 驗證失敗條目
+
+      **rpc.statd 漏洞利用：**
+      - 6 月 13 日 11:55:04–11:55:09 共 9 筆
+      - 畸形主機名含 NOP sled（\220\220\220\220）與格式字串酬載
+      - 這是一次嘗試遠端程式碼執行（remote code execution）的漏洞利用
+
+      可接受的差異：
+      - 異常的排名可能不同
+      - 歡迎找出預期之外的額外異常
+      - 嚴重性評估會有所不同
+    grading_criteria:
+      - "已在工作區建立 `syslog_anomalies.md`"
+      - "提供含日期範圍與服務分布的日誌總覽"
+      - "辨識出 rpc.statd 格式字串攻擊為安全異常"
+      - "分析 FTP 連線型態"
+      - "標示出 SSH 驗證失敗"
+
+  task_log_syslog_services:
+    task_name: "Linux Syslog — 服務啟動/停止摘要"
+    prompt: |
+      請分析位於 `syslog.log` 的 Linux syslog，產出一份所有服務啟動與停止事件的摘要。此
+      日誌來自一台名為「combo」、執行 Linux 2.6 的伺服器。
+
+      你的報告應包含：
+
+      1. **服務清單（Service Inventory）**：列出日誌中提及、且帶有啟動或關閉事件的每個服務
+      2. **系統開機事件（System Boot Events）**：藉由尋找服務啟動的群集，辨識所有系統開機/重啟
+      3. **逐服務狀態（Per-Service Status）**：對每個服務，列出所有啟動/停止事件及其時間戳
+      4. **CUPS 特例（CUPS Special Case）**：CUPS 列印服務有頻繁重啟 — 另行記錄其型態
+      5. **服務相依性（Service Dependencies）**：依啟動順序，推斷哪些服務先啟動（核心 OS）、
+         哪些較晚啟動（應用程式）
+      6. **正常運作時間推估（Uptime Estimate）**：依開機事件，推估伺服器在重啟之間的運作時間
+
+      請將報告寫入 `service_status_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應辨識出：
+
+      **系統開機（偵測到 3 次）：**
+      1. 6 月 9 日 約 06:06 — 完整開機（syslogd、klogd、kernel、irqbalance、portmap 等）
+      2. 6 月 10 日 約 11:32 — 完整開機（相同的服務順序）
+      3. 7 月 27 日 約 14:42 — 另一次開機事件
+
+      **服務清單（20+ 個帶啟動事件的服務）：**
+      - 核心：syslogd、klogd、irqbalance、portmap
+      - 網路：rpc.statd、rpc.idmapd、sendmail、sm-client、named
+      - 安全：spamd、privoxy
+      - 硬體：bluetooth（hcid、sdpd）、smartd、apmd、gpm
+      - 列印：cupsd（17 次啟動！）
+      - 排程：crond、anacron、xinetd
+      - 網頁：htt
+
+      **CUPS 型態：**
+      - cupsd 有 17 次啟動事件與 15 次關閉事件
+      - 規律的每週型態：清晨（04:0x）關閉後接著啟動
+      - 這與 logrotate 觸發 CUPS 重啟的情況相符
+
+      **服務相依性（開機順序）：**
+      1. syslogd、klogd（先記錄日誌）
+      2. kernel 訊息
+      3. irqbalance、portmap（系統服務）
+      4. 網路服務（rpc、named）
+      5. 應用程式服務（cups、cron、sendmail）
+
+      可接受的差異：
+      - 開機偵測的做法可能不同
+      - 服務分類帶有主觀性
+      - 運作時間計算為概略值
+    grading_criteria:
+      - "已在工作區建立 `service_status_report.md`"
+      - "辨識出系統開機事件（至少找到 2 次開機）"
+      - "列出服務及其啟動/停止事件"
+      - "記下 CUPS 的頻繁重啟（17 次啟動）"
+      - "分析服務啟動順序"
+
+  task_log_syslog_cron:
+    task_name: "Linux Syslog — Cron 排程任務執行分析"
+    prompt: |
+      請分析位於 `syslog.log` 的 Linux syslog，產出一份關於 cron 排程任務活動的報告。尋找
+      crond、anacron、logrotate，以及任何其他排程執行的證據。
+
+      你的報告應包含：
+
+      1. **Cron 服務狀態（Cron Service Status）**：crond 在何時啟動？共有幾次啟動事件？
+      2. **Anacron 活動（Anacron Activity）**：記錄所有 anacron 啟動事件及其時點
+      3. **Logrotate 活動（Logrotate Activity）**：找出 logrotate 的執行，以及它們影響哪些服務
+      4. **su 工作階段型態（su Session Patterns）**：`su(pam_unix)` 條目常代表 cron 以不同
+         使用者身分執行任務 — 分析這些型態
+      5. **排程任務時間軸（Scheduled Task Timeline）**：建立一條涵蓋所有排程/週期性活動的時間軸
+      6. **重複型態（Recurring Patterns）**：找出排程執行中的任何規律型態（每日、每週）
+
+      請將報告寫入 `cron_analysis.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應辨識出：
+
+      **Cron/Anacron 啟動：**
+      - crond 啟動：6 月 9 日 06:06:49、6 月 10 日 11:32:10、7 月 27 日 14:42:23（3 次事件，與系統開機對齊）
+      - anacron 啟動：6 月 9 日 06:06:51、6 月 10 日 11:32:12、7 月 27 日 14:42:25（緊接 crond 之後）
+
+      **Logrotate 活動：**
+      - 日誌中有 97 筆 logrotate 條目
+      - logrotate 觸發服務重啟（尤其是 CUPS）
+      - 週期性執行 — 可能透過 anacron/cron 每日執行
+
+      **su(pam_unix) 型態：**
+      - 394 筆 su 工作階段條目
+      - 為下列使用者開啟工作階段：htt、cyrus、news
+      - 型態：「session opened for user X by (uid=0)」→「session closed for user X」
+      - 這些是以特定服務使用者身分執行的 cron 任務
+
+      **主要的排程使用者：**
+      - htt（網頁伺服器）— 規律的 su 工作階段
+      - cyrus（郵件）— 規律的 su 工作階段
+      - news — 週期性工作階段
+
+      **重複型態：**
+      - 每日：logrotate 執行、服務使用者的 su 工作階段
+      - 開機時：crond → anacron 啟動序列
+      - 每週：CUPS 重啟型態（關閉 + 啟動）
+
+      可接受的差異：
+      - 型態偵測的做法可能不同
+      - 時間軸的粒度可能不同
+      - 部分排程型態需從 su 工作階段資料推論
+    grading_criteria:
+      - "已在工作區建立 `cron_analysis.md`"
+      - "記錄 crond 與 anacron 的啟動事件"
+      - "辨識出 logrotate 活動（97 筆條目）"
+      - "將 su(pam_unix) 工作階段連結至排程任務"
+      - "辨識出重複型態（每日、開機時等）"
+
+  task_log_syslog_auth_failures:
+    task_name: "Linux Syslog — 驗證失敗摘要"
+    prompt: |
+      請分析位於 `syslog.log` 的 Linux syslog，產出一份所有驗證失敗的完整摘要。此日誌
+      含有來自多個服務的 PAM 驗證事件。
+
+      你的報告應包含：
+
+      1. **驗證失敗總數（Total Auth Failures）**：統計跨所有服務的所有驗證失敗條目
+      2. **依服務分類的失敗（Failures by Service）**：依服務（sshd、ftpd、login、su 等）拆解失敗
+      3. **依來源分類的失敗（Failures by Source）**：產生最多失敗的前 10 個來源主機/IP
+      4. **被鎖定的使用者（Targeted Users）**：哪些使用者帳號在失敗的驗證嘗試中被鎖定？
+      5. **時間性分布（Temporal Distribution）**：多數驗證失敗發生在何時？是否有突增（spike）？
+      6. **FTP 與 SSH 分析（FTP vs SSH Analysis）**：比較 FTP 與 SSH 的驗證攻擊型態 — 是否為
+         相同來源同時攻擊兩者？
+      7. **建議（Recommendations）**：依失敗型態，提出具體的安全改進建議
+
+      請將報告寫入 `auth_failures_report.md`，以結構良好的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析約 2000+ 筆與 PAM 相關的條目並產出：
+
+      **驗證失敗總數：**
+      - 超過 2000 筆與驗證相關的 PAM 條目
+      - 主要來源：sshd(pam_unix)（約 1610 筆）、ftpd 連線（約 1655 筆）
+
+      **依服務分類的失敗：**
+      - sshd(pam_unix) — 驗證失敗訊息的主要來源
+      - ftpd — 大量連線（ftpd 記錄連線，不一定都是明確的失敗）
+      - su(pam_unix) — 394 筆（多為合法 — cron 的工作階段開啟/關閉）
+      - login(pam_unix) — 14 筆
+      - klogind — 46 筆（Kerberos login daemon）
+
+      **依來源分類的失敗：**
+      - SSH 攻擊來自各種遠端主機（pam 條目中的 rhost=）
+      - FTP 連線集中於特定 IP（例如 209.184.7.130）
+      - 部分主機同時出現在 SSH 與 FTP 的失敗日誌中
+
+      **被鎖定的使用者：**
+      - root — SSH 暴力破解的主要目標
+      - 透過 SSH 嘗試各種無效使用者名稱
+
+      **時間性分布：**
+      - 日誌涵蓋 6 月 9 日到 9 月 14 日
+      - 特定日期可見攻擊突增
+      - SSH 暴力破解傾向在時間上集中
+
+      可接受的差異：
+      - 確切計數取決於如何定義「驗證失敗」
+      - FTP 條目可能被歸類為驗證失敗，也可能不被歸類
+      - 時間性分析的粒度可能不同
+    grading_criteria:
+      - "已在工作區建立 `auth_failures_report.md`"
+      - "統計驗證失敗（2000+ 筆與 pam 相關的條目）"
+      - "依服務拆解失敗（sshd、ftpd、su 等）"
+      - "列出主要的來源主機"
+      - "提供安全改進建議"

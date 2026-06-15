@@ -1,0 +1,103 @@
+task_id: T113tw_meeting_council_contact_info
+task_name: '市議會逐字稿 — 擷取聯絡資訊
+
+  '
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_council_contact_info.md
+  original_task_id: task_meeting_council_contact_info
+  original_file: tasks/task_meeting_council_contact_info.md
+prompt:
+  text: 我手邊有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。請幫我產生 `contacts_report.md`，列出所有具名提及的人物，並附上職稱/角色、所屬組織與背景脈絡。整理時請分類為：**Council
+    Members**、**City Staff**、**Presenters and Experts**、**Community Members / Public Speakers**、**Other
+    People Mentioned**。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2026-04-02-tampa-city-council-transcript.md
+  dest: transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔案 contacts_report.md
+- 已列出全部 7 位議會議員
+- Shelby 列為 Council Attorney
+- Hamilton 列為 Raftelis 顧問
+- Bercaw 列為 Police Chief
+- McNeil 列為 Officer of the Month
+- 已辨識 12 位以上公眾發言者
+- TPD 晉升人員（DeFelice、Messmer、Purcell、McCormick）
+- 已分類整理為各區段
+- Milo 列為 Related Urban president
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：人物辨識（權重 35%）
+
+  **1.0 分**：40 位以上人物。**0.75 分**：30-39 位。**0.5 分**：20-29 位。**0.0 分**：少於 10 位。
+
+
+  ### 評分項 2：角色準確度（權重 30%）
+
+  **1.0 分**：職稱/隸屬正確。**0.5 分**：部分缺漏。**0.0 分**：錯誤。
+
+
+  ### 評分項 3：分類（權重 20%）
+
+  **1.0 分**：區段清楚。**0.5 分**：部分。**0.0 分**：完全沒有。
+
+
+  ### 評分項 4：背景脈絡（權重 15%）
+
+  **1.0 分**：每位人物皆有簡要背景脈絡。**0.5 分**：部分。**0.0 分**：完全沒有。'
+reference_solution: 60 位以上的具名人物，包含 7 位議會議員、市府職員（Shelby、Perry、Baird、Johns、Brody、DeManche、Kopesky）、簡報者（Hamilton/Raftelis、Guyette/Colliers、Chief
+  Bercaw、晉升的 TPD 人員：DeFelice、Messmer、Purcell、McCormick）、16 位以上的公眾發言者，以及其他人（Officer McNeil、Milo/Related
+  Urban、社區致贈禮物者）。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.5
+    llm_judge: 0.5
+  workspace_files:
+  - source: meetings/2026-04-02-tampa-city-council-transcript.md
+    dest: transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

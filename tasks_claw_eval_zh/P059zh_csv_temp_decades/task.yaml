@@ -1,0 +1,143 @@
+task_id: P059zh_csv_temp_decades
+task_name: 全球氣溫各十年比較
+version: 0.2.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_csv_temp_decades
+  original_file: tasks/task_csv_temp_decades.md
+prompt:
+  text: |-
+    我的工作區中有一個 CSV 檔 `global_temperature.csv`，內含全球氣溫距平資料。該檔
+    有三個欄位：`Source`（為 "GISTEMP" 或 "gcag"）、`Year`（格式為 YYYY-MM）與
+    `Mean`（相對於某基準期的氣溫距平，單位 °C）。
+
+    GISTEMP 資料涵蓋 1880–2023，gcag 資料涵蓋 1850–2024。
+
+    請使用 GISTEMP 資料比較各十年（decade）的氣溫型態，並將你的發現寫入名為
+    `decade_report.md` 的檔案。你的報告應包含：
+
+    - **各十年平均**：計算自 1880 年代至 2010 年代（外加部分的 2020 年代）每個完整
+      十年的年度氣溫距平平均。以表格呈現
+    - **十年對十年的變化**：計算從一個十年到下一個十年的平均距平變化。找出哪一段
+      十年轉換出現最大的暖化增幅
+    - **十年內變異性**：對每個十年計算其年度平均的標準差。哪個十年變異性最大、哪個
+      最小？
+    - **各十年最暖與最冷年份**：對每個十年列出最暖與最冷的個別年份
+    - **兩來源比較**：在重疊期間（1880 年代–2010 年代）比較 GISTEMP 與 gcag 的
+      各十年平均。兩者吻合程度如何？
+    - 一段簡短的**總結**，說明暖化如何逐十年推進
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/global_temperature.csv
+  dest: global_temperature.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `decade_report.md`
+- 包含各十年平均表格，含 1880 年代至 2010 年代的數值
+- 正確找出 1910 年代或 1900 年代為最冷的完整十年
+- 正確找出 2010 年代為最暖的完整十年
+- 計算十年對十年的變化
+- 找出最大暖化轉換（1970 年代→1980 年代或 2000 年代→2010 年代，約 +0.2°C）
+- 至少對部分十年計算十年內變異性（標準差）
+- 至少對數個十年找出各十年最暖／最冷年份
+- 包含 GISTEMP 與 gcag 的來源比較
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：量化正確性（權重 35%）
+
+  **1.0 分**：各十年平均、轉換與變異性度量在數值上皆正確並清楚呈現。數值符合
+  預期範圍。
+  **0.75 分**：多數數值正確，僅一、兩個十年有輕微落差。
+  **0.5 分**：部分數值正確，但有數個十年平均錯誤。
+  **0.25 分**：少數數值正確；有根本性聚合錯誤。
+  **0.0 分**：無任何正確計算。
+
+  ### 評分項 2：比較分析品質（權重 30%）
+
+  **1.0 分**：對各十年作徹底比較，呈現漸進暖化，清楚指出轉換與加速期間，並進行
+  具意義的來源比較以呈現 GISTEMP/gcag 的吻合程度。
+  **0.75 分**：比較良好，多數元件齊備。
+  **0.5 分**：有一些比較，但缺乏深度或缺少來源比較。
+  **0.25 分**：比較極少；大多只是列出數字。
+  **0.0 分**：無比較分析。
+
+  ### 評分項 3：報告結構（權重 20%）
+
+  **1.0 分**：組織良好，以清楚的表格呈現各十年資料，轉換經過排版，由資料到解讀
+  脈絡流暢。表格以 markdown 正確排版。
+  **0.75 分**：結構良好，僅有小幅排版問題。
+  **0.5 分**：含分析，但表格凌亂或結構不佳。
+  **0.25 分**：雜亂或缺少主要章節。
+  **0.0 分**：無報告或為空。
+
+  ### 評分項 4：完整性（權重 15%）
+
+  **1.0 分**：所有要求元素皆齊備：各十年表格、轉換、變異性、各十年極端值、來源
+  比較與總結。
+  **0.75 分**：多數元素齊備，僅有一處小缺漏。
+  **0.5 分**：缺少數個元素。
+  **0.25 分**：僅有少數元素。
+  **0.0 分**：報告缺漏或近乎空白。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV，分開 GISTEMP 與 gcag 紀錄
+  2. 為每個來源從月度資料計算年度平均
+  3. 將年度平均依十年分組並計算統計量
+  4. 計算十年對十年的轉換
+  5. 在重疊期間比較兩個資料來源
+  6. 撰寫一份含表格的結構化報告
+
+  預期關鍵數值（GISTEMP）：
+
+  - 1880 年代平均：約 -0.21°C
+  - 1910 年代平均：約 -0.33°C（最冷的完整十年）
+  - 1940 年代平均：約 0.04°C（首個平均為正的十年）
+  - 1980 年代平均：約 0.25°C
+  - 2010 年代平均：約 0.80°C（最暖的完整十年）
+  - 2020 年代平均（部分）：約 0.98°C
+  - 最大的十年對十年暖化：1970 年代→1980 年代（+0.21°C）或
+    2000 年代→2010 年代（+0.22°C）
+  - GISTEMP 與 gcag 每十年大致吻合於約 0.1°C 內，其中 gcag 略低
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/global_temperature.csv
+    dest: global_temperature.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

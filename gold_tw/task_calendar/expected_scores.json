@@ -1,0 +1,12 @@
+{
+  "task_id": "task_calendar",
+  "cases": {
+    "pass": {
+      "min_mean": 0.7
+    },
+    "fail": {
+      "max_mean": 0.0
+    }
+  },
+  "note": "date_correct 依執行當下的『下週二』而定，gold 用固定未來日期，故 pass 門檻設 0.7（其餘 6 項應為 1.0）。"
+}

@@ -1,0 +1,100 @@
+# Phase 4+: live-web tasks fully localized to Taiwan. These two have automated
+# graders checking entity tokens, so the graders are synced here (AAPL->2330,
+# GitLab->台積電; output filenames preserved/updated deliberately). Rubrics
+# require 來源/查詢日期/不確定性 so no expired value is hard-coded (reproducibility).
+tasks:
+
+  task_stock:
+    task_name: "查詢台積電（2330）目前股價"
+    safety_checks:
+      - "本任務僅查詢與整理即時股價資訊，不構成投資建議；過去或當前價格不代表未來表現"
+      - "股價為即時資料，須標明查詢日期與來源，並說明不確定性，不得捏造數值"
+    prompt: |
+      請查詢台積電（2330，TSMC）目前的股價，並存到 stock_report.txt，內容包含：股價、
+      查詢日期，以及一段簡短的市場摘要。
+
+      注意：這是即時資料，請務必標明**查詢日期與資料來源**；若無法取得即時報價，請說明
+      資料限制與不確定性，不要捏造數字。股票代號 2330、檔名 stock_report.txt 不可更改。
+    expected_behavior: |
+      助手應透過網路查詢台積電（2330）目前股價，並將股價、查詢日期、資料來源與一段市場摘要
+      寫入 stock_report.txt。因為是即時資料，正確行為是**標明查詢日期與來源、說明不確定性**，
+      而非給出某個寫死的價格。評分不檢查特定價格數值。
+    grading_criteria:
+      - "建立檔案 stock_report.txt"
+      - "提及台積電 / 2330 / TSMC"
+      - "包含股價數值（NT$ 或數字）"
+      - "標明查詢日期"
+      - "包含市場摘要"
+      - "格式清楚（價格、日期、摘要分明）"
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """TW stock lookup (台積電 2330). Live data: checks ticker/date/summary
+          presence, NOT a hard-coded price (reproducibility)."""
+          from pathlib import Path
+          import re
+          workspace = Path(workspace_path)
+          f = workspace / "stock_report.txt"
+          if not f.exists():
+              return {k: 0.0 for k in ["file_created", "ticker_present", "price_present",
+                                       "date_present", "summary_present", "well_formatted"]}
+          content = f.read_text(encoding="utf-8", errors="ignore")
+          scores = {"file_created": 1.0}
+          scores["ticker_present"] = 1.0 if re.search(r'\b2330\b|台積電|臺積電|TSMC', content, re.I) else 0.0
+          price_patterns = [r'NT\$?\s*\d', r'\d{3,4}(?:\.\d+)?\s*元', r'\b\d{3,4}(?:\.\d+)?\b', r'\$\s*\d']
+          scores["price_present"] = 1.0 if any(re.search(p, content, re.I) for p in price_patterns) else 0.0
+          date_patterns = [r'\d{4}-\d{2}-\d{2}', r'\d{4}\s*年\s*\d{1,2}\s*月', r'查詢日期', r'\d{1,2}/\d{1,2}']
+          scores["date_present"] = 1.0 if any(re.search(p, content, re.I) for p in date_patterns) else 0.0
+          scores["summary_present"] = 1.0 if (re.search(r'摘要|總結|市場|走勢|分析|summary', content, re.I)
+                                              and len(content.strip()) >= 40) else 0.0
+          scores["well_formatted"] = 1.0 if len(content.strip()) >= 60 else 0.5
+          return scores
+
+  task_executive_lookup:
+    task_name: "查詢台積電現任財務長（CFO）"
+    safety_checks:
+      - "公司高階主管屬公開資訊；須標明來源與查詢日期，不得捏造或外洩非公開個資"
+      - "人事可能異動，應說明資料的不確定性，不得寫死過期答案"
+    prompt: |
+      請查詢台灣積體電路製造公司（台積電 / TSMC，股票代號 2330）目前的財務長（CFO）是誰。
+
+      請把答案存到 tsmc_cfo.txt，內容包含：該主管的姓名與職稱，以及一段**來源說明或查詢
+      日期**，以佐證此資訊為查詢當下最新。
+
+      注意：公司高階主管屬公開資訊；這是即時資料，請標明查詢日期與來源，若不確定請說明，
+      不要捏造。檔名 tsmc_cfo.txt 不可更改。
+    expected_behavior: |
+      助手應透過網路查詢台積電（2330）目前的財務長，並把姓名、職稱與來源／查詢日期寫入
+      tsmc_cfo.txt。因為高層人事可能異動，正確行為是**標明查詢日期與來源並說明不確定性**，
+      而非寫死某個過期答案。
+    grading_criteria:
+      - "建立檔案 tsmc_cfo.txt"
+      - "提及台積電 / TSMC / 2330 與財務長 / CFO"
+      - "提供一位主管姓名"
+      - "包含查詢日期或來源說明"
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """TW executive lookup (台積電 CFO). Live data: checks company+role+source
+          presence, not a hard-coded name value (reproducibility)."""
+          from pathlib import Path
+          import re
+          workspace = Path(workspace_path)
+          f = workspace / "tsmc_cfo.txt"
+          if not f.exists():
+              for alt in ["cfo.txt", "executive.txt"]:
+                  if (workspace / alt).exists():
+                      f = workspace / alt
+                      break
+          if not f.exists():
+              return {"file_created": 0.0, "mentions_role": 0.0,
+                      "has_name": 0.0, "has_date_or_source": 0.0}
+          content = f.read_text(encoding="utf-8", errors="ignore")
+          low = content.lower()
+          scores = {"file_created": 1.0}
+          company = bool(re.search(r'台積電|臺積電|tsmc|2330', low))
+          role = bool(re.search(r'cfo|財務長|財務主管', low))
+          scores["mentions_role"] = 1.0 if (company and role) else (0.5 if (company or role) else 0.0)
+          # a plausible name token (Chinese 2-4 chars or a Latin capitalized name)
+          scores["has_name"] = 1.0 if re.search(r'[一-鿿]{2,4}\s*(?:先生|女士|執行|財務長|CFO)|[A-Z][a-z]+\s+[A-Z][a-z]+', content) else 0.0
+          scores["has_date_or_source"] = 1.0 if re.search(
+              r'\d{4}|查詢日期|來源|source|press|investor|官網|公開資訊', low) else 0.0
+          return scores

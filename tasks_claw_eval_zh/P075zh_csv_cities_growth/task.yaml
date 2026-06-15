@@ -1,0 +1,134 @@
+task_id: P075zh_csv_cities_growth
+task_name: 美國城市地理分布分析
+version: 0.2.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_csv_cities_growth
+  original_file: tasks/task_csv_cities_growth.md
+prompt:
+  text: |-
+    我的工作區裡有一個 CSV 檔案 `us_cities_top1000.csv`，內含美國人口最多的 1,000 個城市的資料。檔案欄位有：`City`、`State`、`Population`、`lat`、`lon`。
+
+    請分析這些城市的地理分布，並把你的發現寫到 `cities_geographic_report.md`。你的報告應包含：
+
+    1. **人口地理中心（geographic center of population）**：計算以人口為權重的重心（用人口當權重，對緯度與經度取加權平均）。將其與所有城市位置的簡單未加權重心比較。兩者的差異告訴我們什麼？
+
+    2. **地理極值（geographic extremes）**：找出最北、最南、最東、最西的城市。附上它們的座標與人口。
+
+    3. **緯度帶分析（latitude band analysis）**：將城市分成每 5° 的緯度帶（低於 30°N、30-35°N、35-40°N、40-45°N、高於 45°N）。對每個帶回報城市數、總人口與平均城市人口。哪個帶城市最多？哪個帶總人口最多？
+
+    4. **東西分割（east-west split）**：以經度 -95°W 為分界線，比較全國東半與西半的城市數、總人口與平均城市規模。
+
+    5. **各州地理跨幅（state geographic spread）**：對於有 10 個（含）以上城市的州，以最大與最小緯度、經度之間的簡單差距，計算該州任兩城市之間的最大距離（以度為單位）作為地理跨幅。哪些州地理上分布最廣？
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/us_cities_top1000.csv
+  dest: us_cities_top1000.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔案 `cities_geographic_report.md`
+- 已計算人口加權重心（約 37°N、96-97°W）
+- 已計算未加權重心並與加權重心比較
+- 已正確找出全部四個地理極值
+- 緯度帶分析含城市數與人口
+- 已包含東西分割比較
+- 已為符合資格的州計算地理跨幅
+- 已從地理模式中得出關鍵洞見
+- 報告結構清晰、分區明確
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：分析正確性（權重 35%）
+
+  - 1.0：重心計算正確，極值正確找出（包含 Honolulu 同時為最南與最西），緯度帶與預期計數相符，東西分割準確。
+  - 0.75：多數計算正確，僅有一兩處小錯。
+  - 0.5：部分正確，但有多項關鍵計算錯誤。
+  - 0.25：地理計算有重大錯誤。
+  - 0.0：沒有正確分析。
+
+  ### 評分項 2：洞見品質（權重 30%）
+
+  - 1.0：從資料得出有意義的結論——例如人口集中於 30-45°N 走廊、人口加權重心相較未加權重心略向南偏移、東西人口大致平衡，以及 Hawaii/Alaska 如何使地理極值偏斜。
+  - 0.75：對多數區段有良好洞見。
+  - 0.5：有一些觀察，但漏掉主要模式。
+  - 0.25：大多是原始數字。
+  - 0.0：沒有詮釋。
+
+  ### 評分項 3：完整性（權重 20%）
+
+  - 1.0：五個要求的分析皆具備，且處理充分。
+  - 0.75：所有區段具備，僅有小幅缺漏。
+  - 0.5：有區段缺漏。
+  - 0.25：多數區段缺漏。
+  - 0.0：報告缺漏或空白。
+
+  ### 評分項 4：報告結構（權重 15%）
+
+  - 1.0：組織良好，分區清楚，緯度帶資料以表格呈現，流程合理。
+  - 0.75：組織良好，僅有小問題。
+  - 0.5：有分析但組織不佳。
+  - 0.25：不易閱讀。
+  - 0.0：沒有報告或無法使用。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔案
+  2. 計算加權與未加權的地理重心
+  3. 使用 lat/lon 欄位找出極值位置
+  4. 依緯度將城市分箱並計算各帶統計
+  5. 依經度分割並比較兩半
+  6. 計算各州的地理範圍
+
+  關鍵預期數值：
+
+  - 人口加權重心：約 (36.99°N, 96.51°W)
+  - 未加權重心：約 (37.34°N, 96.48°W)
+  - 最北：Anchorage, Alaska（61.22°N）
+  - 最南：Honolulu, Hawaii（21.31°N）
+  - 最東：Portland, Maine（70.26°W）
+  - 最西：Honolulu, Hawaii（157.86°W）
+  - 城市最多的緯度帶：40-45°N（316 個城市）
+  - 總人口最多的帶：30-35°N（38,580,127）
+  - 95°W 以東：546 個城市，人口 ~67,016,952
+  - 95°W 以西：454 個城市，人口 ~64,115,491
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/us_cities_top1000.csv
+    dest: us_cities_top1000.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

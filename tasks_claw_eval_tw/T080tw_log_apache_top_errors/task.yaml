@@ -1,0 +1,125 @@
+task_id: T080tw_log_apache_top_errors
+task_name: Apache 錯誤日誌 — 排序最常見的錯誤類型
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_apache_top_errors.md
+  original_task_id: task_log_apache_top_errors
+  original_file: tasks/task_log_apache_top_errors.md
+prompt:
+  text: |-
+    請分析位於 `apache_error.log` 的 Apache 錯誤日誌，並將所有 `[error]` 等級的條目依錯誤類型分類。請忽略 `[notice]` 等級的條目。
+
+    請產生一份由最常見到最不常見的錯誤類型排名清單。對於每一種錯誤類型，請提供：
+
+    1. 該錯誤類別的描述性名稱
+    2. 出現次數的精確計數
+    3. 一則範例日誌行
+    4. 簡短說明此錯誤的成因，以及它是否代表資安疑慮
+
+    請把你的發現寫到 `error_types_report.json`，以如下結構的 JSON 物件呈現：
+
+    ```json
+    {
+      "total_errors": 753,
+      "error_types": [
+        {
+          "rank": 1,
+          "category": "Descriptive name",
+          "count": 224,
+          "example": "One example log line",
+          "explanation": "What causes this and security implications"
+        }
+      ]
+    }
+    ```
+
+    請聚焦於面向用戶端的錯誤（即帶有 `[client ...]` 者），但同時也納入伺服器內部錯誤（例如 `mod_jk` 初始化失敗與 `env.createBean2()` 工廠錯誤）。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/apache_error.log
+  dest: apache_error.log
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `error_types_report.json`
+- 已將「Directory index forbidden」判定為最常見的用戶端錯誤（~224）
+- 已找出並計數「File does not exist」錯誤
+- 已將「Invalid method in request」判定為一個獨立的錯誤類型
+- 分析中納入了伺服器內部錯誤（mod_jk、env.createBean2）
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `error_types_report.json`
+  - 已將「Directory index forbidden」判定為最常見的用戶端錯誤（~224）
+  - 已找出並計數「File does not exist」錯誤
+  - 已將「Invalid method in request」判定為一個獨立的錯誤類型
+  - 分析中納入了伺服器內部錯誤（mod_jk、env.createBean2）
+reference_solution: |-
+  助手應解析所有 `[error]` 等級的行，並依錯誤訊息樣式分組。預期的主要錯誤類別為：
+
+  | 排名 | 錯誤類型 | 計數 |
+  |---|---|---|
+  | 1 | Directory index forbidden by rule | ~224 |
+  | 2 | File does not exist（各種路徑） | ~200+ |
+  | 3 | script not found or unable to stat | ~66+ |
+  | 4 | mod_jk child init failures | ~48 |
+  | 5 | jk2_init() Can't find child in scoreboard | ~30+ |
+  | 6 | env.createBean2() Factory errors | ~12 |
+  | 7 | config.update() errors | ~12 |
+  | 8 | Invalid method in request | ~17 |
+  | 9 | request failed: URI too long | ~3 |
+
+  `[error]` 行的總數為 753。助手對子類別的分組方式可以不同（例如把所有「File does not exist」變體合併，或依路徑分開）。兩種做法皆可接受。
+
+  可接受的變化：
+  - 視分組策略而定，計數可能有 ±10 的差異
+  - 類別命名可有所不同
+  - 將「File does not exist」條目再細分子組可接受
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: apache_error.log
+    source: logs/apache_error.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

@@ -1,0 +1,142 @@
+task_id: P054zh_csv_stock_volatility
+task_name: Apple 股票 2014 年波動率分析
+version: 0.2.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_csv_stock_volatility
+  original_file: tasks/task_csv_stock_volatility.md
+prompt:
+  text: |-
+    我的工作區（workspace）中有一個 CSV 檔 `apple_stock_2014.csv`，內含 Apple
+    (AAPL) 2014 年的調整後收盤價。該檔有兩個欄位：`AAPL_x`（日期，格式為
+    YYYY-MM-DD）與 `AAPL_y`（調整後收盤價）。共有 240 個交易日的資料。
+
+    請分析 Apple 股票 2014 年的每日波動率（daily volatility），並將你的發現寫入
+    名為 `volatility_report.md` 的檔案。你的報告應包含：
+
+    - **每日波動率指標**：計算每日百分比報酬（收盤對收盤，close-to-close），再
+      計算這些每日報酬的標準差（standard deviation），作為波動率的衡量。
+    - **年化波動率**：將每日標準差乘以 252 的平方根（square root of 252），以進行
+      年化（annualize）。
+    - **波動最大的前 5 個交易日**：依每日百分比變化的絕對值最大者排序，列出其日期
+      與數值。
+    - 該年度的**每日絕對百分比變化平均值**。
+    - **各季波動率比較**：分別計算各季每日報酬的標準差（Q1：Jan-Mar、Q2：Apr-Jun、
+      Q3：Jul-Sep、Q4：Oct-Dec），以呈現全年波動率的變化。
+    - 一段簡短的**總結**，解讀波動率的型態。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/apple_stock_2014.csv
+  dest: apple_stock_2014.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `volatility_report.md`
+- 正確計算每日報酬標準差（約 1.47%）
+- 正確計算年化波動率（約 23%）
+- 找出波動最大的前 5 日並附正確日期
+- 波動日附上每日百分比變化
+- 包含各季波動率分解
+- 包含每日報酬平均值或平均絕對變化
+- 提供波動率型態的總結解讀
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：分析正確性（權重 35%）
+
+  **1.0 分**：所有波動率指標皆正確計算：每日標準差（約 1.47%）、年化波動率
+  （約 23%）、波動最大的日期符合預期值，且各季分解皆正確。
+  **0.75 分**：多數指標正確，僅有一、兩處輕微的數值落差。
+  **0.5 分**：部分指標正確，但有數個關鍵數字錯誤，或方法論部分不正確。
+  **0.25 分**：僅少數指標正確；出現重大計算錯誤或方法論錯誤。
+  **0.0 分**：無任何正確計算，或未嘗試分析。
+
+  ### 評分項 2：波動率解讀（權重 30%）
+
+  **1.0 分**：提供對波動率型態具意義的解讀，說明各季差異可能代表的意義，將高波動
+  日連結到可能的市場事件（財報、產品發表），並為年化波動率數字提供情境脈絡。
+  **0.75 分**：解讀良好，對型態與可能成因提供一些具意義的脈絡。
+  **0.5 分**：基本解讀，能指出型態，但對成因或意涵著墨有限。
+  **0.25 分**：解讀極少；大多只是呈現數字而缺乏脈絡。
+  **0.0 分**：未提供解讀，或分析完全錯誤。
+
+  ### 評分項 3：報告結構與呈現（權重 20%）
+
+  **1.0 分**：報告組織良好，分節清楚，以表格呈現波動日與各季資料，排版適當，行文
+  流暢有邏輯。
+  **0.75 分**：報告有條理、可讀，僅有小幅排版問題。
+  **0.5 分**：報告包含分析，但組織不佳或不易閱讀。
+  **0.25 分**：報告雜亂或缺少主要章節。
+  **0.0 分**：未建立報告，或報告為空／無法使用。
+
+  ### 評分項 4：完整性（權重 15%）
+
+  **1.0 分**：所有要求的元素皆齊備：每日標準差、年化波動率、波動最大的前 5 日、
+  平均指標、各季比較與總結。
+  **0.75 分**：多數要求元素齊備，僅有一、兩處小缺漏。
+  **0.5 分**：缺少數個要求元素。
+  **0.25 分**：僅有少數要求元素。
+  **0.0 分**：報告缺漏或近乎空白。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔
+  2. 以 `(price_today - price_yesterday) / price_yesterday * 100` 計算每日百分比報酬
+  3. 計算每日報酬的標準差（約 1.47%）
+  4. 將波動率年化（約 23.35%）
+  5. 依每日百分比變化的絕對值找出波動最大的前 5 個交易日
+  6. 計算各季標準差以比較全年波動率
+  7. 撰寫一份結構良好的 markdown 報告
+
+  預期關鍵數值：
+
+  - 每日報酬標準差：約 1.47%
+  - 年化波動率：約 23.35%
+  - 波動最大的前 5 日（依百分比變化絕對值）：
+    1. 2014-01-28：-7.51%
+    2. 2014-04-24：+7.40%
+    3. 2014-10-21：+4.78%
+    4. 2014-12-02：-4.47%
+    5. 2014-09-04：-4.13%
+  - 各季標準差：Q1 約 1.58%、Q2 約 1.39%、Q3 約 1.30%、Q4 約 1.64%
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/apple_stock_2014.csv
+    dest: apple_stock_2014.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

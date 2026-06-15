@@ -1,0 +1,115 @@
+task_id: P108zh_log_syslog_auth_failures
+task_name: Linux Syslog — 驗證失敗摘要
+version: 0.2.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_log_syslog_auth_failures
+  original_file: tasks/task_log_syslog_auth_failures.md
+prompt:
+  text: |-
+    請分析位於 `syslog.log` 的 Linux syslog，產出一份所有驗證失敗的完整摘要。此日誌
+    含有來自多個服務的 PAM 驗證事件。
+
+    你的報告應包含：
+
+    1. **驗證失敗總數（Total Auth Failures）**：統計跨所有服務的所有驗證失敗條目
+    2. **依服務分類的失敗（Failures by Service）**：依服務（sshd、ftpd、login、su 等）拆解失敗
+    3. **依來源分類的失敗（Failures by Source）**：產生最多失敗的前 10 個來源主機/IP
+    4. **被鎖定的使用者（Targeted Users）**：哪些使用者帳號在失敗的驗證嘗試中被鎖定？
+    5. **時間性分布（Temporal Distribution）**：多數驗證失敗發生在何時？是否有突增（spike）？
+    6. **FTP 與 SSH 分析（FTP vs SSH Analysis）**：比較 FTP 與 SSH 的驗證攻擊型態 — 是否為
+       相同來源同時攻擊兩者？
+    7. **建議（Recommendations）**：依失敗型態，提出具體的安全改進建議
+
+    請將報告寫入 `auth_failures_report.md`，以結構良好的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/linux_syslog.log
+  dest: syslog.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `auth_failures_report.md`
+- 統計驗證失敗（2000+ 筆與 pam 相關的條目）
+- 依服務拆解失敗（sshd、ftpd、su 等）
+- 列出主要的來源主機
+- 提供安全改進建議
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `auth_failures_report.md`
+  - 統計驗證失敗（2000+ 筆與 pam 相關的條目）
+  - 依服務拆解失敗（sshd、ftpd、su 等）
+  - 列出主要的來源主機
+  - 提供安全改進建議
+reference_solution: |-
+  助手應解析約 2000+ 筆與 PAM 相關的條目並產出：
+
+  **驗證失敗總數：**
+  - 超過 2000 筆與驗證相關的 PAM 條目
+  - 主要來源：sshd(pam_unix)（約 1610 筆）、ftpd 連線（約 1655 筆）
+
+  **依服務分類的失敗：**
+  - sshd(pam_unix) — 驗證失敗訊息的主要來源
+  - ftpd — 大量連線（ftpd 記錄連線，不一定都是明確的失敗）
+  - su(pam_unix) — 394 筆（多為合法 — cron 的工作階段開啟/關閉）
+  - login(pam_unix) — 14 筆
+  - klogind — 46 筆（Kerberos login daemon）
+
+  **依來源分類的失敗：**
+  - SSH 攻擊來自各種遠端主機（pam 條目中的 rhost=）
+  - FTP 連線集中於特定 IP（例如 209.184.7.130）
+  - 部分主機同時出現在 SSH 與 FTP 的失敗日誌中
+
+  **被鎖定的使用者：**
+  - root — SSH 暴力破解的主要目標
+  - 透過 SSH 嘗試各種無效使用者名稱
+
+  **時間性分布：**
+  - 日誌涵蓋 6 月 9 日到 9 月 14 日
+  - 特定日期可見攻擊突增
+  - SSH 暴力破解傾向在時間上集中
+
+  可接受的差異：
+  - 確切計數取決於如何定義「驗證失敗」
+  - FTP 條目可能被歸類為驗證失敗，也可能不被歸類
+  - 時間性分析的粒度可能不同
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: syslog.log
+    source: logs/linux_syslog.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

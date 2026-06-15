@@ -1,0 +1,1539 @@
+{
+  "benchmark": "claw-style-taiwan",
+  "export": "official-schema-candidate",
+  "official_compatible": false,
+  "task_count": 147,
+  "tasks": [
+    {
+      "task_id": "T001tw_sanity",
+      "category": "productivity",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T002tw_calendar",
+      "category": "productivity",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T003tw_pdf_to_calendar",
+      "category": "productivity",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "school-calendar.pdf"
+      ]
+    },
+    {
+      "task_id": "T004tw_todo_list_cleanup",
+      "category": "productivity",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T005tw_daily_summary",
+      "category": "productivity",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T006tw_email_triage",
+      "category": "productivity",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T007tw_cron_organizer",
+      "category": "productivity",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T008tw_subway_navigation",
+      "category": "productivity",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T009tw_stock",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T010tw_events",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T011tw_market_research",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T012tw_polymarket_briefing",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T013tw_executive_lookup",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T014tw_deep_research",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T015tw_competitive_research",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T016tw_oss_alternative_research",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T017tw_pricing_research",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T018tw_it_procurement",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T019tw_eu_regulation_research",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T020tw_byok_best_practices",
+      "category": "research",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T021tw_blog",
+      "category": "writing",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T022tw_email",
+      "category": "writing",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T023tw_email_reply_drafting",
+      "category": "writing",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T024tw_humanizer",
+      "category": "writing",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": [
+        "ai_blog.txt"
+      ]
+    },
+    {
+      "task_id": "T025tw_commit_message_writer",
+      "category": "writing",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T026tw_readme_generation",
+      "category": "writing",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T027tw_weather",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T028tw_shell_command_generator",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T029tw_multi_file_refactoring",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "utils.py",
+        "orders.py",
+        "reports.py",
+        "api.py"
+      ]
+    },
+    {
+      "task_id": "T030tw_dockerfile_optimization",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T031tw_playwright_e2e",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "form.html"
+      ]
+    },
+    {
+      "task_id": "T032tw_git_rescue_recovery",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T033tw_cicd_pipeline_debug",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "task_id": "T034tw_test_generation",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "order_processor.py"
+      ]
+    },
+    {
+      "task_id": "T035tw_k8s_debugging",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "deployment.yml"
+      ]
+    },
+    {
+      "task_id": "T036tw_selector_fix",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "dashboard_component.html",
+        "dashboard_tests.py"
+      ]
+    },
+    {
+      "task_id": "T037tw_codebase_navigation",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T038tw_browser_automation",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T039tw_video_transcript_extraction",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T040tw_iterative_code_refine",
+      "category": "coding",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T041tw_summary",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": []
+    },
+    {
+      "task_id": "T042tw_spreadsheet_summary",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "quarterly_sales.csv",
+        "company_expenses.xlsx"
+      ]
+    },
+    {
+      "task_id": "T043tw_eli5_pdf_summary",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": [
+        "GPT4.pdf"
+      ]
+    },
+    {
+      "task_id": "T044tw_openclaw_comprehension",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "openclaw_report.pdf"
+      ]
+    },
+    {
+      "task_id": "T045tw_email_search",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T046tw_access_log_anomaly",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T047tw_financial_ratio_calculation",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "tw_company_fy2024_financials.md"
+      ]
+    },
+    {
+      "task_id": "T048tw_earnings_analysis",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T049tw_contract_analysis",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": [
+        "tw_service_contract.md"
+      ]
+    },
+    {
+      "task_id": "T050tw_image_identification",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "images/item_a.jpg",
+        "images/item_b.jpg",
+        "images/item_c.jpg"
+      ]
+    },
+    {
+      "task_id": "T051tw_cve_security_triage",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T052tw_session_chain_analysis",
+      "category": "analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "session.ts",
+        "session-store.ts",
+        "delivery.ts",
+        "agent-command.ts"
+      ]
+    },
+    {
+      "task_id": "T053tw_csv_stock_trend",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "tw_stock_2330_2024.csv"
+      ]
+    },
+    {
+      "task_id": "T054tw_csv_stock_volatility",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "tw_stock_2330_2024.csv"
+      ]
+    },
+    {
+      "task_id": "T055tw_csv_stock_best_worst",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "tw_stock_2330_2024.csv"
+      ]
+    },
+    {
+      "task_id": "T056tw_csv_finance_report",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "llm_judge",
+      "grader_entrypoint": null,
+      "fixtures": [
+        "apple_stock_2014.csv"
+      ]
+    },
+    {
+      "task_id": "T057tw_csv_temp_anomalies",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "global_temperature.csv"
+      ]
+    },
+    {
+      "task_id": "T058tw_csv_temp_trend",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "global_temperature.csv"
+      ]
+    },
+    {
+      "task_id": "T059tw_csv_temp_decades",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "global_temperature.csv"
+      ]
+    },
+    {
+      "task_id": "T060tw_csv_life_exp_ranking",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "gapminder_life_expectancy.csv"
+      ]
+    },
+    {
+      "task_id": "T061tw_csv_life_exp_outliers",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "gapminder_life_expectancy.csv"
+      ]
+    },
+    {
+      "task_id": "T062tw_csv_life_exp_change",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "gapminder_life_expectancy.csv"
+      ]
+    },
+    {
+      "task_id": "T063tw_csv_gdp_ranking",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "world_gdp_2014.csv"
+      ]
+    },
+    {
+      "task_id": "T064tw_csv_gdp_per_capita",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "world_gdp_2014.csv"
+      ]
+    },
+    {
+      "task_id": "T065tw_csv_gdp_regions",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "world_gdp_2014.csv"
+      ]
+    },
+    {
+      "task_id": "T066tw_csv_stations_by_elevation",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "idaho_weather_stations.csv"
+      ]
+    },
+    {
+      "task_id": "T067tw_csv_stations_coverage",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "idaho_weather_stations.csv"
+      ]
+    },
+    {
+      "task_id": "T068tw_csv_stations_filter",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "idaho_weather_stations.csv"
+      ]
+    },
+    {
+      "task_id": "T069tw_csv_iris_summary",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "iris_flowers.csv"
+      ]
+    },
+    {
+      "task_id": "T070tw_csv_iris_classify",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "iris_flowers.csv"
+      ]
+    },
+    {
+      "task_id": "T071tw_csv_iris_outliers",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "iris_flowers.csv"
+      ]
+    },
+    {
+      "task_id": "T072tw_csv_cities_ranking",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "us_cities_top1000.csv"
+      ]
+    },
+    {
+      "task_id": "T073tw_csv_cities_filter",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "tw_cities.csv"
+      ]
+    },
+    {
+      "task_id": "T074tw_csv_cities_density",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "us_cities_top1000.csv"
+      ]
+    },
+    {
+      "task_id": "T075tw_csv_cities_growth",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "us_cities_top1000.csv"
+      ]
+    },
+    {
+      "task_id": "T076tw_csv_pension_ranking",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "us_pension_by_state.csv"
+      ]
+    },
+    {
+      "task_id": "T077tw_csv_pension_liability",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "us_pension_by_state.csv"
+      ]
+    },
+    {
+      "task_id": "T078tw_csv_pension_risk",
+      "category": "data_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "us_pension_by_state.csv"
+      ]
+    },
+    {
+      "task_id": "T079tw_log_apache_client_issues",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "apache_error.log"
+      ]
+    },
+    {
+      "task_id": "T080tw_log_apache_top_errors",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "apache_error.log"
+      ]
+    },
+    {
+      "task_id": "T081tw_log_apache_error_summary",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "apache_error.log"
+      ]
+    },
+    {
+      "task_id": "T082tw_log_apache_critical",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "apache_error.log"
+      ]
+    },
+    {
+      "task_id": "T083tw_log_apache_timeline",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "apache_error.log"
+      ]
+    },
+    {
+      "task_id": "T084tw_log_syslog_boot",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "linux_syslog.log"
+      ]
+    },
+    {
+      "task_id": "T085tw_log_nginx_status_codes",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "nginx_access.log"
+      ]
+    },
+    {
+      "task_id": "T086tw_log_nginx_traffic",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "nginx_access.log"
+      ]
+    },
+    {
+      "task_id": "T087tw_log_nginx_slow_requests",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "nginx_access.log"
+      ]
+    },
+    {
+      "task_id": "T088tw_log_nginx_user_agents",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "nginx_access.log"
+      ]
+    },
+    {
+      "task_id": "T089tw_log_nginx_errors",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "nginx_access.log"
+      ]
+    },
+    {
+      "task_id": "T090tw_log_ssh_failed_logins",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "auth.log"
+      ]
+    },
+    {
+      "task_id": "T091tw_log_ssh_brute_force",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "auth.log"
+      ]
+    },
+    {
+      "task_id": "T092tw_log_ssh_successful",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "auth.log"
+      ]
+    },
+    {
+      "task_id": "T093tw_log_ssh_user_activity",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "auth.log"
+      ]
+    },
+    {
+      "task_id": "T094tw_log_ssh_unusual_times",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "auth.log"
+      ]
+    },
+    {
+      "task_id": "T095tw_log_hdfs_failures",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "hdfs_datanode.log"
+      ]
+    },
+    {
+      "task_id": "T096tw_log_hdfs_connections",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "hdfs_datanode.log"
+      ]
+    },
+    {
+      "task_id": "T097tw_log_hdfs_slow_ops",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "hdfs_datanode.log"
+      ]
+    },
+    {
+      "task_id": "T098tw_log_hdfs_block_ops",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "hdfs_datanode.log"
+      ]
+    },
+    {
+      "task_id": "T099tw_log_hdfs_storage",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "hdfs_datanode.log"
+      ]
+    },
+    {
+      "task_id": "T100tw_log_mapreduce_jobs",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "mapreduce.log"
+      ]
+    },
+    {
+      "task_id": "T101tw_log_mapreduce_failures",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "mapreduce.log"
+      ]
+    },
+    {
+      "task_id": "T102tw_log_mapreduce_slow_tasks",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "mapreduce.log"
+      ]
+    },
+    {
+      "task_id": "T103tw_log_mapreduce_resources",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "mapreduce.log"
+      ]
+    },
+    {
+      "task_id": "T104tw_log_mapreduce_timeline",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "mapreduce.log"
+      ]
+    },
+    {
+      "task_id": "T105tw_log_syslog_anomalies",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "syslog.log"
+      ]
+    },
+    {
+      "task_id": "T106tw_log_syslog_services",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "syslog.log"
+      ]
+    },
+    {
+      "task_id": "T107tw_log_syslog_cron",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "syslog.log"
+      ]
+    },
+    {
+      "task_id": "T108tw_log_syslog_auth_failures",
+      "category": "log_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "syslog.log"
+      ]
+    },
+    {
+      "task_id": "T109tw_meeting_council_votes",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T110tw_meeting_council_public_comment",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T111tw_meeting_council_budget",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T112tw_meeting_council_upcoming",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T113tw_meeting_council_contact_info",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T114tw_meeting_council_neighborhood",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T115tw_meeting_tech_action_items",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T116tw_meeting_tech_decisions",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T117tw_meeting_tech_competitors",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T118tw_meeting_tech_messaging",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T119tw_meeting_tech_product_features",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T120tw_meeting_advisory_attendees",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting-transcript.md"
+      ]
+    },
+    {
+      "task_id": "T121tw_meeting_advisory_stakeholders",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting-transcript.md"
+      ]
+    },
+    {
+      "task_id": "T122tw_meeting_advisory_technical",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting-transcript.md"
+      ]
+    },
+    {
+      "task_id": "T123tw_meeting_advisory_timeline",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting-transcript.md"
+      ]
+    },
+    {
+      "task_id": "T124tw_meeting_advisory_acronyms",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting-transcript.md"
+      ]
+    },
+    {
+      "task_id": "T125tw_meeting_executive_summary",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T126tw_meeting_sentiment_analysis",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T127tw_meeting_follow_up_email",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T128tw_meeting_blog_post",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T129tw_meeting_tldr",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T130tw_meeting_searchable_index",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "meeting_transcript.md"
+      ]
+    },
+    {
+      "task_id": "T131tw_meeting_gov_speaker_summary",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T132tw_meeting_gov_qa_extract",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T133tw_meeting_gov_recommendations",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T134tw_meeting_gov_data_sources",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T135tw_meeting_gov_controversy",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T136tw_meeting_gov_next_steps",
+      "category": "meeting_analysis",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": [
+        "transcript.md"
+      ]
+    },
+    {
+      "task_id": "T137tw_memory",
+      "category": "memory",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T138tw_second_brain",
+      "category": "memory",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T139tw_files",
+      "category": "skills",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T140tw_workflow",
+      "category": "skills",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T141tw_clawdhub",
+      "category": "skills",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T142tw_skill_search",
+      "category": "skills",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "automated",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T143tw_image_gen",
+      "category": "skills",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T144tw_gh_issue_triage",
+      "category": "skills",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T145tw_gws_email_triage",
+      "category": "integrations",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T146tw_gws_cross_service",
+      "category": "integrations",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    },
+    {
+      "task_id": "T147tw_gws_task_management",
+      "category": "integrations",
+      "language": "zh",
+      "locale": "zh-TW",
+      "grading_type": "hybrid",
+      "grader_entrypoint": "grader.py",
+      "fixtures": []
+    }
+  ]
+}

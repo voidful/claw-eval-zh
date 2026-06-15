@@ -1,0 +1,223 @@
+---
+id: task_email_reply_drafting
+name: 從未讀收件匣撰寫郵件回覆
+category: writing
+grading_type: llm_judge
+timeout_seconds: 240
+language: zh
+locale: zh-TW
+region: TW
+source_task_id: task_email_reply_drafting
+source_benchmark: pinchbench
+source_locale: zh-TW
+localization: taiwan
+localization_strategy: context_replace
+claw_eval_tw_id: T023tw_email_reply_drafting
+workspace_files:
+- path: inbox/unread_01_vendor_security_followup.txt
+  content: |
+    From: rachel.owens@vendorco.com (Rachel Owens, VendorCo Security)
+    To: me@mycompany.com
+    Date: Tue, 07 Apr 2026 08:12:00 -0500
+    Subject: Follow-up: Security questionnaire due tomorrow
+
+    Hi,
+
+    Quick reminder that we still need your completed security questionnaire by
+    tomorrow (April 8) to keep your procurement onboarding on schedule.
+
+    If we don't receive it by EOD tomorrow, legal review and contract signing may
+    slip into next week.
+
+    Please let me know if you need an extension.
+
+    Thanks,
+    Rachel
+- path: inbox/unread_02_customer_escalation.txt
+  content: |
+    From: tom.garcia@northstarhealth.com (Tom Garcia, Northstar Health)
+    To: support@mycompany.com, me@mycompany.com
+    Date: Tue, 07 Apr 2026 09:03:00 -0500
+    Subject: Escalation: Data export failed before board meeting
+
+    Team,
+
+    Our scheduled compliance export failed again this morning with a timeout.
+    We have a board packet deadline today at 3:00 PM ET and need the export ASAP.
+
+    This is now the third failure in two weeks and we need an immediate update,
+    including ETA and whether there's a workaround.
+
+    Please treat this as urgent.
+
+    -Tom
+- path: inbox/unread_03_internal_review_request.txt
+  content: |
+    From: priya.nair@mycompany.com (Priya Nair, Product)
+    To: me@mycompany.com
+    Date: Tue, 07 Apr 2026 10:14:00 -0500
+    Subject: Quick review request: onboarding tooltip copy
+
+    Hey,
+
+    Could you review the revised onboarding tooltip text and leave comments by
+    Thursday afternoon? It's a short doc (~15 mins).
+
+    Draft: https://docs.mycompany.com/onboarding-tooltips-v3
+
+    Thanks!
+    Priya
+- path: inbox/unread_04_newsletter.txt
+  content: |
+    From: newsletter@devweekly.io
+    To: me@mycompany.com
+    Date: Tue, 07 Apr 2026 06:00:00 -0500
+    Subject: DevWeekly #242 - Databases at scale
+
+    This week:
+    - Postgres indexing deep dive
+    - Incident write-ups from top infra teams
+    - New OSS observability tools
+
+    Read online: https://devweekly.io/issues/242
+- path: inbox/unread_05_partner_meeting_reschedule.txt
+  content: |-
+    From: emily.cho@alliancepartners.com (Emily Cho, Alliance Partners)
+    To: me@mycompany.com
+    Date: Tue, 07 Apr 2026 11:25:00 -0500
+    Subject: Need to reschedule Thursday partner sync
+
+    Hi,
+
+    I have a customer workshop conflict and need to move our Thursday 2:30 PM ET
+    partner sync. Could we do Friday between 10:00 AM-12:00 PM ET instead?
+
+    If Friday does not work, please suggest a couple alternatives next week.
+
+    Best,
+    Emily
+---
+
+# 從未讀收件匣撰寫郵件回覆
+
+## Prompt
+
+我 `inbox/` 資料夾裡有 5 封還沒回的信（`unread_01` 到 `unread_05`），想請你
+幫我把該回的信先擬個回覆草稿。請把結果存到 `reply_drafts.md`。
+
+注意：信件原文是英文，回覆草稿也請用「英文」撰寫（保留原文語言）；下面的需求
+說明只是用中文寫給你看的。
+
+需求：
+
+1. 只針對需要回覆的信擬草稿（電子報那種沒什麼價值的就別回了）。
+2. 每一份回覆草稿都要包含：
+   - 來源郵件的檔名
+   - 主旨行（用 `Re:` 格式）
+   - 專業、貼合情境的內文
+3. 依各情境調整語氣與急迫程度（客戶的升級事件要展現急迫與當責；內部請求可以
+   簡潔處理）。
+4. 如果你手上的資訊還不足以把某件事完全解決，請坦白說明，並給出明確的後續步驟
+   或時間表。
+5. 每份回覆都要簡潔但完整。
+
+## Expected Behavior
+
+助手應該檢視全部 5 封郵件，並判斷哪些需要採取行動。助手應該略過電子報，並為以下
+具營運相關性的訊息撰寫回覆草稿（以英文撰寫）：
+
+- 廠商安全問卷提醒
+- 客戶針對匯出失敗的升級事件
+- 內部審閱請求
+- 合作夥伴會議改期
+
+優秀的回覆應依情境而有所不同：
+
+- **客戶升級事件**：立即承擔當責、致歉、給出明確的下次更新時間，以及（如有）暫時
+  替代方案的途徑。
+- **廠商截止期限**：確認收到、提出承諾，或附上具體日期／時間的延期請求。
+- **內部請求**：簡短確認，並附上實際可行的完成時間。
+- **合作夥伴排程**：接受時間，或反向提出明確的時間。
+
+輸出檔案 `reply_drafts.md` 應該易於瀏覽，並清楚區分各份草稿，例如為每封來源郵件
+加上標題。
+
+## Grading Criteria
+
+- [ ] 已建立檔案 `reply_drafts.md`
+- [ ] 回覆草稿以英文撰寫（保留原文語言）
+- [ ] 全部 5 封未讀郵件皆已檢視
+- [ ] 已為需要回覆的郵件（01、02、03、05）撰寫回覆草稿
+- [ ] 未為電子報郵件（04）撰寫不必要的草稿
+- [ ] 每份草稿皆包含來源檔名與 `Re:` 主旨
+- [ ] 語氣貼合情境與急迫性
+- [ ] 客戶升級事件的回覆展現當責與近期可行的後續步驟
+- [ ] 廠商／合作夥伴的回覆包含具體的排程或時間承諾
+- [ ] 草稿簡潔、專業且具可執行性
+
+## LLM Judge Rubric
+
+### 評分項 1：涵蓋度與篩選（權重 25%）
+
+**1.0 分**：檢視全部 5 封郵件，為 01/02/03/05 撰寫回覆草稿，並正確地不為電子報
+（04）撰寫回覆。
+
+**0.75 分**：正確撰寫了大部分必要回覆，僅有一處小幅篩選失誤（例如納入了電子報，
+或漏掉一封必要回覆）。
+
+**0.5 分**：涵蓋不完整，有多處遺漏或撰寫了不必要的草稿。
+
+**0.25 分**：涵蓋極少；對哪些郵件需要回覆有重大誤解。
+
+**0.0 分**：未產出有意義的回覆集。
+
+### 評分項 2：回覆品質與專業度（權重 25%）
+
+**1.0 分**：草稿精煉、專業、簡潔，且針對各收件者量身打造。語氣與結構符合郵件
+情境。
+
+**0.75 分**：整體專業文筆良好，僅有小幅語氣／清晰度問題。
+
+**0.5 分**：可理解，但語氣空泛或參差不齊；部分草稿顯得不專業或生硬。
+
+**0.25 分**：草稿撰寫不佳，有明顯的專業度問題。
+
+**0.0 分**：草稿無法使用或缺漏。
+
+### 評分項 3：急迫性處理與當責（權重 25%）
+
+**1.0 分**：升級事件的回覆清楚承認影響、承擔當責，並給出明確的下次更新時間或立即
+行動途徑；對時效敏感的郵件以明確承諾妥善處理。
+
+**0.75 分**：認知到急迫性，承諾大致清楚，但有一項關鍵細節含糊。
+
+**0.5 分**：有提及急迫性，但缺乏具體承諾或當責的措辭。
+
+**0.25 分**：未能妥善處理急迫性；回覆過於隨意或不夠肯定。
+
+**0.0 分**：完全沒有急迫性意識。
+
+### 評分項 4：可執行性與後續步驟（權重 15%）
+
+**1.0 分**：每份草稿在需要時皆包含明確的後續步驟、時間表或排程細節。
+
+**0.75 分**：多數草稿包含可執行的後續步驟，僅有小幅缺漏。
+
+**0.5 分**：有些可執行性，但多份草稿仍含糊。
+
+**0.25 分**：可執行的內容極少。
+
+**0.0 分**：草稿中沒有明確的後續步驟。
+
+### 評分項 5：輸出結構與可用性（權重 10%）
+
+**1.0 分**：`reply_drafts.md` 依來源郵件清楚分類，每份草稿皆有檔名、主旨與內文；
+易於審閱與寄送。
+
+**0.75 分**：結構大致清楚，僅有小幅格式不一致。
+
+**0.5 分**：具備基本結構，但難以瀏覽。
+
+**0.25 分**：組織不佳或缺少必要欄位。
+
+**0.0 分**：輸出缺漏或無法使用。

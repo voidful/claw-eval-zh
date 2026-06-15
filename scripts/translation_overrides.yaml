@@ -1,0 +1,7 @@
+# Legacy single-file overrides (Phase 1). Phase 2 moved all translations into
+# scripts/translation_overrides/*.yaml (one batch file per group), which the
+# converter merges AFTER this file (directory entries take precedence).
+#
+# Kept as an empty stub for backward compatibility. Add new translations under
+# scripts/translation_overrides/ — see docs/task_translation_policy.md.
+tasks: {}

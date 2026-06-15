@@ -1,0 +1,91 @@
+task_id: T028tw_shell_command_generator
+task_name: Shell 指令產生器
+version: 0.3.0
+category: coding
+difficulty: easy
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- coding
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_shell_command_generator.md
+  original_task_id: task_shell_command_generator
+  original_file: tasks/task_shell_command_generator.md
+prompt:
+  text: '請將下列終端機需求翻譯成一條 shell 指令，並只以純文字（plain text）將它儲存到
+
+    `command.txt`，不要附加任何說明：
+
+
+    在目前目錄底下的任意位置中，找出每一個內容包含完整字串 `FATAL:` 的 `.log`
+
+    檔案，並將每個相符的檔案路徑各印出一次。
+
+
+    這條指令應該在從目標目錄的根目錄執行時能夠正常運作。'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 90
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立檔案 `command.txt`
+- 指令非空，且看起來像一條 shell 指令
+- 指令在受控的測試 fixture 中能成功執行
+- 指令恰好輸出包含 `FATAL:` 的 `.log` 檔案
+- 指令未包含非 shell 的註解或說明文字
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: '助手應該在 `command.txt` 中產生一條 shell 指令，使其從目前目錄執行時能解決
+
+  該需求。
+
+
+  可接受的做法包括使用 `find`、`grep`、`xargs` 或 `rg` 等工具，只要該指令能：
+
+
+  1. 從目前目錄起遞迴搜尋
+
+  2. 將比對範圍限定在 `.log` 檔案
+
+  3. 檢查檔案內容是否包含完整字串 `FATAL:`
+
+  4. 將每個相符的檔案路徑各印出一次
+
+
+  該指令的搜尋根目錄可使用 `.` 或等效的目前目錄路徑。輸出順序不重要。'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: language_polish
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

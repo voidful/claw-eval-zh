@@ -1,0 +1,90 @@
+task_id: T003tw_pdf_to_calendar
+task_name: PDF 學校行事曆轉 ICS 匯入
+version: 0.3.0
+category: productivity
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- productivity
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_pdf_to_calendar.md
+  original_task_id: task_pdf_to_calendar
+  original_file: tasks/task_pdf_to_calendar.md
+prompt:
+  text: |-
+    我家小朋友學校寄來一份學年度行事曆 PDF，已經放在工作區的 `school-calendar.pdf`。
+    我想把上面的活動全部匯入手機的行事曆 App，可以麻煩你幫我整理嗎？
+
+    請從這份 PDF 擷取所有日期與活動，並在工作區建立一個名為 `school-calendar.ics`
+    的 ICS（iCalendar）檔案，內含所有活動。
+
+    每一筆活動請做到：
+    - SUMMARY 要與 PDF 上的活動名稱相符、具描述性
+    - 使用正確的日期；跨多天的活動請用 DTSTART 與 DTEND
+    - 設為整日活動（使用 DATE 格式，而非 DATETIME）
+
+    備註：這份 PDF 是英文版的學校行事曆，活動名稱請沿用原文（例如 First Day of
+    School、Labor Day），不用翻成中文，以免日期對不上。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: school-calendar.pdf
+  dest: school-calendar.pdf
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已在 `school-calendar.ics` 建立 ICS 檔案
+- ICS 檔案有效（包含 VCALENDAR、VEVENT 區塊）
+- 至少擷取出 10 筆活動
+- 包含開學日（First Day of School）活動（2026 年 8 月 3 日）
+- 包含學期最後一日（Last Day of School）活動（2027 年 5 月 21 日）
+- 包含勞動節（Labor Day）活動（2026 年 9 月 7 日）
+- 包含聖誕假期（Christmas Break）活動（2026 年 12 月）
+- 包含春假（Spring Break）活動（2027 年 4 月）
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+  1. 讀取並從 PDF 中擷取文字
+  2. 將每一筆有日期的項目解析為結構化活動
+  3. 寫出一個有效、內含所有活動的 ICS 檔案
+
+  備註：檔名 `school-calendar.pdf` 與輸出檔名 `school-calendar.ics` 不可更改；
+  活動名稱與日期皆以 PDF 原始內容為準（英文活動名、原始學年度日期）。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - source: school-calendar.pdf
+    dest: school-calendar.pdf
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

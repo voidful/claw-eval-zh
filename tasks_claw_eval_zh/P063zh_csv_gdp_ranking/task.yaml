@@ -1,0 +1,144 @@
+task_id: P063zh_csv_gdp_ranking
+task_name: 世界 GDP 各國排名
+version: 0.2.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_csv_gdp_ranking
+  original_file: tasks/task_csv_gdp_ranking.md
+prompt:
+  text: |-
+    我的工作區中有一個 CSV 檔 `world_gdp_2014.csv`，內含全球各國與屬地的 GDP 資料。
+    該檔有三個欄位：`COUNTRY`、`GDP (BILLIONS)`（單位為美元）與 `CODE`（ISO 國家
+    代碼）。共有 222 筆。
+
+    請分析 GDP 排名，並將你的發現寫入 `gdp_ranking_report.md`。你的報告應包含：
+
+    - **前 20 大經濟體**，依 GDP 由高至低排名，附上國名、GDP 數值，以及其佔世界 GDP
+      的百分比份額
+    - **後 10 小經濟體**，由 GDP 最低者往上排名
+    - **摘要統計**：世界 GDP 總額、平均 GDP、中位數 GDP、最小值與最大值
+    - **集中度分析**：前 5、前 10 與前 20 大經濟體各佔世界 GDP 總額的百分比
+    - **「1 兆美元俱樂部」（$1 trillion club）**：列出所有 GDP 超過 1 兆美元的國家
+      及其合計佔世界 GDP 的份額
+    - 一段簡短的**總結段落**，解讀全球 GDP 的分布
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/world_gdp_2014.csv
+  dest: world_gdp_2014.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `gdp_ranking_report.md`
+- 正確列出前 20 大經濟體，第 1 為 United States
+- 正確列出後 10 小經濟體，最小為 Niue
+- 摘要統計包含總額、平均、中位數、最小值與最大值
+- 集中度分析呈現前 5、前 10 與前 20 的份額
+- 找出 1 兆美元俱樂部（15 個國家）
+- 排名國家附上百分比份額
+- 含解讀分布的總結段落
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：資料正確性（權重 35%）
+
+  **1.0 分**：所有排名皆正確，統計符合預期值（總額約 $78,285B、平均約 $353B、
+  中位數約 $21.5B），且百分比份額準確計算。
+  **0.75 分**：排名與統計大致正確，僅有小幅四捨五入差異。
+  **0.5 分**：頂端經濟體正確，但統計或較後排名有錯誤。
+  **0.25 分**：排名或統計有數個重大錯誤。
+  **0.0 分**：未嘗試分析或根本性錯誤。
+
+  ### 評分項 2：分析深度（權重 30%）
+
+  **1.0 分**：對 GDP 集中度提供具意義的解讀（平均與中位數間巨大差距反映極端偏態），
+  討論美中主導地位，指出多數經濟體規模偏小，並為 $1T 俱樂部提供脈絡。
+  **0.75 分**：解讀良好，僅有小缺漏。
+  **0.5 分**：陳述事實，但解讀或洞見有限。
+  **0.25 分**：除列出數字外幾無分析。
+  **0.0 分**：未提供任何分析或解讀。
+
+  ### 評分項 3：報告完整性（權重 20%）
+
+  **1.0 分**：所有要求章節皆齊備：前 20、後 10、摘要統計、集中度分析、$1T 俱樂部、
+  總結段落。
+  **0.75 分**：多數章節齊備，僅有一處小缺漏。
+  **0.5 分**：缺少數個章節。
+  **0.25 分**：僅有一、兩個章節。
+  **0.0 分**：報告缺漏或為空。
+
+  ### 評分項 4：呈現品質（權重 15%）
+
+  **1.0 分**：markdown 排版良好，以表格呈現排名，標題清楚、版面有條理。百分比份額
+  清楚顯示於 GDP 數值旁。
+  **0.75 分**：排版良好，僅有小問題。
+  **0.5 分**：可讀但組織不佳。
+  **0.25 分**：不易閱讀。
+  **0.0 分**：無報告或無法閱讀。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔（222 列）
+  2. 依 GDP 由高至低排序
+  3. 找出最大經濟體：United States，$17,420.0B
+  4. 計算世界 GDP 總額（約 $78,285.45B）
+  5. 計算各國的百分比份額
+  6. 計算集中度指標（前 5、前 10、前 20 的份額）
+  7. 找出 GDP 超過 1 兆美元的 15 個國家
+  8. 計算摘要統計（平均約 $352.64B、中位數約 $21.52B）
+  9. 撰寫一份結構良好的 markdown 報告
+
+  預期關鍵數值：
+
+  - 世界 GDP 總額：約 $78,285.45B
+  - 第 1：United States（$17,420.0B，約 22.3%）
+  - 第 2：China（$10,360.0B，約 13.2%）
+  - 第 3：Japan（$4,770.0B，約 6.1%）
+  - 第 4：Germany（$3,820.0B，約 4.9%）
+  - 第 5：France（$2,902.0B，約 3.7%）
+  - 前 5 份額：約 50.2%
+  - 前 10 份額：約 64.6%
+  - 前 20 份額：約 79.2%
+  - 平均 GDP：約 $352.64B
+  - 中位數 GDP：約 $21.52B
+  - $1T+ 俱樂部：15 個國家
+  - 最小經濟體：Niue（$0.01B）
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/world_gdp_2014.csv
+    dest: world_gdp_2014.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

@@ -1,0 +1,139 @@
+task_id: T067tw_csv_stations_coverage
+task_name: 愛達荷州氣象站涵蓋缺口分析
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_stations_coverage.md
+  original_task_id: task_csv_stations_coverage
+  original_file: tasks/task_csv_stations_coverage.md
+prompt:
+  text: |-
+    我的工作區裡有一個 CSV 檔案 `idaho_weather_stations.csv`，內含愛達荷州（Idaho）213 個氣象站的資料。檔案欄位有：`OBJECTID`、`Station Name`、`Station Code`、`Managing Agency`、`County`、`Longitude`、`Latitude`、`Elevation (feet)`、`x`、`y`。
+
+    愛達荷州共有 44 個郡（county）。請分析這個氣象站網路的地理與海拔涵蓋情況，並把你的發現寫到 `coverage_report.md`。你的報告應包含：
+
+    - **郡級涵蓋（county coverage）**：愛達荷州的 44 個郡中，有多少個郡至少有一個氣象站？哪一個（或哪些）郡完全沒有氣象站？
+    - **各郡氣象站密度（station density by county）**：哪些郡的氣象站最多、哪些（在有氣象站的郡之中）最少？
+    - **海拔帶分布（elevation band distribution）**：把氣象站依海拔分組（例如以 1,000 ft 為一段），統計每個海拔帶各有多少個氣象站。指出哪些海拔帶涵蓋過多、哪些涵蓋不足。
+    - **機構涵蓋比較（agency coverage comparison）**：NWS 與 NRCS 在氣象站布點上的地理差異為何？哪些郡只由 NWS 服務、哪些只由 NRCS 服務、哪些兩者都有？
+    - **資料品質問題（data quality issues）**：找出任何郡別資料缺漏或空白的氣象站。
+    - 一個**建議區段（recommendations）**：說明在哪些地方增設氣象站能改善涵蓋。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/idaho_weather_stations.csv
+  dest: idaho_weather_stations.csv
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔案 `coverage_report.md`
+- 已指出 Payette County 沒有氣象站
+- 已列出各郡氣象站數，且氣象站最多的郡正確
+- 已包含海拔帶分布
+- 已包含 NWS 與 NRCS 的地理比較
+- 已指出郡別資料缺漏（5 個站）
+- 有建議區段
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：涵蓋分析正確性（權重 35%）
+
+  - 1.0：正確指出 44 個郡中有 43 個有氣象站，點名 Payette 為缺漏的郡，提供各郡正確的氣象站數，並正確找出 5 個郡別缺漏的氣象站。
+  - 0.75：多數涵蓋事實正確，僅有一兩處小錯（例如某郡計數略有偏差）。
+  - 0.5：找出部分缺口，但漏掉 Payette 或有多處計數錯誤。
+  - 0.25：嘗試做涵蓋分析，但有重大事實錯誤。
+  - 0.0：沒有涵蓋分析，或完全錯誤。
+
+  ### 評分項 2：海拔分布品質（權重 25%）
+
+  - 1.0：海拔帶劃分清楚且計數正確，指出 4,000-6,000 ft 的集中現象，並注意到低於 2,000 ft 與高於 8,000 ft 涵蓋稀疏。
+  - 0.75：海拔帶劃分良好，僅有小幅計數錯誤。
+  - 0.5：有做海拔分組，但不完整或有錯誤。
+  - 0.25：海拔分析極少。
+  - 0.0：完全沒有海拔分布。
+
+  ### 評分項 3：機構分析（權重 20%）
+
+  - 1.0：清楚說明 NWS 與 NRCS 在地理／海拔上的分布差異，指出只由單一機構服務的郡，並提供差異成因的洞見（NWS 設於城鎮、NRCS 設於山區以監測積雪）。
+  - 0.75：機構比較良好，僅有小幅缺漏。
+  - 0.5：提到兩個機構，但比較有限。
+  - 0.25：機構討論極少。
+  - 0.0：完全沒有機構分析。
+
+  ### 評分項 4：建議品質（權重 20%）
+
+  - 1.0：提出具體、可執行且緊扣已發現缺口的建議（例如在 Payette County 增設氣象站、改善北部郡的低海拔涵蓋、補上空白的郡別資料）。
+  - 0.75：建議良好，具一定具體性。
+  - 0.5：建議籠統，未緊扣具體發現。
+  - 0.25：建議模糊或無助益。
+  - 0.0：沒有建議區段。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔案（213 列）
+  2. 將氣象站的郡別與愛達荷州的 44 個郡交叉比對
+  3. 發現 44 個郡中有 43 個有氣象站；Payette County 完全沒有氣象站
+  4. 注意到有 5 個氣象站的郡別資料空白／缺漏
+  5. 找出氣象站最多的郡：Idaho（13）、Blaine（11）、Shoshone（10）、Custer（10）、Clearwater（10）
+  6. 找出只有單一氣象站的郡：Kootenai、Jefferson、Nez Perce、Madison、Lincoln
+  7. 建立海拔帶分布，呈現氣象站集中在 4,000-6,000 ft 區間
+  8. 比較 NWS（143 個站，海拔較低）與 NRCS（70 個站，海拔較高）
+  9. 撰寫一份結構清晰、含建議的報告
+
+  關鍵預期數值：
+
+  - 氣象站總數：213
+  - 有氣象站的郡：44 個中有 43 個（若僅計郡別非空白者則為 38-39 個）
+  - 缺漏的郡：Payette County 完全沒有氣象站
+  - 有 5 個氣象站的郡別欄位空白
+  - 氣象站最多：Idaho County（13）
+  - 機構：NWS（143）、NRCS（70）
+  - 最大的海拔帶：4,000-5,000 ft（37 個站）、5,000-6,000 ft（42 個站）
+  - 氣象站最少：低於 2,000 ft（10 個站）、高於 8,000 ft（7 個站）
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/idaho_weather_stations.csv
+    dest: idaho_weather_stations.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

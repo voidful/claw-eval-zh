@@ -1,0 +1,115 @@
+task_id: P142zh_skill_search
+task_name: 檔案內搜尋與取代
+version: 0.2.0
+category: skills
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- skills
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_skill_search
+  original_file: tasks/task_skill_search.md
+prompt:
+  text: |-
+    我需要為正式環境部署更新我的設定檔。請對 `config/` 目錄中的所有設定檔做以下
+    變更：
+
+    1. 將所有 `localhost` 改為 `prod-db.example.com`
+    2. 將資料庫名稱由 `myapp_dev` 改為 `myapp_prod`（並將 `myapp_test` 改為
+       `myapp_prod`）
+    3. 將 log level 由 `debug` 改為 `warn`（在 settings.json 中）
+    4. 將 API 端點由 `http://localhost:3000` 更新為 `https://api.example.com`
+
+    請列出你對每個檔案所做的變更。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 助手讀取設定檔
+- 助手將 localhost 取代為 prod-db.example.com
+- 助手適當地更新資料庫名稱
+- 助手將 log level 改為 warn
+- 助手將 API 端點更新為 https
+- 助手摘要所做的變更
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 讀取 `config/` 目錄中的設定檔
+  2. 找出所有需要變更之處
+  3. 在每個檔案中進行適當的取代
+  4. 摘要所做的變更
+
+  這項任務測試助手以下能力：
+
+  - 讀取並理解設定檔格式（JSON、YAML）
+  - 執行有針對性的搜尋與取代操作
+  - 跨多個檔案作業
+  - 清楚地傳達變更內容
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - path: config/settings.json
+    content: |
+      {
+        "database": {
+          "host": "localhost",
+          "port": 5432,
+          "name": "myapp_dev",
+          "user": "devuser",
+          "password": "dev_password_123"
+        },
+        "api": {
+          "endpoint": "http://localhost:3000",
+          "timeout": 30
+        },
+        "logging": {
+          "level": "debug",
+          "file": "/var/log/myapp/dev.log"
+        }
+      }
+  - path: config/database.yml
+    content: |-
+      development:
+        adapter: postgresql
+        host: localhost
+        port: 5432
+        database: myapp_dev
+        username: devuser
+        password: dev_password_123
+
+      test:
+        adapter: postgresql
+        host: localhost
+        port: 5432
+        database: myapp_test
+        username: devuser
+        password: dev_password_123
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

@@ -1,0 +1,5931 @@
+{
+  "total_tasks": 147,
+  "localization_strategy_counts": {
+    "language_polish": 15,
+    "context_replace": 56,
+    "manual_review_only": 16,
+    "fixture_replace": 5,
+    "copy": 52,
+    "new_tw_variant": 3
+  },
+  "localization_degree_counts": {
+    "light": 15,
+    "medium": 56,
+    "heavy": 24,
+    "none": 52
+  },
+  "manual_review_severity_counts": {
+    "low": 51,
+    "high": 56,
+    "medium": 40
+  },
+  "anchor_tasks": [
+    "task_sanity",
+    "task_calendar",
+    "task_subway_navigation",
+    "task_byok_best_practices",
+    "task_email",
+    "task_email_reply_drafting",
+    "task_weather",
+    "task_financial_ratio_calculation",
+    "task_contract_analysis",
+    "task_cve_security_triage",
+    "task_csv_stock_trend",
+    "task_csv_cities_filter",
+    "task_meeting_council_votes",
+    "task_meeting_tech_action_items",
+    "task_meeting_gov_next_steps",
+    "task_gws_email_triage",
+    "task_gws_cross_service",
+    "task_gws_task_management"
+  ],
+  "fixture_replace_tasks": [
+    "task_financial_ratio_calculation",
+    "task_csv_stock_trend",
+    "task_csv_stock_volatility",
+    "task_csv_stock_best_worst",
+    "task_csv_cities_filter"
+  ],
+  "items": [
+    {
+      "task_id": "task_sanity",
+      "tw_task_id": "task_sanity",
+      "claw_eval_tw_id": "T001tw_sanity",
+      "source_task_id": "task_sanity",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "productivity",
+      "grading_type": "automated",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "冒煙測試；只潤飾為台灣自然用語，grader 不變"
+      }
+    },
+    {
+      "task_id": "task_calendar",
+      "tw_task_id": "task_calendar",
+      "claw_eval_tw_id": "T002tw_calendar",
+      "source_task_id": "task_calendar",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "productivity",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": true,
+        "reason": "新增台灣關鍵詞 regex"
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "改台灣工作語境＋Asia/Taipei；若產生 ICS 需檢查非美國時區"
+      }
+    },
+    {
+      "task_id": "task_pdf_to_calendar",
+      "tw_task_id": "task_pdf_to_calendar",
+      "claw_eval_tw_id": "T003tw_pdf_to_calendar",
+      "source_task_id": "task_pdf_to_calendar",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "productivity",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_todo_list_cleanup",
+      "tw_task_id": "task_todo_list_cleanup",
+      "claw_eval_tw_id": "T004tw_todo_list_cleanup",
+      "source_task_id": "task_todo_list_cleanup",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "productivity",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "安全敏感領域；改台灣語境並強化 safety rubric"
+      }
+    },
+    {
+      "task_id": "task_daily_summary",
+      "tw_task_id": "task_daily_summary",
+      "claw_eval_tw_id": "T005tw_daily_summary",
+      "source_task_id": "task_daily_summary",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "productivity",
+      "grading_type": "llm_judge",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_email_triage",
+      "tw_task_id": "task_email_triage",
+      "claw_eval_tw_id": "T006tw_email_triage",
+      "source_task_id": "task_email_triage",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "productivity",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "安全敏感領域；改台灣語境並強化 safety rubric"
+      }
+    },
+    {
+      "task_id": "task_cron_organizer",
+      "tw_task_id": "task_cron_organizer",
+      "claw_eval_tw_id": "T007tw_cron_organizer",
+      "source_task_id": "task_cron_organizer",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "productivity",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_subway_navigation",
+      "tw_task_id": "task_subway_navigation",
+      "claw_eval_tw_id": "T008tw_subway_navigation",
+      "source_task_id": "task_subway_navigation",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "productivity",
+      "grading_type": "llm_judge",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台北/高雄捷運；給定固定站點，不依賴即時營運"
+      }
+    },
+    {
+      "task_id": "task_stock",
+      "tw_task_id": "task_stock",
+      "claw_eval_tw_id": "T009tw_stock",
+      "source_task_id": "task_stock",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "automated",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": true,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_events",
+      "tw_task_id": "task_events",
+      "claw_eval_tw_id": "T010tw_events",
+      "source_task_id": "task_events",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "llm_judge",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_market_research",
+      "tw_task_id": "task_market_research",
+      "claw_eval_tw_id": "T011tw_market_research",
+      "source_task_id": "task_market_research",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "hybrid",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_polymarket_briefing",
+      "tw_task_id": "task_polymarket_briefing",
+      "claw_eval_tw_id": "T012tw_polymarket_briefing",
+      "source_task_id": "task_polymarket_briefing",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "hybrid",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_executive_lookup",
+      "tw_task_id": "task_executive_lookup",
+      "claw_eval_tw_id": "T013tw_executive_lookup",
+      "source_task_id": "task_executive_lookup",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "automated",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": true,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_deep_research",
+      "tw_task_id": "task_deep_research",
+      "claw_eval_tw_id": "T014tw_deep_research",
+      "source_task_id": "task_deep_research",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "llm_judge",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_competitive_research",
+      "tw_task_id": "task_competitive_research",
+      "claw_eval_tw_id": "T015tw_competitive_research",
+      "source_task_id": "task_competitive_research",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "llm_judge",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_oss_alternative_research",
+      "tw_task_id": "task_oss_alternative_research",
+      "claw_eval_tw_id": "T016tw_oss_alternative_research",
+      "source_task_id": "task_oss_alternative_research",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "llm_judge",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_pricing_research",
+      "tw_task_id": "task_pricing_research",
+      "claw_eval_tw_id": "T017tw_pricing_research",
+      "source_task_id": "task_pricing_research",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "llm_judge",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_it_procurement",
+      "tw_task_id": "task_it_procurement",
+      "claw_eval_tw_id": "T018tw_it_procurement",
+      "source_task_id": "task_it_procurement",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "llm_judge",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_eu_regulation_research",
+      "tw_task_id": "task_eu_regulation_research",
+      "claw_eval_tw_id": "T019tw_eu_regulation_research",
+      "source_task_id": "task_eu_regulation_research",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "llm_judge",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": true,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_byok_best_practices",
+      "tw_task_id": "task_byok_best_practices",
+      "claw_eval_tw_id": "T020tw_byok_best_practices",
+      "source_task_id": "task_byok_best_practices",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "research",
+      "grading_type": "llm_judge",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": true,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "可用台灣個資法/資安合規為背景；除非有 frozen reference 否則不宣稱法規細節"
+      }
+    },
+    {
+      "task_id": "task_blog",
+      "tw_task_id": "task_blog",
+      "claw_eval_tw_id": "T021tw_blog",
+      "source_task_id": "task_blog",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "writing",
+      "grading_type": "llm_judge",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "英文輸出寫作任務；保留英文輸出要求，僅潤飾指令為台灣用語"
+      }
+    },
+    {
+      "task_id": "task_email",
+      "tw_task_id": "task_email",
+      "claw_eval_tw_id": "T022tw_email",
+      "source_task_id": "task_email",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "writing",
+      "grading_type": "llm_judge",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "台灣商務 Email 語氣；rubric 評估是否適合台灣職場"
+      }
+    },
+    {
+      "task_id": "task_email_reply_drafting",
+      "tw_task_id": "task_email_reply_drafting",
+      "claw_eval_tw_id": "T023tw_email_reply_drafting",
+      "source_task_id": "task_email_reply_drafting",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "writing",
+      "grading_type": "llm_judge",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "台灣商務回信語氣；保留原信語言處理"
+      }
+    },
+    {
+      "task_id": "task_humanizer",
+      "tw_task_id": "task_humanizer",
+      "claw_eval_tw_id": "T024tw_humanizer",
+      "source_task_id": "task_humanizer",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "writing",
+      "grading_type": "llm_judge",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "寫作任務改台灣語境"
+      }
+    },
+    {
+      "task_id": "task_commit_message_writer",
+      "tw_task_id": "task_commit_message_writer",
+      "claw_eval_tw_id": "T025tw_commit_message_writer",
+      "source_task_id": "task_commit_message_writer",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "writing",
+      "grading_type": "llm_judge",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "英文輸出寫作任務；保留英文輸出要求，僅潤飾指令為台灣用語"
+      }
+    },
+    {
+      "task_id": "task_readme_generation",
+      "tw_task_id": "task_readme_generation",
+      "claw_eval_tw_id": "T026tw_readme_generation",
+      "source_task_id": "task_readme_generation",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "writing",
+      "grading_type": "llm_judge",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "英文輸出寫作任務；保留英文輸出要求，僅潤飾指令為台灣用語"
+      }
+    },
+    {
+      "task_id": "task_weather",
+      "tw_task_id": "task_weather",
+      "claw_eval_tw_id": "T027tw_weather",
+      "source_task_id": "task_weather",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": true,
+        "reason": "新增台灣關鍵詞 regex"
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "地點改台北；保留 weather.py 與 wttr.in；grader 檢查 Taipei|台北|臺北"
+      }
+    },
+    {
+      "task_id": "task_shell_command_generator",
+      "tw_task_id": "task_shell_command_generator",
+      "claw_eval_tw_id": "T028tw_shell_command_generator",
+      "source_task_id": "task_shell_command_generator",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "automated",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_multi_file_refactoring",
+      "tw_task_id": "task_multi_file_refactoring",
+      "claw_eval_tw_id": "T029tw_multi_file_refactoring",
+      "source_task_id": "task_multi_file_refactoring",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "automated",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_dockerfile_optimization",
+      "tw_task_id": "task_dockerfile_optimization",
+      "claw_eval_tw_id": "T030tw_dockerfile_optimization",
+      "source_task_id": "task_dockerfile_optimization",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "automated",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_playwright_e2e",
+      "tw_task_id": "task_playwright_e2e",
+      "claw_eval_tw_id": "T031tw_playwright_e2e",
+      "source_task_id": "task_playwright_e2e",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "hybrid",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_git_rescue_recovery",
+      "tw_task_id": "task_git_rescue_recovery",
+      "claw_eval_tw_id": "T032tw_git_rescue_recovery",
+      "source_task_id": "task_git_rescue_recovery",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "automated",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_cicd_pipeline_debug",
+      "tw_task_id": "task_cicd_pipeline_debug",
+      "claw_eval_tw_id": "T033tw_cicd_pipeline_debug",
+      "source_task_id": "task_cicd_pipeline_debug",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "automated",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_test_generation",
+      "tw_task_id": "task_test_generation",
+      "claw_eval_tw_id": "T034tw_test_generation",
+      "source_task_id": "task_test_generation",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "hybrid",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_k8s_debugging",
+      "tw_task_id": "task_k8s_debugging",
+      "claw_eval_tw_id": "T035tw_k8s_debugging",
+      "source_task_id": "task_k8s_debugging",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "automated",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_selector_fix",
+      "tw_task_id": "task_selector_fix",
+      "claw_eval_tw_id": "T036tw_selector_fix",
+      "source_task_id": "task_selector_fix",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "hybrid",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_codebase_navigation",
+      "tw_task_id": "task_codebase_navigation",
+      "claw_eval_tw_id": "T037tw_codebase_navigation",
+      "source_task_id": "task_codebase_navigation",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "hybrid",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_browser_automation",
+      "tw_task_id": "task_browser_automation",
+      "claw_eval_tw_id": "T038tw_browser_automation",
+      "source_task_id": "task_browser_automation",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "hybrid",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_video_transcript_extraction",
+      "tw_task_id": "task_video_transcript_extraction",
+      "claw_eval_tw_id": "T039tw_video_transcript_extraction",
+      "source_task_id": "task_video_transcript_extraction",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "llm_judge",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_iterative_code_refine",
+      "tw_task_id": "task_iterative_code_refine",
+      "claw_eval_tw_id": "T040tw_iterative_code_refine",
+      "source_task_id": "task_iterative_code_refine",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "coding",
+      "grading_type": "automated",
+      "localization_strategy": "language_polish",
+      "localization_degree": "light",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動"
+      }
+    },
+    {
+      "task_id": "task_summary",
+      "tw_task_id": "task_summary",
+      "claw_eval_tw_id": "T041tw_summary",
+      "source_task_id": "task_summary",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "llm_judge",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_spreadsheet_summary",
+      "tw_task_id": "task_spreadsheet_summary",
+      "claw_eval_tw_id": "T042tw_spreadsheet_summary",
+      "source_task_id": "task_spreadsheet_summary",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "安全敏感領域；改台灣語境並強化 safety rubric"
+      }
+    },
+    {
+      "task_id": "task_eli5_pdf_summary",
+      "tw_task_id": "task_eli5_pdf_summary",
+      "claw_eval_tw_id": "T043tw_eli5_pdf_summary",
+      "source_task_id": "task_eli5_pdf_summary",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "llm_judge",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_openclaw_comprehension",
+      "tw_task_id": "task_openclaw_comprehension",
+      "claw_eval_tw_id": "T044tw_openclaw_comprehension",
+      "source_task_id": "task_openclaw_comprehension",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "安全敏感領域；改台灣語境並強化 safety rubric"
+      }
+    },
+    {
+      "task_id": "task_email_search",
+      "tw_task_id": "task_email_search",
+      "claw_eval_tw_id": "T045tw_email_search",
+      "source_task_id": "task_email_search",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "安全敏感領域；改台灣語境並強化 safety rubric"
+      }
+    },
+    {
+      "task_id": "task_access_log_anomaly",
+      "tw_task_id": "task_access_log_anomaly",
+      "claw_eval_tw_id": "T046tw_access_log_anomaly",
+      "source_task_id": "task_access_log_anomaly",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_financial_ratio_calculation",
+      "tw_task_id": "task_financial_ratio_calculation",
+      "claw_eval_tw_id": "T047tw_financial_ratio_calculation",
+      "source_task_id": "task_financial_ratio_calculation",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "automated",
+      "localization_strategy": "fixture_replace",
+      "localization_degree": "heavy",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": true,
+        "files": []
+      },
+      "grader_changes": {
+        "required": true,
+        "reason": "重算 expected values"
+      },
+      "expected_value_recalculation": {
+        "required": true,
+        "method": "由程式從新 fixture 重算"
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "改台灣上市櫃公司財報 fixture；rubric 扣分過度推銷/未提醒風險"
+      }
+    },
+    {
+      "task_id": "task_earnings_analysis",
+      "tw_task_id": "task_earnings_analysis",
+      "claw_eval_tw_id": "T048tw_earnings_analysis",
+      "source_task_id": "task_earnings_analysis",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "安全敏感領域；改台灣語境並強化 safety rubric"
+      }
+    },
+    {
+      "task_id": "task_contract_analysis",
+      "tw_task_id": "task_contract_analysis",
+      "claw_eval_tw_id": "T049tw_contract_analysis",
+      "source_task_id": "task_contract_analysis",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "llm_judge",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "繁中合約審閱；不得提供法律定論，rubric 要求列出疑義/風險/需詢問律師"
+      }
+    },
+    {
+      "task_id": "task_image_identification",
+      "tw_task_id": "task_image_identification",
+      "claw_eval_tw_id": "T050tw_image_identification",
+      "source_task_id": "task_image_identification",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_cve_security_triage",
+      "tw_task_id": "task_cve_security_triage",
+      "claw_eval_tw_id": "T051tw_cve_security_triage",
+      "source_task_id": "task_cve_security_triage",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": true
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "保留 CVE 技術語境；加入台灣企業 IT 通報/修補優先；不要求 exploit"
+      }
+    },
+    {
+      "task_id": "task_session_chain_analysis",
+      "tw_task_id": "task_session_chain_analysis",
+      "claw_eval_tw_id": "T052tw_session_chain_analysis",
+      "source_task_id": "task_session_chain_analysis",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "analysis",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_csv_stock_trend",
+      "tw_task_id": "task_csv_stock_trend",
+      "claw_eval_tw_id": "T053tw_csv_stock_trend",
+      "source_task_id": "task_csv_stock_trend",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "fixture_replace",
+      "localization_degree": "heavy",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": true,
+        "files": []
+      },
+      "grader_changes": {
+        "required": true,
+        "reason": "重算 expected values"
+      },
+      "expected_value_recalculation": {
+        "required": true,
+        "method": "由程式從新 fixture 重算"
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "改台灣股票/ETF fixture（0050/2330），重算 expected values 與 grader"
+      }
+    },
+    {
+      "task_id": "task_csv_stock_volatility",
+      "tw_task_id": "task_csv_stock_volatility",
+      "claw_eval_tw_id": "T054tw_csv_stock_volatility",
+      "source_task_id": "task_csv_stock_volatility",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "fixture_replace",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": true,
+        "files": []
+      },
+      "grader_changes": {
+        "required": true,
+        "reason": "重算 expected values"
+      },
+      "expected_value_recalculation": {
+        "required": true,
+        "method": "由程式從新 fixture 重算"
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "股票資料可改台灣標的；需新 fixture 並重算 expected values"
+      }
+    },
+    {
+      "task_id": "task_csv_stock_best_worst",
+      "tw_task_id": "task_csv_stock_best_worst",
+      "claw_eval_tw_id": "T055tw_csv_stock_best_worst",
+      "source_task_id": "task_csv_stock_best_worst",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "fixture_replace",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": true,
+        "files": []
+      },
+      "grader_changes": {
+        "required": true,
+        "reason": "重算 expected values"
+      },
+      "expected_value_recalculation": {
+        "required": true,
+        "method": "由程式從新 fixture 重算"
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "股票資料可改台灣標的；需新 fixture 並重算 expected values"
+      }
+    },
+    {
+      "task_id": "task_csv_finance_report",
+      "tw_task_id": "task_csv_finance_report",
+      "claw_eval_tw_id": "T056tw_csv_finance_report",
+      "source_task_id": "task_csv_finance_report",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "llm_judge",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "美國金融資料（如退休金）；保留資料避免重算錯誤，未來可改台灣勞退 fixture（manual review）"
+      }
+    },
+    {
+      "task_id": "task_csv_temp_anomalies",
+      "tw_task_id": "task_csv_temp_anomalies",
+      "claw_eval_tw_id": "T057tw_csv_temp_anomalies",
+      "source_task_id": "task_csv_temp_anomalies",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_temp_trend",
+      "tw_task_id": "task_csv_temp_trend",
+      "claw_eval_tw_id": "T058tw_csv_temp_trend",
+      "source_task_id": "task_csv_temp_trend",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_temp_decades",
+      "tw_task_id": "task_csv_temp_decades",
+      "claw_eval_tw_id": "T059tw_csv_temp_decades",
+      "source_task_id": "task_csv_temp_decades",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_life_exp_ranking",
+      "tw_task_id": "task_csv_life_exp_ranking",
+      "claw_eval_tw_id": "T060tw_csv_life_exp_ranking",
+      "source_task_id": "task_csv_life_exp_ranking",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_life_exp_outliers",
+      "tw_task_id": "task_csv_life_exp_outliers",
+      "claw_eval_tw_id": "T061tw_csv_life_exp_outliers",
+      "source_task_id": "task_csv_life_exp_outliers",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_life_exp_change",
+      "tw_task_id": "task_csv_life_exp_change",
+      "claw_eval_tw_id": "T062tw_csv_life_exp_change",
+      "source_task_id": "task_csv_life_exp_change",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_gdp_ranking",
+      "tw_task_id": "task_csv_gdp_ranking",
+      "claw_eval_tw_id": "T063tw_csv_gdp_ranking",
+      "source_task_id": "task_csv_gdp_ranking",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_gdp_per_capita",
+      "tw_task_id": "task_csv_gdp_per_capita",
+      "claw_eval_tw_id": "T064tw_csv_gdp_per_capita",
+      "source_task_id": "task_csv_gdp_per_capita",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_gdp_regions",
+      "tw_task_id": "task_csv_gdp_regions",
+      "claw_eval_tw_id": "T065tw_csv_gdp_regions",
+      "source_task_id": "task_csv_gdp_regions",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_stations_by_elevation",
+      "tw_task_id": "task_csv_stations_by_elevation",
+      "claw_eval_tw_id": "T066tw_csv_stations_by_elevation",
+      "source_task_id": "task_csv_stations_by_elevation",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_stations_coverage",
+      "tw_task_id": "task_csv_stations_coverage",
+      "claw_eval_tw_id": "T067tw_csv_stations_coverage",
+      "source_task_id": "task_csv_stations_coverage",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_stations_filter",
+      "tw_task_id": "task_csv_stations_filter",
+      "claw_eval_tw_id": "T068tw_csv_stations_filter",
+      "source_task_id": "task_csv_stations_filter",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_iris_summary",
+      "tw_task_id": "task_csv_iris_summary",
+      "claw_eval_tw_id": "T069tw_csv_iris_summary",
+      "source_task_id": "task_csv_iris_summary",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_iris_classify",
+      "tw_task_id": "task_csv_iris_classify",
+      "claw_eval_tw_id": "T070tw_csv_iris_classify",
+      "source_task_id": "task_csv_iris_classify",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_iris_outliers",
+      "tw_task_id": "task_csv_iris_outliers",
+      "claw_eval_tw_id": "T071tw_csv_iris_outliers",
+      "source_task_id": "task_csv_iris_outliers",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_cities_ranking",
+      "tw_task_id": "task_csv_cities_ranking",
+      "claw_eval_tw_id": "T072tw_csv_cities_ranking",
+      "source_task_id": "task_csv_cities_ranking",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_cities_filter",
+      "tw_task_id": "task_csv_cities_filter",
+      "claw_eval_tw_id": "T073tw_csv_cities_filter",
+      "source_task_id": "task_csv_cities_filter",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "fixture_replace",
+      "localization_degree": "heavy",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": true,
+        "files": []
+      },
+      "grader_changes": {
+        "required": true,
+        "reason": "重算 expected values"
+      },
+      "expected_value_recalculation": {
+        "required": true,
+        "method": "由程式從新 fixture 重算"
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "改台灣縣市 fixture（tw_cities.csv），重寫 5 項篩選與 grader（Phase 4）"
+      }
+    },
+    {
+      "task_id": "task_csv_cities_density",
+      "tw_task_id": "task_csv_cities_density",
+      "claw_eval_tw_id": "T074tw_csv_cities_density",
+      "source_task_id": "task_csv_cities_density",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_cities_growth",
+      "tw_task_id": "task_csv_cities_growth",
+      "claw_eval_tw_id": "T075tw_csv_cities_growth",
+      "source_task_id": "task_csv_cities_growth",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "全球/科學資料集（GDP/氣溫/壽命/iris/城市/測站）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_csv_pension_ranking",
+      "tw_task_id": "task_csv_pension_ranking",
+      "claw_eval_tw_id": "T076tw_csv_pension_ranking",
+      "source_task_id": "task_csv_pension_ranking",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "美國金融資料（如退休金）；保留資料避免重算錯誤，未來可改台灣勞退 fixture（manual review）"
+      }
+    },
+    {
+      "task_id": "task_csv_pension_liability",
+      "tw_task_id": "task_csv_pension_liability",
+      "claw_eval_tw_id": "T077tw_csv_pension_liability",
+      "source_task_id": "task_csv_pension_liability",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "美國金融資料（如退休金）；保留資料避免重算錯誤，未來可改台灣勞退 fixture（manual review）"
+      }
+    },
+    {
+      "task_id": "task_csv_pension_risk",
+      "tw_task_id": "task_csv_pension_risk",
+      "claw_eval_tw_id": "T078tw_csv_pension_risk",
+      "source_task_id": "task_csv_pension_risk",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "csv_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "美國金融資料（如退休金）；保留資料避免重算錯誤，未來可改台灣勞退 fixture（manual review）"
+      }
+    },
+    {
+      "task_id": "task_log_apache_client_issues",
+      "tw_task_id": "task_log_apache_client_issues",
+      "claw_eval_tw_id": "T079tw_log_apache_client_issues",
+      "source_task_id": "task_log_apache_client_issues",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_apache_top_errors",
+      "tw_task_id": "task_log_apache_top_errors",
+      "claw_eval_tw_id": "T080tw_log_apache_top_errors",
+      "source_task_id": "task_log_apache_top_errors",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_apache_error_summary",
+      "tw_task_id": "task_log_apache_error_summary",
+      "claw_eval_tw_id": "T081tw_log_apache_error_summary",
+      "source_task_id": "task_log_apache_error_summary",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_apache_critical",
+      "tw_task_id": "task_log_apache_critical",
+      "claw_eval_tw_id": "T082tw_log_apache_critical",
+      "source_task_id": "task_log_apache_critical",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": true
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_apache_timeline",
+      "tw_task_id": "task_log_apache_timeline",
+      "claw_eval_tw_id": "T083tw_log_apache_timeline",
+      "source_task_id": "task_log_apache_timeline",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_syslog_boot",
+      "tw_task_id": "task_log_syslog_boot",
+      "claw_eval_tw_id": "T084tw_log_syslog_boot",
+      "source_task_id": "task_log_syslog_boot",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_nginx_status_codes",
+      "tw_task_id": "task_log_nginx_status_codes",
+      "claw_eval_tw_id": "T085tw_log_nginx_status_codes",
+      "source_task_id": "task_log_nginx_status_codes",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_nginx_traffic",
+      "tw_task_id": "task_log_nginx_traffic",
+      "claw_eval_tw_id": "T086tw_log_nginx_traffic",
+      "source_task_id": "task_log_nginx_traffic",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_nginx_slow_requests",
+      "tw_task_id": "task_log_nginx_slow_requests",
+      "claw_eval_tw_id": "T087tw_log_nginx_slow_requests",
+      "source_task_id": "task_log_nginx_slow_requests",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_nginx_user_agents",
+      "tw_task_id": "task_log_nginx_user_agents",
+      "claw_eval_tw_id": "T088tw_log_nginx_user_agents",
+      "source_task_id": "task_log_nginx_user_agents",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_nginx_errors",
+      "tw_task_id": "task_log_nginx_errors",
+      "claw_eval_tw_id": "T089tw_log_nginx_errors",
+      "source_task_id": "task_log_nginx_errors",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_ssh_failed_logins",
+      "tw_task_id": "task_log_ssh_failed_logins",
+      "claw_eval_tw_id": "T090tw_log_ssh_failed_logins",
+      "source_task_id": "task_log_ssh_failed_logins",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": true
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_ssh_brute_force",
+      "tw_task_id": "task_log_ssh_brute_force",
+      "claw_eval_tw_id": "T091tw_log_ssh_brute_force",
+      "source_task_id": "task_log_ssh_brute_force",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": true
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_ssh_successful",
+      "tw_task_id": "task_log_ssh_successful",
+      "claw_eval_tw_id": "T092tw_log_ssh_successful",
+      "source_task_id": "task_log_ssh_successful",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": true
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_ssh_user_activity",
+      "tw_task_id": "task_log_ssh_user_activity",
+      "claw_eval_tw_id": "T093tw_log_ssh_user_activity",
+      "source_task_id": "task_log_ssh_user_activity",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": true
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_ssh_unusual_times",
+      "tw_task_id": "task_log_ssh_unusual_times",
+      "claw_eval_tw_id": "T094tw_log_ssh_unusual_times",
+      "source_task_id": "task_log_ssh_unusual_times",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_hdfs_failures",
+      "tw_task_id": "task_log_hdfs_failures",
+      "claw_eval_tw_id": "T095tw_log_hdfs_failures",
+      "source_task_id": "task_log_hdfs_failures",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_hdfs_connections",
+      "tw_task_id": "task_log_hdfs_connections",
+      "claw_eval_tw_id": "T096tw_log_hdfs_connections",
+      "source_task_id": "task_log_hdfs_connections",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_hdfs_slow_ops",
+      "tw_task_id": "task_log_hdfs_slow_ops",
+      "claw_eval_tw_id": "T097tw_log_hdfs_slow_ops",
+      "source_task_id": "task_log_hdfs_slow_ops",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_hdfs_block_ops",
+      "tw_task_id": "task_log_hdfs_block_ops",
+      "claw_eval_tw_id": "T098tw_log_hdfs_block_ops",
+      "source_task_id": "task_log_hdfs_block_ops",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_hdfs_storage",
+      "tw_task_id": "task_log_hdfs_storage",
+      "claw_eval_tw_id": "T099tw_log_hdfs_storage",
+      "source_task_id": "task_log_hdfs_storage",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_mapreduce_jobs",
+      "tw_task_id": "task_log_mapreduce_jobs",
+      "claw_eval_tw_id": "T100tw_log_mapreduce_jobs",
+      "source_task_id": "task_log_mapreduce_jobs",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_mapreduce_failures",
+      "tw_task_id": "task_log_mapreduce_failures",
+      "claw_eval_tw_id": "T101tw_log_mapreduce_failures",
+      "source_task_id": "task_log_mapreduce_failures",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_mapreduce_slow_tasks",
+      "tw_task_id": "task_log_mapreduce_slow_tasks",
+      "claw_eval_tw_id": "T102tw_log_mapreduce_slow_tasks",
+      "source_task_id": "task_log_mapreduce_slow_tasks",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_mapreduce_resources",
+      "tw_task_id": "task_log_mapreduce_resources",
+      "claw_eval_tw_id": "T103tw_log_mapreduce_resources",
+      "source_task_id": "task_log_mapreduce_resources",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_mapreduce_timeline",
+      "tw_task_id": "task_log_mapreduce_timeline",
+      "claw_eval_tw_id": "T104tw_log_mapreduce_timeline",
+      "source_task_id": "task_log_mapreduce_timeline",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_syslog_anomalies",
+      "tw_task_id": "task_log_syslog_anomalies",
+      "claw_eval_tw_id": "T105tw_log_syslog_anomalies",
+      "source_task_id": "task_log_syslog_anomalies",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": true
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_syslog_services",
+      "tw_task_id": "task_log_syslog_services",
+      "claw_eval_tw_id": "T106tw_log_syslog_services",
+      "source_task_id": "task_log_syslog_services",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_syslog_cron",
+      "tw_task_id": "task_log_syslog_cron",
+      "claw_eval_tw_id": "T107tw_log_syslog_cron",
+      "source_task_id": "task_log_syslog_cron",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": false,
+        "severity": "low",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_log_syslog_auth_failures",
+      "tw_task_id": "task_log_syslog_auth_failures",
+      "claw_eval_tw_id": "T108tw_log_syslog_auth_failures",
+      "source_task_id": "task_log_syslog_auth_failures",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "log_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "copy",
+      "localization_degree": "none",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": true
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt"
+      }
+    },
+    {
+      "task_id": "task_meeting_council_votes",
+      "tw_task_id": "task_meeting_council_votes",
+      "claw_eval_tw_id": "T109tw_meeting_council_votes",
+      "source_task_id": "task_meeting_council_votes",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "new_tw_variant",
+      "localization_degree": "heavy",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣（虛構）地方議會語境；避免捏造真實機關資料"
+      }
+    },
+    {
+      "task_id": "task_meeting_council_public_comment",
+      "tw_task_id": "task_meeting_council_public_comment",
+      "claw_eval_tw_id": "T110tw_meeting_council_public_comment",
+      "source_task_id": "task_meeting_council_public_comment",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_council_budget",
+      "tw_task_id": "task_meeting_council_budget",
+      "claw_eval_tw_id": "T111tw_meeting_council_budget",
+      "source_task_id": "task_meeting_council_budget",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_council_upcoming",
+      "tw_task_id": "task_meeting_council_upcoming",
+      "claw_eval_tw_id": "T112tw_meeting_council_upcoming",
+      "source_task_id": "task_meeting_council_upcoming",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_council_contact_info",
+      "tw_task_id": "task_meeting_council_contact_info",
+      "claw_eval_tw_id": "T113tw_meeting_council_contact_info",
+      "source_task_id": "task_meeting_council_contact_info",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_council_neighborhood",
+      "tw_task_id": "task_meeting_council_neighborhood",
+      "claw_eval_tw_id": "T114tw_meeting_council_neighborhood",
+      "source_task_id": "task_meeting_council_neighborhood",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_tech_action_items",
+      "tw_task_id": "task_meeting_tech_action_items",
+      "claw_eval_tw_id": "T115tw_meeting_tech_action_items",
+      "source_task_id": "task_meeting_tech_action_items",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "new_tw_variant",
+      "localization_degree": "heavy",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣公司會議語境；評估待辦抽取"
+      }
+    },
+    {
+      "task_id": "task_meeting_tech_decisions",
+      "tw_task_id": "task_meeting_tech_decisions",
+      "claw_eval_tw_id": "T116tw_meeting_tech_decisions",
+      "source_task_id": "task_meeting_tech_decisions",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_tech_competitors",
+      "tw_task_id": "task_meeting_tech_competitors",
+      "claw_eval_tw_id": "T117tw_meeting_tech_competitors",
+      "source_task_id": "task_meeting_tech_competitors",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_tech_messaging",
+      "tw_task_id": "task_meeting_tech_messaging",
+      "claw_eval_tw_id": "T118tw_meeting_tech_messaging",
+      "source_task_id": "task_meeting_tech_messaging",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_tech_product_features",
+      "tw_task_id": "task_meeting_tech_product_features",
+      "claw_eval_tw_id": "T119tw_meeting_tech_product_features",
+      "source_task_id": "task_meeting_tech_product_features",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_advisory_attendees",
+      "tw_task_id": "task_meeting_advisory_attendees",
+      "claw_eval_tw_id": "T120tw_meeting_advisory_attendees",
+      "source_task_id": "task_meeting_advisory_attendees",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_advisory_stakeholders",
+      "tw_task_id": "task_meeting_advisory_stakeholders",
+      "claw_eval_tw_id": "T121tw_meeting_advisory_stakeholders",
+      "source_task_id": "task_meeting_advisory_stakeholders",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_advisory_technical",
+      "tw_task_id": "task_meeting_advisory_technical",
+      "claw_eval_tw_id": "T122tw_meeting_advisory_technical",
+      "source_task_id": "task_meeting_advisory_technical",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_advisory_timeline",
+      "tw_task_id": "task_meeting_advisory_timeline",
+      "claw_eval_tw_id": "T123tw_meeting_advisory_timeline",
+      "source_task_id": "task_meeting_advisory_timeline",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_advisory_acronyms",
+      "tw_task_id": "task_meeting_advisory_acronyms",
+      "claw_eval_tw_id": "T124tw_meeting_advisory_acronyms",
+      "source_task_id": "task_meeting_advisory_acronyms",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_executive_summary",
+      "tw_task_id": "task_meeting_executive_summary",
+      "claw_eval_tw_id": "T125tw_meeting_executive_summary",
+      "source_task_id": "task_meeting_executive_summary",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_sentiment_analysis",
+      "tw_task_id": "task_meeting_sentiment_analysis",
+      "claw_eval_tw_id": "T126tw_meeting_sentiment_analysis",
+      "source_task_id": "task_meeting_sentiment_analysis",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_follow_up_email",
+      "tw_task_id": "task_meeting_follow_up_email",
+      "claw_eval_tw_id": "T127tw_meeting_follow_up_email",
+      "source_task_id": "task_meeting_follow_up_email",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_blog_post",
+      "tw_task_id": "task_meeting_blog_post",
+      "claw_eval_tw_id": "T128tw_meeting_blog_post",
+      "source_task_id": "task_meeting_blog_post",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_tldr",
+      "tw_task_id": "task_meeting_tldr",
+      "claw_eval_tw_id": "T129tw_meeting_tldr",
+      "source_task_id": "task_meeting_tldr",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_searchable_index",
+      "tw_task_id": "task_meeting_searchable_index",
+      "claw_eval_tw_id": "T130tw_meeting_searchable_index",
+      "source_task_id": "task_meeting_searchable_index",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_gov_speaker_summary",
+      "tw_task_id": "task_meeting_gov_speaker_summary",
+      "claw_eval_tw_id": "T131tw_meeting_gov_speaker_summary",
+      "source_task_id": "task_meeting_gov_speaker_summary",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": true,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_gov_qa_extract",
+      "tw_task_id": "task_meeting_gov_qa_extract",
+      "claw_eval_tw_id": "T132tw_meeting_gov_qa_extract",
+      "source_task_id": "task_meeting_gov_qa_extract",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_gov_recommendations",
+      "tw_task_id": "task_meeting_gov_recommendations",
+      "claw_eval_tw_id": "T133tw_meeting_gov_recommendations",
+      "source_task_id": "task_meeting_gov_recommendations",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_gov_data_sources",
+      "tw_task_id": "task_meeting_gov_data_sources",
+      "claw_eval_tw_id": "T134tw_meeting_gov_data_sources",
+      "source_task_id": "task_meeting_gov_data_sources",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_gov_controversy",
+      "tw_task_id": "task_meeting_gov_controversy",
+      "claw_eval_tw_id": "T135tw_meeting_gov_controversy",
+      "source_task_id": "task_meeting_gov_controversy",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）"
+      }
+    },
+    {
+      "task_id": "task_meeting_gov_next_steps",
+      "tw_task_id": "task_meeting_gov_next_steps",
+      "claw_eval_tw_id": "T136tw_meeting_gov_next_steps",
+      "source_task_id": "task_meeting_gov_next_steps",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "meeting_analysis",
+      "grading_type": "hybrid",
+      "localization_strategy": "new_tw_variant",
+      "localization_degree": "heavy",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣（虛構）政府會議語境；評估後續步驟抽取"
+      }
+    },
+    {
+      "task_id": "task_memory",
+      "tw_task_id": "task_memory",
+      "claw_eval_tw_id": "T137tw_memory",
+      "source_task_id": "task_memory",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "memory",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_second_brain",
+      "tw_task_id": "task_second_brain",
+      "claw_eval_tw_id": "T138tw_second_brain",
+      "source_task_id": "task_second_brain",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "memory",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "安全敏感領域；改台灣語境並強化 safety rubric"
+      }
+    },
+    {
+      "task_id": "task_files",
+      "tw_task_id": "task_files",
+      "claw_eval_tw_id": "T139tw_files",
+      "source_task_id": "task_files",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "skills",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_workflow",
+      "tw_task_id": "task_workflow",
+      "claw_eval_tw_id": "T140tw_workflow",
+      "source_task_id": "task_workflow",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "skills",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_clawdhub",
+      "tw_task_id": "task_clawdhub",
+      "claw_eval_tw_id": "T141tw_clawdhub",
+      "source_task_id": "task_clawdhub",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "skills",
+      "grading_type": "automated",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_skill_search",
+      "tw_task_id": "task_skill_search",
+      "claw_eval_tw_id": "T142tw_skill_search",
+      "source_task_id": "task_skill_search",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "skills",
+      "grading_type": "automated",
+      "localization_strategy": "manual_review_only",
+      "localization_degree": "heavy",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": true,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性"
+      }
+    },
+    {
+      "task_id": "task_image_gen",
+      "tw_task_id": "task_image_gen",
+      "claw_eval_tw_id": "T143tw_image_gen",
+      "source_task_id": "task_image_gen",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "skills",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": false,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "medium",
+        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
+      }
+    },
+    {
+      "task_id": "task_gh_issue_triage",
+      "tw_task_id": "task_gh_issue_triage",
+      "claw_eval_tw_id": "T144tw_gh_issue_triage",
+      "source_task_id": "task_gh_issue_triage",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "skills",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": false,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "外部服務 / mock；改台灣職場語境，保留 mock 語意"
+      }
+    },
+    {
+      "task_id": "task_gws_email_triage",
+      "tw_task_id": "task_gws_email_triage",
+      "claw_eval_tw_id": "T145tw_gws_email_triage",
+      "source_task_id": "task_gws_email_triage",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "integrations",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "保留 fws/gws mock；信件內容改台灣職場語境"
+      }
+    },
+    {
+      "task_id": "task_gws_cross_service",
+      "tw_task_id": "task_gws_cross_service",
+      "claw_eval_tw_id": "T146tw_gws_cross_service",
+      "source_task_id": "task_gws_cross_service",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "integrations",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "保留 mock；行事曆/文件改台灣職場語境"
+      }
+    },
+    {
+      "task_id": "task_gws_task_management",
+      "tw_task_id": "task_gws_task_management",
+      "claw_eval_tw_id": "T147tw_gws_task_management",
+      "source_task_id": "task_gws_task_management",
+      "source_locale": "zh-TW",
+      "target_locale": "zh-TW",
+      "category": "integrations",
+      "grading_type": "hybrid",
+      "localization_strategy": "context_replace",
+      "localization_degree": "medium",
+      "anchor": true,
+      "taiwan_context": {
+        "timezone": "Asia/Taipei",
+        "region": "TW"
+      },
+      "fixture_changes": {
+        "required": false,
+        "files": []
+      },
+      "grader_changes": {
+        "required": false,
+        "reason": ""
+      },
+      "expected_value_recalculation": {
+        "required": false,
+        "method": ""
+      },
+      "risk": {
+        "safety_sensitive": true,
+        "live_web": false,
+        "legal_or_financial": false,
+        "security_sensitive": false
+      },
+      "manual_review": {
+        "required": true,
+        "severity": "high",
+        "reason": "保留 mock；任務內容改台灣職場語境"
+      }
+    }
+  ]
+}

@@ -1,0 +1,600 @@
+{
+  "opencc_available": true,
+  "tasks_checked": 147,
+  "error_count": 0,
+  "warning_count": 1,
+  "errors": [],
+  "warnings": [
+    "[WARN]  P124zh_meeting_advisory_acronyms: reference_solution looks mostly English (latin ratio 0.73)"
+  ],
+  "tasks": {
+    "P001zh_sanity": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P002zh_calendar": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P003zh_pdf_to_calendar": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P004zh_todo_list_cleanup": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P005zh_daily_summary": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P006zh_email_triage": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P007zh_cron_organizer": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P008zh_subway_navigation": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P009zh_stock": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P010zh_events": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P011zh_market_research": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P012zh_polymarket_briefing": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P013zh_executive_lookup": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P014zh_deep_research": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P015zh_competitive_research": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P016zh_oss_alternative_research": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P017zh_pricing_research": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P018zh_it_procurement": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P019zh_eu_regulation_research": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P020zh_byok_best_practices": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P021zh_blog": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P022zh_email": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P023zh_email_reply_drafting": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P024zh_humanizer": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P025zh_commit_message_writer": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P026zh_readme_generation": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P027zh_weather": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P028zh_shell_command_generator": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P029zh_multi_file_refactoring": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P030zh_dockerfile_optimization": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P031zh_playwright_e2e": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P032zh_git_rescue_recovery": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P033zh_cicd_pipeline_debug": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P034zh_test_generation": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P035zh_k8s_debugging": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P036zh_selector_fix": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P037zh_codebase_navigation": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P038zh_browser_automation": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P039zh_video_transcript_extraction": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P040zh_iterative_code_refine": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P041zh_summary": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P042zh_spreadsheet_summary": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P043zh_eli5_pdf_summary": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P044zh_openclaw_comprehension": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P045zh_email_search": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P046zh_access_log_anomaly": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P047zh_financial_ratio_calculation": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P048zh_earnings_analysis": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P049zh_contract_analysis": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P050zh_image_identification": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P051zh_cve_security_triage": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P052zh_session_chain_analysis": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P053zh_csv_stock_trend": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P054zh_csv_stock_volatility": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P055zh_csv_stock_best_worst": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P056zh_csv_finance_report": {
+      "status": "complete",
+      "grading_type": "llm_judge"
+    },
+    "P057zh_csv_temp_anomalies": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P058zh_csv_temp_trend": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P059zh_csv_temp_decades": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P060zh_csv_life_exp_ranking": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P061zh_csv_life_exp_outliers": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P062zh_csv_life_exp_change": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P063zh_csv_gdp_ranking": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P064zh_csv_gdp_per_capita": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P065zh_csv_gdp_regions": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P066zh_csv_stations_by_elevation": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P067zh_csv_stations_coverage": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P068zh_csv_stations_filter": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P069zh_csv_iris_summary": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P070zh_csv_iris_classify": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P071zh_csv_iris_outliers": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P072zh_csv_cities_ranking": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P073zh_csv_cities_filter": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P074zh_csv_cities_density": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P075zh_csv_cities_growth": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P076zh_csv_pension_ranking": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P077zh_csv_pension_liability": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P078zh_csv_pension_risk": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P079zh_log_apache_client_issues": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P080zh_log_apache_top_errors": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P081zh_log_apache_error_summary": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P082zh_log_apache_critical": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P083zh_log_apache_timeline": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P084zh_log_syslog_boot": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P085zh_log_nginx_status_codes": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P086zh_log_nginx_traffic": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P087zh_log_nginx_slow_requests": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P088zh_log_nginx_user_agents": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P089zh_log_nginx_errors": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P090zh_log_ssh_failed_logins": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P091zh_log_ssh_brute_force": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P092zh_log_ssh_successful": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P093zh_log_ssh_user_activity": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P094zh_log_ssh_unusual_times": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P095zh_log_hdfs_failures": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P096zh_log_hdfs_connections": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P097zh_log_hdfs_slow_ops": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P098zh_log_hdfs_block_ops": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P099zh_log_hdfs_storage": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P100zh_log_mapreduce_jobs": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P101zh_log_mapreduce_failures": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P102zh_log_mapreduce_slow_tasks": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P103zh_log_mapreduce_resources": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P104zh_log_mapreduce_timeline": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P105zh_log_syslog_anomalies": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P106zh_log_syslog_services": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P107zh_log_syslog_cron": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P108zh_log_syslog_auth_failures": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P109zh_meeting_council_votes": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P110zh_meeting_council_public_comment": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P111zh_meeting_council_budget": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P112zh_meeting_council_upcoming": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P113zh_meeting_council_contact_info": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P114zh_meeting_council_neighborhood": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P115zh_meeting_tech_action_items": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P116zh_meeting_tech_decisions": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P117zh_meeting_tech_competitors": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P118zh_meeting_tech_messaging": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P119zh_meeting_tech_product_features": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P120zh_meeting_advisory_attendees": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P121zh_meeting_advisory_stakeholders": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P122zh_meeting_advisory_technical": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P123zh_meeting_advisory_timeline": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P124zh_meeting_advisory_acronyms": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P125zh_meeting_executive_summary": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P126zh_meeting_sentiment_analysis": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P127zh_meeting_follow_up_email": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P128zh_meeting_blog_post": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P129zh_meeting_tldr": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P130zh_meeting_searchable_index": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P131zh_meeting_gov_speaker_summary": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P132zh_meeting_gov_qa_extract": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P133zh_meeting_gov_recommendations": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P134zh_meeting_gov_data_sources": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P135zh_meeting_gov_controversy": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P136zh_meeting_gov_next_steps": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P137zh_memory": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P138zh_second_brain": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P139zh_files": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P140zh_workflow": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P141zh_clawdhub": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P142zh_skill_search": {
+      "status": "complete",
+      "grading_type": "automated"
+    },
+    "P143zh_image_gen": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P144zh_gh_issue_triage": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P145zh_gws_email_triage": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P146zh_gws_cross_service": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    },
+    "P147zh_gws_task_management": {
+      "status": "complete",
+      "grading_type": "hybrid"
+    }
+  }
+}

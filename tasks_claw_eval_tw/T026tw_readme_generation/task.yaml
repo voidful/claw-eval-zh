@@ -1,0 +1,359 @@
+task_id: T026tw_readme_generation
+task_name: README 產製
+version: 0.3.0
+category: writing
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- writing
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_readme_generation.md
+  original_task_id: task_readme_generation
+  original_file: tasks/task_readme_generation.md
+prompt:
+  text: |-
+    請檢視本工作區中的原始碼 — 這是一個小型的 TypeScript REST API 專案。請為此專案
+    產製一份完整的 `README.md`。
+
+    注意：README 慣例上以英文撰寫，請以英文輸出這份 README；以下需求說明僅以中文
+    呈現。
+
+    這份 README 應該包含：
+
+    1. **專案標題與說明** — 此專案的用途。
+    2. **技術堆疊（tech stack）** — 所使用的語言、框架與關鍵函式庫。
+    3. **快速上手（getting started）** — 先決條件、安裝步驟，以及如何在本機執行此
+       專案（含資料庫設定）。
+    4. **環境變數** — 以表格或清單說明 `.env.example` 中的每一個變數。
+    5. **API 端點** — 記錄可用的路由、其 HTTP 方法與簡短說明。
+    6. **可用腳本（scripts）** — 說明每一個 npm script 的作用。
+    7. **授權（License）** — 依據 `package.json` 中的內容。
+
+    請將輸出存為工作區根目錄下的 `README.md`。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 `README.md`
+- 包含專案名稱與正確的說明
+- 列出正確的技術堆疊
+- 提供快速上手／安裝說明
+- 記錄 `.env.example` 中的環境變數
+- 記錄 API 端點及其 HTTP 方法
+- 說明可用的 npm 腳本
+- 提及授權
+- 內容正確，且源自實際原始碼
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：正確性與忠實度（權重 30%）
+
+  **1.0 分**：README 中的所有資訊皆源自實際原始碼。技術堆疊、端點、環境變數與腳本
+  皆正確，無捏造的功能或函式庫。
+
+  **0.75 分**：大致正確，僅有一處小幅不準確，或假設了原始碼中沒有的細節。
+
+  **0.5 分**：整體正確，但含有明顯的不準確之處或捏造的細節。
+
+  **0.25 分**：有多處重大不準確之處或捏造的功能。
+
+  **0.0 分**：內容多半為捏造，未反映實際的程式碼庫。
+
+  ### 評分項 2：完整性（權重 25%）
+
+  **1.0 分**：涵蓋所有必要章節：標題／說明、技術堆疊、快速上手、環境變數、API 端點、
+  腳本與授權。無重大章節缺漏。
+
+  **0.75 分**：涵蓋大部分章節，僅有一處小幅遺漏。
+
+  **0.5 分**：缺少兩個以上章節，或有數個章節流於表面。
+
+  **0.25 分**：涵蓋極少；大部分必要章節缺漏。
+
+  **0.0 分**：無有意義的 README 內容。
+
+  ### 評分項 3：API 文件品質（權重 20%）
+
+  **1.0 分**：所有路由皆記錄了 HTTP 方法、路徑與簡短說明。驗證路由（register、
+  login）、task CRUD 路由、webhook 端點與健康檢查皆有涵蓋。
+
+  **0.75 分**：多數路由皆有記錄，僅有小幅缺漏（例如漏掉健康檢查或一項 CRUD 操作）。
+
+  **0.5 分**：部分路由有記錄；有數個端點缺漏或方法不正確。
+
+  **0.25 分**：API 文件極少。
+
+  **0.0 分**：無 API 文件。
+
+  ### 評分項 4：結構與可讀性（權重 15%）
+
+  **1.0 分**：組織良好，標題清楚、格式一致、指令與環境變數妥善使用程式碼區塊，且
+  讓新進開發者易於依循。
+
+  **0.75 分**：結構良好，僅有小幅格式不一致。
+
+  **0.5 分**：可讀，但組織不佳或格式不一致。
+
+  **0.25 分**：難以依循或結構不佳。
+
+  **0.0 分**：無法閱讀或無結構。
+
+  ### 評分項 5：快速上手品質（權重 10%）
+
+  **1.0 分**：步驟清楚的設定說明，包含先決條件（Node.js、PostgreSQL、Redis）、安裝
+  相依套件、設定環境變數、執行 migration，以及啟動伺服器。
+
+  **0.75 分**：設定說明良好，僅有一處小幅缺漏。
+
+  **0.5 分**：具備基本說明，但缺少關鍵步驟（例如資料庫 migration 或 Redis）。
+
+  **0.25 分**：設定說明極少或不清楚。
+
+  **0.0 分**：無設定說明。
+reference_solution: |-
+  助手應該閱讀原始檔案以了解專案結構，接著產製一份組織良好、能準確反映程式碼庫的
+  README。
+
+  助手應該發掘並納入的關鍵細節：
+
+  - 此專案名為「TaskFlow API」（來自 package.json 的 name/description 與 logger
+    輸出）。
+  - 技術堆疊：TypeScript、Express、Prisma（PostgreSQL）、Redis、JWT 驗證、bcrypt。
+  - 路由：`/api/auth`（register、login）、`/api/tasks`（CRUD）、`/api/webhooks`
+    （task-complete）、`/health`。
+  - 環境變數：PORT、DATABASE_URL、JWT_SECRET、REDIS_URL、WEBHOOK_SECRET。
+  - 腳本：dev、build、start、test、lint、db:migrate、db:seed。
+  - 授權：MIT。
+
+  這份 README 應結構完整，具有清楚的標題、指令的程式碼區塊，以及源自實際原始碼
+  （而非憑空捏造功能）的正確資訊。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files:
+  - path: src/index.ts
+    content: |
+      import express from 'express';
+      import { config } from './config';
+      import { authRouter } from './routes/auth';
+      import { tasksRouter } from './routes/tasks';
+      import { webhookRouter } from './routes/webhooks';
+      import { connectDb } from './db';
+      import { logger } from './utils/logger';
+
+      const app = express();
+
+      app.use(express.json());
+      app.use('/api/auth', authRouter);
+      app.use('/api/tasks', tasksRouter);
+      app.use('/api/webhooks', webhookRouter);
+
+      app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+
+      async function main() {
+        await connectDb();
+        app.listen(config.port, () => {
+          logger.info(`TaskFlow API listening on port ${config.port}`);
+        });
+      }
+
+      main().catch((err) => {
+        logger.error('Failed to start server', err);
+        process.exit(1);
+      });
+  - path: src/config.ts
+    content: |
+      import dotenv from 'dotenv';
+      dotenv.config();
+
+      export const config = {
+        port: parseInt(process.env.PORT || '3000', 10),
+        databaseUrl: process.env.DATABASE_URL || 'postgresql://localhost:5432/taskflow',
+        jwtSecret: process.env.JWT_SECRET || 'change-me',
+        redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
+        webhookSecret: process.env.WEBHOOK_SECRET || '',
+      };
+  - path: src/routes/auth.ts
+    content: |
+      import { Router } from 'express';
+      import bcrypt from 'bcrypt';
+      import jwt from 'jsonwebtoken';
+      import { db } from '../db';
+      import { config } from '../config';
+
+      export const authRouter = Router();
+
+      authRouter.post('/register', async (req, res) => {
+        const { email, password, name } = req.body;
+        const hash = await bcrypt.hash(password, 12);
+        const user = await db.user.create({ data: { email, password: hash, name } });
+        res.status(201).json({ id: user.id, email: user.email });
+      });
+
+      authRouter.post('/login', async (req, res) => {
+        const { email, password } = req.body;
+        const user = await db.user.findUnique({ where: { email } });
+        if (!user || !(await bcrypt.compare(password, user.password))) {
+          return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        const token = jwt.sign({ sub: user.id }, config.jwtSecret, { expiresIn: '7d' });
+        res.json({ token });
+      });
+  - path: src/routes/tasks.ts
+    content: |
+      import { Router } from 'express';
+      import { db } from '../db';
+      import { authenticate } from '../middleware/auth';
+
+      export const tasksRouter = Router();
+      tasksRouter.use(authenticate);
+
+      tasksRouter.get('/', async (req, res) => {
+        const tasks = await db.task.findMany({ where: { userId: req.userId } });
+        res.json(tasks);
+      });
+
+      tasksRouter.post('/', async (req, res) => {
+        const { title, description, dueDate } = req.body;
+        const task = await db.task.create({
+          data: { title, description, dueDate: new Date(dueDate), userId: req.userId },
+        });
+        res.status(201).json(task);
+      });
+
+      tasksRouter.patch('/:id', async (req, res) => {
+        const task = await db.task.update({
+          where: { id: req.params.id, userId: req.userId },
+          data: req.body,
+        });
+        res.json(task);
+      });
+
+      tasksRouter.delete('/:id', async (req, res) => {
+        await db.task.delete({ where: { id: req.params.id, userId: req.userId } });
+        res.status(204).send();
+      });
+  - path: src/routes/webhooks.ts
+    content: |
+      import { Router } from 'express';
+      import crypto from 'crypto';
+      import { config } from '../config';
+      import { db } from '../db';
+
+      export const webhookRouter = Router();
+
+      webhookRouter.post('/task-complete', async (req, res) => {
+        const signature = req.headers['x-webhook-signature'] as string;
+        const payload = JSON.stringify(req.body);
+        const expected = crypto.createHmac('sha256', config.webhookSecret).update(payload).digest('hex');
+        if (signature !== expected) {
+          return res.status(403).json({ error: 'Invalid signature' });
+        }
+        const { taskId, completedAt } = req.body;
+        await db.task.update({ where: { id: taskId }, data: { completedAt: new Date(completedAt), status: 'done' } });
+        res.json({ ok: true });
+      });
+  - path: package.json
+    content: |
+      {
+        "name": "taskflow-api",
+        "version": "1.2.0",
+        "description": "Task management REST API",
+        "main": "dist/index.js",
+        "scripts": {
+          "dev": "ts-node-dev --respawn src/index.ts",
+          "build": "tsc",
+          "start": "node dist/index.js",
+          "test": "jest",
+          "lint": "eslint src/",
+          "db:migrate": "prisma migrate dev",
+          "db:seed": "ts-node prisma/seed.ts"
+        },
+        "dependencies": {
+          "express": "^4.18.2",
+          "bcrypt": "^5.1.1",
+          "jsonwebtoken": "^9.0.2",
+          "ioredis": "^5.3.2",
+          "dotenv": "^16.3.1",
+          "@prisma/client": "^5.7.0"
+        },
+        "devDependencies": {
+          "typescript": "^5.3.3",
+          "ts-node-dev": "^2.0.0",
+          "jest": "^29.7.0",
+          "@types/express": "^4.17.21",
+          "eslint": "^8.56.0",
+          "prisma": "^5.7.0"
+        },
+        "license": "MIT"
+      }
+  - path: prisma/schema.prisma
+    content: |
+      generator client {
+        provider = "prisma-client-js"
+      }
+
+      datasource db {
+        provider = "postgresql"
+        url      = env("DATABASE_URL")
+      }
+
+      model User {
+        id        String   @id @default(uuid())
+        email     String   @unique
+        password  String
+        name      String
+        tasks     Task[]
+        createdAt DateTime @default(now())
+      }
+
+      model Task {
+        id          String    @id @default(uuid())
+        title       String
+        description String?
+        status      String    @default("pending")
+        dueDate     DateTime?
+        completedAt DateTime?
+        user        User      @relation(fields: [userId], references: [id])
+        userId      String
+        createdAt   DateTime  @default(now())
+        updatedAt   DateTime  @updatedAt
+      }
+  - path: .env.example
+    content: |-
+      PORT=3000
+      DATABASE_URL=postgresql://user:password@localhost:5432/taskflow
+      JWT_SECRET=your-secret-key
+      REDIS_URL=redis://localhost:6379
+      WEBHOOK_SECRET=your-webhook-secret
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: language_polish
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

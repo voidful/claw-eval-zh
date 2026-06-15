@@ -1,0 +1,175 @@
+task_id: P133zh_meeting_gov_recommendations
+task_name: NASA UAP 聽證會小組建議
+version: 0.2.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_meeting_gov_recommendations
+  original_file: tasks/task_meeting_gov_recommendations.md
+prompt:
+  text: |-
+    我有一份逐字稿檔案 `transcript.md`，來自 NASA 首場關於不明異常現象（UAPs/UFOs）的公開會議。會議過程中，小組成員與報告者就 NASA 在 UAP 研究上應採取的作為提出了各種建議。
+
+    請閱讀逐字稿，並把所有建議擷取到名為 `recommendations.md` 的檔案。對於每項建議，請列出：
+
+    - **建議（Recommendation）**：清楚、可執行的陳述
+    - **提出者（Who proposed it）**：發言者姓名
+    - **脈絡（Context）**：簡述他們為何提出此建議
+    - **類別（Category）**：分類為：Data Collection、Data Standards、Sensor Technology、Partnerships、Public Engagement、Scientific Method 或 Other
+
+    請依類別將建議分組。在每個類別內，依其在逐字稿中的出場順序排列。最後，附上一段簡短摘要，說明最被強調或最常被重複的建議。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2025-07-30-nasa-holds-first-public-meeting-on-ufos-transcript.md
+  dest: transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立輸出檔案 `recommendations.md`
+- 擷取出至少 12 項不同的建議
+- 建議分類成有意義的群組
+- 包含群眾外包／公民科學的建議
+- 包含資料標準（FAIR 或類似）的建議
+- 包含感測器評估的建議
+- 包含國際夥伴關係的建議
+- 包含減少污名化的建議
+- 建議歸於特定發言者
+- 包含對最被強調主題的摘要
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：建議擷取完整性（權重 30%）
+
+  **1.0 分**：擷取出至少 15 項不同、可執行的建議，涵蓋資料收集、標準、感測器、夥伴關係、公眾參與與方法論。沒有遺漏主要建議。
+
+  **0.75 分**：10-14 項建議，涵蓋多數類別。
+
+  **0.5 分**：6-9 項建議，部分類別著墨不足。
+
+  **0.25 分**：少於 6 項建議，或有重大缺口。
+
+  **0.0 分**：未擷取任何建議。
+
+  ### 評分項 2：分類品質（權重 20%）
+
+  **1.0 分**：建議清楚分類成有意義、不重疊的群組。類別直觀且標示得當。
+
+  **0.75 分**：分類良好，僅有少許重疊或一項分類錯誤。
+
+  **0.5 分**：有類別，但模糊或有明顯重疊。
+
+  **0.25 分**：分類極少或令人困惑。
+
+  **0.0 分**：沒有分類。
+
+  ### 評分項 3：準確性與歸屬（權重 30%）
+
+  **1.0 分**：建議準確反映所述內容，正確歸於對的發言者，並附適當脈絡說明提出原因。
+
+  **0.75 分**：大致準確，僅有少許誤歸或脈絡缺漏。
+
+  **0.5 分**：有一些不準確或缺少歸屬。
+
+  **0.25 分**：明顯不準確。
+
+  **0.0 分**：建議為捏造或全然誤歸。
+
+  ### 評分項 4：綜整與摘要（權重 20%）
+
+  **1.0 分**：結語摘要點出最被強調的 2-3 個主題（例如需要高品質資料、公民科學、減少污名化），並指出哪些建議被多位發言者呼應。
+
+  **0.75 分**：摘要良好，僅有少許遺漏。
+
+  **0.5 分**：有摘要但流於表面。
+
+  **0.25 分**：摘要極少。
+
+  **0.0 分**：沒有摘要。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析完整逐字稿
+  2. 辨識發言者明示與隱含的建議
+  3. 清楚分類與組織
+  4. 把每項建議歸於正確的發言者
+
+  關鍵建議包括：
+
+  **Data Collection：**
+  - 從公眾群眾外包非機密的開源資料（Kirkpatrick）
+  - 開發公民科學群眾外包平台／app 以收集 UAP 資料（Bianco、Spergel）
+  - 同時收集多感測器、多平台、多地點的資料（Bianco）
+  - 在熱點地區建立為期 3 個月的 24/7 收集監測行動（Kirkpatrick——生活型態分析 pattern of life）
+
+  **Data Standards：**
+  - 確保 UAP 資料符合 FAIR 標準（Findability、Accessibility、Interoperability、Reusability）（Bianco）
+  - 建立有組織的儲存庫以系統化檢索資料（Bianco）
+  - 在觀測資料旁收集完整的後設資料（Bianco）
+  - NASA 應提供高資料品質的標準（Spergel）
+
+  **Sensor Technology：**
+  - 評估大型地基科學儀器用於 UAP 偵測（Kirkpatrick）
+  - 評估地球科學衛星的 UAP 偵測能力（Kirkpatrick）
+  - 在特定區域部署專門打造的感測器（Kirkpatrick）
+  - 善用既有的天文觀測站（為時域異常偵測而設計）（Bianco）
+  - 使用校準良好的專用儀器（Spergel）
+  - 收集 FAA 的原始雷達資料而非僅處理過的資料（Reggie 的建議）
+
+  **Partnerships：**
+  - 建立國外／國際科學夥伴關係（Kirkpatrick）
+  - 善用 Five Eyes 情報夥伴關係（Kirkpatrick）
+  - 跨聯邦機關合作——FAA、NOAA、DOD、DOE（多位發言者）
+  - 善用 NASA 的 Artemis Accords 國際關係（Gold）
+  - 與 Department of Commerce 在太空交通管理上合作（Gold）
+
+  **Public Engagement：**
+  - NASA 應引領科學論述以減少污名化（Kirkpatrick、Spergel）
+  - 運用公眾對 NASA 的信任來去除 UAP 通報的污名（Bontempi）
+  - 把 UAP 議題當作擴展公眾對科學方法理解的機會（Bianco）
+
+  **Scientific Method：**
+  - 對先進能力進行同儕審查並發表於科學期刊（Kirkpatrick）
+  - 將 AI/ML 技術應用於已歸檔的科學資料（Kirkpatrick）
+  - 在辨識異常前徹底刻畫「正常」背景（Spergel）
+  - 使用監督式與非監督式機器學習進行異常偵測（Bianco）
+  - 組成跨領域研究團隊（Bontempi）
+  - 將搜尋擴展到技術特徵與地球大氣層以外的觀測（Grinspoon）
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.5
+    llm_judge: 0.5
+  workspace_files:
+  - source: meetings/2025-07-30-nasa-holds-first-public-meeting-on-ufos-transcript.md
+    dest: transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

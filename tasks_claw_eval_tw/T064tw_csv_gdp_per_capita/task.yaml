@@ -1,0 +1,154 @@
+task_id: T064tw_csv_gdp_per_capita
+task_name: 世界人均 GDP 估算
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_gdp_per_capita.md
+  original_task_id: task_csv_gdp_per_capita
+  original_file: tasks/task_csv_gdp_per_capita.md
+prompt:
+  text: |-
+    我的工作區中有一個 CSV 檔 `world_gdp_2014.csv`，內含全球各國與屬地的 GDP 資料。
+    該檔有三個欄位：`COUNTRY`、`GDP (BILLIONS)`（單位為美元）與 `CODE`（ISO 國家
+    代碼）。共有 222 筆。
+
+    此資料集含有總 GDP，但沒有人口。請運用你對 2014 年**GDP 前 30 大經濟體**約略
+    人口的知識，為每一國估算人均 GDP (GDP per capita)，並將你的發現寫入
+    `gdp_per_capita_report.md`。你的報告應包含：
+
+    - **依總 GDP 排序的前 30 大經濟體**，欄位包含：排名、國家、GDP（單位 billions）、
+      估計人口，以及估計人均 GDP
+    - **依人均 GDP 重新排名**：將同樣這 30 國依人均 GDP 由高至低重新排序
+    - **關鍵觀察**：哪些大型經濟體在人均上排名最高、哪些最低，以及這對生活水準
+      相對於經濟規模透露了什麼
+    - **離群值與意外之處**：找出人均排名與其總 GDP 排名差異極大的國家（例如某前 10
+      大經濟體在人均上卻排得很低，或某較小經濟體在人均上排得很高）
+    - 一段簡短的**方法論說明**，闡明由於 CSV 缺乏人口資料，人口是依一般知識估算的
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/world_gdp_2014.csv
+  dest: world_gdp_2014.csv
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `gdp_per_capita_report.md`
+- 依總 GDP 列出前 30 大經濟體並附 GDP 數值
+- 為每一國提供人口估計
+- 為每一國計算人均 GDP
+- 包含依人均 GDP 的重新排名
+- 含關於規模相對於人均財富的關鍵觀察
+- 找出離群值（例如 India／China 總 GDP 高但人均低）
+- 含關於估計人口的方法論說明
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：人口估計品質（權重 30%）
+
+  **1.0 分**：人口估計對 2014 年而言合理（例如 US 約 318M、China 約 1.36B、
+  India 約 1.25B、Japan 約 127M、Germany 約 81M）。可接受小幅不準，但應落在
+  合理範圍內。
+  **0.75 分**：多數估計合理，僅少數明顯偏差。
+  **0.5 分**：有提供估計，但數個明顯錯誤（偏差 >20%）。
+  **0.25 分**：許多估計嚴重不準。
+  **0.0 分**：未提供人口估計或完全捏造。
+
+  ### 評分項 2：人均分析品質（權重 30%）
+
+  **1.0 分**：在給定人口估計下，人均計算正確，重新排名做得妥當，且分析正確指出
+  人口眾多的開發中國家（India、China、Indonesia）人均排名低得多，而較小的富裕
+  國家排名較高。
+  **0.75 分**：計算與重新排名大致正確，分析良好。
+  **0.5 分**：算出部分人均值，但重新排名不完整或分析流於表面。
+  **0.25 分**：有人均值但計算有重大錯誤。
+  **0.0 分**：未嘗試人均分析。
+
+  ### 評分項 3：洞見品質（權重 25%）
+
+  **1.0 分**：清楚說明總 GDP 反映經濟規模、人均反映個人富裕程度。指出具體意外
+  （例如 India 以 GDP 排第 10 但人均近墊底、Australia 為中型經濟體卻人均居頂）。
+  討論人口在此分歧中的作用。
+  **0.75 分**：洞見良好，僅有小缺漏。
+  **0.5 分**：有基本觀察但缺乏更深入的解讀。
+  **0.25 分**：觀察流於表面或不正確。
+  **0.0 分**：未提供任何洞見。
+
+  ### 評分項 4：方法論與呈現（權重 15%）
+
+  **1.0 分**：方法論說明清楚、表格排版良好，並坦承估計上的侷限。承認人口數字
+  為約略值。
+  **0.75 分**：呈現良好，僅有小幅排版問題或方法論說明較簡短。
+  **0.5 分**：可讀，但缺少方法論說明或表格排版不佳。
+  **0.25 分**：不易閱讀或方法論不清楚。
+  **0.0 分**：無報告或無法閱讀。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔
+  2. 依 GDP 排序以找出前 30 大經濟體
+  3. 套用合理的 2014 年人口估計（依一般知識）
+  4. 為每一國計算人均 GDP（GDP in billions × 1,000,000,000 / 人口）
+  5. 依人均 GDP 重新排名
+  6. 找出關於經濟規模相對於人均財富的關鍵洞見
+  7. 撰寫一份含方法論說明、結構良好的 markdown 報告
+
+  預期關鍵數值（約略，使用 2014 年人口）：
+
+  依總 GDP 的前 30 大以下列開頭：US ($17,420B)、China ($10,360B)、Japan ($4,770B)、
+  Germany ($3,820B)、France ($2,902B)
+
+  前 30 國依人均排名大致應呈現：
+  - 前 30 中人均最高者：Australia（約 $62k）、Sweden（約 $58k）、
+    United States（約 $55k）、Netherlands（約 $52k）、Switzerland 不在內
+    （依總 GDP 不在前 30）
+  - 前 30 中人均最低者：India（約 $1.6k）、Nigeria（約 $3.4k）、Indonesia
+    （約 $3.5k）、Pakistan（約 $1.3k，若在前 30 內）
+  - China 人均：約 $7.5k，儘管總 GDP 排第 2
+  - India 人均：約 $1.6k，儘管總 GDP 排第 10
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/world_gdp_2014.csv
+    dest: world_gdp_2014.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

@@ -1,0 +1,181 @@
+task_id: T020tw_byok_best_practices
+task_name: 台灣企業合規下的 BYOK 最佳實務
+version: 0.3.0
+category: research
+difficulty: hard
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- research
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_byok_best_practices.md
+  original_task_id: task_byok_best_practices
+  original_file: tasks/task_byok_best_practices.md
+prompt:
+  text: |-
+    請彙整一份在 AI 推論（AI inference）應用程式中實作 **BYOK（Bring Your Own
+    Key，自帶金鑰）** 的完整最佳實務指南，並特別納入**台灣個人資料保護法（個資法）
+    與資通安全合規**的考量。此指南對象為一家台灣的開發者工具公司，該公司讓使用者
+    提供自己的 LLM 供應商 API 金鑰（OpenAI、Anthropic、Google 等），而非透過共用
+    金鑰代理（proxy）。
+
+    你的指南應涵蓋：
+
+    1. **安全架構**：BYOK 金鑰應如何儲存、傳輸與使用？用戶端 vs. 伺服器端金鑰
+       處理。靜態加密與傳輸中加密。
+    2. **金鑰驗證**：在儲存前如何驗證使用者提供的 API 金鑰確實有效？速率限制、
+       妥善處理已過期或被撤銷的金鑰。
+    3. **個資法與資安合規影響**：使用 BYOK 相較共用代理金鑰，資料流有何變化？在
+       個資法下的日誌記錄、告知義務與跨境傳輸考量。應用程式供應商是否會看到使用者
+       的 API 用量或內容？
+    4. **各供應商的特定考量**：OpenAI、Anthropic、Google Vertex AI 與 AWS Bedrock
+       在金鑰管理上的顯著差異。API key vs. OAuth vs. service accounts。
+    5. **成本透明度**：如何協助使用者理解並追蹤其 API 支出。
+    6. **常見陷阱**：BYOK 實作會出哪些差錯？金鑰外洩途徑、意外記錄到日誌、用戶端
+       暴露、速率限制混淆。
+    7. **替代做法**：何時 BYOK 是正確選擇，何時共用代理或混合模式更佳？
+
+    請將指南儲存至 `byok_best_practices.md`。至少 1500 字（words）。請於適當處加入
+    程式碼範例或設定片段。
+
+    注意：本指南若引用個資法、資安規範條文或各供應商的合規／API 文件等即時資訊，
+    請**標示資料來源、標示查詢日期**，並說明**資料限制與不確定性**（法規與供應商
+    API 可能變動）。切勿捏造條文編號或供應商政策。法規正式名稱（個人資料保護法）
+    保留原文，供應商與函式庫名稱保留英文原文。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 300
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 byok_best_practices.md
+- 涵蓋安全架構（儲存、傳輸、加密）
+- 探討金鑰驗證模式
+- 處理個資法與資安合規影響（日誌、告知、跨境傳輸）
+- 註明各供應商的差異
+- 包含成本透明度章節
+- 記錄常見陷阱並探討替代做法
+- 包含程式碼範例或片段
+- 至少 1500 字
+- 凡引用法規或供應商政策皆標示來源、查詢日期，並說明不確定性
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：安全深度（權重 30%）
+
+  **1.0 分**：徹底的安全分析，涵蓋靜態加密（AES-256、KMS）、傳輸（TLS、切勿置於
+  query params）、儲存模式（加密的資料庫欄位、密鑰管理器），以及「僅用戶端」vs.
+  「伺服器端儲存」的根本選擇。探討金鑰輪替（rotation）與撤銷處理。
+
+  **0.75 分**：安全涵蓋良好並有具體建議。可能遺漏一兩個面向。
+
+  **0.5 分**：涵蓋安全基本面，但缺乏具體性。提及加密但未探討實作。
+
+  **0.25 分**：安全探討停留在表面。
+
+  **0.0 分**：無安全內容。
+
+  ### 評分項 2：實務適用性（權重 20%）
+
+  **1.0 分**：指南對台灣開發團隊可立即派上用場。包含程式碼範例（金鑰驗證、加密
+  儲存、代理模式）、設定片段，以及架構描述。處理現實考量，如瀏覽器擴充套件安全、
+  CI/CD 金鑰注入，以及多供應商抽象化。
+
+  **0.75 分**：實務內容良好，有部分程式碼範例。處理多數現實情境。
+
+  **0.5 分**：提供了指引，但缺乏具體的實作範例。
+
+  **0.25 分**：多為理論，缺乏實務應用。
+
+  **0.0 分**：無實務內容。
+
+  ### 評分項 3：個資法／資安合規與來源、查詢日期、不確定性（權重 20%）
+
+  **1.0 分**：清楚說明 BYOK 在台灣個資法與資安合規下的影響（日誌記錄、告知義務、
+  跨境傳輸、應用程式供應商可見性）。凡引用法規條文或供應商政策皆標示可追溯的
+  資料來源與查詢日期，並說明資料限制與不確定性（法規與供應商 API 可能變動）。
+  明顯以引用來源取代捏造的條文或政策。
+
+  **0.75 分**：合規影響涵蓋良好，多數引用有標示來源與查詢日期，對不確定性有提及
+  但較簡略。
+
+  **0.5 分**：提及合規影響，但引用來源或查詢日期不一致，或未說明資料限制。
+
+  **0.25 分**：合規著墨少，且僅零星提及來源或日期。
+
+  **0.0 分**：未處理合規影響，或出現捏造／寫死且未加註的條文或供應商政策。
+
+  ### 評分項 4：各供應商專屬知識與完整性（權重 20%）
+
+  **1.0 分**：正確描述各供應商間的驗證差異——OpenAI API keys vs. Anthropic API
+  keys vs. Google OAuth／service accounts vs. AWS IAM for Bedrock，並指出實務
+  影響。所要求的全部 7 個主題皆有實質涵蓋，達到最低字數，邏輯流暢。
+
+  **0.75 分**：涵蓋 3 家以上供應商且細節正確，5～6 個主題涵蓋良好，接近字數要求。
+
+  **0.5 分**：供應商差異籠統或僅涵蓋 1～2 家，或涵蓋 4～5 個主題、未達字數。
+
+  **0.25 分**：各供應商專屬內容極少，或處理少於 4 個主題。
+
+  **0.0 分**：無任何供應商專屬資訊，或缺少多數所要求的內容。
+
+  ### 評分項 5：陷阱與權衡（權重 10%）
+
+  **1.0 分**：常見陷阱章節具體且可付諸行動——意外將金鑰記錄到日誌、用戶端 JS
+  bundle 暴露、瀏覽器 DevTools 可見性、URL 參數中的金鑰。對 BYOK 與代理模式之間
+  的權衡分析細膩。
+
+  **0.75 分**：陷阱涵蓋良好，並具一定具體性。
+
+  **0.5 分**：提及陷阱，但籠統。
+
+  **0.25 分**：陷阱著墨極少。
+
+  **0.0 分**：未探討任何陷阱或權衡。
+reference_solution: |-
+  助手應該：
+
+  1. 研究 AI 推論應用程式中的 BYOK 模式
+  2. 從官方文件與安全指南蒐集安全最佳實務
+  3. 依據實際的 API 文件納入各供應商的特定細節
+  4. 納入台灣個資法與資安合規（告知義務、日誌、跨境傳輸）的考量
+  5. 提供實用的程式碼範例或設定模式
+  6. 製作一份完整、結構良好的指南，儲存至 `byok_best_practices.md`
+
+  凡引用即時的法規條文或供應商政策／API 細節，正確行為是**標示資料來源、標示
+  查詢日期，並說明資料限制與不確定性**（法規與供應商 API 可能變動），而非捏造
+  條文編號或供應商政策。
+primary_dimensions:
+- completion
+- safety
+- robustness
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: manual_review_only
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

@@ -1,0 +1,98 @@
+task_id: T115tw_meeting_tech_action_items
+task_name: 台灣公司產品會議：擷取行動項目
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_tech_action_items.md
+  original_task_id: task_meeting_tech_action_items
+  original_file: tasks/task_meeting_tech_action_items.md
+prompt:
+  text: |-
+    工作區裡有一份會議逐字稿 meeting_transcript.md（虛構台灣軟體公司「鼎峰科技」的產品
+    行銷會議）。請閱讀逐字稿，擷取所有**行動項目（action items）**，並寫入 action_items.md。
+
+    每個行動項目請包含：負責人、要做的事、以及期限（若逐字稿有提到）。也請特別標出與
+    「活動／發表會」及「對內公告」相關的行動項目。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: tw/meetings/tw_tech_product_meeting.md
+  dest: meeting_transcript.md
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 建立報告檔案 action_items.md
+- 至少擷取 5 個行動項目
+- 至少正確標出 3 位負責人（林佳蓉/王志明/陳怡君/張家豪/黃淑芬/李俊賢）
+- 標出與活動／發表會相關的行動項目
+- 標出與對內公告相關的行動項目
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：行動項目完整度（權重 50%）
+  - 1.0：擷取 6 個行動項目，負責人、事項、期限正確
+  - 0.5：擷取多數但有遺漏或負責人錯置
+  - 0.0：嚴重遺漏或錯誤
+  ### 評分項 2：分類標註（權重 30%）
+  - 1.0：正確標出活動／發表會與對內公告相關項目
+  - 0.5：標出其一
+  - 0.0：未標
+  ### 評分項 3：可讀性（權重 20%）
+  - 1.0：條列清楚、含負責人與期限
+  - 0.0：雜亂
+reference_solution: |-
+  助手應從逐字稿擷取至少 6 個行動項目與其負責人：
+  - 林佳蓉：6/30 前完成新版 API 文件
+  - 王志明：下週五前與通路夥伴確認新版報價
+  - 陳怡君：7/10 前確認產品發表會（活動）場地與議程
+  - 張家豪：6 月底前改版官網 messaging 與產品頁
+  - 黃淑芬：本週內整理客戶回饋並發出內部公告（announcement）
+  - 李俊賢：7/15 前完成資安稽核與滲透測試
+  並把結果整理成清楚的 action_items.md。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: tw/meetings/tw_tech_product_meeting.md
+    dest: meeting_transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: new_tw_variant
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

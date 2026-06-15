@@ -1,0 +1,139 @@
+task_id: P010zh_events
+task_name: 科技研討會研究
+version: 0.2.0
+category: research
+difficulty: hard
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- research
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_events
+  original_file: tasks/task_events.md
+prompt:
+  text: |-
+    請找出 5 場即將舉行的科技研討會，並建立 events.md，為每一場列出名稱、日期、
+    地點與官方網站。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 300
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 events.md
+- 恰好包含 5 筆研討會項目
+- 每筆項目皆有研討會名稱
+- 每筆項目皆有日期資訊
+- 每筆項目皆有地點資訊
+- 每筆項目皆有官方網站／網址
+- 資訊看起來正確且可查證
+- 排版清楚且一致
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：資訊正確性（權重 35%）
+
+  **1.0 分**：5 場研討會皆為真實、可查證的科技研討會。所有資訊（名稱、日期、
+  地點、網站）皆正確且可查證，無任何捏造的活動。
+
+  **0.75 分**：4～5 場研討會可查證且資訊正確。日期或細節有些微不準確，但不影響
+  整體有效性。
+
+  **0.5 分**：3～4 場研討會可查證。部分資訊可能已過時或含有不準確之處，但活動
+  確實存在。
+
+  **0.25 分**：僅有 1～2 場研討會可查證，或多筆項目含有明顯不準確之處，可能包含
+  捏造的活動。
+
+  **0.0 分**：所有或大多數研討會看似捏造，或資訊完全不正確。
+
+  ### 評分項 2：完整性（權重 25%）
+
+  **1.0 分**：5 場研討會皆有完整資訊：名稱、具體日期（不只是月份）、地點
+  （城市／國家），以及可正常開啟的官方網站網址。
+
+  **0.75 分**：5 場研討會皆有列出，資訊大致完整。僅有小幅缺漏（例如日期較為概略、
+  缺少具體場館）。
+
+  **0.5 分**：列出 4～5 場研討會，但有明顯的資訊缺漏。部分項目缺少日期、地點或
+  網站。
+
+  **0.25 分**：少於 4 場研討會，或多筆項目有重大資訊缺漏。
+
+  **0.0 分**：少於 3 場研討會，或多數項目嚴重不完整。
+
+  ### 評分項 3：相關性與品質（權重 20%）
+
+  **1.0 分**：所有研討會皆為重要、知名的科技研討會（例如重大業界活動、具規模的
+  系列研討會）。在主題或地區上具有良好的多樣性。
+
+  **0.75 分**：多數研討會皆為值得關注的科技活動。整體選擇良好，僅在重要性或多樣性
+  上有小瑕疵。
+
+  **0.5 分**：知名與較不知名的研討會混雜。多樣性有限，或部分活動與「科技」的相關性
+  令人存疑。
+
+  **0.25 分**：多為冷門或令人存疑的研討會，與科技產業的相關性不佳。
+
+  **0.0 分**：研討會與科技無關，或完全不恰當。
+
+  ### 評分項 4：排版與呈現（權重 15%）
+
+  **1.0 分**：排版優異，結構一致。善用 markdown（標題、清單、連結），易讀且
+  條理分明。
+
+  **0.75 分**：排版良好，僅有小幅不一致。整體清楚易讀。
+
+  **0.5 分**：具備基本排版，但有明顯的不一致或結構問題，較難閱讀。
+
+  **0.25 分**：排版不佳。結構不一致，使資訊難以判讀。
+
+  **0.0 分**：毫無排版，或完全無法閱讀。
+
+  ### 評分項 5：任務完成度（權重 5%）
+
+  **1.0 分**：建立了檔名正確的檔案（events.md），包含 5 場研討會，所有要求皆達成。
+
+  **0.75 分**：檔案已建立，僅有小瑕疵，但基本上完整。
+
+  **0.5 分**：檔案已建立，但缺少重要要求。
+
+  **0.25 分**：檔案已建立，但嚴重不足。
+
+  **0.0 分**：未建立檔案，或檔案為空。
+reference_solution: |-
+  助手應該：
+
+  1. 使用網路搜尋或研究工具，找出真實存在的科技研討會
+  2. 找出 5 場在今年舉行的研討會
+  3. 擷取關鍵資訊：名稱、日期、地點、官方網站
+  4. 建立一個名為 `events.md` 的檔案，寫入上述資訊
+  5. 以清楚且一致的方式排版這些資訊
+  6. 確保這些研討會真實存在，且資訊正確無誤
+
+  助手可採用多種搜尋策略，並應從可靠來源查證資訊。
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

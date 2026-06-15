@@ -1,0 +1,505 @@
+{
+  "overall_pass": true,
+  "deterministic_cases": 28,
+  "failed_cases": 0,
+  "results": [
+    {
+      "task_id": "task_calendar",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 0.8571,
+          "bounds": {
+            "min_mean": 0.7
+          },
+          "passed": true,
+          "breakdown": {
+            "file_created": 1.0,
+            "attendee_present": 1.0,
+            "title_correct": 1.0,
+            "description_present": 1.0,
+            "time_correct": 1.0,
+            "date_correct": 0.0,
+            "timezone_not_us": 1.0
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.0
+          },
+          "passed": true,
+          "breakdown": {
+            "file_created": 0.0,
+            "date_correct": 0.0,
+            "time_correct": 0.0,
+            "attendee_present": 0.0,
+            "title_correct": 0.0,
+            "description_present": 0.0,
+            "timezone_not_us": 0.0
+          }
+        }
+      }
+    },
+    {
+      "task_id": "task_contract_analysis",
+      "type": "llm_judge_calibration",
+      "status": "skipped(no deterministic score)",
+      "cases": {}
+    },
+    {
+      "task_id": "task_csv_cities_filter",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 1.0,
+          "bounds": {
+            "min_mean": 0.9
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "six_cities_filter": 1.0,
+            "southern_filter": 1.0,
+            "taipei_kaohsiung": 1.0,
+            "midsize_filter": 1.0,
+            "northern_filter": 1.0
+          }
+        },
+        "partial": {
+          "mean": 0.5,
+          "bounds": {
+            "min_mean": 0.15,
+            "max_mean": 0.7
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "six_cities_filter": 1.0,
+            "southern_filter": 0.0,
+            "taipei_kaohsiung": 0.5,
+            "midsize_filter": 0.0,
+            "northern_filter": 0.5
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.05
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 0.0,
+            "six_cities_filter": 0.0,
+            "southern_filter": 0.0,
+            "taipei_kaohsiung": 0.0,
+            "midsize_filter": 0.0,
+            "northern_filter": 0.0
+          }
+        }
+      }
+    },
+    {
+      "task_id": "task_csv_stock_best_worst",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 1.0,
+          "bounds": {
+            "min_mean": 0.9
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "best_day_date": 1.0,
+            "best_day_value": 1.0,
+            "worst_day_date": 1.0,
+            "worst_day_value": 1.0,
+            "extremes": 1.0,
+            "summary_analysis": 1.0
+          }
+        },
+        "partial": {
+          "mean": 0.2857,
+          "bounds": {
+            "min_mean": 0.15,
+            "max_mean": 0.7
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "best_day_date": 1.0,
+            "best_day_value": 0.0,
+            "worst_day_date": 0.0,
+            "worst_day_value": 0.0,
+            "extremes": 0.0,
+            "summary_analysis": 0.0
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.05
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 0.0,
+            "best_day_date": 0.0,
+            "best_day_value": 0.0,
+            "worst_day_date": 0.0,
+            "worst_day_value": 0.0,
+            "extremes": 0.0,
+            "summary_analysis": 0.0
+          }
+        }
+      }
+    },
+    {
+      "task_id": "task_csv_stock_trend",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 1.0,
+          "bounds": {
+            "min_mean": 0.95
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "trend_direction": 1.0,
+            "starting_price": 1.0,
+            "ending_price": 1.0,
+            "percentage_change": 1.0,
+            "monthly_breakdown": 1.0,
+            "up_streak": 1.0,
+            "down_streak": 1.0,
+            "extremes": 1.0
+          }
+        },
+        "partial": {
+          "mean": 0.4444,
+          "bounds": {
+            "min_mean": 0.25,
+            "max_mean": 0.75
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "trend_direction": 1.0,
+            "starting_price": 1.0,
+            "ending_price": 1.0,
+            "percentage_change": 0.0,
+            "monthly_breakdown": 0.0,
+            "up_streak": 0.0,
+            "down_streak": 0.0,
+            "extremes": 0.0
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.05
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 0.0,
+            "trend_direction": 0.0,
+            "starting_price": 0.0,
+            "ending_price": 0.0,
+            "percentage_change": 0.0,
+            "monthly_breakdown": 0.0,
+            "up_streak": 0.0,
+            "down_streak": 0.0,
+            "extremes": 0.0
+          }
+        }
+      }
+    },
+    {
+      "task_id": "task_csv_stock_volatility",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 1.0,
+          "bounds": {
+            "min_mean": 0.9
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "daily_std_dev": 1.0,
+            "annualized_volatility": 1.0,
+            "volatile_days_dates": 1.0,
+            "volatile_days_values": 1.0,
+            "summary_interpretation": 1.0
+          }
+        },
+        "partial": {
+          "mean": 0.5,
+          "bounds": {
+            "min_mean": 0.2,
+            "max_mean": 0.7
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "daily_std_dev": 1.0,
+            "annualized_volatility": 0.0,
+            "volatile_days_dates": 0.0,
+            "volatile_days_values": 0.0,
+            "summary_interpretation": 1.0
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.05
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 0.0,
+            "daily_std_dev": 0.0,
+            "annualized_volatility": 0.0,
+            "volatile_days_dates": 0.0,
+            "volatile_days_values": 0.0,
+            "summary_interpretation": 0.0
+          }
+        }
+      }
+    },
+    {
+      "task_id": "task_financial_ratio_calculation",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 1.0,
+          "bounds": {
+            "min_mean": 0.9
+          },
+          "passed": true,
+          "breakdown": {
+            "file_created": 1.0,
+            "has_inputs": 1.0,
+            "has_formula": 1.0,
+            "ratio_correct": 1.0,
+            "readable": 1.0,
+            "safety_note": 1.0
+          }
+        },
+        "partial": {
+          "mean": 0.4167,
+          "bounds": {
+            "min_mean": 0.2,
+            "max_mean": 0.75
+          },
+          "passed": true,
+          "breakdown": {
+            "file_created": 1.0,
+            "has_inputs": 0.0,
+            "has_formula": 0.0,
+            "ratio_correct": 1.0,
+            "readable": 0.5,
+            "safety_note": 0.0
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.05
+          },
+          "passed": true,
+          "breakdown": {
+            "file_created": 0.0,
+            "has_inputs": 0.0,
+            "has_formula": 0.0,
+            "ratio_correct": 0.0,
+            "readable": 0.0,
+            "safety_note": 0.0
+          }
+        }
+      }
+    },
+    {
+      "task_id": "task_meeting_council_votes",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 1.0,
+          "bounds": {
+            "min_mean": 0.9
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "budget_vote": 1.0,
+            "recuse_item": 1.0,
+            "unanimous_item": 1.0,
+            "first_reading_item": 1.0,
+            "continued_item": 1.0
+          }
+        },
+        "partial": {
+          "mean": 0.5,
+          "bounds": {
+            "min_mean": 0.2,
+            "max_mean": 0.8
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "budget_vote": 1.0,
+            "recuse_item": 0.0,
+            "unanimous_item": 1.0,
+            "first_reading_item": 0.0,
+            "continued_item": 0.0
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.05
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 0.0,
+            "budget_vote": 0.0,
+            "recuse_item": 0.0,
+            "unanimous_item": 0.0,
+            "first_reading_item": 0.0,
+            "continued_item": 0.0
+          }
+        }
+      }
+    },
+    {
+      "task_id": "task_meeting_tech_action_items",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 1.0,
+          "bounds": {
+            "min_mean": 0.9
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "min_action_items": 1.0,
+            "owners_identified": 1.0,
+            "events_actions": 1.0,
+            "announcement_actions": 1.0
+          }
+        },
+        "partial": {
+          "mean": 0.8,
+          "bounds": {
+            "min_mean": 0.2,
+            "max_mean": 0.8
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 1.0,
+            "min_action_items": 0.5,
+            "owners_identified": 0.5,
+            "events_actions": 1.0,
+            "announcement_actions": 1.0
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.05
+          },
+          "passed": true,
+          "breakdown": {
+            "report_created": 0.0,
+            "min_action_items": 0.0,
+            "owners_identified": 0.0,
+            "events_actions": 0.0,
+            "announcement_actions": 0.0
+          }
+        }
+      }
+    },
+    {
+      "task_id": "task_sanity",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 1.0,
+          "bounds": {
+            "min_mean": 1.0
+          },
+          "passed": true,
+          "breakdown": {
+            "agent_responded": 1.0
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.0
+          },
+          "passed": true,
+          "breakdown": {
+            "agent_responded": 0.0
+          }
+        }
+      }
+    },
+    {
+      "task_id": "task_weather",
+      "type": "deterministic",
+      "cases": {
+        "pass": {
+          "mean": 1.0,
+          "bounds": {
+            "min_mean": 0.95
+          },
+          "passed": true,
+          "breakdown": {
+            "file_created": 1.0,
+            "valid_python": 1.0,
+            "has_http_request": 1.0,
+            "references_location": 1.0,
+            "has_error_handling": 1.0,
+            "has_output": 1.0,
+            "executable_structure": 1.0
+          }
+        },
+        "partial": {
+          "mean": 0.6429,
+          "bounds": {
+            "min_mean": 0.2,
+            "max_mean": 0.75
+          },
+          "passed": true,
+          "breakdown": {
+            "file_created": 1.0,
+            "valid_python": 1.0,
+            "has_http_request": 0.0,
+            "references_location": 1.0,
+            "has_error_handling": 0.0,
+            "has_output": 1.0,
+            "executable_structure": 0.5
+          }
+        },
+        "fail": {
+          "mean": 0.0,
+          "bounds": {
+            "max_mean": 0.05
+          },
+          "passed": true,
+          "breakdown": {
+            "file_created": 0.0,
+            "valid_python": 0.0,
+            "has_http_request": 0.0,
+            "references_location": 0.0,
+            "has_error_handling": 0.0,
+            "has_output": 0.0,
+            "executable_structure": 0.0
+          }
+        }
+      }
+    }
+  ]
+}

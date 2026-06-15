@@ -1,0 +1,126 @@
+task_id: T100tw_log_mapreduce_jobs
+task_name: MapReduce 日誌 — 工作完成摘要
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_mapreduce_jobs.md
+  original_task_id: task_log_mapreduce_jobs
+  original_file: tasks/task_log_mapreduce_jobs.md
+prompt:
+  text: |-
+    請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，產出一份完整的工作
+    完成摘要。此日誌來自一個 MapReduce v2（YARN）應用程式。
+
+    你的報告應包含：
+
+    1. **工作識別（Job Identification）**：Job ID、application attempt ID，以及工作名稱/類型
+    2. **工作組態（Job Configuration）**：OutputCommitter 類型、檔案系統，以及任何其他組態細節
+    3. **任務摘要（Task Summary）**：map 任務總數、reduce 任務總數，各有多少成功完成
+    4. **任務完成時間軸（Task Completion Timeline）**：每個任務在何時完成？建立一條按完成順序
+       並附時間戳的時間軸
+    5. **工作時長（Job Duration）**：從開始到結束的工作總執行時間
+    6. **最終狀態（Final Status）**：工作成功還是失敗？最終的狀態轉換為何？
+
+    請將報告寫入 `job_completion_report.md`，以結構良好的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hadoop_mapreduce.log
+  dest: mapreduce.log
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `job_completion_report.md`
+- 辨識出 Job ID（job_1445062781478_0011）
+- map 與 reduce 任務計數正確（10 個 map 任務、1 個 reduce 任務）
+- 計算工作時長（約 5 分鐘）
+- 辨識最終狀態為 SUCCEEDED
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `job_completion_report.md`
+  - 辨識出 Job ID（job_1445062781478_0011）
+  - map 與 reduce 任務計數正確（10 個 map 任務、1 個 reduce 任務）
+  - 計算工作時長（約 5 分鐘）
+  - 辨識最終狀態為 SUCCEEDED
+reference_solution: |-
+  助手應解析 1282 筆日誌條目並產出：
+
+  **工作識別：**
+  - Job ID：job_1445062781478_0011
+  - Application Attempt：appattempt_1445062781478_0011_000001
+  - 工作類型：pagerank（可從 history 檔案路徑看出）
+  - 使用者：msrabi
+
+  **組態：**
+  - OutputCommitter：FileOutputCommitter
+  - 檔案系統：hdfs://msra-sa-41:9000
+  - API：mapred newApiCommitter
+
+  **任務摘要：**
+  - 10 個 map 任務（m_000000 至 m_000009），外加 2 次重試（m_000006_1、m_000007_1）
+  - 1 個 reduce 任務（r_000000）
+  - 全部 11 個任務皆成功完成（10 map + 1 reduce）
+  - 共 12 次 map 任務嘗試、1 次 reduce 任務嘗試
+
+  **時間軸：**
+  - 工作開始：15:37:56
+  - 首個 map 完成：15:39:24（m_000009）
+  - 最後 map 完成：15:41:25（m_000006）
+  - reduce 完成：15:42:46（r_000000）
+  - 工作結束：約 15:42:47
+
+  **時長：** 約 5 分鐘（15:37:56 到 15:42:47）
+
+  **最終狀態：** SUCCEEDED
+
+  可接受的差異：
+  - 時間軸的格式可能不同
+  - 時長計算方式可能不同
+  - 任務編號標記法可能不同
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: mapreduce.log
+    source: logs/hadoop_mapreduce.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

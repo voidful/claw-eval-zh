@@ -1,0 +1,113 @@
+task_id: T040tw_iterative_code_refine
+task_name: 迭代式程式碼改進
+version: 0.3.0
+category: coding
+difficulty: hard
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- coding
+- multi_turn
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_iterative_code_refine.md
+  original_task_id: task_iterative_code_refine
+  original_file: tasks/task_iterative_code_refine.md
+prompt:
+  text: 本任務為多輪任務，完整對話腳本見 user_agent.sessions（task.yaml）／ frontmatter 的 sessions（markdown）。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 300
+  max_turns: 3
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- calculator.py 存在且含 add、subtract、multiply 函式
+- calculator.py 的 divide 在除以 0 時拋出 ValueError
+- calculator.py 含 power 函式
+- calculator.py 的 modulo 在除以 0 時拋出 ValueError
+- review.txt 存在且提及全部 6 個函式
+- review.txt 提及錯誤處理 / ValueError
+user_agent:
+  enabled: true
+  sessions:
+  - prompt: '請建立一個名為 calculator.py 的 Python 腳本，實作一個簡單計算機，包含以下函式：
+
+      1. add(a, b) —— 回傳 a + b
+
+      2. subtract(a, b) —— 回傳 a - b
+
+      3. multiply(a, b) —— 回傳 a * b
+
+      4. divide(a, b) —— 回傳 a / b（暫時不做錯誤處理）
+
+
+      請把檔案儲存為工作區裡的 calculator.py。
+
+      '
+    new_session: false
+  - prompt: '我發現 divide 函式沒有處理除以 0 的情況。請更新 calculator.py：
+
+      1. 讓 divide(a, b) 在 b 為 0 時拋出 ValueError，訊息為 "Cannot divide by zero"
+
+      2. 新增 power(a, b) 函式，回傳 a ** b
+
+      3. 新增 modulo(a, b) 函式，回傳 a % b（同樣處理除以 0 的情況）
+
+
+      請保留所有既有函式，只新增上述改進。
+
+      '
+    new_session: false
+  - prompt: '請讀取工作區裡的 calculator.py，確認它具備下列特性：
+
+      1. 函式：add、subtract、multiply、divide、power、modulo
+
+      2. divide 與 modulo 都在除以 0 時拋出 ValueError
+
+      3. 所有函式都能正確運作
+
+
+      然後把驗證結果寫入 review.txt，說明有哪些函式、以及是否具備錯誤處理。
+
+      '
+    new_session: true
+judge_rubric: ''
+reference_solution: "這是一個多輪任務（見 frontmatter 的 sessions）。助手應該：\n1. 第 1 輪：建立 calculator.py，含 add、subtract、multiply、divide\
+  \ 函式\n   （divide 先不做錯誤處理）\n2. 第 2 輪：修改 calculator.py，讓 divide 在除以 0 時拋出 ValueError\n   (\"Cannot divide\
+  \ by zero\")，新增 power 與 modulo（modulo 也處理除以 0），\n   並保留既有函式\n3. 第 3 輪（全新 session）：讀取 calculator.py，驗證\
+  \ 6 個函式與錯誤處理是否\n   齊全，並把驗證結果寫入 review.txt\n\n注意：calculator.py、review.txt、以及所有函式名與 \"Cannot divide by\
+  \ zero\"\n字串都不可更改。"
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: language_polish
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  user_agent_mode: scripted
+  export_candidate: true
+  official_compat: false

@@ -1,0 +1,115 @@
+task_id: P106zh_log_syslog_services
+task_name: Linux Syslog — 服務啟動/停止摘要
+version: 0.2.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_log_syslog_services
+  original_file: tasks/task_log_syslog_services.md
+prompt:
+  text: |-
+    請分析位於 `syslog.log` 的 Linux syslog，產出一份所有服務啟動與停止事件的摘要。此
+    日誌來自一台名為「combo」、執行 Linux 2.6 的伺服器。
+
+    你的報告應包含：
+
+    1. **服務清單（Service Inventory）**：列出日誌中提及、且帶有啟動或關閉事件的每個服務
+    2. **系統開機事件（System Boot Events）**：藉由尋找服務啟動的群集，辨識所有系統開機/重啟
+    3. **逐服務狀態（Per-Service Status）**：對每個服務，列出所有啟動/停止事件及其時間戳
+    4. **CUPS 特例（CUPS Special Case）**：CUPS 列印服務有頻繁重啟 — 另行記錄其型態
+    5. **服務相依性（Service Dependencies）**：依啟動順序，推斷哪些服務先啟動（核心 OS）、
+       哪些較晚啟動（應用程式）
+    6. **正常運作時間推估（Uptime Estimate）**：依開機事件，推估伺服器在重啟之間的運作時間
+
+    請將報告寫入 `service_status_report.md`，以結構良好的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/linux_syslog.log
+  dest: syslog.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `service_status_report.md`
+- 辨識出系統開機事件（至少找到 2 次開機）
+- 列出服務及其啟動/停止事件
+- 記下 CUPS 的頻繁重啟（17 次啟動）
+- 分析服務啟動順序
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `service_status_report.md`
+  - 辨識出系統開機事件（至少找到 2 次開機）
+  - 列出服務及其啟動/停止事件
+  - 記下 CUPS 的頻繁重啟（17 次啟動）
+  - 分析服務啟動順序
+reference_solution: |-
+  助手應辨識出：
+
+  **系統開機（偵測到 3 次）：**
+  1. 6 月 9 日 約 06:06 — 完整開機（syslogd、klogd、kernel、irqbalance、portmap 等）
+  2. 6 月 10 日 約 11:32 — 完整開機（相同的服務順序）
+  3. 7 月 27 日 約 14:42 — 另一次開機事件
+
+  **服務清單（20+ 個帶啟動事件的服務）：**
+  - 核心：syslogd、klogd、irqbalance、portmap
+  - 網路：rpc.statd、rpc.idmapd、sendmail、sm-client、named
+  - 安全：spamd、privoxy
+  - 硬體：bluetooth（hcid、sdpd）、smartd、apmd、gpm
+  - 列印：cupsd（17 次啟動！）
+  - 排程：crond、anacron、xinetd
+  - 網頁：htt
+
+  **CUPS 型態：**
+  - cupsd 有 17 次啟動事件與 15 次關閉事件
+  - 規律的每週型態：清晨（04:0x）關閉後接著啟動
+  - 這與 logrotate 觸發 CUPS 重啟的情況相符
+
+  **服務相依性（開機順序）：**
+  1. syslogd、klogd（先記錄日誌）
+  2. kernel 訊息
+  3. irqbalance、portmap（系統服務）
+  4. 網路服務（rpc、named）
+  5. 應用程式服務（cups、cron、sendmail）
+
+  可接受的差異：
+  - 開機偵測的做法可能不同
+  - 服務分類帶有主觀性
+  - 運作時間計算為概略值
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: syslog.log
+    source: logs/linux_syslog.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

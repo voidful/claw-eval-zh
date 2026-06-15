@@ -1,0 +1,70 @@
+task_id: P048zh_earnings_analysis
+task_name: 財報分析
+version: 0.2.0
+category: analysis
+difficulty: hard
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_earnings_analysis
+  original_file: tasks/task_earnings_analysis.md
+prompt:
+  text: |-
+    GitLab 在 2025 年第三季（Q3 2025）的利潤率（margin）指引（guidance）上，超出或未達多少個基點（basis points）？
+
+    請研究相關的財報發布（earnings release）或法說會逐字稿（transcript），判斷相關的指引利潤率與實際回報的利潤率，並把你的答案存到 `gitlab_margin_guidance.txt`。
+
+    請附上實際利潤率、指引利潤率，以及超出或未達的基點數。
+
+    （提醒：本任務僅供資訊與分析參考，不構成投資或財務建議，亦不取代專業財務意見。）
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 240
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立 gitlab_margin_guidance.txt 檔案
+- 檔案辨識出 GitLab 與該利潤率指標
+- 檔案含有實際與指引的利潤率數值
+- 檔案結論為 GitLab 超出指引約 500 個基點
+- 說明精簡且易讀
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 辨識出 GitLab 所指的季度，以及管理層說明中相關的利潤率指標。
+  2. 找出指引水準與實際回報結果。
+  3. 把兩者差異換算成基點（basis points）。
+  4. 把答案存到 `gitlab_margin_guidance.txt`。
+
+  GitLab 的 Q3 FY2026 說明指出，非 GAAP 營業利潤率（non-GAAP operating margin）達到約 18%，比指引高出約 5 個百分點，因此優秀的答案會回報超出約 500 個基點。
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

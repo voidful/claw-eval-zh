@@ -1,0 +1,137 @@
+task_id: P042zh_spreadsheet_summary
+task_name: CSV 與 Excel 資料摘要
+version: 0.2.0
+category: analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_spreadsheet_summary
+  original_file: tasks/task_spreadsheet_summary.md
+prompt:
+  text: |-
+    我的工作區裡有兩個資料檔，提供給你分析：
+
+    1. `quarterly_sales.csv` —— 一個包含銷售交易的 CSV 檔，欄位有：Date、Region、Product、Units_Sold、Unit_Price、Revenue、Cost（共 24 列資料）
+    2. `company_expenses.xlsx` —— 一個 Excel 活頁簿，含兩個工作表：「Q1_Expenses」（員工費用報告，12 筆紀錄）與「Budgets」（各部門預算分配）
+
+    請讀取並分析這兩個檔案，然後把一份摘要報告寫入 `data_summary.md`，內容包含：
+
+    - **CSV 分析**：總營收、總利潤（營收減成本）、總銷售數量、依營收計算表現最佳的地區，以及依營收計算最暢銷的產品。
+    - **Excel 分析**：Q1 總費用、費用最高的部門、總費用最高的員工，以及各部門 Q1 實際費用與 Q1 預算的比較。
+    - 一段結合兩個檔案發現的整體洞察（insights）區段。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: quarterly_sales.csv
+  dest: quarterly_sales.csv
+- source: company_expenses.xlsx
+  dest: company_expenses.xlsx
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 助手成功讀取 CSV 檔
+- 助手成功讀取 Excel 檔（含多個工作表）
+- 已建立摘要報告檔 data_summary.md
+- 正確回報總營收（約 $119,900）
+- 正確計算總利潤（約 $47,960）
+- 辨識出依營收計算的最佳地區（East）
+- 辨識出依營收計算的最佳產品（Widget B）
+- 正確回報 Q1 總費用（約 $15,430）
+- 辨識出費用最高的部門（Engineering）
+- 辨識出費用最高的員工（Alice Chen）
+- 包含預算與實際費用的比較
+- 報告結構良好、易讀
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：資料讀取與解析（權重 25%）
+
+  **1.0 分**：助手正確讀取了 CSV 檔與含多個工作表的 Excel 檔，無誤地擷取所有相關資料。
+  **0.75 分**：助手讀取了兩個檔案，但對其中一種格式略有問題（例如只讀了一個 Excel 工作表）。
+  **0.5 分**：助手正確讀取了其中一個檔案，但對另一種格式有困難。
+  **0.25 分**：助手嘗試讀取檔案，但遇到顯著的解析錯誤。
+  **0.0 分**：助手未能讀取任一檔案，或未嘗試擷取資料。
+
+  ### 評分項 2：分析準確性（權重 35%）
+
+  **1.0 分**：所有計算出的統計（總計、最佳表現者、比較）在數值上皆正確且清楚呈現。
+  **0.75 分**：多數統計正確，僅有一兩個小數值錯誤。
+  **0.5 分**：部分統計正確，但數個關鍵數字錯誤或缺漏。
+  **0.25 分**：少數統計正確；存在重大計算錯誤。
+  **0.0 分**：沒有任何正確統計，或未嘗試分析。
+
+  ### 評分項 3：報告品質與結構（權重 25%）
+
+  **1.0 分**：報告組織良好、區段清楚、markdown 格式得當，發現呈現一目了然。含標題，並以表格或格式化清單呈現資料。
+  **0.75 分**：報告有條理且易讀，僅有少許格式問題。
+  **0.5 分**：報告含有資訊，但組織不佳或難以閱讀。
+  **0.25 分**：報告雜亂無章或缺少主要區段。
+  **0.0 分**：未建立報告，或報告為空／無法使用。
+
+  ### 評分項 4：洞察與綜整（權重 15%）
+
+  **1.0 分**：報告含有縝密的跨檔案洞察、對趨勢的有意義觀察，以及結合兩個資料來源的可行建議。
+  **0.75 分**：報告含有一些跨檔案觀察，但可以更具洞見。
+  **0.5 分**：報告呈現了兩個檔案的資料，但缺乏有意義的綜整。
+  **0.25 分**：報告幾乎沒有把兩個資料來源的發現連結起來。
+  **0.0 分**：未提供任何綜整或洞察。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔（標準 CSV 格式，容易解析）
+  2. 讀取並解析 Excel 檔（需處理含多個工作表的 `.xlsx` 格式）
+  3. 從兩個檔案計算出正確的彙總統計
+  4. 把一份結構良好的 markdown 摘要報告寫入 `data_summary.md`
+
+  CSV 含 24 列銷售資料，橫跨 4 個地區（North、South、East、West）與 3 項產品（Widget A、B、C）。Excel 檔有 12 筆費用紀錄、橫跨 4 個部門，並有一個獨立的預算工作表列出各部門的季度分配。
+
+  預期關鍵數值：
+
+  - CSV 總營收：$119,900
+  - CSV 總利潤：$47,960
+  - CSV 總數量：3,775
+  - CSV 最佳地區：East（$33,075）
+  - CSV 最佳產品：Widget B（$47,400）
+  - Excel Q1 總費用：$15,430
+  - Excel 費用最高部門：Engineering（$7,680）
+  - Excel 費用最高員工：Alice Chen（$5,400）
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: quarterly_sales.csv
+    dest: quarterly_sales.csv
+  - source: company_expenses.xlsx
+    dest: company_expenses.xlsx
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

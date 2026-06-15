@@ -1,0 +1,159 @@
+task_id: P052zh_session_chain_analysis
+task_name: 會話鏈分析與設計審查
+version: 0.2.0
+category: analysis
+difficulty: hard
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- analysis
+- multi_turn
+source:
+  benchmark: pinchbench
+  original_task_id: task_session_chain_analysis
+  original_file: tasks/task_session_chain_analysis.md
+prompt:
+  text: 這是一個多會話（multi-session）任務。請參閱 frontmatter 中的 `sessions` 欄位，取得各輪提示的順序。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: session_chain/session.ts
+  dest: session.ts
+- source: session_chain/session-store.ts
+  dest: session-store.ts
+- source: session_chain/delivery.ts
+  dest: delivery.ts
+- source: session_chain/agent-command.ts
+  dest: agent-command.ts
+environment:
+  timeout_seconds: 300
+  max_turns: 4
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 助手在第 1 輪讀取了全部 4 個原始檔
+- chain_map 含 3 個項目（S1、S2、S3），階段名稱正確
+- evidence_index 含 3 個項目（E1、E2、E3），各欄位非空
+- E1 主張引用 session 解析（resolveSession 或 resolveSessionKeyForRequest）
+- E2 主張引用 usage/token 持久化（updateSessionStoreAfterAgentRun）
+- E3 主張引用 delivery／回應封包（deliverAgentCommandResult 或 buildOutboundResultEnvelope）
+- 第 2 輪以 E2 為目標，並為 session-store.ts 與 agent-command.ts 指定變更
+- 第 3 輪為 E2 與 E3 提供含實際原始碼的程式碼片段
+- 第 4 輪含有引用 E1、E2、E3 的可追溯性
+- 所有 JSON 輸出皆有效且遵循要求結構
+user_agent:
+  enabled: true
+  mode: scripted
+  sessions:
+  - prompt: |
+      你正在做一次會話鏈路接手。請只讀取以下檔案，並只關注指定函式：
+      1) session.ts -> resolveSession
+      2) session-store.ts -> updateSessionStoreAfterAgentRun
+      3) delivery.ts -> deliverAgentCommandResult
+      4) agent-command.ts -> prepareAgentCommandExecution, agentCommandInternal
+      輸出嚴格 JSON（僅此結構，不要額外欄位）：
+      {
+        "chain_map": [
+          {"id":"S1","stage":"session_resolve","file":"","function":"resolveSession","input":"","output":""},
+          {"id":"S2","stage":"session_store_update","file":"","function":"updateSessionStoreAfterAgentRun","input":"","output":""},
+          {"id":"S3","stage":"delivery","file":"","function":"deliverAgentCommandResult","input":"","output":""}
+        ],
+        "evidence_index": [
+          {"evidence_id":"E1","claim":"session key/session id resolution occurs before run","file":"","function":"","line_hint":""},
+          {"evidence_id":"E2","claim":"usage and token fields are persisted in session store","file":"","function":"","line_hint":""},
+          {"evidence_id":"E3","claim":"json response envelope is formed at delivery stage","file":"","function":"","line_hint":""}
+        ]
+      }
+    new_session: false
+  - prompt: |
+      基於上一輪內容，做最小改造設計（不改程式碼），並固定目標為 E2 對應的問題。輸出嚴格 JSON（僅此結構）：
+      {
+        "target_evidence_id": "E2",
+        "problem_statement": "",
+        "minimal_scope": [
+          {"file":"session-store.ts","planned_change":""},
+          {"file":"agent-command.ts","planned_change":""}
+        ],
+        "invariants": ["", "", ""],
+        "rollback": ["", ""]
+      }
+    new_session: false
+  - prompt: |
+      現在要提交設計評審材料。請為 E2 與 E3 各提供一段精確的程式碼證據（每段 8-12 行，保留縮排）。優先依據前文；若需要精確原文，請從第一輪已採集的引用中回取。輸出嚴格 JSON：
+      {
+        "evidence_pack": [
+          {"evidence_id":"E2","file":"","function":"","line_range_hint":"","code_snippet":""},
+          {"evidence_id":"E3","file":"","function":"","line_range_hint":"","code_snippet":""}
+        ]
+      }
+    new_session: false
+  - prompt: |
+      輸出交付摘要，嚴格 JSON（僅此結構）：
+      {
+        "context": "",
+        "root_cause_hypothesis": "",
+        "proposed_change": "",
+        "expected_impact": "",
+        "known_risks": "",
+        "next_step": "",
+        "traceability": [
+          {"claim":"session resolution","evidence_id":"E1"},
+          {"claim":"usage persistence","evidence_id":"E2"},
+          {"claim":"delivery envelope","evidence_id":"E3"}
+        ]
+      }
+    new_session: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. **第 1 輪（結構化擷取 Structured Ingest）**：
+     - 讀取工作區中的 4 個原始檔（`session.ts`、`session-store.ts`、`delivery.ts`、`agent-command.ts`）
+     - 只聚焦於指定的函式：`resolveSession`、`updateSessionStoreAfterAgentRun`、`deliverAgentCommandResult`、`prepareAgentCommandExecution`、`agentCommandInternal`
+     - 產出一個 JSON `chain_map`，描述 3 階段的處理管線（session resolve → store update → delivery）
+     - 產出一個 `evidence_index`，含 3 個證據項目（E1、E2、E3），把主張連結到程式碼位置
+
+  2. **第 2 輪（固定設計 Fixed Design）**：
+     - 基於先前的分析，產出針對 E2 證據（session store 中的 usage/token 持久化）的最小變更設計
+     - 界定橫跨 `session-store.ts` 與 `agent-command.ts` 的變更範圍
+     - 列出必須保留的不變式（invariants）與回滾（rollback）步驟
+
+  3. **第 3 輪（審查證據包 Review Evidence Pack）**：
+     - 為 E2 與 E3 證據各擷取精確的程式碼片段（每段 8-12 行）
+     - 片段必須來自實際原始檔，不可捏造
+     - 包含檔名、函式名與行號範圍提示
+
+  4. **第 4 輪（最終摘要 Final Summary）**：
+     - 產出結構化的交付摘要，含脈絡（context）、根因假設、提議變更、預期影響、已知風險與下一步
+     - 包含把主張回溯到證據 ID（E1、E2、E3）的可追溯性（traceability）
+
+  本任務測試助手能否進行多輪程式碼分析、在各輪間維持脈絡、擷取精確的程式碼證據，並產出結構化的設計審查產物。
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - source: session_chain/session.ts
+    dest: session.ts
+  - source: session_chain/session-store.ts
+    dest: session-store.ts
+  - source: session_chain/delivery.ts
+    dest: delivery.ts
+  - source: session_chain/agent-command.ts
+    dest: agent-command.ts
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

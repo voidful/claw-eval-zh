@@ -1,0 +1,85 @@
+task_id: P033zh_cicd_pipeline_debug
+task_name: CI/CD Pipeline 除錯
+version: 0.2.0
+category: coding
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- coding
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_cicd_pipeline_debug
+  original_file: tasks/task_cicd_pipeline_debug.md
+prompt:
+  text: |-
+    工作區中的 `.github/workflows/ci.yml` 是一個 GitHub Actions workflow，其中有數個
+    bug 導致它無法正常執行。請找出並修正這個 workflow 檔案中所有的問題，並就地儲存
+    修正後的版本。
+
+    團隊回報的已知症狀：
+
+    1. `lint` job 從未啟動——GitHub 表示 runner 標籤無效。
+    2. `test` job 的 coverage 上傳步驟在每一條 matrix 分支上都會觸發，而非僅在
+       Node 20 上。
+    3. `deploy` job 會從頭重新建置專案，而不是從 `build` job 下載 artifact。
+    4. `deploy` job 洩漏了 `DEPLOY_TOKEN`——它同時以行內 secret 引用的方式出現在
+       `curl` 指令中，又多餘地以環境變數的形式對外暴露。
+
+    請直接在檔案中修正全部四個問題。請勿加入說明這些變更的註解。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: broken_ci.yml
+  dest: .github/workflows/ci.yml
+environment:
+  timeout_seconds: 120
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 編輯後檔案 `.github/workflows/ci.yml` 存在
+- 檔案是有效的 YAML
+- runner 標籤 `ubuntu-latst` 已修正為 `ubuntu-latest`
+- coverage 上傳條件對 node 版本使用字串比較
+- deploy job 改為下載 build artifact，而非重新建置
+- 多餘的 DEPLOY_TOKEN env 區塊已從 deploy 步驟中移除
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該閱讀 `.github/workflows/ci.yml`，找出四個 bug 並加以修正：
+
+  1. **runner 標籤的拼字錯誤**：`ubuntu-latst` 應為 `ubuntu-latest`。
+  2. **matrix 比較的型別**：`if: matrix.node-version == 20` 應使用字串比較
+     `if: matrix.node-version == '20'`（或等效寫法），因為 matrix 的值可能是字串。
+  3. **deploy 缺少 artifact 下載**：`deploy` job 應使用
+     `actions/download-artifact@v4` 從 `build` job 下載 `build-output` artifact，
+     並略過自行執行 `npm run build`。它應使用下載下來的 `dist/` 目錄。
+  4. **多餘的 secret 暴露**：deploy 步驟上的 `env: DEPLOY_TOKEN` 區塊應移除，因為
+     `${{ secrets.DEPLOY_TOKEN }}` 已在 `curl` 指令中行內插值。兩者並存是一種洩漏
+     模式。
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - source: broken_ci.yml
+    dest: .github/workflows/ci.yml
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

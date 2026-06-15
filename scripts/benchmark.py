@@ -48,6 +48,7 @@ from lib_grading import (
     clear_judge_cache,
 )
 from lib_tasks import Task, TaskLoader
+from lib_passk import aggregate_passk, DEFAULT_PASS_THRESHOLD
 
 
 # Configure logging
@@ -230,9 +231,41 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--runs",
+        "--trials",
+        dest="runs",
         type=int,
         default=1,
-        help="Number of runs per task for averaging",
+        help="Number of runs/trials per task (for averaging and pass@k/pass^k)",
+    )
+    parser.add_argument(
+        "--language",
+        choices=["en", "zh", "tw"],
+        default="en",
+        help="Task language: 'en'->tasks/, 'zh'->tasks_zh/, 'tw'->tasks_tw/ (default: en)",
+    )
+    parser.add_argument(
+        "--region",
+        choices=["TW"],
+        default=None,
+        help="Region shortcut: --region TW is equivalent to --language tw",
+    )
+    parser.add_argument(
+        "--tasks-dir",
+        type=str,
+        default=None,
+        help="Explicit tasks directory (overrides --language)",
+    )
+    parser.add_argument(
+        "--export-format",
+        choices=["pinchbench", "claw-eval"],
+        default="pinchbench",
+        help="Result JSON format marker (default: pinchbench)",
+    )
+    parser.add_argument(
+        "--pass-threshold",
+        type=float,
+        default=DEFAULT_PASS_THRESHOLD,
+        help=f"Score threshold for a run to count as pass (default: {DEFAULT_PASS_THRESHOLD})",
     )
     parser.add_argument(
         "--judge",
@@ -720,28 +753,95 @@ def _snapshot_workspace_for_grading(execution_result: Dict[str, Any]) -> Dict[st
     return snapshot_result
 
 
+def _effective_language(args: argparse.Namespace) -> str:
+    """--region TW is an alias for --language tw."""
+    if getattr(args, "region", None) == "TW":
+        return "tw"
+    return getattr(args, "language", "en")
+
+
+def _resolve_tasks_dir(args: argparse.Namespace, skill_root: Path) -> Path:
+    """Pick the tasks directory: explicit --tasks-dir wins, else language/region."""
+    if getattr(args, "tasks_dir", None):
+        return Path(args.tasks_dir)
+    lang = _effective_language(args)
+    if lang == "tw":
+        return skill_root / "tasks_tw"
+    if lang == "zh":
+        return skill_root / "tasks_zh"
+    return skill_root / "tasks"
+
+
+def _build_trials_by_task(
+    results: List[Dict[str, Any]],
+    grades_by_task_id: Dict[str, Dict[str, Any]],
+) -> Dict[str, List[Dict[str, Any]]]:
+    """Pair each task's per-run scores with that run's execution status.
+
+    Returns {task_id: [{score, status, timed_out}, ...]} for pass@k/pass^k.
+    """
+    results_by_task: Dict[str, List[Dict[str, Any]]] = {}
+    for r in results:
+        results_by_task.setdefault(r.get("task_id", ""), []).append(r)
+
+    trials_by_task: Dict[str, List[Dict[str, Any]]] = {}
+    for tid, grade_info in grades_by_task_id.items():
+        run_scores = [run.get("score", 0.0) for run in grade_info.get("runs", [])]
+        task_results = results_by_task.get(tid, [])
+        trials: List[Dict[str, Any]] = []
+        for i, score in enumerate(run_scores):
+            res = task_results[i] if i < len(task_results) else {}
+            trials.append({
+                "score": score,
+                "status": res.get("status", "success"),
+                "timed_out": bool(res.get("timed_out", False)),
+            })
+        trials_by_task[tid] = trials
+    return trials_by_task
+
+
+def _compute_passk(
+    results: List[Dict[str, Any]],
+    grades_by_task_id: Dict[str, Dict[str, Any]],
+    category_map: Optional[Dict[str, str]],
+    threshold: float,
+) -> Dict[str, Any]:
+    """Compute the pass@k / pass^k aggregate block from completed grades."""
+    trials_by_task = _build_trials_by_task(results, grades_by_task_id)
+    per_task = {
+        tid: {
+            "trials": trials,
+            "category": (category_map or {}).get(tid, ""),
+        }
+        for tid, trials in trials_by_task.items()
+    }
+    return aggregate_passk(per_task, threshold)
+
+
 def main():
     """Main entry point for the benchmark script."""
     # Determine tasks directory
     script_dir = Path(__file__).parent
     skill_root = script_dir.parent  # Parent of scripts/ is the skill root
-    tasks_dir = skill_root / "tasks"
 
-    logger.info("🦞🦀🦐 PinchBench - OpenClaw Benchmarking")
+    args = _parse_args()
+    tasks_dir = _resolve_tasks_dir(args, skill_root)
+
+    logger.info("🦞🦀🦐 claw-eval-zh — OpenClaw Benchmarking (based on PinchBench)")
+    logger.info("   Language: %s | Tasks dir: %s", _effective_language(args), tasks_dir)
     ascii_crab = _load_ascii_art(skill_root, "crab.txt")
     if ascii_crab:
         print("\n" + _colorize_gradient(ascii_crab) + "\n")
     else:
         print("\n" + "🦀 " * 30)
         print("🦀 " * 30 + "\n")
-    logger.info("🦞🦀🦐 Starting PinchBench 🦐🦀🦞")
+    logger.info("🦞🦀🦐 Starting claw-eval-zh 🦐🦀🦞")
     time.sleep(5)
 
     if not tasks_dir.exists():
         logger.error(f"❌ Tasks directory not found: {tasks_dir}")
         sys.exit(1)
 
-    args = _parse_args()
     if not args.model and not args.register and not args.upload:
         logger.error("Missing required argument: --model (unless using --register or --upload)")
         sys.exit(2)
@@ -862,6 +962,25 @@ def main():
     category_map = runner.task_loader.category_map
     category_order = runner.task_loader.categories
 
+    # Per-task pass@k / pass^k results, refreshed before each results write.
+    passk_per_task: Dict[str, Any] = {}
+
+    def _claw_eval_zh_meta() -> Dict[str, Any]:
+        """Shared claw-eval-zh result-JSON fields (backward-compatible additions)."""
+        lang = _effective_language(args)
+        meta: Dict[str, Any] = {
+            "language": "zh" if lang in ("zh", "tw") else lang,
+            "benchmark_family": "claw-style-taiwan" if lang == "tw" else "claw-eval-zh",
+            "source_benchmark": "pinchbench",
+            "export_format": args.export_format,
+            "pass_threshold": args.pass_threshold,
+        }
+        if lang == "tw":
+            meta["locale"] = "zh-TW"
+            meta["region"] = "TW"
+            meta["localization"] = "taiwan"
+        return meta
+
     def _build_task_entry(r: Dict[str, Any]) -> Dict[str, Any]:
         """Build a single task entry dict for results JSON."""
         tid = r["task_id"]
@@ -878,14 +997,27 @@ def main():
         }
         if category_map:
             entry["category"] = category_map.get(tid, "")
+        pk = passk_per_task.get(tid)
+        if pk is not None:
+            entry["pass_at_k"] = pk["pass_at_k"]
+            entry["pass_k"] = pk["pass_k"]
         return entry
 
+    def _refresh_passk() -> Dict[str, Any]:
+        """Recompute pass@k/pass^k and update per-task cache; return aggregate."""
+        passk = _compute_passk(results, grades_by_task_id, category_map, args.pass_threshold)
+        passk_per_task.clear()
+        passk_per_task.update(passk.get("per_task", {}))
+        return passk
+
     def _write_incremental_results():
+        passk = _refresh_passk()
         task_entries = [_build_task_entry(r) for r in results]
         efficiency = _compute_efficiency_summary(task_entries, grades_by_task_id)
         cat_scores = _compute_category_scores(task_entries, tasks_by_id, category_order)
         partial = {
             "model": args.model,
+            **_claw_eval_zh_meta(),
             "benchmark_version": _get_benchmark_version(skill_root),
             "run_id": run_id,
             "timestamp": time.time(),
@@ -893,6 +1025,7 @@ def main():
             "runs_per_task": runs_per_task,
             "tasks": task_entries,
             "category_scores": cat_scores,
+            "passk": passk,
             "efficiency": efficiency,
             "in_progress": True,
             "completed_tasks": len(grades_by_task_id),
@@ -1208,11 +1341,13 @@ def main():
 
     def _build_and_write_results():
         """Build aggregate result from completed tasks and write to output_path."""
+        passk = _refresh_passk()
         task_entries = [_build_task_entry(r) for r in results]
         efficiency = _compute_efficiency_summary(task_entries, grades_by_task_id)
         cat_scores = _compute_category_scores(task_entries, tasks_by_id, category_order)
         aggregate = {
             "model": args.model,
+            **_claw_eval_zh_meta(),
             "benchmark_version": _get_benchmark_version(skill_root),
             "run_id": run_id,
             "timestamp": time.time(),
@@ -1220,18 +1355,25 @@ def main():
             "runs_per_task": runs_per_task,
             "tasks": task_entries,
             "category_scores": cat_scores,
+            "passk": passk,
             "efficiency": efficiency,
         }
         output_path.write_text(json.dumps(aggregate, indent=2), encoding="utf-8")
-        return task_entries, efficiency
+        return task_entries, efficiency, passk
 
-    task_entries, efficiency = _build_and_write_results()
+    task_entries, efficiency, passk = _build_and_write_results()
 
     # Calculate and log final score summary
     total_score = sum(grades_by_task_id[tid]["mean"] for tid in grades_by_task_id)
     max_score = float(len(grades_by_task_id))  # Each task has max_score of 1.0
     score_pct = (total_score / max_score * 100) if max_score > 0 else 0
     logger.info("📊 Final score: %.2f/%.0f (%.1f%%)", total_score, max_score, score_pct)
+    logger.info(
+        "🎯 Pass@%d: %.1f%% | Pass^%d: %.1f%% (threshold %.2f)",
+        runs_per_task, passk.get("pass_at_k_rate", 0.0) * 100,
+        runs_per_task, passk.get("pass_k_rate", 0.0) * 100,
+        args.pass_threshold,
+    )
 
     # Log judge cache stats
     if not args.no_judge_cache:

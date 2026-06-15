@@ -3,9 +3,9 @@ requires = ["setuptools>=61", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pinchbench-skill"
+name = "claw-eval-zh"
 dynamic = ["version"]
-description = "PinchBench - OpenClaw Agent Benchmarking System"
+description = "claw-eval-zh - Chinese OpenClaw Agent Benchmark (based on PinchBench, task format inspired by Claw-Eval)"
 readme = "SKILL.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -23,7 +23,10 @@ dev = [
 ]
 
 [project.scripts]
+# Original PinchBench entry point, preserved for backward compatibility.
 benchmark = "benchmark:main"
+# claw-eval-zh entry point — same runner, defaults documented in SKILL.md/README.md.
+claw-eval-zh = "benchmark:main"
 
 [tool.black]
 line-length = 100

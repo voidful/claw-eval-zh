@@ -1,0 +1,110 @@
+task_id: P096zh_log_hdfs_connections
+task_name: HDFS DataNode 日誌 — 連線型態分析
+version: 0.2.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_log_hdfs_connections
+  original_file: tasks/task_log_hdfs_connections.md
+prompt:
+  text: |-
+    請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，產出一份關於節點之間連線與
+    通訊型態的報告。此日誌包含 DataNode、FSNamesystem 與 PacketResponder 元件的條目。
+
+    你的報告應包含：
+
+    1. **網路拓撲（Network Topology）**：列出日誌中出現的所有不重複 IP 位址，並依其角色
+       分類（來源、目的地，或兩者皆是）
+    2. **子網分析（Subnet Analysis）**：依子網（subnet）將 IP 分組（例如 10.250.x.x 與
+       10.251.x.x）。每個子網有多少節點？
+    3. **最活躍的節點（Most Active Nodes）**：依出現頻率（作為來源或目的地）排名前 10 的 IP
+    4. **通訊型態（Communication Patterns）**：哪些節點對之間通訊最頻繁？
+    5. **DataNode 與 NameSystem**：將活動拆分 — 哪些來自 DataNode 操作、哪些來自
+       FSNamesystem 操作？
+    6. **叢集規模推估（Cluster Size Estimate）**：依觀察到的 IP，推估叢集規模
+
+    請將報告寫入 `hdfs_connections_report.md`，以結構良好的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hdfs_datanode.log
+  dest: hdfs_datanode.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `hdfs_connections_report.md`
+- 列出或計數不重複 IP（約 202）
+- 依子網將 IP 分組（10.250.x.x 與 10.251.x.x）
+- 辨識出最活躍的節點
+- 區分 DataNode 與 FSNamesystem 的活動
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `hdfs_connections_report.md`
+  - 列出或計數不重複 IP（約 202）
+  - 依子網將 IP 分組（10.250.x.x 與 10.251.x.x）
+  - 辨識出最活躍的節點
+  - 區分 DataNode 與 FSNamesystem 的活動
+reference_solution: |-
+  助手應解析 2000 筆日誌條目並產出：
+
+  **網路拓撲：**
+  - 觀察到 202 個不重複 IP 位址
+  - IP 落在 10.250.x.x 與 10.251.x.x 範圍（私有網路）
+  - 所有節點皆使用通訊埠 50010（HDFS DataNode 資料傳輸埠）
+
+  **子網分析：**
+  - 10.250.x.x 子網 — 包含部分最活躍的節點
+  - 10.251.x.x 子網 — 包含其他 DataNode 叢集成員
+  - 此分割顯示這是多機架（multi-rack）的 HDFS 佈署
+
+  **最活躍的節點：**
+  - 10.250.19.102 — 極為活躍（在許多區塊傳輸中作為來源出現）
+  - 10.250.10.6、10.251.215.16、10.250.14.224 — 也相當活躍
+
+  **元件活動：**
+  - DataNode$DataXceiver：區塊接收操作（約 1149 筆）
+  - FSNamesystem：區塊配置與儲存追蹤（約 400+ 筆）
+  - DataNode$PacketResponder：附帶大小的區塊接收確認
+
+  可接受的差異：
+  - 確切的 IP 計數與排名可能因解析方式而異
+  - 子網分組的粒度可能不同
+  - 叢集規模推估將為概略值
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: hdfs_datanode.log
+    source: logs/hdfs_datanode.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

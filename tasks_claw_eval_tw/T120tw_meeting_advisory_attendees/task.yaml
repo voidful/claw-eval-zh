@@ -1,0 +1,145 @@
+task_id: T120tw_meeting_advisory_attendees
+task_name: |
+  NTIA Advisory Board 與會者名單
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_advisory_attendees.md
+  original_task_id: task_meeting_advisory_attendees
+  original_file: tasks/task_meeting_advisory_attendees.md
+prompt:
+  text: |-
+    我手邊有一份政府諮詢委員會會議的逐字稿，存放在 `meeting-transcript.md`。這是 Commerce Spectrum Management Advisory Committee（CSMAC）於 2012 年 5 月 30 日舉行的會議。
+
+    請幫我分析這份逐字稿，並在一個名為 `attendees.md` 的檔案中建立一份結構化的與會者名單。針對每位與會者，請包含：
+
+    - **全名**（若有提及頭銜，如 Dr.、Esq.，請一併附上）
+    - **會議中的角色**（Chair、Member、Also Present、Public Participant）
+    - **所屬組織與職稱**（依逐字稿所述）
+    - **與會方式**（In-person 或 Phone/Remote）
+    - **發言角色**（是否做了實質發言、提問，或僅報出自己的身分）
+
+    請將名單整理為以下區段：Committee Leadership、Committee Members (In-Person)、Committee Members (Remote)、Non-Member Officials、Public Participants。最後附上與會者總數的彙總計數。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+  dest: meeting-transcript.md
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 attendees.md
+- Brian Fontes 正確辨識為 Chair 並具 NENA 隸屬
+- 至少具名辨識出 15 位委員會成員
+- 正確辨識遠端/電話與會者（Hatfield、Feldman、McGinnis、Stancil、Reaser、Donovan）
+- 已列出非成員官員（Strickling、Nebbia、Power、Washington）
+- 多數與會者皆含所屬組織/隸屬
+- 正確記下與會方式（in-person 對比 phone）
+- Mr. Snider 辨識為公眾參與者
+- 已包含與會者彙總計數
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：與會者辨識完整度（權重 35%）
+
+  **1.0 分**：所有委員會成員、官員與公眾參與者皆以正確姓名與角色辨識。無一遺漏。
+  **0.75 分**：辨識出多數與會者（18 位以上），僅有少許遺漏。
+  **0.5 分**：辨識出多數，但有數位與會者缺漏。
+  **0.25 分**：僅辨識出最突出的發言者。
+  **0.0 分**：辨識出的與會者不到一半。
+
+  ### 評分項 2：細節準確度（權重 30%）
+
+  **1.0 分**：所有組織、職稱與與會方式皆正確。Remote 對比 in-person 的狀態與逐字稿的星號標記及點名相符。
+  **0.75 分**：多數細節正確，僅一兩處小誤。
+  **0.5 分**：組織或與會方式有數處錯誤。
+  **0.25 分**：隸屬或角色有許多不準確之處。
+  **0.0 分**：細節大致錯誤或為杜撰。
+
+  ### 評分項 3：組織與結構（權重 20%）
+
+  **1.0 分**：清楚分區，分開 leadership、in-person 成員、remote 成員、官員與公眾。易於瀏覽與查閱。
+  **0.75 分**：組織良好，僅有少許結構問題。
+  **0.5 分**：有部分組織，但區段不清楚或不一致。
+  **0.25 分**：組織不佳，難以查找。
+  **0.0 分**：無有意義的結構。
+
+  ### 評分項 4：發言角色評估（權重 15%）
+
+  **1.0 分**：準確區分積極參與者（提問、做出發言）與僅在點名時報出身分者。
+  **0.75 分**：多數發言角色正確記下。
+  **0.5 分**：嘗試記下參與程度但不完整。
+  **0.25 分**：區分參與程度的努力極少。
+  **0.0 分**：未評估發言角色。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析會議逐字稿
+  2. 從「Members Present」名單、「Also Present」區段與對話中辨識出所有具名人物
+  3. 從星號標記（電話）與點名（roll call）判定與會方式
+  4. 將每位人物的角色與參與程度分類
+  5. 產出一份結構良好的 markdown 文件
+
+  預期的關鍵與會者：
+
+  - Dr. Brian Fontes（Chair，NENA）— In-person
+  - Larry Strickling（Asst. Secretary of Commerce）— In-person，Also Present
+  - Karl Nebbia（Associate Administrator，Office of Spectrum Management）— In-person，Also Present
+  - Tom Power（White House OSTP）— In-person，Also Present
+  - Bruce M. Washington（Designated Federal Officer）— In-person，Also Present
+  - Dale Hatfield（University of Colorado）— Remote（phone）
+  - Molly Feldman（Verizon Wireless）— Remote（phone）
+  - Doug McGinnis（Exelon）— Remote（phone）
+  - Dan Stancil（NC State）— Remote（phone）
+  - Rick Reaser（Raytheon）— Remote（phone）
+  - David Donovan — Remote（phone）
+  - Mr. Snider — Public participant（於公眾意見時段發言）
+  - 委員會成員總數：約 19-20 人
+  - 含官員與公眾的與會者總數：約 23-24 人
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+    dest: meeting-transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

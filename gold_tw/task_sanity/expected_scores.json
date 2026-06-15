@@ -1,0 +1,12 @@
+{
+  "task_id": "task_sanity",
+  "cases": {
+    "pass": {
+      "min_mean": 1.0
+    },
+    "fail": {
+      "max_mean": 0.0
+    }
+  },
+  "note": "transcript.json is loaded as the transcript; workspace empty."
+}

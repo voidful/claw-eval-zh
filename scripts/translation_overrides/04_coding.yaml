@@ -1,0 +1,863 @@
+# 程式開發類任務 — 繁體中文（Traditional Chinese, zh-TW）。
+# 僅翻譯使用者可見內容（任務名稱、prompt、預期行為、評分標準、LLM 評審 rubric）。
+# 不包含任何 grader / Python 程式碼；檔名、目錄名、URL、API 端點、指令、識別字、
+# 套件／函式庫／品牌名、環境變數、需精確比對的輸出字串等一律保留原文。
+tasks:
+
+  task_shell_command_generator:
+    task_name: "Shell 指令產生器"
+    prompt: |
+      請將下列終端機需求翻譯成一條 shell 指令，並只以純文字（plain text）將它儲存到
+      `command.txt`，不要附加任何說明：
+
+      在目前目錄底下的任意位置中，找出每一個內容包含完整字串 `FATAL:` 的 `.log`
+      檔案，並將每個相符的檔案路徑各印出一次。
+
+      這條指令應該在從目標目錄的根目錄執行時能夠正常運作。
+    expected_behavior: |
+      助手應該在 `command.txt` 中產生一條 shell 指令，使其從目前目錄執行時能解決
+      該需求。
+
+      可接受的做法包括使用 `find`、`grep`、`xargs` 或 `rg` 等工具，只要該指令能：
+
+      1. 從目前目錄起遞迴搜尋
+      2. 將比對範圍限定在 `.log` 檔案
+      3. 檢查檔案內容是否包含完整字串 `FATAL:`
+      4. 將每個相符的檔案路徑各印出一次
+
+      該指令的搜尋根目錄可使用 `.` 或等效的目前目錄路徑。輸出順序不重要。
+    grading_criteria:
+      - "已建立檔案 `command.txt`"
+      - "指令非空，且看起來像一條 shell 指令"
+      - "指令在受控的測試 fixture 中能成功執行"
+      - "指令恰好輸出包含 `FATAL:` 的 `.log` 檔案"
+      - "指令未包含非 shell 的註解或說明文字"
+
+  task_multi_file_refactoring:
+    task_name: "多檔案重構"
+    prompt: |
+      請將函式 `calculate_total_price` 重新命名為 `compute_order_total`，並套用到工作區
+      （workspace）中所有的 Python 檔案。請更新 `utils.py` 中的函式定義，以及
+      `orders.py`、`reports.py` 與 `api.py` 中所有的 import 與呼叫處（call sites）。同時
+      也要更新任何引用舊名稱的字串字面值（string literals）、註解或 docstring。請勿更動
+      任何其他邏輯或格式。
+    expected_behavior: |
+      助手應該：
+
+      1. 開啟 `utils.py`，將函式定義從 `calculate_total_price` 重新命名為
+         `compute_order_total`，包含 `EXPORTED_FUNCTIONS` 清單中的字串引用
+      2. 開啟 `orders.py`，更新 import 陳述句、所有呼叫處，以及註解／docstring 中的引用
+      3. 開啟 `reports.py`，更新 import 陳述句、所有呼叫處，以及 docstring 中的引用
+      4. 開啟 `api.py`，更新 import 陳述句、所有呼叫處，以及行內註解（inline comment）中的引用
+      5. 保留所有其他程式碼、邏輯與格式
+
+      此任務測試助手在多個檔案之間執行協調一致的重新命名重構的能力，包含字串字面值、
+      註解與 docstring 等邊界情況。
+    grading_criteria:
+      - "已在 `utils.py` 的定義中重新命名函式"
+      - "`utils.py` 中任何位置都不再包含 `calculate_total_price`"
+      - "`orders.py` 的 import 已更新為 `compute_order_total`"
+      - "`orders.py` 的呼叫處已更新"
+      - "`orders.py` 中任何位置都不再引用 `calculate_total_price`"
+      - "`reports.py` 的 import 已更新為 `compute_order_total`"
+      - "`reports.py` 的呼叫處已更新"
+      - "`reports.py` 中任何位置都不再引用 `calculate_total_price`"
+      - "`api.py` 的 import 已更新為 `compute_order_total`"
+      - "`api.py` 的呼叫處已更新"
+      - "`api.py` 中任何位置都不再引用 `calculate_total_price`"
+      - "重構後四個檔案皆為有效的 Python"
+
+  task_dockerfile_optimization:
+    task_name: "Dockerfile 最佳化"
+    prompt: |
+      工作區中的 `Dockerfile` 用來建置一個 Python 網頁應用程式，但它過於臃腫且效率
+      不彰。請將它最佳化，以產生一個更小、更快、更適合正式環境（production）的 Docker
+      映像檔。
+
+      請將最佳化後的 Dockerfile 儲存為 `Dockerfile.optimized`。
+
+      目標：
+
+      1. 在適當的情況下合併 `RUN` 指令，以減少 layer 數量。
+      2. 使用更小或更合適的基礎映像檔（base image，例如 slim 或 Alpine 版本）。
+      3. 移除執行階段（runtime）不需要的套件（例如編輯器、僅在編譯時需要的建置工具）。
+      4. 調整指令順序以最大化 Docker layer 的快取（例如在複製完整原始碼之前先複製
+         相依性檔案）。
+      5. 在與安裝相同的 layer 中清理套件管理員的快取。
+      6. 移除 `DEBUG=true` 環境變數（不適合正式環境）。
+
+      請勿更動應用程式的執行指令或對外開放的連接埠（port）。
+    expected_behavior: |
+      助手應該分析原始的 Dockerfile，並產生套用常見 Docker 最佳實務的
+      `Dockerfile.optimized`：
+
+      - 改用更精簡的基礎映像檔，例如 `python:3.11-slim`、`python:3.12-slim` 或
+        Alpine 版本。
+      - 將眾多個別的 `apt-get install` 或 `apk add` 指令合併為單一 `RUN` layer，並在
+        同一個 layer 中清理快取。
+      - 移除執行階段不需要的套件：`vim`、`nano`、`wget`、`git`，以及可能的
+        `build-essential`（或使用 multi-stage build 來區分建置階段與執行階段的相依性）。
+      - 在複製完整原始碼之前先複製 `requirements.txt` 並安裝相依性，以利用 layer 快取。
+      - 移除 `ENV DEBUG=true`。
+      - 保留 `EXPOSE 8000` 與原本的 `CMD`。
+    grading_criteria:
+      - "已建立檔案 `Dockerfile.optimized`"
+      - "使用比 `ubuntu:22.04` 更小的基礎映像檔"
+      - "合併 RUN 指令（layer 更少）"
+      - "移除不必要的編輯器／工具套件（vim、nano）"
+      - "在複製完整原始碼之前先複製 requirements.txt，以利 layer 快取"
+      - "在安裝的 layer 中清理套件管理員快取"
+      - "未包含 `DEBUG=true` 環境變數"
+      - "保留對外開放的連接埠與應用程式執行指令"
+
+  task_playwright_e2e:
+    task_name: "Playwright E2E 表單測試"
+    prompt: |
+      工作區中有一個檔案 `form.html`，它是一個以純 HTML、CSS 與 JavaScript（無任何
+      框架）打造、自我完整（self-contained）的三步驟註冊表單。你的任務：
+
+      1. 仔細閱讀 `form.html`，以了解表單結構與導覽方式
+      2. 撰寫一支 Playwright 端對端（end-to-end）測試腳本，儲存為 `test_form.py`
+      3. 腳本應使用 `playwright.sync_api`（Python 同步 API）
+      4. 依序走過全部 3 個步驟：
+         - 步驟 1：填寫個人資訊（full name、email、phone）
+         - 步驟 2：填寫地址細節（street、city、state 下拉選單、ZIP code）
+         - 步驟 3：確認 review 摘要顯示正確資料，然後送出
+      5. 送出後，確認成功面板（success panel）可見，且包含一組 submission ID
+      6. 在每個步驟，驗證 UI 狀態（正確的步驟可見、進度條已更新）
+      7. 為選擇器（selector）互動加入重試邏輯——若某個選擇器失敗，最多重試 3 次，
+         並在每次之間短暫延遲
+      8. 將最終成功狀態的螢幕截圖儲存為 `success.png`
+
+      該表單會驗證輸入（必填欄位、email 格式、5 位數 ZIP）——請提供能通過驗證的資料。
+
+      請盡可能使用 `data-testid` 選擇器——它們是最具韌性的選擇器策略。
+    expected_behavior: |
+      助手應該：
+
+      1. 閱讀 `form.html` 並分析 DOM 結構，留意 `data-testid` 屬性、表單驗證規則與
+         步驟導覽邏輯
+      2. 使用 `playwright.sync_api` 搭配 `sync_playwright` context manager 建立
+         `test_form.py`
+      3. 啟動 Chromium 瀏覽器（headless 模式）
+      4. 以 `file://` URL 開啟本機的 `form.html` 檔案
+      5. 以有效的測試資料填寫步驟 1 的欄位（fullname、email、phone）
+      6. 點擊「Next」，確認步驟 2 為 active 且步驟 1 已隱藏
+      7. 以有效資料填寫步驟 2 的欄位（street、city、state 下拉選單、zip）
+      8. 點擊「Next」，確認步驟 3 顯示 review 摘要
+      9. 斷言（assert）review 中的值與輸入的內容相符
+      10. 點擊「Submit Registration」
+      11. 確認成功面板可見且包含一組 submission ID
+      12. 擷取螢幕截圖並儲存為 `success.png`
+      13. 加入重試／等待邏輯，避免不穩定（flaky）的選擇器使測試立即失敗
+      14. 使用正確的 Playwright 慣用法：`page.locator()`、`data-testid` 選擇器、
+          `expect()` 斷言
+    grading_criteria:
+      - "已在工作區建立檔案 `test_form.py`"
+      - "檔案包含有效的 Python 語法"
+      - "腳本從 `playwright.sync_api` 匯入"
+      - "腳本引用 `form.html` 以開啟表單"
+      - "腳本跨多個步驟填寫欄位（至少 5 次不同的欄位互動）"
+      - "腳本包含重試或明確的等待邏輯"
+      - "腳本包含用於狀態驗證的 assertion／expect 呼叫"
+      - "腳本將螢幕截圖儲存為 `success.png`"
+    llm_judge_rubric: |
+      ### 評分項 1：多步驟導覽（權重 30%）
+
+      **1.0 分**：腳本正確地依序走過全部 3 個表單步驟。每次步驟轉換都很明確——填寫
+      欄位、點擊 Next，並在繼續前確認新步驟為 active。以 `select_option` 處理 state
+      下拉選單。有測試返回（back）導覽，或至少未使其失效。
+
+      **0.75 分**：全部 3 個步驟皆正確導覽，但有些微問題（例如轉換之間沒有明確的等待，
+      或以 click 而非 select_option 處理 state 下拉選單）。
+
+      **0.5 分**：3 個步驟中有 2 個處理正確，或 3 個皆有嘗試但欄位名稱錯誤、或缺少
+      能通過驗證的資料。
+
+      **0.25 分**：僅處理 1 個步驟，或導覽邏輯有根本性瑕疵。
+
+      **0.0 分**：未嘗試任何有意義的步驟導覽。
+
+      ### 評分項 2：Review 資料斷言（權重 25%）
+
+      **1.0 分**：腳本驗證步驟 3 的 review 摘要顯示步驟 1 與步驟 2 中輸入的確切資料。
+      以文字內容斷言檢查至少 3 個 review 欄位（name、email、address）。
+
+      **0.75 分**：以正確的斷言驗證 2 個以上的 review 欄位。
+
+      **0.5 分**：檢查 review 步驟為可見，但未驗證具體的資料值。
+
+      **0.25 分**：review 斷言極少或不正確。
+
+      **0.0 分**：未嘗試任何 review 驗證。
+
+      ### 評分項 3：錯誤處理與重試（權重 25%）
+
+      **1.0 分**：實作了具可設定最大嘗試次數（3 次以上）的重試包裝，捕捉特定的
+      Playwright 例外（TimeoutError 或類似者），在每次重試之間加入延遲，並有適當的
+      清理（在 finally 區塊中呼叫 browser.close）。
+
+      **0.75 分**：具備重試邏輯（2 次以上嘗試）與基本的錯誤捕捉。清理方面有小缺漏。
+
+      **0.5 分**：使用 Playwright 內建的等待（wait_for_selector、expect），但沒有自訂
+      的重試迴圈。
+
+      **0.25 分**：錯誤處理極少——只有基本的 try/except，沒有重試。
+
+      **0.0 分**：完全沒有錯誤處理。
+
+      ### 評分項 4：程式碼品質與最佳實務（權重 20%）
+
+      **1.0 分**：程式碼整潔、組織良好。一致地使用 `data-testid` 選擇器。為 playwright
+      使用適當的 context manager。以函式／類別封裝可重複使用的邏輯。變數命名有意義。
+      註解說明了不顯而易見的選擇。
+
+      **0.75 分**：程式碼品質良好，僅有些微風格問題。大致使用 data-testid 選擇器。
+
+      **0.5 分**：可運作但組織不佳。混用了良好與脆弱的選擇器。沒有輔助函式。
+
+      **0.25 分**：程式碼凌亂、硬編碼數值、整支使用脆弱的 CSS／XPath 選擇器。
+
+      **0.0 分**：程式碼無法運作或難以理解。
+
+  task_git_rescue_recovery:
+    task_name: "Git 搶救／復原"
+    prompt: |
+      請將下列 git 復原需求翻譯成指令，並儲存到 `recovery.sh`，每行一條指令，不要附加
+      任何說明：
+
+      我不小心把最近的 2 個 commit 提交在 `main` 上，但它們其實應該屬於一個名為
+      `feature/login-fix` 的新分支。這些 commit 尚未被 push。請把那 2 個 commit 移到
+      該新分支，並讓 `main` 指向它們之前的那個 commit。
+
+      這些指令應假設是從受影響的儲存庫（repository）內部執行。
+    expected_behavior: |
+      助手應該將一連串 git 指令寫入 `recovery.sh`，以正確修復儲存庫的狀態。
+
+      成功的解法必須：
+
+      1. 將最近的兩個 commit 保留在名為 `feature/login-fix` 的新分支上
+      2. 將 `main` 倒退兩個 commit，使其指向先前的基底 commit
+      3. 在指令執行完成後，讓儲存庫處於乾淨（clean）狀態
+
+      可接受的解法可以先建立新分支再重設 `main`，或先切換到新分支、之後再回到 `main`
+      進行重設。由於這些 commit 明確尚未被 push，在 `main` 上重寫本機歷史是可以接受的。
+    grading_criteria:
+      - "已建立檔案 `recovery.sh`"
+      - "檔案僅包含非空的 git 指令"
+      - "指令在受控的儲存庫 fixture 中能成功執行"
+      - "執行後分支 `feature/login-fix` 存在"
+      - "`main` 被重設到最近兩個 commit 之前的那個 commit"
+      - "兩個放錯位置的 commit 被保留在 `feature/login-fix` 上"
+      - "儲存庫最終處於乾淨的工作樹（working tree）狀態"
+
+  task_cicd_pipeline_debug:
+    task_name: "CI/CD Pipeline 除錯"
+    prompt: |
+      工作區中的 `.github/workflows/ci.yml` 是一個 GitHub Actions workflow，其中有數個
+      bug 導致它無法正常執行。請找出並修正這個 workflow 檔案中所有的問題，並就地儲存
+      修正後的版本。
+
+      團隊回報的已知症狀：
+
+      1. `lint` job 從未啟動——GitHub 表示 runner 標籤無效。
+      2. `test` job 的 coverage 上傳步驟在每一條 matrix 分支上都會觸發，而非僅在
+         Node 20 上。
+      3. `deploy` job 會從頭重新建置專案，而不是從 `build` job 下載 artifact。
+      4. `deploy` job 洩漏了 `DEPLOY_TOKEN`——它同時以行內 secret 引用的方式出現在
+         `curl` 指令中，又多餘地以環境變數的形式對外暴露。
+
+      請直接在檔案中修正全部四個問題。請勿加入說明這些變更的註解。
+    expected_behavior: |
+      助手應該閱讀 `.github/workflows/ci.yml`，找出四個 bug 並加以修正：
+
+      1. **runner 標籤的拼字錯誤**：`ubuntu-latst` 應為 `ubuntu-latest`。
+      2. **matrix 比較的型別**：`if: matrix.node-version == 20` 應使用字串比較
+         `if: matrix.node-version == '20'`（或等效寫法），因為 matrix 的值可能是字串。
+      3. **deploy 缺少 artifact 下載**：`deploy` job 應使用
+         `actions/download-artifact@v4` 從 `build` job 下載 `build-output` artifact，
+         並略過自行執行 `npm run build`。它應使用下載下來的 `dist/` 目錄。
+      4. **多餘的 secret 暴露**：deploy 步驟上的 `env: DEPLOY_TOKEN` 區塊應移除，因為
+         `${{ secrets.DEPLOY_TOKEN }}` 已在 `curl` 指令中行內插值。兩者並存是一種洩漏
+         模式。
+    grading_criteria:
+      - "編輯後檔案 `.github/workflows/ci.yml` 存在"
+      - "檔案是有效的 YAML"
+      - "runner 標籤 `ubuntu-latst` 已修正為 `ubuntu-latest`"
+      - "coverage 上傳條件對 node 版本使用字串比較"
+      - "deploy job 改為下載 build artifact，而非重新建置"
+      - "多餘的 DEPLOY_TOKEN env 區塊已從 deploy 步驟中移除"
+
+  task_test_generation:
+    task_name: "測試產生"
+    prompt: |
+      工作區中的 `order_processor.py` 包含一個用於電子商務訂單流程的 `OrderProcessor`
+      類別。請為這個模組撰寫一套完整的測試，並將它儲存為工作區中的
+      `test_order_processor.py`。
+
+      需求：
+
+      1. 使用 `pytest` 作為測試框架
+      2. 測試 `OrderProcessor` 的每一個 public 方法
+      3. 包含針對邊界情況的測試：空訂單、數量為零的品項、未知的地區、優惠券疊加
+         （coupon stacking）行為、缺貨品項
+      4. 測試在輸入無效時會拋出 `InvalidOrderError`
+      5. 使用 fixture 或 factory helper，以避免重複的測試設定
+      6. 力求高分支覆蓋率——測試每個條件判斷的兩側
+
+      請勿修改 `order_processor.py`。
+    expected_behavior: |
+      助手應該：
+
+      1. 閱讀 `order_processor.py`，了解所有 public 方法、類別常數與例外型別
+      2. 以 pytest 風格的測試建立 `test_order_processor.py`
+      3. 涵蓋全部 7 個 public 方法：`validate_order`、`calculate_subtotal`、
+         `apply_discount`、`calculate_tax`、`check_stock`、`estimate_delivery`、
+         `process_order`
+      4. 為每個方法測試正常路徑（happy path）與錯誤路徑（error path）
+      5. 使用 `pytest.raises` 進行例外測試
+      6. 使用 fixture 或輔助函式來消除重複的測試資料
+      7. 撰寫實際針對原始模組執行時能通過的測試
+    grading_criteria:
+      - "已在工作區建立檔案 `test_order_processor.py`"
+      - "檔案包含有效的 Python 語法"
+      - "檔案匯入 pytest"
+      - "檔案從 order_processor 模組匯入"
+      - "測試涵蓋 validate_order（包含例外情況）"
+      - "測試涵蓋 calculate_subtotal"
+      - "測試涵蓋 apply_discount（級距與優惠券）"
+      - "測試涵蓋 calculate_tax"
+      - "測試涵蓋 check_stock"
+      - "測試涵蓋 estimate_delivery"
+      - "測試涵蓋 process_order（整合測試）"
+      - "測試實際執行時能通過"
+    llm_judge_rubric: |
+      ### 評分項 1：邊界情況覆蓋（權重 35%）
+
+      **1.0 分**：測試涵蓋所有重要的邊界情況：空的 items 清單、數量為零、負價格、
+      未知地區（0% 稅）、所有 discount 級距與邊界、優惠券代碼（SAVE20、WELCOME10、
+      無效／None）、優惠券與級距不可疊加、空的倉庫庫存、部分庫存、priority 對 standard
+      配送、加拿大對美國地區。
+
+      **0.75 分**：涵蓋大多數邊界情況（上述 8 項以上）。邊界測試有些微缺漏。
+
+      **0.5 分**：涵蓋數個邊界情況，但遺漏了重要情境，如 discount 級距邊界或優惠券
+      疊加行為。
+
+      **0.25 分**：僅有基本的正常路徑測試，加上 1～2 個邊界情況。
+
+      **0.0 分**：沒有任何有意義的邊界情況測試。
+
+      ### 評分項 2：測試組織與可讀性（權重 25%）
+
+      **1.0 分**：測試以邏輯方式分組（依方法或功能）。測試名稱清楚、具描述性，且遵循
+      一致的慣例（例如 `test_<method>_<scenario>`）。測試類別或模組層級的組織整潔。
+      容易理解每個測試在驗證什麼。
+
+      **0.75 分**：組織良好，僅在命名或分組上有些微不一致。
+
+      **0.5 分**：測試可運作但組織不佳——全部攤平成一份清單，名稱不清楚。
+
+      **0.25 分**：雜亂無章、難以理解、結構不一致。
+
+      **0.0 分**：沒有任何有意義的組織。
+
+      ### 評分項 3：fixture 與輔助函式的運用（權重 20%）
+
+      **1.0 分**：使用 `@pytest.fixture` 進行共用的測試設定（例如範例訂單、預先載入
+      庫存的 processor 實例）。以輔助函式或 parametrize 裝飾器減少重複。沒有複製貼上的
+      測試資料區塊。
+
+      **0.75 分**：有使用部分 fixture，但偶有重複。
+
+      **0.5 分**：fixture 使用極少——多數測試以行內方式建構資料，但無過度重複。
+
+      **0.25 分**：測試之間大量重複，沒有 fixture 或輔助函式。
+
+      **0.0 分**：每個測試都完全自我包含，且設定重複。
+
+      ### 評分項 4：斷言品質（權重 20%）
+
+      **1.0 分**：斷言具體且有意義——檢查確切的值、對浮點數使用 `pytest.approx`、驗證
+      字典的鍵與值、對例外使用帶 match 樣式的 `pytest.raises`。在適當情況下，每個測試
+      有多個斷言以驗證完整行為。
+
+      **0.75 分**：斷言良好，僅有些微缺漏（例如缺少浮點數容差、raises 沒有 match 樣式）。
+
+      **0.5 分**：基本斷言能確認行為，但缺乏精確度（例如只檢查真假值，而非具體的值）。
+
+      **0.25 分**：斷言薄弱——多半在檢查型別或是否存在，而非值。
+
+      **0.0 分**：沒有有意義的斷言，或只有瑣碎的 `assert True` 檢查。
+
+  task_k8s_debugging:
+    task_name: "K8s／IaC 除錯"
+    prompt: |
+      工作區中的 `deployment.yml` 包含一個 Web API Deployment 及其 Service 的
+      Kubernetes manifest。這些 manifest 有數個 bug，會在真實叢集（cluster）中造成
+      問題。請找出並修正所有問題，並就地儲存修正後的版本。
+
+      團隊回報的已知症狀：
+
+      1. Pod 永遠無法進入 Ready 狀態——Deployment 的 `selector.matchLabels` 與 pod
+         template 標籤不符，因此 ReplicaSet 找不到它的 pod。
+      2. 容器持續被 OOMKilled——記憶體 limit 被設定得比記憶體 request 還低，這是無效的
+         設定，會導致立即被終止。
+      3. 資料庫密碼以純文字 `value` 的形式硬編碼在容器的 env 中，而非引用 Kubernetes
+         Secret。
+      4. Service 的 `targetPort` 與容器的 `containerPort` 不符，因此流量永遠到不了
+         應用程式。
+
+      請直接在檔案中修正全部四個問題。關於 Secret 引用，請假設同一個 namespace 中已存在
+      一個名為 `web-api-secrets` 的 Secret，其中有一個名為 `db-password` 的 key。請勿
+      加入說明這些變更的註解。
+    expected_behavior: |
+      助手應該閱讀 `deployment.yml`，找出四個 bug 並加以修正：
+
+      1. **selector 不符**：將 `selector.matchLabels.app` 從 `web-api-frontend` 改為
+         `web-api`，使其與 pod template 的 `labels.app: web-api` 相符。
+      2. **記憶體 limit < request**：記憶體 limit（`64Mi`）比 request（`128Mi`）低。
+         修正方式是將 limit 設為至少 `128Mi`（例如 `256Mi` 或 `512Mi`）。
+      3. **硬編碼的 secret**：將 `DB_PASSWORD` 的純文字 `value: "s3cret_password_123"`
+         替換為引用 Secret `web-api-secrets`、key 為 `db-password` 的
+         `valueFrom.secretKeyRef`。
+      4. **Service targetPort 不符**：將 Service 的 `targetPort` 從 `3000` 改為
+         `8080`，以符合容器的 `containerPort`。
+    grading_criteria:
+      - "編輯後檔案 `deployment.yml` 存在"
+      - "檔案是有效的 YAML"
+      - "selector 的 matchLabels 與 pod template 標籤相符"
+      - "記憶體 limit 大於或等於記憶體 request"
+      - "DB_PASSWORD 使用 Secret 引用，而非純文字值"
+      - "Service 的 targetPort 與容器連接埠相符（8080）"
+
+  task_selector_fix:
+    task_name: "測試維護／選擇器修正"
+    prompt: |
+      工作區中的 `dashboard_tests.py` 包含一個 Team Dashboard UI 元件
+      （`dashboard_component.html`）的 Playwright 端對端測試。在最近一次 UI 重構之後，
+      HTML 中所有的 class 名稱與結構性選擇器都改變了，但測試檔案卻從未更新。
+
+      目前每一個測試都使用**舊選擇器**，這些選擇器已不再與實際的標記（markup）相符。
+      你的工作是更新 `dashboard_tests.py` 中**所有**的選擇器，使其與
+      `dashboard_component.html` 中的實際元素相符。
+
+      規則：
+
+      1. 閱讀 `dashboard_component.html`，了解新的 DOM 結構與 class 名稱
+      2. 更新 `dashboard_tests.py` 中每一個失效的選擇器，使其符合新的標記
+      3. **請勿**更動測試邏輯、關於內容／數量的斷言，或測試結構——只修正選擇器
+      4. **請勿**修改 `dashboard_component.html`
+      5. 將更新後的測試檔案就地儲存為 `dashboard_tests.py`
+
+      以下是這次重構變更內容的快速對照表：
+
+      | 舊（失效） | 新（現行） |
+      |---|---|
+      | `.sidebar` | `.sidebar-nav` |
+      | `.menu-items` | `.nav-items` |
+      | `a.active` | `a[aria-current="page"]` |
+      | `.top-bar` | `.header-bar` |
+      | `.top-bar .title` | `.header-bar .page-title` |
+      | `.top-bar .avatar` | `.header-bar .avatar-btn` |
+      | `.dropdown-menu` | `.dropdown-panel` |
+      | `.stats-grid` / `.stat-card` | `.metrics-grid` / `.metric-card` |
+      | `.stat-label` / `.stat-value` / `.stat-change.positive` | `.metric-label` / `.metric-value` / `.metric-trend.trend-up` |
+      | `#searchBox` | `.search-input` |
+      | `.members-table` | `.data-section table`（或 `.data-section`） |
+      | `th.sortable` | `th[data-sort]` |
+      | `.badge` / `.badge-active` / `.badge-idle` / `.badge-offline` | `.status-badge` / `.status-active` / `.status-idle` / `.status-offline` |
+      | `.edit-btn` | `[data-action="edit-member"]` |
+      | `.notifications` / `.toast` | `.toast-container` / `.toast-message` |
+      | `.pager` / `.page-btn` / `.page-btn.active` | `.pagination-bar` / `.page-controls button` / `.page-controls button.is-active` |
+      | `.pager .info` | `.pagination-bar .page-info` |
+      | `.modal-backdrop` | `.modal-overlay` |
+      | `.modal-content` | `.modal-dialog` |
+      | `.cancel-btn` | `[data-action="close-modal"]` |
+      | `.submit-btn` | `button[type="submit"]` |
+    expected_behavior: |
+      助手應該：
+
+      1. 閱讀 `dashboard_component.html`，了解現行的 DOM 結構、class 名稱與 data 屬性
+      2. 閱讀 `dashboard_tests.py`，找出每一個失效的選擇器
+      3. 以對照表為指引，有系統地將每個選擇器更新為符合新的標記
+      4. 保留所有測試邏輯、斷言的值與結構性模式——只應更動選擇器
+      5. 將修正後的檔案儲存為 `dashboard_tests.py`
+
+      修正後的選擇器應使用 HTML 中實際存在的 class 名稱與屬性（例如 `.sidebar-nav`、
+      `.nav-items`、`[aria-current="page"]`、`.metric-card`、`.status-badge.status-active`、
+      `[data-action="edit-member"]`、`.toast-container .toast-message`、`.modal-overlay`
+      等）。
+    grading_criteria:
+      - "編輯後檔案 `dashboard_tests.py` 存在"
+      - "檔案包含有效的 Python 語法"
+      - "Sidebar 選擇器已更新（`.sidebar-nav`、`.nav-items`、`aria-current`）"
+      - "Header 選擇器已更新（`.header-bar`、`.page-title`）"
+      - "使用者選單選擇器已更新（`.avatar-btn`、`.dropdown-panel`）"
+      - "Metric card 選擇器已更新（`.metrics-grid`、`.metric-card`、`.metric-label`、`.metric-value`、`.metric-trend`）"
+      - "搜尋輸入框選擇器已更新（以 `.search-input` 取代 `#searchBox`）"
+      - "表格選擇器已更新（以 `.data-section` 取代 `.members-table`）"
+      - "排序表頭選擇器已更新（`th[data-sort]` 或 `th[aria-sort]`）"
+      - "狀態標章選擇器已更新（`.status-badge`、`.status-active`、`.status-idle`、`.status-offline`）"
+      - "編輯按鈕選擇器已更新（`data-action=\"edit-member\"`）"
+      - "Toast 選擇器已更新（`.toast-container`、`.toast-message`）"
+      - "分頁選擇器已更新（`.pagination-bar`、`.page-controls`、`.is-active`、`.page-info`）"
+      - "Modal 選擇器已更新（`.modal-overlay`、`.modal-dialog`、`data-action=\"close-modal\"`、`button[type=\"submit\"]`）"
+      - "檔案中沒有殘留任何舊選擇器"
+    llm_judge_rubric: |
+      ### 評分項 1：選擇器正確性與專一性（權重 40%）
+
+      **1.0 分**：更新後的測試檔案中，每一個選擇器都精準對應 `dashboard_component.html`
+      中的元素。選擇器使用正確的 class 名稱、data 屬性與結構性關係。沒有誤判——每個
+      選擇器都恰好鎖定預期的元素。在 HTML 使用 data／ARIA 屬性而非樣式化 class 之處，
+      適當使用了 `[aria-current="page"]`、`[data-action="edit-member"]` 與 `[data-sort]`
+      等屬性選擇器。
+
+      **0.75 分**：幾乎所有選擇器都正確。有一兩個小瑕疵（例如稍微過度指定但仍可運作的
+      選擇器，或在更適合使用 data 屬性處改用了父層 class）。
+
+      **0.5 分**：多數選擇器更新正確，但有數個不精準或部分錯誤（例如鎖定父層而非特定
+      元素，或使用了近似的 class 名稱）。
+
+      **0.25 分**：更新了部分選擇器，但有許多不準確，或在未對照實際 HTML 結構下憑空
+      猜測。
+
+      **0.0 分**：選擇器大致未變、捏造，或不對應實際的標記。
+
+      ### 評分項 2：選擇器風格的一致性（權重 20%）
+
+      **1.0 分**：更新後的選擇器在整個檔案中遵循一致的模式。若助手對互動元素使用 data
+      屬性、對樣式化元素使用 class，這項慣例就被一致地套用。選擇器專一性適中——不會
+      過於寬泛或不必要地深入。
+
+      **0.75 分**：大致一致，僅有一兩處風格偏差。
+
+      **0.5 分**：選擇器策略混雜——有些用 data 屬性、有些用深層巢狀路徑、有些用 class，
+      沒有明確的理由。
+
+      **0.25 分**：不一致且雜亂——選擇器的選擇沒有可辨識的模式。
+
+      **0.0 分**：完全沒有一致性。
+
+      ### 評分項 3：測試邏輯的保留（權重 25%）
+
+      **1.0 分**：所有測試函式都保留了原本的結構、斷言值、預期數量與行為檢查。沒有移除、
+      更動或破壞任何測試邏輯。註解與 docstring 都被保留。只有選擇器被修改。
+
+      **0.75 分**：測試邏輯完整保留，僅有微不足道的外觀變更（例如重新排版某一行、更新
+      某個註解）。
+
+      **0.5 分**：多數測試邏輯被保留，但有一兩個斷言被不必要地更動（例如改變了預期數量
+      或文字值）。
+
+      **0.25 分**：有數個測試在選擇器修正之外，其邏輯也被修改。
+
+      **0.0 分**：測試邏輯被大幅更動——測試可能不再驗證相同的行為。
+
+      ### 評分項 4：整體程式碼品質（權重 15%）
+
+      **1.0 分**：更新後的檔案是整潔、格式良好的 Python。import 維持不變。沒有語法
+      錯誤。選擇器字串有正確的引號，並在需要處正確跳脫（escape）。檔案能在無 import 或
+      語法錯誤的情況下執行。
+
+      **0.75 分**：程式碼整潔，僅有些微風格問題（例如屬性選擇器的引號不一致）。
+
+      **0.5 分**：有一些格式問題，或對非選擇器的程式碼做了不必要的更動。
+
+      **0.25 分**：有明顯的程式碼品質問題——引號不匹配、字串損壞，或不必要的重構。
+
+      **0.0 分**：檔案有語法錯誤，或無法 import。
+
+  task_codebase_navigation:
+    task_name: "程式庫導覽"
+    prompt: |
+      你拿到一個不熟悉的開源專案：GitHub 上的 **expressjs/express** 儲存庫
+      （https://github.com/expressjs/express）。
+
+      請回答下列關於這個程式庫中身分驗證（authentication）與請求處理運作方式的問題，
+      並將你的答案儲存到 `codebase_report.md`。
+
+      1. **路由（routing）在哪裡處理？** 找出負責路由比對與分派（dispatching）的
+         檔案。請提供相對於儲存庫根目錄的檔案路徑。
+      2. **request 與 response 物件在哪裡被擴充？** 找出新增 Express 專屬方法
+         （例如 `res.send`、`res.json`、`req.params`）的檔案。請提供檔案路徑。
+      3. **middleware 的執行是如何運作的？** 追蹤從請求抵達、到 middleware stack
+         被執行的程式碼路徑。描述其中涉及的關鍵函式與檔案。
+      4. **身分驗證 middleware 會在哪裡接入？** 根據這個架構，說明像 `passport`
+         這樣的 middleware 會在何處、以何種方式整合。引用你所找到的具體程式碼模式。
+
+      每個答案都請附上你所檢視的具體檔案路徑與行號範圍。在有助於說明時請使用程式碼
+      片段。
+    expected_behavior: |
+      助手應該：
+
+      1. clone 或瀏覽 Express.js 儲存庫以檢視其原始碼
+      2. 在程式庫中導覽，找出路由邏輯（`lib/router/index.js`、`lib/router/route.js`、
+         `lib/router/layer.js`）
+      3. 找出 request／response 的擴充（`lib/request.js`、`lib/response.js`）
+      4. 透過 router 的 `handle` 方法追蹤 middleware 的執行
+      5. 說明 middleware 模式，以及 auth 會在何處接入
+      6. 將一份結構良好的報告儲存到 `codebase_report.md`
+
+      助手可使用 `git clone`、`gh` CLI、web fetch，或任意組合來探索程式碼。重點在於
+      展現出導覽並理解一個不熟悉的程式庫的能力。
+    grading_criteria:
+      - "已建立檔案 `codebase_report.md`"
+      - "報告找出路由相關檔案（lib/router/）"
+      - "報告找出 request／response 擴充檔案"
+      - "報告說明 middleware 的執行流程"
+      - "報告討論身分驗證的整合接入點"
+      - "檔案路徑具體且正確"
+      - "包含程式碼片段或行號參照"
+    llm_judge_rubric: |
+      ### 評分項 1：程式庫理解（權重 35%）
+
+      **1.0 分**：報告展現對 Express 內部運作的深入理解。正確找出 router、layer 與
+      route 抽象。從 `app.handle` 一路追蹤到 router 分派的完整請求生命週期。引用具體
+      函式及其角色。
+
+      **0.75 分**：報告正確找出關鍵檔案並說明整體架構，但遺漏了 middleware 鏈或路由
+      內部的一些細微之處。
+
+      **0.5 分**：報告找出部分正確的檔案，但說明流於表面或含有些微不準確之處。
+
+      **0.25 分**：報告提及 Express 的檔案，但對它們之間的關聯理解有限。
+
+      **0.0 分**：報告缺失，或看不出有探索程式庫的跡象。
+
+      ### 評分項 2：導覽策略（權重 25%）
+
+      **1.0 分**：助手使用有效的策略來導覽程式庫——搜尋關鍵詞、追蹤 import、先閱讀進入
+      點再深入細節。有系統化探索的證據。
+
+      **0.75 分**：助手展現出合理的導覽能力，但本可更有效率或更有系統。
+
+      **0.5 分**：助手找到一些相關程式碼，但導覽雜亂或缺乏效率。
+
+      **0.25 分**：助手在尋找相關程式碼上明顯吃力。
+
+      **0.0 分**：看不出有程式庫導覽的跡象。
+
+      ### 評分項 3：具體性與佐證（權重 25%）
+
+      **1.0 分**：報告包含具體的檔案路徑、行號或範圍，以及直接支持每個答案的程式碼
+      片段。各項主張都有具體參照佐證。
+
+      **0.75 分**：報告包含檔案路徑與部分程式碼參照，但並非所有主張都充分佐證。
+
+      **0.5 分**：報告有一些檔案路徑，但缺少程式碼片段或具體的行號參照。
+
+      **0.25 分**：報告多為籠統的陳述，缺乏具體的程式碼參照。
+
+      **0.0 分**：沒有任何對原始碼的具體參照。
+
+      ### 評分項 4：Auth 整合分析（權重 15%）
+
+      **1.0 分**：清楚說明身分驗證 middleware 如何與 Express 的 middleware 模式整合。
+      引用 `app.use()`、middleware 排序與 `next()` 模式。可能引用真實的 auth 函式庫。
+
+      **0.75 分**：對 auth 整合說明良好，僅有些微缺漏。
+
+      **0.5 分**：基本說明正確，但缺乏深度。
+
+      **0.25 分**：說明含糊或部分不正確。
+
+      **0.0 分**：沒有討論身分驗證的整合。
+
+  task_browser_automation:
+    task_name: "瀏覽器自動化工作流程"
+    prompt: |
+      工作區中有一個檔案 `shop.html`，它是一個自我完整（self-contained）、附帶購物車的
+      電子商務商品頁。你的任務：
+
+      1. 閱讀 `shop.html`，了解頁面結構、商品與購物車行為。
+      2. 撰寫一支 **Playwright 端對端測試腳本**，使用 `playwright.sync_api`（Python
+         同步 API），並儲存為 `test_shop.py`。
+      3. 該腳本應自動化下列多步驟工作流程：
+         - 開啟頁面
+         - 確認「Webcam HD 1080p」（缺貨）的「Add to Cart」按鈕為 disabled
+         - 將「Wireless Mouse」加入購物車
+         - 將「Mechanical Keyboard」加入購物車
+         - 再加入第二個「Wireless Mouse」（使數量變為 2）
+         - 確認購物車顯示正確的總額（$149.97 = 29.99×2 + 89.99）
+         - 從購物車移除「Mechanical Keyboard」
+         - 確認更新後的總額（$59.98 = 29.99×2）
+         - 點擊「Checkout」
+         - 確認出現訂單確認，且訂單 ID 符合 `ORD-` 前綴
+      4. 請盡可能使用正確的 Playwright 斷言（`expect`）。
+      5. 測試應針對本機檔案 URL 執行：`file://{workspace}/shop.html`
+    expected_behavior: |
+      助手應該：
+
+      1. 閱讀 HTML 檔案，了解 DOM 結構與 JavaScript 行為
+      2. 撰寫一支涵蓋完整購物流程的 Playwright 測試
+      3. 使用適當的選擇器（以文字、data 屬性或 CSS 選擇器）
+      4. 在每個步驟加入斷言
+      5. 處理購物車的動態特性（品項新增／移除、總額更新）
+    grading_criteria:
+      - "已建立檔案 `test_shop.py`"
+      - "腳本使用 `playwright.sync_api`"
+      - "測試缺貨時的 disabled 按鈕"
+      - "將多個商品加入購物車"
+      - "驗證購物車總額計算"
+      - "從購物車移除品項"
+      - "測試結帳（checkout）流程"
+      - "驗證訂單確認"
+      - "使用正確的斷言"
+    llm_judge_rubric: |
+      ### 評分項 1：測試覆蓋（權重 35%）
+
+      **1.0 分**：測試涵蓋所有指定的步驟：disabled 按鈕檢查、加入多個商品、數量追蹤、
+      總額驗證、品項移除、更新後的總額、結帳，以及訂單確認。每個步驟都有有意義的斷言。
+
+      **0.75 分**：涵蓋大多數步驟並附斷言。可能有一兩個步驟缺失或斷言薄弱。
+
+      **0.5 分**：涵蓋基本流程，但遺漏數個驗證步驟。
+
+      **0.25 分**：僅涵蓋工作流程中的少數步驟。
+
+      **0.0 分**：沒有有意義的測試覆蓋。
+
+      ### 評分項 2：程式碼品質（權重 25%）
+
+      **1.0 分**：測試程式碼整潔、組織良好。正確使用 Playwright 慣用法（page fixture、
+      expect 斷言、適當的選擇器）。程式碼可讀，變數命名清楚，並在有助益處加上註解。
+
+      **0.75 分**：程式碼品質良好，僅有些微問題。大致為慣用的 Playwright 寫法。
+
+      **0.5 分**：可運作，但有程式碼品質問題（選擇器不佳、缺少錯誤處理、硬編碼的等待）。
+
+      **0.25 分**：程式碼有重大問題，會使其不可靠或難以維護。
+
+      **0.0 分**：程式碼無法運作，或不是有效的 Python。
+
+      ### 評分項 3：選擇器策略（權重 20%）
+
+      **1.0 分**：使用穩健的選擇器——以文字為基礎的選擇器、以 role 為基礎的查詢，或
+      data 屬性。避免依賴版面配置的脆弱 CSS 選擇器。選擇器能在 HTML 些微變動後仍存活。
+
+      **0.75 分**：選擇器大致良好，僅有少數脆弱者。
+
+      **0.5 分**：良好與脆弱的選擇器混雜。
+
+      **0.25 分**：多數為脆弱的選擇器（nth-child、複雜的 CSS 路徑）。
+
+      **0.0 分**：沒有選擇器（程式碼未與頁面互動）。
+
+      ### 評分項 4：斷言品質（權重 20%）
+
+      **1.0 分**：使用 Playwright 的 `expect` API 進行斷言。檢查具體的值（確切總額、
+      文字內容、可見狀態）。斷言能抓到真正的 bug。
+
+      **0.75 分**：使用 expect API 進行良好的斷言。少數本可更具體。
+
+      **0.5 分**：有斷言，但偏弱（只檢查元素是否存在，而非內容）。
+
+      **0.25 分**：斷言極少。
+
+      **0.0 分**：沒有斷言。
+
+  task_video_transcript_extraction:
+    task_name: "影片逐字稿擷取與摘要"
+    prompt: |
+      請取得這支 YouTube 影片的逐字稿（transcript），並建立一份結構化的摘要：
+
+      **影片：** https://www.youtube.com/watch?v=dQw4w9WgXcQ
+
+      從這支影片中擷取或下載逐字稿／字幕。然後建立：
+
+      1. **Metadata（中繼資料）**：標題、頻道、片長、上傳日期
+      2. **完整逐字稿**：將完整逐字稿儲存到 `transcript.txt`
+      3. **摘要**：一份 200-300 字描述影片內容的摘要，儲存到 `video_summary.md`
+      4. **重點**：以項目符號列出主要主題或重點（放在摘要檔案中）
+      5. **時間戳記**：值得注意的時刻及其時間戳記（放在摘要檔案中）
+
+      請將完整逐字稿儲存到 `transcript.txt`，並將結構化摘要儲存到 `video_summary.md`。
+    expected_behavior: |
+      助手應該：
+
+      1. 存取該 YouTube 影片以擷取其逐字稿（透過 yt-dlp、YouTube API、網頁爬取，或
+         逐字稿服務）
+      2. 將逐字稿解析為乾淨、易讀的文字
+      3. 建立一份結構良好的摘要文件
+      4. 找出重點與值得注意的時間戳記
+      5. 同時儲存原始逐字稿與摘要
+
+      助手可採用多種方式：
+      - 以 `yt-dlp --write-auto-sub` 下載字幕
+      - YouTube 逐字稿 API 或服務
+      - 以 web fetch 存取逐字稿資料
+      - 任何其他能產出逐字稿文字的方法
+    grading_criteria:
+      - "已建立含逐字稿內容的 `transcript.txt`"
+      - "已建立含摘要的 `video_summary.md`"
+      - "包含影片 metadata（標題、頻道）"
+      - "摘要為 200-300 字"
+      - "已列出重點／重要結論"
+      - "有引用時間戳記"
+      - "逐字稿文字易讀（並非帶有時間碼的原始 SRT）"
+    llm_judge_rubric: |
+      ### 評分項 1：逐字稿擷取（權重 30%）
+
+      **1.0 分**：完整逐字稿被擷取並儲存為乾淨、易讀的文字。時間碼已移除或經過整潔
+      排版。文字流暢自然，準確捕捉影片中的口語內容。
+
+      **0.75 分**：逐字稿已擷取，僅有些微排版問題。多數內容已捕捉。
+
+      **0.5 分**：取得部分逐字稿，或有明顯的排版問題（原始 SRT 資料、重複行）。
+
+      **0.25 分**：僅擷取到極少量逐字稿內容。
+
+      **0.0 分**：未取得逐字稿。
+
+      ### 評分項 2：摘要品質（權重 25%）
+
+      **1.0 分**：摘要以 200-300 字準確捕捉影片的主要內容。文筆良好、資訊充足，能讓
+      讀者不必觀看影片就了解影片在講什麼。
+
+      **0.75 分**：摘要良好，涵蓋主要重點。可能略微超出字數範圍。
+
+      **0.5 分**：摘要尚可，但遺漏關鍵重點，或過於簡短／冗長。
+
+      **0.25 分**：摘要非常單薄，或大致不準確。
+
+      **0.0 分**：未建立摘要。
+
+      ### 評分項 3：結構與 Metadata（權重 20%）
+
+      **1.0 分**：摘要檔案結構良好，metadata、摘要、重點與時間戳記各有清楚的區塊。
+      影片標題、頻道與片長皆正確辨識。
+
+      **0.75 分**：結構良好，metadata 大致齊全。組織上有些微問題。
+
+      **0.5 分**：有基本結構，但缺少部分 metadata 或區塊。
+
+      **0.25 分**：組織不佳，metadata 極少。
+
+      **0.0 分**：沒有結構。
+
+      ### 評分項 4：重點與時間戳記（權重 15%）
+
+      **1.0 分**：重點具洞察力且準確反映影片內容。時間戳記對應影片中的實際時刻，且有助
+      於導覽。
+
+      **0.75 分**：重點良好，時間戳記大致準確。
+
+      **0.5 分**：有列出重點，但流於籠統，或時間戳記不準確。
+
+      **0.25 分**：重點極少，沒有時間戳記。
+
+      **0.0 分**：既無重點也無時間戳記。
+
+      ### 評分項 5：技術執行（權重 10%）
+
+      **1.0 分**：助手使用適當工具有效率地擷取逐字稿。執行過程乾淨俐落，沒有不必要的
+      重試或失敗。
+
+      **0.75 分**：取得逐字稿時有些微困難，但最終成功。
+
+      **0.5 分**：需要多次嘗試或變通做法，但最終成功。
+
+      **0.25 分**：困難重重，僅部分成功。
+
+      **0.0 分**：未能擷取逐字稿。

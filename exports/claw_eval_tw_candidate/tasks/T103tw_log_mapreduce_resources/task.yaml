@@ -1,0 +1,135 @@
+task_id: T103tw_log_mapreduce_resources
+task_name: MapReduce 日誌 — 資源使用率分析
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_mapreduce_resources.md
+  original_task_id: task_log_mapreduce_resources
+  original_file: tasks/task_log_mapreduce_resources.md
+prompt:
+  text: "請分析位於 `mapreduce.log` 的 Hadoop MapReduce 應用程式日誌，產出一份資源使用率\n報告。聚焦於容器（container）配置、排程，以及資源使用型態。\n\
+    \n你的報告應包含：\n\n1. **容器清單（Container Inventory）**：列出為此工作配置的所有容器及其 ID\n2. **容器配置時間軸（Container Allocation\
+    \ Timeline）**：每個容器在何時被請求與指派？\n3. **排程分析（Scheduling Analysis）**：從 RMContainerAllocator 條目追蹤待處理\n  \
+    \ （pending）的 map 與 reduce 數量隨時間的變化\n4. **Reduce 排程（Reduce Scheduling）**：reduce 的慢啟動（slow start）門檻在何時達到？\n\
+    \   當時的完成百分比為何？\n5. **容器重用（Container Reuse）**：是否有容器完成後被重新使用？\n6. **資源效率（Resource Efficiency）**：依容器配置與任務完成型態，評估資源效率\n\
+    \n請將報告寫入 `mapreduce_resources.md`，以結構良好的 markdown 文件呈現。"
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hadoop_mapreduce.log
+  dest: mapreduce.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `mapreduce_resources.md`
+- 列出容器（辨識出 13 個容器）
+- 追蹤排程進展（待處理 map/reduce 隨時間的變化）
+- 包含對 reduce 慢啟動門檻的討論
+- 分析容器完成事件
+user_agent:
+  enabled: false
+judge_rubric: '依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+
+  - 已在工作區建立 `mapreduce_resources.md`
+
+  - 列出容器（辨識出 13 個容器）
+
+  - 追蹤排程進展（待處理 map/reduce 隨時間的變化）
+
+  - 包含對 reduce 慢啟動門檻的討論
+
+  - 分析容器完成事件'
+reference_solution: '助手應解析 RMContainerAllocator 條目並產出：
+
+
+  **容器清單：**
+
+  - 使用 13 個不重複容器（container_1445062781478_0011_01_000001 至 000013）
+
+  - Application attempt：01
+
+
+  **排程進展：**
+
+  - 初始狀態：10 個待處理 map、1 個待處理 reduce
+
+  - reduce 慢啟動門檻從 15:38:00 到 15:39:24 反覆「not met」（未達標）
+
+  - 首個 map 於 15:39:24 完成（10% complete）— 仍不足以啟動 reduce
+
+  - 當 completedMapPercent 達到足夠門檻時，reduce 排程開始
+
+  - 15:39:24 記錄了「completedMapPercent 0.1 totalResources 2」
+
+
+  **容器生命週期：**
+
+  - 容器約於 15:38:00–15:38:15 配置
+
+  - 隨任務完成而釋放容器
+
+  - 「Received completed container」條目追蹤容器何時結束
+
+
+  **重點觀察：**
+
+  - reduce 任務必須等待足夠多的 map 完成（慢啟動）
+
+  - map 任務的完成時間各異（1.5 到 3.5 分鐘）
+
+  - 容器周轉：部分容器很快被釋放、其資源迅速被回收
+
+
+  可接受的差異：
+
+  - 容器 ID 的列舉方式可能不同
+
+  - 時間軸的粒度可能不同
+
+  - 資源效率評估帶有主觀性'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: mapreduce.log
+    source: logs/hadoop_mapreduce.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

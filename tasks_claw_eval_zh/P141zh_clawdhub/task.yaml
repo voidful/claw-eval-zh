@@ -1,0 +1,73 @@
+task_id: P141zh_clawdhub
+task_name: 建立專案結構
+version: 0.2.0
+category: skills
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- skills
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_clawdhub
+  original_file: tasks/task_clawdhub.md
+prompt:
+  text: |-
+    請為一個名為「datautils」的函式庫建立一個基本的 Python 專案結構。此專案應包含：
+
+    1. 一個 `src/datautils/` 套件目錄，內含 `__init__.py` 檔案
+    2. 一個 `tests/` 目錄，內含 `test_datautils.py` 檔案
+    3. 一個 `pyproject.toml` 檔案，含基本專案中繼資料（name、version 0.1.0、
+       description）
+    4. 一個 `README.md` 檔案，含標題與簡短說明
+
+    請在目前的工作區中建立此專案結構。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 120
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 助手已建立 `src/datautils/` 目錄結構
+- 助手已在套件中建立 `__init__.py`
+- 助手已建立含測試檔案的 `tests/` 目錄
+- 助手已建立含正確中繼資料的 `pyproject.toml`
+- 助手已建立 `README.md`
+- 助手已確認建立成功
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 建立目錄結構：`src/datautils/`、`tests/`
+  2. 建立 `src/datautils/__init__.py`，含基本內容
+  3. 建立 `tests/test_datautils.py`，含一個佔位用的測試
+  4. 建立 `pyproject.toml`，含妥善的 Python 專案中繼資料
+  5. 建立 `README.md`，含專案說明文件
+
+  這項任務測試助手建立檔案結構，以及理解 Python 專案慣例的能力。
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

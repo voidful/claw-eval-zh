@@ -1,0 +1,16 @@
+{
+  "task_id": "task_csv_stock_volatility",
+  "cases": {
+    "pass": {
+      "min_mean": 0.9
+    },
+    "partial": {
+      "min_mean": 0.2,
+      "max_mean": 0.7
+    },
+    "fail": {
+      "max_mean": 0.05
+    }
+  },
+  "note": ""
+}

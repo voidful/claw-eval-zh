@@ -1,0 +1,133 @@
+task_id: P022zh_email
+task_name: 專業電子郵件撰寫
+version: 0.2.0
+category: writing
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- writing
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_email
+  original_file: tasks/task_email.md
+prompt:
+  text: |-
+    請撰寫一封專業的電子郵件，因行程衝突而婉拒一項會議邀請，並儲存到 email_draft.txt。
+
+    注意：本任務要求以英文撰寫，請以英文輸出這封電子郵件；以上中文僅為說明。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 `email_draft.txt`
+- 郵件結構恰當（問候語、主體、結尾）
+- 清楚婉拒會議邀請
+- 提供理由（行程衝突）
+- 維持專業且有禮的語氣
+- 提供替代方案或表達願意改期
+- 包含恰當的結尾
+- 篇幅適中（不過於簡短，也不過於冗長）
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：專業語氣與禮貌（權重 30%）
+
+  **1.0 分**：語氣始終專業、有禮且周到。對婉拒一事表達恰如其分的歉意。聚焦於維繫
+  正向關係。沒有過於隨意或過於僵硬的措辭。
+
+  **0.75 分**：整體專業有禮，僅有小幅語氣問題。略嫌隨意或略嫌正式，但仍屬恰當。
+
+  **0.5 分**：專業度尚可，但有明顯的語氣問題。可能過於唐突、過度致歉，或前後不一。
+
+  **0.25 分**：語氣不佳。過於隨意、無禮，或過分正式。缺乏禮貌。
+
+  **0.0 分**：完全不專業，或內容缺漏。
+
+  ### 評分項 2：完整性與清晰度（權重 25%）
+
+  **1.0 分**：郵件清楚婉拒會議、提供理由（行程衝突），並提出替代方案（改期、改約
+  其他時間，或其他解法）。訊息明確無歧義。
+
+  **0.75 分**：郵件清楚婉拒並附有理由。可能缺乏強而有力的替代方案，但意圖清楚。
+
+  **0.5 分**：郵件有婉拒，但在理由或替代方案上不夠清楚。訊息可能略有歧義。
+
+  **0.25 分**：郵件對是否婉拒交代不清，或缺少關鍵要素（理由或任何替代方案）。
+
+  **0.0 分**：郵件未能婉拒會議，或完全不清楚。
+
+  ### 評分項 3：結構與格式（權重 20%）
+
+  **1.0 分**：郵件結構完美，具備問候語（Dear/Hi [Name]）、清楚的主體段落，以及
+  專業的結尾（Best regards、Sincerely 等）並附署名行。組織良好。
+
+  **0.75 分**：結構良好，所有關鍵要素皆具備。僅有小幅格式問題。
+
+  **0.5 分**：具備基本結構，但缺少要素（例如沒有問候語或結尾），或組織不佳。
+
+  **0.25 分**：結構不佳。多項要素缺漏，或組織極為混亂。
+
+  **0.0 分**：無可辨識的郵件結構，或內容缺漏。
+
+  ### 評分項 4：簡潔度與適切性（權重 15%）
+
+  **1.0 分**：郵件長度適中且簡潔（3～6 句或 50～150 字）。傳達所有必要資訊，既不
+  贅述也不過於精簡。
+
+  **0.75 分**：長度良好（2～3 句或 6～8 句）。略嫌冗長或略嫌精簡，但仍有效。
+
+  **0.5 分**：過於簡短（1～2 句）或過長（超過 200 字）。仍可運作，但非最佳。
+
+  **0.25 分**：極為簡短（僅一句）或過分冗長（超過 300 字）。拿捏不佳。
+
+  **0.0 分**：長度完全不恰當，或內容缺漏。
+
+  ### 評分項 5：任務完成度（權重 10%）
+
+  **1.0 分**：建立的檔案名稱正確（email_draft.txt），內含完整郵件，所有需求皆
+  達成。
+
+  **0.75 分**：已建立檔案，雖有小瑕疵但大致完整。
+
+  **0.5 分**：已建立檔案，但漏掉重要需求。
+
+  **0.25 分**：已建立檔案，但內容嚴重不足。
+
+  **0.0 分**：未建立檔案，或檔案為空。
+reference_solution: |-
+  助手應該：
+
+  1. 撰寫一封結構恰當的專業電子郵件
+  2. 包含關鍵要素：問候語、說明、婉拒、替代方案／致歉、結尾
+  3. 維持有禮且專業的語氣
+  4. 內容簡潔但完整
+  5. 儲存到名為 `email_draft.txt` 的檔案
+
+  這封郵件應該在明確婉拒的同時，兼顧維繫正向的專業關係。
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

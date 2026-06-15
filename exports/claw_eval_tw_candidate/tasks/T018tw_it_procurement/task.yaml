@@ -1,0 +1,239 @@
+task_id: T018tw_it_procurement
+task_name: 台灣 IT 採購評估
+version: 0.3.0
+category: research
+difficulty: hard
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- research
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_it_procurement.md
+  original_task_id: task_it_procurement
+  original_file: tasks/task_it_procurement.md
+prompt:
+  text: '有一家台灣公司／政府單位（約 50 位使用者）需要為新進人員採購 **開發者／辦公
+
+    用筆電（laptops）**。請協助他們研究選項並提出建議，並納入**政府採購法**與
+
+    **新臺幣（NT$）預算**的考量。
+
+
+    **要求：**
+
+    - 至少 32 GB RAM、至少 512 GB SSD、現代 CPU（近兩代以內）、良好做工
+
+    - 預算：每台 NT$45,000–NT$75,000
+
+    - 需兼顧 macOS 與 Linux 相容性（部分開發者各有偏好）
+
+    - 須考量政府採購法相關規範（如共同供應契約、決標方式、資安要求）
+
+
+    請研究至少 5 款在台灣可採購的具體筆電型號，並製作一份採購建議。針對每款型號，
+
+    記錄：
+
+
+    1. **確切的型號名稱與配置**（CPU、RAM、儲存、螢幕）
+
+    2. **台灣市場目前價格**（新臺幣，並註明購買通路——原廠、經銷商、政府共同供應契約）
+
+    3. **可維修性與保固**——標準保固、延長保固選項、在台維修服務
+
+    4. **與使用者相關的規格**——鍵盤、連接埠、螢幕、電池續航
+
+    5. **Linux 相容性**（非 Mac 選項）——WiFi、藍牙、休眠等已知問題
+
+    6. **大量採購／政府採購選項**——量大折扣、政府共同供應契約品項、資安合規
+
+
+    請將報告儲存至 `laptop_procurement.md`，內容須包含比較表格、分別針對 macOS
+
+    與 Linux 使用者的建議、一份為 50 人團隊建議理想機型組合的「車隊建議」，以及
+
+    估算的總預算（新臺幣）。
+
+
+    注意：這是即時資料。請對型號、價格與共同供應契約品項**標示資料來源、標示查詢
+
+    日期**，並說明**資料限制與不確定性**（價格與供貨狀態常變動、共同供應契約品項
+
+    會更新）。切勿捏造或寫死特定價格。法規正式名稱（政府採購法）保留原文。'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 300
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 laptop_procurement.md
+- 至少記錄 5 款在台可採購的具體筆電型號
+- 每款型號皆含台灣市場價格（新臺幣）
+- 規格符合所述要求
+- 針對非 Mac 選項探討 Linux 相容性
+- 包含比較表格
+- 分別有 macOS 與 Linux 的建議
+- 車隊建議並附估算總預算（新臺幣）
+- 納入政府採購法、共同供應契約或資安合規考量
+- 標示資料來源與查詢日期，並說明資料限制與不確定性
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：產品研究品質（權重 30%）
+
+
+  **1.0 分**：具體的型號及確切配置（例如「ThinkPad T14s Gen 5 — AMD Ryzen 7
+
+  PRO 8840U, 32GB, 512GB, 14\" 2.8K」）。價格為最新（新臺幣）且來源可辨識。所有
+
+  型號目前在台灣皆可購買。
+
+
+  **0.75 分**：多數型號具體性良好。少數可能配置或價格較為概略。
+
+
+  **0.5 分**：有列出型號，但配置或價格含糊或可能過時。
+
+
+  **0.25 分**：僅列出籠統的產品線，無具體配置。
+
+
+  **0.0 分**：未研究任何具體產品。
+
+
+  ### 評分項 2：台灣採購實務價值（權重 20%）
+
+
+  **1.0 分**：報告對台灣 IT 管理者可付諸行動。涵蓋政府採購法、共同供應契約、
+
+  保固與在台維修、大量定價、資安合規與部署考量。包含通路建議（原廠、經銷商、
+
+  共同供應契約）。總預算計算切合實際（新臺幣）。
+
+
+  **0.75 分**：採購細節良好。在通路、共同供應契約或合規考量上有小幅缺口。
+
+
+  **0.5 分**：處理了部分採購面向，但讀起來較像消費者評測。
+
+
+  **0.25 分**：與採購相關的內容極少。
+
+
+  **0.0 分**：無任何採購考量。
+
+
+  ### 評分項 3：來源、查詢日期與不確定性（權重 20%）
+
+
+  **1.0 分**：所有型號、價格與共同供應契約品項皆標示可追溯的資料來源與查詢日期，
+
+  並說明資料限制與不確定性（價格、供貨與共同供應契約品項會變動）。明顯以引用
+
+  來源取代捏造或寫死的價格。
+
+
+  **0.75 分**：多數價格有標示來源並標示查詢日期，對不確定性有提及但較簡略。
+
+
+  **0.5 分**：有標示部分來源或查詢日期，但不一致，或未說明資料限制。
+
+
+  **0.25 分**：僅零星提及來源或日期，未說明不確定性。
+
+
+  **0.0 分**：完全未標示來源或查詢日期，或出現捏造／寫死且未加註的價格。
+
+
+  ### 評分項 4：Linux 相容性與車隊建議（權重 20%）
+
+
+  **1.0 分**：為每個非 Mac 選項提供具體的 Linux 相容性說明（特定發行版支援、
+
+  已知硬體問題、驅動程式狀態）。並提供具體的車隊組合（例如「30× MacBook Pro
+
+  14\"、20× ThinkPad T14s」），附理由並計算總預算（新臺幣）。
+
+
+  **0.75 分**：Linux 相容性與車隊建議涵蓋良好，並附預算估算，僅有小幅缺口。
+
+
+  **0.5 分**：有提及 Linux 相容性與車隊，但缺乏具體內容或具體組合／預算。
+
+
+  **0.25 分**：幾乎未提及 Linux 或車隊指引含糊。
+
+
+  **0.0 分**：未探討 Linux 相容性，亦無車隊建議。
+
+
+  ### 評分項 5：比較品質（權重 10%）
+
+
+  **1.0 分**：乾淨的比較表格，涵蓋規格、價格（新臺幣）、作業系統、關鍵差異化
+
+  要點。易於用於快速決策。
+
+
+  **0.75 分**：表格良好，僅有小幅缺口。
+
+
+  **0.5 分**：有表格，但不完整。
+
+
+  **0.25 分**：表格不佳。
+
+
+  **0.0 分**：無比較表格。'
+reference_solution: '助手應該：
+
+
+  1. 研究符合規格、在台灣可採購的現行筆電型號
+
+  2. 找出具體配置與台灣市場價格（新臺幣）
+
+  3. 查核非 Mac 選項的 Linux 相容性
+
+  4. 考量政府採購法、共同供應契約、大量採購與資安合規等因素
+
+  5. 產出一份實用的採購文件
+
+  6. 儲存至 `laptop_procurement.md`
+
+
+  因為價格與供貨屬即時資料，正確行為是**標示資料來源、標示查詢日期，並說明資料
+
+  限制與不確定性**（價格、供貨與共同供應契約品項會變動），而非捏造或寫死價格。'
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: manual_review_only
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

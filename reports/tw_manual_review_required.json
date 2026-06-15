@@ -1,0 +1,966 @@
+{
+  "generated_by": "convert_zh_to_tw_localized.py",
+  "count": 96,
+  "items": [
+    {
+      "task_id": "task_calendar",
+      "tw_task_path": "tasks_tw/task_calendar.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T002tw_calendar/",
+      "reason": "改台灣工作語境＋Asia/Taipei；若產生 ICS 需檢查非美國時區",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_pdf_to_calendar",
+      "tw_task_path": "tasks_tw/task_pdf_to_calendar.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T003tw_pdf_to_calendar/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_todo_list_cleanup",
+      "tw_task_path": "tasks_tw/task_todo_list_cleanup.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T004tw_todo_list_cleanup/",
+      "reason": "安全敏感領域；改台灣語境並強化 safety rubric",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_daily_summary",
+      "tw_task_path": "tasks_tw/task_daily_summary.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T005tw_daily_summary/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_email_triage",
+      "tw_task_path": "tasks_tw/task_email_triage.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T006tw_email_triage/",
+      "reason": "安全敏感領域；改台灣語境並強化 safety rubric",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_cron_organizer",
+      "tw_task_path": "tasks_tw/task_cron_organizer.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T007tw_cron_organizer/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_subway_navigation",
+      "tw_task_path": "tasks_tw/task_subway_navigation.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T008tw_subway_navigation/",
+      "reason": "改台北/高雄捷運；給定固定站點，不依賴即時營運",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_stock",
+      "tw_task_path": "tasks_tw/task_stock.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T009tw_stock/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_events",
+      "tw_task_path": "tasks_tw/task_events.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T010tw_events/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_market_research",
+      "tw_task_path": "tasks_tw/task_market_research.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T011tw_market_research/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_polymarket_briefing",
+      "tw_task_path": "tasks_tw/task_polymarket_briefing.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T012tw_polymarket_briefing/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_executive_lookup",
+      "tw_task_path": "tasks_tw/task_executive_lookup.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T013tw_executive_lookup/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_deep_research",
+      "tw_task_path": "tasks_tw/task_deep_research.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T014tw_deep_research/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_competitive_research",
+      "tw_task_path": "tasks_tw/task_competitive_research.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T015tw_competitive_research/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_oss_alternative_research",
+      "tw_task_path": "tasks_tw/task_oss_alternative_research.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T016tw_oss_alternative_research/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_pricing_research",
+      "tw_task_path": "tasks_tw/task_pricing_research.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T017tw_pricing_research/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_it_procurement",
+      "tw_task_path": "tasks_tw/task_it_procurement.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T018tw_it_procurement/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_eu_regulation_research",
+      "tw_task_path": "tasks_tw/task_eu_regulation_research.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T019tw_eu_regulation_research/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_byok_best_practices",
+      "tw_task_path": "tasks_tw/task_byok_best_practices.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T020tw_byok_best_practices/",
+      "reason": "可用台灣個資法/資安合規為背景；除非有 frozen reference 否則不宣稱法規細節",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_email",
+      "tw_task_path": "tasks_tw/task_email.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T022tw_email/",
+      "reason": "台灣商務 Email 語氣；rubric 評估是否適合台灣職場",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_email_reply_drafting",
+      "tw_task_path": "tasks_tw/task_email_reply_drafting.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T023tw_email_reply_drafting/",
+      "reason": "台灣商務回信語氣；保留原信語言處理",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_humanizer",
+      "tw_task_path": "tasks_tw/task_humanizer.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T024tw_humanizer/",
+      "reason": "寫作任務改台灣語境",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_weather",
+      "tw_task_path": "tasks_tw/task_weather.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T027tw_weather/",
+      "reason": "地點改台北；保留 weather.py 與 wttr.in；grader 檢查 Taipei|台北|臺北",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_playwright_e2e",
+      "tw_task_path": "tasks_tw/task_playwright_e2e.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T031tw_playwright_e2e/",
+      "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "language_polish",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_cicd_pipeline_debug",
+      "tw_task_path": "tasks_tw/task_cicd_pipeline_debug.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T033tw_cicd_pipeline_debug/",
+      "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "language_polish",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_test_generation",
+      "tw_task_path": "tasks_tw/task_test_generation.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T034tw_test_generation/",
+      "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "language_polish",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_k8s_debugging",
+      "tw_task_path": "tasks_tw/task_k8s_debugging.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T035tw_k8s_debugging/",
+      "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "language_polish",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_codebase_navigation",
+      "tw_task_path": "tasks_tw/task_codebase_navigation.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T037tw_codebase_navigation/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_browser_automation",
+      "tw_task_path": "tasks_tw/task_browser_automation.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T038tw_browser_automation/",
+      "reason": "技術編碼任務；潤飾為台灣自然用語，程式碼/檔名/指令不動",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "language_polish",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_video_transcript_extraction",
+      "tw_task_path": "tasks_tw/task_video_transcript_extraction.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T039tw_video_transcript_extraction/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_summary",
+      "tw_task_path": "tasks_tw/task_summary.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T041tw_summary/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_spreadsheet_summary",
+      "tw_task_path": "tasks_tw/task_spreadsheet_summary.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T042tw_spreadsheet_summary/",
+      "reason": "安全敏感領域；改台灣語境並強化 safety rubric",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_eli5_pdf_summary",
+      "tw_task_path": "tasks_tw/task_eli5_pdf_summary.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T043tw_eli5_pdf_summary/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_openclaw_comprehension",
+      "tw_task_path": "tasks_tw/task_openclaw_comprehension.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T044tw_openclaw_comprehension/",
+      "reason": "安全敏感領域；改台灣語境並強化 safety rubric",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_email_search",
+      "tw_task_path": "tasks_tw/task_email_search.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T045tw_email_search/",
+      "reason": "安全敏感領域；改台灣語境並強化 safety rubric",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_access_log_anomaly",
+      "tw_task_path": "tasks_tw/task_access_log_anomaly.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T046tw_access_log_anomaly/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_financial_ratio_calculation",
+      "tw_task_path": "tasks_tw/task_financial_ratio_calculation.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T047tw_financial_ratio_calculation/",
+      "reason": "改台灣上市櫃公司財報 fixture；rubric 扣分過度推銷/未提醒風險",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "fixture_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_earnings_analysis",
+      "tw_task_path": "tasks_tw/task_earnings_analysis.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T048tw_earnings_analysis/",
+      "reason": "安全敏感領域；改台灣語境並強化 safety rubric",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_contract_analysis",
+      "tw_task_path": "tasks_tw/task_contract_analysis.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T049tw_contract_analysis/",
+      "reason": "繁中合約審閱；不得提供法律定論，rubric 要求列出疑義/風險/需詢問律師",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_image_identification",
+      "tw_task_path": "tasks_tw/task_image_identification.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T050tw_image_identification/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_cve_security_triage",
+      "tw_task_path": "tasks_tw/task_cve_security_triage.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T051tw_cve_security_triage/",
+      "reason": "保留 CVE 技術語境；加入台灣企業 IT 通報/修補優先；不要求 exploit",
+      "severity": "high",
+      "domain": "security",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_session_chain_analysis",
+      "tw_task_path": "tasks_tw/task_session_chain_analysis.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T052tw_session_chain_analysis/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_csv_stock_trend",
+      "tw_task_path": "tasks_tw/task_csv_stock_trend.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T053tw_csv_stock_trend/",
+      "reason": "改台灣股票/ETF fixture（0050/2330），重算 expected values 與 grader",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "fixture_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_csv_stock_volatility",
+      "tw_task_path": "tasks_tw/task_csv_stock_volatility.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T054tw_csv_stock_volatility/",
+      "reason": "股票資料可改台灣標的；需新 fixture 並重算 expected values",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "fixture_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_csv_stock_best_worst",
+      "tw_task_path": "tasks_tw/task_csv_stock_best_worst.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T055tw_csv_stock_best_worst/",
+      "reason": "股票資料可改台灣標的；需新 fixture 並重算 expected values",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "fixture_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_csv_finance_report",
+      "tw_task_path": "tasks_tw/task_csv_finance_report.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T056tw_csv_finance_report/",
+      "reason": "美國金融資料（如退休金）；保留資料避免重算錯誤，未來可改台灣勞退 fixture（manual review）",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_csv_cities_filter",
+      "tw_task_path": "tasks_tw/task_csv_cities_filter.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T073tw_csv_cities_filter/",
+      "reason": "改台灣縣市 fixture（tw_cities.csv），重寫 5 項篩選與 grader（Phase 4）",
+      "severity": "high",
+      "domain": "general",
+      "localization_strategy": "fixture_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_csv_pension_ranking",
+      "tw_task_path": "tasks_tw/task_csv_pension_ranking.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T076tw_csv_pension_ranking/",
+      "reason": "美國金融資料（如退休金）；保留資料避免重算錯誤，未來可改台灣勞退 fixture（manual review）",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_csv_pension_liability",
+      "tw_task_path": "tasks_tw/task_csv_pension_liability.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T077tw_csv_pension_liability/",
+      "reason": "美國金融資料（如退休金）；保留資料避免重算錯誤，未來可改台灣勞退 fixture（manual review）",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_csv_pension_risk",
+      "tw_task_path": "tasks_tw/task_csv_pension_risk.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T078tw_csv_pension_risk/",
+      "reason": "美國金融資料（如退休金）；保留資料避免重算錯誤，未來可改台灣勞退 fixture（manual review）",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_log_apache_critical",
+      "tw_task_path": "tasks_tw/task_log_apache_critical.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T082tw_log_apache_critical/",
+      "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt",
+      "severity": "high",
+      "domain": "security",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_log_ssh_failed_logins",
+      "tw_task_path": "tasks_tw/task_log_ssh_failed_logins.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T090tw_log_ssh_failed_logins/",
+      "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt",
+      "severity": "high",
+      "domain": "security",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_log_ssh_brute_force",
+      "tw_task_path": "tasks_tw/task_log_ssh_brute_force.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T091tw_log_ssh_brute_force/",
+      "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt",
+      "severity": "high",
+      "domain": "security",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_log_ssh_successful",
+      "tw_task_path": "tasks_tw/task_log_ssh_successful.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T092tw_log_ssh_successful/",
+      "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt",
+      "severity": "high",
+      "domain": "security",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_log_ssh_user_activity",
+      "tw_task_path": "tasks_tw/task_log_ssh_user_activity.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T093tw_log_ssh_user_activity/",
+      "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt",
+      "severity": "high",
+      "domain": "security",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_log_syslog_anomalies",
+      "tw_task_path": "tasks_tw/task_log_syslog_anomalies.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T105tw_log_syslog_anomalies/",
+      "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt",
+      "severity": "high",
+      "domain": "security",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_log_syslog_auth_failures",
+      "tw_task_path": "tasks_tw/task_log_syslog_auth_failures.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T108tw_log_syslog_auth_failures/",
+      "reason": "技術日誌（IP/timestamp）；在地化會破壞 fixture，保留資料、維持繁中 prompt",
+      "severity": "high",
+      "domain": "security",
+      "localization_strategy": "copy",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_council_votes",
+      "tw_task_path": "tasks_tw/task_meeting_council_votes.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T109tw_meeting_council_votes/",
+      "reason": "改台灣（虛構）地方議會語境；避免捏造真實機關資料",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "new_tw_variant",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_council_public_comment",
+      "tw_task_path": "tasks_tw/task_meeting_council_public_comment.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T110tw_meeting_council_public_comment/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_council_budget",
+      "tw_task_path": "tasks_tw/task_meeting_council_budget.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T111tw_meeting_council_budget/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_council_upcoming",
+      "tw_task_path": "tasks_tw/task_meeting_council_upcoming.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T112tw_meeting_council_upcoming/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_council_contact_info",
+      "tw_task_path": "tasks_tw/task_meeting_council_contact_info.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T113tw_meeting_council_contact_info/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_council_neighborhood",
+      "tw_task_path": "tasks_tw/task_meeting_council_neighborhood.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T114tw_meeting_council_neighborhood/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_tech_action_items",
+      "tw_task_path": "tasks_tw/task_meeting_tech_action_items.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T115tw_meeting_tech_action_items/",
+      "reason": "改台灣公司會議語境；評估待辦抽取",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "new_tw_variant",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_tech_decisions",
+      "tw_task_path": "tasks_tw/task_meeting_tech_decisions.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T116tw_meeting_tech_decisions/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_tech_competitors",
+      "tw_task_path": "tasks_tw/task_meeting_tech_competitors.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T117tw_meeting_tech_competitors/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_tech_messaging",
+      "tw_task_path": "tasks_tw/task_meeting_tech_messaging.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T118tw_meeting_tech_messaging/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_tech_product_features",
+      "tw_task_path": "tasks_tw/task_meeting_tech_product_features.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T119tw_meeting_tech_product_features/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_advisory_attendees",
+      "tw_task_path": "tasks_tw/task_meeting_advisory_attendees.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T120tw_meeting_advisory_attendees/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_advisory_stakeholders",
+      "tw_task_path": "tasks_tw/task_meeting_advisory_stakeholders.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T121tw_meeting_advisory_stakeholders/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_advisory_technical",
+      "tw_task_path": "tasks_tw/task_meeting_advisory_technical.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T122tw_meeting_advisory_technical/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_advisory_timeline",
+      "tw_task_path": "tasks_tw/task_meeting_advisory_timeline.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T123tw_meeting_advisory_timeline/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_advisory_acronyms",
+      "tw_task_path": "tasks_tw/task_meeting_advisory_acronyms.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T124tw_meeting_advisory_acronyms/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_executive_summary",
+      "tw_task_path": "tasks_tw/task_meeting_executive_summary.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T125tw_meeting_executive_summary/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_sentiment_analysis",
+      "tw_task_path": "tasks_tw/task_meeting_sentiment_analysis.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T126tw_meeting_sentiment_analysis/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_follow_up_email",
+      "tw_task_path": "tasks_tw/task_meeting_follow_up_email.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T127tw_meeting_follow_up_email/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_blog_post",
+      "tw_task_path": "tasks_tw/task_meeting_blog_post.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T128tw_meeting_blog_post/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_tldr",
+      "tw_task_path": "tasks_tw/task_meeting_tldr.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T129tw_meeting_tldr/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_searchable_index",
+      "tw_task_path": "tasks_tw/task_meeting_searchable_index.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T130tw_meeting_searchable_index/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_gov_speaker_summary",
+      "tw_task_path": "tasks_tw/task_meeting_gov_speaker_summary.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T131tw_meeting_gov_speaker_summary/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "high",
+      "domain": "finance_or_legal",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_gov_qa_extract",
+      "tw_task_path": "tasks_tw/task_meeting_gov_qa_extract.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T132tw_meeting_gov_qa_extract/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_gov_recommendations",
+      "tw_task_path": "tasks_tw/task_meeting_gov_recommendations.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T133tw_meeting_gov_recommendations/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_gov_data_sources",
+      "tw_task_path": "tasks_tw/task_meeting_gov_data_sources.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T134tw_meeting_gov_data_sources/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_gov_controversy",
+      "tw_task_path": "tasks_tw/task_meeting_gov_controversy.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T135tw_meeting_gov_controversy/",
+      "reason": "會議分析；prompt 改台灣語境，英文 transcript 為固定 fixture（指示處理原文）",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_meeting_gov_next_steps",
+      "tw_task_path": "tasks_tw/task_meeting_gov_next_steps.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T136tw_meeting_gov_next_steps/",
+      "reason": "改台灣（虛構）政府會議語境；評估後續步驟抽取",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "new_tw_variant",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_memory",
+      "tw_task_path": "tasks_tw/task_memory.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T137tw_memory/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_second_brain",
+      "tw_task_path": "tasks_tw/task_second_brain.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T138tw_second_brain/",
+      "reason": "安全敏感領域；改台灣語境並強化 safety rubric",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_files",
+      "tw_task_path": "tasks_tw/task_files.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T139tw_files/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_workflow",
+      "tw_task_path": "tasks_tw/task_workflow.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T140tw_workflow/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_clawdhub",
+      "tw_task_path": "tasks_tw/task_clawdhub.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T141tw_clawdhub/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_skill_search",
+      "tw_task_path": "tasks_tw/task_skill_search.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T142tw_skill_search/",
+      "reason": "依賴即時網路資料；在地化框架但保留 live，需人工確認可重現性",
+      "severity": "high",
+      "domain": "live_web",
+      "localization_strategy": "manual_review_only",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_image_gen",
+      "tw_task_path": "tasks_tw/task_image_gen.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T143tw_image_gen/",
+      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
+      "severity": "medium",
+      "domain": "general",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_gh_issue_triage",
+      "tw_task_path": "tasks_tw/task_gh_issue_triage.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T144tw_gh_issue_triage/",
+      "reason": "外部服務 / mock；改台灣職場語境，保留 mock 語意",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_gws_email_triage",
+      "tw_task_path": "tasks_tw/task_gws_email_triage.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T145tw_gws_email_triage/",
+      "reason": "保留 fws/gws mock；信件內容改台灣職場語境",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_gws_cross_service",
+      "tw_task_path": "tasks_tw/task_gws_cross_service.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T146tw_gws_cross_service/",
+      "reason": "保留 mock；行事曆/文件改台灣職場語境",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    },
+    {
+      "task_id": "task_gws_task_management",
+      "tw_task_path": "tasks_tw/task_gws_task_management.md",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T147tw_gws_task_management/",
+      "reason": "保留 mock；任務內容改台灣職場語境",
+      "severity": "high",
+      "domain": "safety",
+      "localization_strategy": "context_replace",
+      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
+    }
+  ]
+}

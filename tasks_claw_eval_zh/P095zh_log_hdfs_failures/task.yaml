@@ -1,0 +1,113 @@
+task_id: P095zh_log_hdfs_failures
+task_name: HDFS DataNode 日誌 — 區塊與複製失敗分析
+version: 0.2.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_log_hdfs_failures
+  original_file: tasks/task_log_hdfs_failures.md
+prompt:
+  text: |-
+    請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，找出任何區塊（block）操作
+    失敗、複製（replication）問題或錯誤狀況。此日誌來自一個 HDFS 叢集，內含 DataNode、
+    FSNamesystem 與 PacketResponder 的條目。
+
+    你的報告應包含：
+
+    1. **日誌總覽（Log Overview）**：總條目數、日期/時間範圍、日誌級別分布（INFO、WARN、ERROR）
+    2. **區塊操作摘要（Block Operation Summary）**：區塊接收、配置、已儲存區塊確認與複製的計數
+    3. **錯誤與警告分析（Error and Warning Analysis）**：列出任何 WARN 或 ERROR 級別的條目及其細節
+    4. **複製活動（Replication Activity）**：詳列所有複製請求 — 哪些區塊正在被複製，從何處複製到何處？
+    5. **失敗或未完成的操作（Failed or Incomplete Operations）**：是否有區塊開始接收但從未記錄確認？
+    6. **健康狀態評估（Health Assessment）**：依日誌判斷，此 HDFS 叢集是否運作正常？
+
+    請將報告寫入 `hdfs_failure_report.md`，以結構良好的 markdown 文件呈現。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hdfs_datanode.log
+  dest: hdfs_datanode.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `hdfs_failure_report.md`
+- 提供含條目數與時間範圍的日誌總覽
+- 將區塊操作分類並計數（接收、配置、複製）
+- 記下沒有 WARN/ERROR 條目（或詳述任何發現的條目）
+- 提供健康狀態評估
+user_agent:
+  enabled: false
+judge_rubric: |-
+  依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+  - 已在工作區建立 `hdfs_failure_report.md`
+  - 提供含條目數與時間範圍的日誌總覽
+  - 將區塊操作分類並計數（接收、配置、複製）
+  - 記下沒有 WARN/ERROR 條目（或詳述任何發現的條目）
+  - 提供健康狀態評估
+reference_solution: |-
+  助手應解析 2000 筆日誌條目並產出：
+
+  **日誌總覽：**
+  - 2000 筆條目，全部來自 2008 年 11 月 9 日（081109），涵蓋約 28 秒（203518–203546）
+  - 所有條目皆為 INFO 級別 — 無 WARN 或 ERROR 條目
+
+  **區塊操作：**
+  - Receiving block：約 1149 筆
+  - Allocate block：約 385 筆
+  - Received block（已確認）：約 19 筆
+  - addStoredBlock：約 19 筆
+  - PacketResponder：約 12 筆
+  - 複製請求：4 筆
+
+  **複製細節：**
+  - 區塊 blk_-1608999687919862906 有 4 筆複製請求：
+    - 10.250.14.224 → 10.251.215.16
+    - 10.251.215.16 → 10.251.74.79
+    - 10.251.107.19 → 10.251.31.5
+    - 10.251.31.5 → 10.251.90.64
+
+  **健康狀態評估：**
+  - 無任何錯誤或警告 — 叢集看似健康
+  - 大量「Receiving block」條目（1149）卻只有相對少量的確認（19），顯示高度併發（concurrency）
+  - 單一區塊跨多個節點的複製活動是正常的 HDFS 行為
+
+  可接受的差異：
+  - 確切計數可能因解析方式而略有不同
+  - 評估用語會有所不同
+  - 將狀況描述為「無失敗」或「可能有未完成操作」皆屬有效
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: hdfs_datanode.log
+    source: logs/hdfs_datanode.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

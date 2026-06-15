@@ -1,0 +1,1184 @@
+{
+  "generated_by": "convert_pinchbench_to_claw_eval_zh.py",
+  "conversion_stage": "phase2_full_traditional_chinese",
+  "total_source_tasks": 147,
+  "total_tasks_zh": 147,
+  "total_claw_eval_zh": 147,
+  "fully_translated_count": 147,
+  "manual_review_required_count": 138,
+  "tasks_with_todo": 0,
+  "tasks_with_untranslated_english_prompt": 0,
+  "tasks_with_english_output_grader_assumption": 63,
+  "tasks_with_live_web_dependency": 16,
+  "tasks_with_safety_sensitive_domain": 38,
+  "simplified_char_findings": 0,
+  "english_leakage_findings": 0,
+  "grader_modified_count": 1,
+  "safety_sensitive_count": 38,
+  "multi_turn_count": 4,
+  "multimodal_count": 12,
+  "integration_count": 4,
+  "failed_tasks": [],
+  "details": {
+    "translated": [
+      {
+        "task_id": "task_sanity",
+        "claw_eval_id": "P001zh_sanity"
+      },
+      {
+        "task_id": "task_calendar",
+        "claw_eval_id": "P002zh_calendar"
+      },
+      {
+        "task_id": "task_pdf_to_calendar",
+        "claw_eval_id": "P003zh_pdf_to_calendar"
+      },
+      {
+        "task_id": "task_todo_list_cleanup",
+        "claw_eval_id": "P004zh_todo_list_cleanup"
+      },
+      {
+        "task_id": "task_daily_summary",
+        "claw_eval_id": "P005zh_daily_summary"
+      },
+      {
+        "task_id": "task_email_triage",
+        "claw_eval_id": "P006zh_email_triage"
+      },
+      {
+        "task_id": "task_cron_organizer",
+        "claw_eval_id": "P007zh_cron_organizer"
+      },
+      {
+        "task_id": "task_subway_navigation",
+        "claw_eval_id": "P008zh_subway_navigation"
+      },
+      {
+        "task_id": "task_stock",
+        "claw_eval_id": "P009zh_stock"
+      },
+      {
+        "task_id": "task_events",
+        "claw_eval_id": "P010zh_events"
+      },
+      {
+        "task_id": "task_market_research",
+        "claw_eval_id": "P011zh_market_research"
+      },
+      {
+        "task_id": "task_polymarket_briefing",
+        "claw_eval_id": "P012zh_polymarket_briefing"
+      },
+      {
+        "task_id": "task_executive_lookup",
+        "claw_eval_id": "P013zh_executive_lookup"
+      },
+      {
+        "task_id": "task_deep_research",
+        "claw_eval_id": "P014zh_deep_research"
+      },
+      {
+        "task_id": "task_competitive_research",
+        "claw_eval_id": "P015zh_competitive_research"
+      },
+      {
+        "task_id": "task_oss_alternative_research",
+        "claw_eval_id": "P016zh_oss_alternative_research"
+      },
+      {
+        "task_id": "task_pricing_research",
+        "claw_eval_id": "P017zh_pricing_research"
+      },
+      {
+        "task_id": "task_it_procurement",
+        "claw_eval_id": "P018zh_it_procurement"
+      },
+      {
+        "task_id": "task_eu_regulation_research",
+        "claw_eval_id": "P019zh_eu_regulation_research"
+      },
+      {
+        "task_id": "task_byok_best_practices",
+        "claw_eval_id": "P020zh_byok_best_practices"
+      },
+      {
+        "task_id": "task_blog",
+        "claw_eval_id": "P021zh_blog"
+      },
+      {
+        "task_id": "task_email",
+        "claw_eval_id": "P022zh_email"
+      },
+      {
+        "task_id": "task_email_reply_drafting",
+        "claw_eval_id": "P023zh_email_reply_drafting"
+      },
+      {
+        "task_id": "task_humanizer",
+        "claw_eval_id": "P024zh_humanizer"
+      },
+      {
+        "task_id": "task_commit_message_writer",
+        "claw_eval_id": "P025zh_commit_message_writer"
+      },
+      {
+        "task_id": "task_readme_generation",
+        "claw_eval_id": "P026zh_readme_generation"
+      },
+      {
+        "task_id": "task_weather",
+        "claw_eval_id": "P027zh_weather"
+      },
+      {
+        "task_id": "task_shell_command_generator",
+        "claw_eval_id": "P028zh_shell_command_generator"
+      },
+      {
+        "task_id": "task_multi_file_refactoring",
+        "claw_eval_id": "P029zh_multi_file_refactoring"
+      },
+      {
+        "task_id": "task_dockerfile_optimization",
+        "claw_eval_id": "P030zh_dockerfile_optimization"
+      },
+      {
+        "task_id": "task_playwright_e2e",
+        "claw_eval_id": "P031zh_playwright_e2e"
+      },
+      {
+        "task_id": "task_git_rescue_recovery",
+        "claw_eval_id": "P032zh_git_rescue_recovery"
+      },
+      {
+        "task_id": "task_cicd_pipeline_debug",
+        "claw_eval_id": "P033zh_cicd_pipeline_debug"
+      },
+      {
+        "task_id": "task_test_generation",
+        "claw_eval_id": "P034zh_test_generation"
+      },
+      {
+        "task_id": "task_k8s_debugging",
+        "claw_eval_id": "P035zh_k8s_debugging"
+      },
+      {
+        "task_id": "task_selector_fix",
+        "claw_eval_id": "P036zh_selector_fix"
+      },
+      {
+        "task_id": "task_codebase_navigation",
+        "claw_eval_id": "P037zh_codebase_navigation"
+      },
+      {
+        "task_id": "task_browser_automation",
+        "claw_eval_id": "P038zh_browser_automation"
+      },
+      {
+        "task_id": "task_video_transcript_extraction",
+        "claw_eval_id": "P039zh_video_transcript_extraction"
+      },
+      {
+        "task_id": "task_iterative_code_refine",
+        "claw_eval_id": "P040zh_iterative_code_refine"
+      },
+      {
+        "task_id": "task_summary",
+        "claw_eval_id": "P041zh_summary"
+      },
+      {
+        "task_id": "task_spreadsheet_summary",
+        "claw_eval_id": "P042zh_spreadsheet_summary"
+      },
+      {
+        "task_id": "task_eli5_pdf_summary",
+        "claw_eval_id": "P043zh_eli5_pdf_summary"
+      },
+      {
+        "task_id": "task_openclaw_comprehension",
+        "claw_eval_id": "P044zh_openclaw_comprehension"
+      },
+      {
+        "task_id": "task_email_search",
+        "claw_eval_id": "P045zh_email_search"
+      },
+      {
+        "task_id": "task_access_log_anomaly",
+        "claw_eval_id": "P046zh_access_log_anomaly"
+      },
+      {
+        "task_id": "task_financial_ratio_calculation",
+        "claw_eval_id": "P047zh_financial_ratio_calculation"
+      },
+      {
+        "task_id": "task_earnings_analysis",
+        "claw_eval_id": "P048zh_earnings_analysis"
+      },
+      {
+        "task_id": "task_contract_analysis",
+        "claw_eval_id": "P049zh_contract_analysis"
+      },
+      {
+        "task_id": "task_image_identification",
+        "claw_eval_id": "P050zh_image_identification"
+      },
+      {
+        "task_id": "task_cve_security_triage",
+        "claw_eval_id": "P051zh_cve_security_triage"
+      },
+      {
+        "task_id": "task_session_chain_analysis",
+        "claw_eval_id": "P052zh_session_chain_analysis"
+      },
+      {
+        "task_id": "task_csv_stock_trend",
+        "claw_eval_id": "P053zh_csv_stock_trend"
+      },
+      {
+        "task_id": "task_csv_stock_volatility",
+        "claw_eval_id": "P054zh_csv_stock_volatility"
+      },
+      {
+        "task_id": "task_csv_stock_best_worst",
+        "claw_eval_id": "P055zh_csv_stock_best_worst"
+      },
+      {
+        "task_id": "task_csv_finance_report",
+        "claw_eval_id": "P056zh_csv_finance_report"
+      },
+      {
+        "task_id": "task_csv_temp_anomalies",
+        "claw_eval_id": "P057zh_csv_temp_anomalies"
+      },
+      {
+        "task_id": "task_csv_temp_trend",
+        "claw_eval_id": "P058zh_csv_temp_trend"
+      },
+      {
+        "task_id": "task_csv_temp_decades",
+        "claw_eval_id": "P059zh_csv_temp_decades"
+      },
+      {
+        "task_id": "task_csv_life_exp_ranking",
+        "claw_eval_id": "P060zh_csv_life_exp_ranking"
+      },
+      {
+        "task_id": "task_csv_life_exp_outliers",
+        "claw_eval_id": "P061zh_csv_life_exp_outliers"
+      },
+      {
+        "task_id": "task_csv_life_exp_change",
+        "claw_eval_id": "P062zh_csv_life_exp_change"
+      },
+      {
+        "task_id": "task_csv_gdp_ranking",
+        "claw_eval_id": "P063zh_csv_gdp_ranking"
+      },
+      {
+        "task_id": "task_csv_gdp_per_capita",
+        "claw_eval_id": "P064zh_csv_gdp_per_capita"
+      },
+      {
+        "task_id": "task_csv_gdp_regions",
+        "claw_eval_id": "P065zh_csv_gdp_regions"
+      },
+      {
+        "task_id": "task_csv_stations_by_elevation",
+        "claw_eval_id": "P066zh_csv_stations_by_elevation"
+      },
+      {
+        "task_id": "task_csv_stations_coverage",
+        "claw_eval_id": "P067zh_csv_stations_coverage"
+      },
+      {
+        "task_id": "task_csv_stations_filter",
+        "claw_eval_id": "P068zh_csv_stations_filter"
+      },
+      {
+        "task_id": "task_csv_iris_summary",
+        "claw_eval_id": "P069zh_csv_iris_summary"
+      },
+      {
+        "task_id": "task_csv_iris_classify",
+        "claw_eval_id": "P070zh_csv_iris_classify"
+      },
+      {
+        "task_id": "task_csv_iris_outliers",
+        "claw_eval_id": "P071zh_csv_iris_outliers"
+      },
+      {
+        "task_id": "task_csv_cities_ranking",
+        "claw_eval_id": "P072zh_csv_cities_ranking"
+      },
+      {
+        "task_id": "task_csv_cities_filter",
+        "claw_eval_id": "P073zh_csv_cities_filter"
+      },
+      {
+        "task_id": "task_csv_cities_density",
+        "claw_eval_id": "P074zh_csv_cities_density"
+      },
+      {
+        "task_id": "task_csv_cities_growth",
+        "claw_eval_id": "P075zh_csv_cities_growth"
+      },
+      {
+        "task_id": "task_csv_pension_ranking",
+        "claw_eval_id": "P076zh_csv_pension_ranking"
+      },
+      {
+        "task_id": "task_csv_pension_liability",
+        "claw_eval_id": "P077zh_csv_pension_liability"
+      },
+      {
+        "task_id": "task_csv_pension_risk",
+        "claw_eval_id": "P078zh_csv_pension_risk"
+      },
+      {
+        "task_id": "task_log_apache_client_issues",
+        "claw_eval_id": "P079zh_log_apache_client_issues"
+      },
+      {
+        "task_id": "task_log_apache_top_errors",
+        "claw_eval_id": "P080zh_log_apache_top_errors"
+      },
+      {
+        "task_id": "task_log_apache_error_summary",
+        "claw_eval_id": "P081zh_log_apache_error_summary"
+      },
+      {
+        "task_id": "task_log_apache_critical",
+        "claw_eval_id": "P082zh_log_apache_critical"
+      },
+      {
+        "task_id": "task_log_apache_timeline",
+        "claw_eval_id": "P083zh_log_apache_timeline"
+      },
+      {
+        "task_id": "task_log_syslog_boot",
+        "claw_eval_id": "P084zh_log_syslog_boot"
+      },
+      {
+        "task_id": "task_log_nginx_status_codes",
+        "claw_eval_id": "P085zh_log_nginx_status_codes"
+      },
+      {
+        "task_id": "task_log_nginx_traffic",
+        "claw_eval_id": "P086zh_log_nginx_traffic"
+      },
+      {
+        "task_id": "task_log_nginx_slow_requests",
+        "claw_eval_id": "P087zh_log_nginx_slow_requests"
+      },
+      {
+        "task_id": "task_log_nginx_user_agents",
+        "claw_eval_id": "P088zh_log_nginx_user_agents"
+      },
+      {
+        "task_id": "task_log_nginx_errors",
+        "claw_eval_id": "P089zh_log_nginx_errors"
+      },
+      {
+        "task_id": "task_log_ssh_failed_logins",
+        "claw_eval_id": "P090zh_log_ssh_failed_logins"
+      },
+      {
+        "task_id": "task_log_ssh_brute_force",
+        "claw_eval_id": "P091zh_log_ssh_brute_force"
+      },
+      {
+        "task_id": "task_log_ssh_successful",
+        "claw_eval_id": "P092zh_log_ssh_successful"
+      },
+      {
+        "task_id": "task_log_ssh_user_activity",
+        "claw_eval_id": "P093zh_log_ssh_user_activity"
+      },
+      {
+        "task_id": "task_log_ssh_unusual_times",
+        "claw_eval_id": "P094zh_log_ssh_unusual_times"
+      },
+      {
+        "task_id": "task_log_hdfs_failures",
+        "claw_eval_id": "P095zh_log_hdfs_failures"
+      },
+      {
+        "task_id": "task_log_hdfs_connections",
+        "claw_eval_id": "P096zh_log_hdfs_connections"
+      },
+      {
+        "task_id": "task_log_hdfs_slow_ops",
+        "claw_eval_id": "P097zh_log_hdfs_slow_ops"
+      },
+      {
+        "task_id": "task_log_hdfs_block_ops",
+        "claw_eval_id": "P098zh_log_hdfs_block_ops"
+      },
+      {
+        "task_id": "task_log_hdfs_storage",
+        "claw_eval_id": "P099zh_log_hdfs_storage"
+      },
+      {
+        "task_id": "task_log_mapreduce_jobs",
+        "claw_eval_id": "P100zh_log_mapreduce_jobs"
+      },
+      {
+        "task_id": "task_log_mapreduce_failures",
+        "claw_eval_id": "P101zh_log_mapreduce_failures"
+      },
+      {
+        "task_id": "task_log_mapreduce_slow_tasks",
+        "claw_eval_id": "P102zh_log_mapreduce_slow_tasks"
+      },
+      {
+        "task_id": "task_log_mapreduce_resources",
+        "claw_eval_id": "P103zh_log_mapreduce_resources"
+      },
+      {
+        "task_id": "task_log_mapreduce_timeline",
+        "claw_eval_id": "P104zh_log_mapreduce_timeline"
+      },
+      {
+        "task_id": "task_log_syslog_anomalies",
+        "claw_eval_id": "P105zh_log_syslog_anomalies"
+      },
+      {
+        "task_id": "task_log_syslog_services",
+        "claw_eval_id": "P106zh_log_syslog_services"
+      },
+      {
+        "task_id": "task_log_syslog_cron",
+        "claw_eval_id": "P107zh_log_syslog_cron"
+      },
+      {
+        "task_id": "task_log_syslog_auth_failures",
+        "claw_eval_id": "P108zh_log_syslog_auth_failures"
+      },
+      {
+        "task_id": "task_meeting_council_votes",
+        "claw_eval_id": "P109zh_meeting_council_votes"
+      },
+      {
+        "task_id": "task_meeting_council_public_comment",
+        "claw_eval_id": "P110zh_meeting_council_public_comment"
+      },
+      {
+        "task_id": "task_meeting_council_budget",
+        "claw_eval_id": "P111zh_meeting_council_budget"
+      },
+      {
+        "task_id": "task_meeting_council_upcoming",
+        "claw_eval_id": "P112zh_meeting_council_upcoming"
+      },
+      {
+        "task_id": "task_meeting_council_contact_info",
+        "claw_eval_id": "P113zh_meeting_council_contact_info"
+      },
+      {
+        "task_id": "task_meeting_council_neighborhood",
+        "claw_eval_id": "P114zh_meeting_council_neighborhood"
+      },
+      {
+        "task_id": "task_meeting_tech_action_items",
+        "claw_eval_id": "P115zh_meeting_tech_action_items"
+      },
+      {
+        "task_id": "task_meeting_tech_decisions",
+        "claw_eval_id": "P116zh_meeting_tech_decisions"
+      },
+      {
+        "task_id": "task_meeting_tech_competitors",
+        "claw_eval_id": "P117zh_meeting_tech_competitors"
+      },
+      {
+        "task_id": "task_meeting_tech_messaging",
+        "claw_eval_id": "P118zh_meeting_tech_messaging"
+      },
+      {
+        "task_id": "task_meeting_tech_product_features",
+        "claw_eval_id": "P119zh_meeting_tech_product_features"
+      },
+      {
+        "task_id": "task_meeting_advisory_attendees",
+        "claw_eval_id": "P120zh_meeting_advisory_attendees"
+      },
+      {
+        "task_id": "task_meeting_advisory_stakeholders",
+        "claw_eval_id": "P121zh_meeting_advisory_stakeholders"
+      },
+      {
+        "task_id": "task_meeting_advisory_technical",
+        "claw_eval_id": "P122zh_meeting_advisory_technical"
+      },
+      {
+        "task_id": "task_meeting_advisory_timeline",
+        "claw_eval_id": "P123zh_meeting_advisory_timeline"
+      },
+      {
+        "task_id": "task_meeting_advisory_acronyms",
+        "claw_eval_id": "P124zh_meeting_advisory_acronyms"
+      },
+      {
+        "task_id": "task_meeting_executive_summary",
+        "claw_eval_id": "P125zh_meeting_executive_summary"
+      },
+      {
+        "task_id": "task_meeting_sentiment_analysis",
+        "claw_eval_id": "P126zh_meeting_sentiment_analysis"
+      },
+      {
+        "task_id": "task_meeting_follow_up_email",
+        "claw_eval_id": "P127zh_meeting_follow_up_email"
+      },
+      {
+        "task_id": "task_meeting_blog_post",
+        "claw_eval_id": "P128zh_meeting_blog_post"
+      },
+      {
+        "task_id": "task_meeting_tldr",
+        "claw_eval_id": "P129zh_meeting_tldr"
+      },
+      {
+        "task_id": "task_meeting_searchable_index",
+        "claw_eval_id": "P130zh_meeting_searchable_index"
+      },
+      {
+        "task_id": "task_meeting_gov_speaker_summary",
+        "claw_eval_id": "P131zh_meeting_gov_speaker_summary"
+      },
+      {
+        "task_id": "task_meeting_gov_qa_extract",
+        "claw_eval_id": "P132zh_meeting_gov_qa_extract"
+      },
+      {
+        "task_id": "task_meeting_gov_recommendations",
+        "claw_eval_id": "P133zh_meeting_gov_recommendations"
+      },
+      {
+        "task_id": "task_meeting_gov_data_sources",
+        "claw_eval_id": "P134zh_meeting_gov_data_sources"
+      },
+      {
+        "task_id": "task_meeting_gov_controversy",
+        "claw_eval_id": "P135zh_meeting_gov_controversy"
+      },
+      {
+        "task_id": "task_meeting_gov_next_steps",
+        "claw_eval_id": "P136zh_meeting_gov_next_steps"
+      },
+      {
+        "task_id": "task_memory",
+        "claw_eval_id": "P137zh_memory"
+      },
+      {
+        "task_id": "task_second_brain",
+        "claw_eval_id": "P138zh_second_brain"
+      },
+      {
+        "task_id": "task_files",
+        "claw_eval_id": "P139zh_files"
+      },
+      {
+        "task_id": "task_workflow",
+        "claw_eval_id": "P140zh_workflow"
+      },
+      {
+        "task_id": "task_clawdhub",
+        "claw_eval_id": "P141zh_clawdhub"
+      },
+      {
+        "task_id": "task_skill_search",
+        "claw_eval_id": "P142zh_skill_search"
+      },
+      {
+        "task_id": "task_image_gen",
+        "claw_eval_id": "P143zh_image_gen"
+      },
+      {
+        "task_id": "task_gh_issue_triage",
+        "claw_eval_id": "P144zh_gh_issue_triage"
+      },
+      {
+        "task_id": "task_gws_email_triage",
+        "claw_eval_id": "P145zh_gws_email_triage"
+      },
+      {
+        "task_id": "task_gws_cross_service",
+        "claw_eval_id": "P146zh_gws_cross_service"
+      },
+      {
+        "task_id": "task_gws_task_management",
+        "claw_eval_id": "P147zh_gws_task_management"
+      }
+    ],
+    "todo": [],
+    "untranslated_english_prompt": [],
+    "english_output_grader_assumption": [
+      {
+        "task_id": "task_calendar",
+        "claw_eval_id": "P002zh_calendar"
+      },
+      {
+        "task_id": "task_email_triage",
+        "claw_eval_id": "P006zh_email_triage"
+      },
+      {
+        "task_id": "task_stock",
+        "claw_eval_id": "P009zh_stock"
+      },
+      {
+        "task_id": "task_market_research",
+        "claw_eval_id": "P011zh_market_research"
+      },
+      {
+        "task_id": "task_weather",
+        "claw_eval_id": "P027zh_weather"
+      },
+      {
+        "task_id": "task_shell_command_generator",
+        "claw_eval_id": "P028zh_shell_command_generator"
+      },
+      {
+        "task_id": "task_playwright_e2e",
+        "claw_eval_id": "P031zh_playwright_e2e"
+      },
+      {
+        "task_id": "task_git_rescue_recovery",
+        "claw_eval_id": "P032zh_git_rescue_recovery"
+      },
+      {
+        "task_id": "task_test_generation",
+        "claw_eval_id": "P034zh_test_generation"
+      },
+      {
+        "task_id": "task_iterative_code_refine",
+        "claw_eval_id": "P040zh_iterative_code_refine"
+      },
+      {
+        "task_id": "task_spreadsheet_summary",
+        "claw_eval_id": "P042zh_spreadsheet_summary"
+      },
+      {
+        "task_id": "task_email_search",
+        "claw_eval_id": "P045zh_email_search"
+      },
+      {
+        "task_id": "task_access_log_anomaly",
+        "claw_eval_id": "P046zh_access_log_anomaly"
+      },
+      {
+        "task_id": "task_cve_security_triage",
+        "claw_eval_id": "P051zh_cve_security_triage"
+      },
+      {
+        "task_id": "task_csv_stock_trend",
+        "claw_eval_id": "P053zh_csv_stock_trend"
+      },
+      {
+        "task_id": "task_csv_stock_volatility",
+        "claw_eval_id": "P054zh_csv_stock_volatility"
+      },
+      {
+        "task_id": "task_csv_stock_best_worst",
+        "claw_eval_id": "P055zh_csv_stock_best_worst"
+      },
+      {
+        "task_id": "task_csv_temp_anomalies",
+        "claw_eval_id": "P057zh_csv_temp_anomalies"
+      },
+      {
+        "task_id": "task_csv_temp_trend",
+        "claw_eval_id": "P058zh_csv_temp_trend"
+      },
+      {
+        "task_id": "task_csv_life_exp_ranking",
+        "claw_eval_id": "P060zh_csv_life_exp_ranking"
+      },
+      {
+        "task_id": "task_csv_life_exp_outliers",
+        "claw_eval_id": "P061zh_csv_life_exp_outliers"
+      },
+      {
+        "task_id": "task_csv_life_exp_change",
+        "claw_eval_id": "P062zh_csv_life_exp_change"
+      },
+      {
+        "task_id": "task_csv_gdp_ranking",
+        "claw_eval_id": "P063zh_csv_gdp_ranking"
+      },
+      {
+        "task_id": "task_csv_gdp_per_capita",
+        "claw_eval_id": "P064zh_csv_gdp_per_capita"
+      },
+      {
+        "task_id": "task_csv_gdp_regions",
+        "claw_eval_id": "P065zh_csv_gdp_regions"
+      },
+      {
+        "task_id": "task_csv_stations_by_elevation",
+        "claw_eval_id": "P066zh_csv_stations_by_elevation"
+      },
+      {
+        "task_id": "task_csv_iris_summary",
+        "claw_eval_id": "P069zh_csv_iris_summary"
+      },
+      {
+        "task_id": "task_csv_iris_classify",
+        "claw_eval_id": "P070zh_csv_iris_classify"
+      },
+      {
+        "task_id": "task_csv_iris_outliers",
+        "claw_eval_id": "P071zh_csv_iris_outliers"
+      },
+      {
+        "task_id": "task_csv_cities_density",
+        "claw_eval_id": "P074zh_csv_cities_density"
+      },
+      {
+        "task_id": "task_csv_pension_liability",
+        "claw_eval_id": "P077zh_csv_pension_liability"
+      },
+      {
+        "task_id": "task_csv_pension_risk",
+        "claw_eval_id": "P078zh_csv_pension_risk"
+      },
+      {
+        "task_id": "task_log_apache_error_summary",
+        "claw_eval_id": "P081zh_log_apache_error_summary"
+      },
+      {
+        "task_id": "task_log_apache_timeline",
+        "claw_eval_id": "P083zh_log_apache_timeline"
+      },
+      {
+        "task_id": "task_log_nginx_status_codes",
+        "claw_eval_id": "P085zh_log_nginx_status_codes"
+      },
+      {
+        "task_id": "task_log_ssh_failed_logins",
+        "claw_eval_id": "P090zh_log_ssh_failed_logins"
+      },
+      {
+        "task_id": "task_log_ssh_successful",
+        "claw_eval_id": "P092zh_log_ssh_successful"
+      },
+      {
+        "task_id": "task_log_ssh_unusual_times",
+        "claw_eval_id": "P094zh_log_ssh_unusual_times"
+      },
+      {
+        "task_id": "task_log_hdfs_block_ops",
+        "claw_eval_id": "P098zh_log_hdfs_block_ops"
+      },
+      {
+        "task_id": "task_log_mapreduce_jobs",
+        "claw_eval_id": "P100zh_log_mapreduce_jobs"
+      },
+      {
+        "task_id": "task_log_mapreduce_failures",
+        "claw_eval_id": "P101zh_log_mapreduce_failures"
+      },
+      {
+        "task_id": "task_log_syslog_anomalies",
+        "claw_eval_id": "P105zh_log_syslog_anomalies"
+      },
+      {
+        "task_id": "task_log_syslog_services",
+        "claw_eval_id": "P106zh_log_syslog_services"
+      },
+      {
+        "task_id": "task_log_syslog_auth_failures",
+        "claw_eval_id": "P108zh_log_syslog_auth_failures"
+      },
+      {
+        "task_id": "task_meeting_council_votes",
+        "claw_eval_id": "P109zh_meeting_council_votes"
+      },
+      {
+        "task_id": "task_meeting_council_public_comment",
+        "claw_eval_id": "P110zh_meeting_council_public_comment"
+      },
+      {
+        "task_id": "task_meeting_council_budget",
+        "claw_eval_id": "P111zh_meeting_council_budget"
+      },
+      {
+        "task_id": "task_meeting_tech_decisions",
+        "claw_eval_id": "P116zh_meeting_tech_decisions"
+      },
+      {
+        "task_id": "task_meeting_advisory_attendees",
+        "claw_eval_id": "P120zh_meeting_advisory_attendees"
+      },
+      {
+        "task_id": "task_meeting_executive_summary",
+        "claw_eval_id": "P125zh_meeting_executive_summary"
+      },
+      {
+        "task_id": "task_meeting_sentiment_analysis",
+        "claw_eval_id": "P126zh_meeting_sentiment_analysis"
+      },
+      {
+        "task_id": "task_meeting_follow_up_email",
+        "claw_eval_id": "P127zh_meeting_follow_up_email"
+      },
+      {
+        "task_id": "task_meeting_blog_post",
+        "claw_eval_id": "P128zh_meeting_blog_post"
+      },
+      {
+        "task_id": "task_meeting_tldr",
+        "claw_eval_id": "P129zh_meeting_tldr"
+      },
+      {
+        "task_id": "task_meeting_gov_speaker_summary",
+        "claw_eval_id": "P131zh_meeting_gov_speaker_summary"
+      },
+      {
+        "task_id": "task_meeting_gov_recommendations",
+        "claw_eval_id": "P133zh_meeting_gov_recommendations"
+      },
+      {
+        "task_id": "task_meeting_gov_data_sources",
+        "claw_eval_id": "P134zh_meeting_gov_data_sources"
+      },
+      {
+        "task_id": "task_meeting_gov_controversy",
+        "claw_eval_id": "P135zh_meeting_gov_controversy"
+      },
+      {
+        "task_id": "task_meeting_gov_next_steps",
+        "claw_eval_id": "P136zh_meeting_gov_next_steps"
+      },
+      {
+        "task_id": "task_image_gen",
+        "claw_eval_id": "P143zh_image_gen"
+      },
+      {
+        "task_id": "task_gws_email_triage",
+        "claw_eval_id": "P145zh_gws_email_triage"
+      },
+      {
+        "task_id": "task_gws_cross_service",
+        "claw_eval_id": "P146zh_gws_cross_service"
+      },
+      {
+        "task_id": "task_gws_task_management",
+        "claw_eval_id": "P147zh_gws_task_management"
+      }
+    ],
+    "live_web_dependency": [
+      {
+        "task_id": "task_stock",
+        "claw_eval_id": "P009zh_stock"
+      },
+      {
+        "task_id": "task_events",
+        "claw_eval_id": "P010zh_events"
+      },
+      {
+        "task_id": "task_market_research",
+        "claw_eval_id": "P011zh_market_research"
+      },
+      {
+        "task_id": "task_polymarket_briefing",
+        "claw_eval_id": "P012zh_polymarket_briefing"
+      },
+      {
+        "task_id": "task_executive_lookup",
+        "claw_eval_id": "P013zh_executive_lookup"
+      },
+      {
+        "task_id": "task_deep_research",
+        "claw_eval_id": "P014zh_deep_research"
+      },
+      {
+        "task_id": "task_competitive_research",
+        "claw_eval_id": "P015zh_competitive_research"
+      },
+      {
+        "task_id": "task_oss_alternative_research",
+        "claw_eval_id": "P016zh_oss_alternative_research"
+      },
+      {
+        "task_id": "task_pricing_research",
+        "claw_eval_id": "P017zh_pricing_research"
+      },
+      {
+        "task_id": "task_it_procurement",
+        "claw_eval_id": "P018zh_it_procurement"
+      },
+      {
+        "task_id": "task_eu_regulation_research",
+        "claw_eval_id": "P019zh_eu_regulation_research"
+      },
+      {
+        "task_id": "task_byok_best_practices",
+        "claw_eval_id": "P020zh_byok_best_practices"
+      },
+      {
+        "task_id": "task_weather",
+        "claw_eval_id": "P027zh_weather"
+      },
+      {
+        "task_id": "task_codebase_navigation",
+        "claw_eval_id": "P037zh_codebase_navigation"
+      },
+      {
+        "task_id": "task_video_transcript_extraction",
+        "claw_eval_id": "P039zh_video_transcript_extraction"
+      },
+      {
+        "task_id": "task_skill_search",
+        "claw_eval_id": "P142zh_skill_search"
+      }
+    ],
+    "safety_sensitive_domain": [
+      {
+        "task_id": "task_calendar",
+        "claw_eval_id": "P002zh_calendar"
+      },
+      {
+        "task_id": "task_todo_list_cleanup",
+        "claw_eval_id": "P004zh_todo_list_cleanup"
+      },
+      {
+        "task_id": "task_email_triage",
+        "claw_eval_id": "P006zh_email_triage"
+      },
+      {
+        "task_id": "task_stock",
+        "claw_eval_id": "P009zh_stock"
+      },
+      {
+        "task_id": "task_executive_lookup",
+        "claw_eval_id": "P013zh_executive_lookup"
+      },
+      {
+        "task_id": "task_eu_regulation_research",
+        "claw_eval_id": "P019zh_eu_regulation_research"
+      },
+      {
+        "task_id": "task_byok_best_practices",
+        "claw_eval_id": "P020zh_byok_best_practices"
+      },
+      {
+        "task_id": "task_email",
+        "claw_eval_id": "P022zh_email"
+      },
+      {
+        "task_id": "task_email_reply_drafting",
+        "claw_eval_id": "P023zh_email_reply_drafting"
+      },
+      {
+        "task_id": "task_playwright_e2e",
+        "claw_eval_id": "P031zh_playwright_e2e"
+      },
+      {
+        "task_id": "task_cicd_pipeline_debug",
+        "claw_eval_id": "P033zh_cicd_pipeline_debug"
+      },
+      {
+        "task_id": "task_test_generation",
+        "claw_eval_id": "P034zh_test_generation"
+      },
+      {
+        "task_id": "task_k8s_debugging",
+        "claw_eval_id": "P035zh_k8s_debugging"
+      },
+      {
+        "task_id": "task_browser_automation",
+        "claw_eval_id": "P038zh_browser_automation"
+      },
+      {
+        "task_id": "task_spreadsheet_summary",
+        "claw_eval_id": "P042zh_spreadsheet_summary"
+      },
+      {
+        "task_id": "task_openclaw_comprehension",
+        "claw_eval_id": "P044zh_openclaw_comprehension"
+      },
+      {
+        "task_id": "task_email_search",
+        "claw_eval_id": "P045zh_email_search"
+      },
+      {
+        "task_id": "task_financial_ratio_calculation",
+        "claw_eval_id": "P047zh_financial_ratio_calculation"
+      },
+      {
+        "task_id": "task_earnings_analysis",
+        "claw_eval_id": "P048zh_earnings_analysis"
+      },
+      {
+        "task_id": "task_contract_analysis",
+        "claw_eval_id": "P049zh_contract_analysis"
+      },
+      {
+        "task_id": "task_csv_stock_trend",
+        "claw_eval_id": "P053zh_csv_stock_trend"
+      },
+      {
+        "task_id": "task_csv_stock_volatility",
+        "claw_eval_id": "P054zh_csv_stock_volatility"
+      },
+      {
+        "task_id": "task_csv_stock_best_worst",
+        "claw_eval_id": "P055zh_csv_stock_best_worst"
+      },
+      {
+        "task_id": "task_csv_finance_report",
+        "claw_eval_id": "P056zh_csv_finance_report"
+      },
+      {
+        "task_id": "task_csv_pension_ranking",
+        "claw_eval_id": "P076zh_csv_pension_ranking"
+      },
+      {
+        "task_id": "task_csv_pension_liability",
+        "claw_eval_id": "P077zh_csv_pension_liability"
+      },
+      {
+        "task_id": "task_csv_pension_risk",
+        "claw_eval_id": "P078zh_csv_pension_risk"
+      },
+      {
+        "task_id": "task_log_ssh_failed_logins",
+        "claw_eval_id": "P090zh_log_ssh_failed_logins"
+      },
+      {
+        "task_id": "task_log_ssh_successful",
+        "claw_eval_id": "P092zh_log_ssh_successful"
+      },
+      {
+        "task_id": "task_log_ssh_user_activity",
+        "claw_eval_id": "P093zh_log_ssh_user_activity"
+      },
+      {
+        "task_id": "task_meeting_council_budget",
+        "claw_eval_id": "P111zh_meeting_council_budget"
+      },
+      {
+        "task_id": "task_meeting_follow_up_email",
+        "claw_eval_id": "P127zh_meeting_follow_up_email"
+      },
+      {
+        "task_id": "task_meeting_gov_speaker_summary",
+        "claw_eval_id": "P131zh_meeting_gov_speaker_summary"
+      },
+      {
+        "task_id": "task_second_brain",
+        "claw_eval_id": "P138zh_second_brain"
+      },
+      {
+        "task_id": "task_gh_issue_triage",
+        "claw_eval_id": "P144zh_gh_issue_triage"
+      },
+      {
+        "task_id": "task_gws_email_triage",
+        "claw_eval_id": "P145zh_gws_email_triage"
+      },
+      {
+        "task_id": "task_gws_cross_service",
+        "claw_eval_id": "P146zh_gws_cross_service"
+      },
+      {
+        "task_id": "task_gws_task_management",
+        "claw_eval_id": "P147zh_gws_task_management"
+      }
+    ],
+    "multi_turn": [
+      {
+        "task_id": "task_iterative_code_refine",
+        "claw_eval_id": "P040zh_iterative_code_refine"
+      },
+      {
+        "task_id": "task_session_chain_analysis",
+        "claw_eval_id": "P052zh_session_chain_analysis"
+      },
+      {
+        "task_id": "task_memory",
+        "claw_eval_id": "P137zh_memory"
+      },
+      {
+        "task_id": "task_second_brain",
+        "claw_eval_id": "P138zh_second_brain"
+      }
+    ],
+    "multimodal": [
+      {
+        "task_id": "task_eu_regulation_research",
+        "claw_eval_id": "P019zh_eu_regulation_research"
+      },
+      {
+        "task_id": "task_dockerfile_optimization",
+        "claw_eval_id": "P030zh_dockerfile_optimization"
+      },
+      {
+        "task_id": "task_playwright_e2e",
+        "claw_eval_id": "P031zh_playwright_e2e"
+      },
+      {
+        "task_id": "task_video_transcript_extraction",
+        "claw_eval_id": "P039zh_video_transcript_extraction"
+      },
+      {
+        "task_id": "task_eli5_pdf_summary",
+        "claw_eval_id": "P043zh_eli5_pdf_summary"
+      },
+      {
+        "task_id": "task_contract_analysis",
+        "claw_eval_id": "P049zh_contract_analysis"
+      },
+      {
+        "task_id": "task_image_identification",
+        "claw_eval_id": "P050zh_image_identification"
+      },
+      {
+        "task_id": "task_meeting_tech_messaging",
+        "claw_eval_id": "P118zh_meeting_tech_messaging"
+      },
+      {
+        "task_id": "task_meeting_gov_qa_extract",
+        "claw_eval_id": "P132zh_meeting_gov_qa_extract"
+      },
+      {
+        "task_id": "task_meeting_gov_data_sources",
+        "claw_eval_id": "P134zh_meeting_gov_data_sources"
+      },
+      {
+        "task_id": "task_meeting_gov_controversy",
+        "claw_eval_id": "P135zh_meeting_gov_controversy"
+      },
+      {
+        "task_id": "task_image_gen",
+        "claw_eval_id": "P143zh_image_gen"
+      }
+    ],
+    "integration": [
+      {
+        "task_id": "task_gh_issue_triage",
+        "claw_eval_id": "P144zh_gh_issue_triage"
+      },
+      {
+        "task_id": "task_gws_email_triage",
+        "claw_eval_id": "P145zh_gws_email_triage"
+      },
+      {
+        "task_id": "task_gws_cross_service",
+        "claw_eval_id": "P146zh_gws_cross_service"
+      },
+      {
+        "task_id": "task_gws_task_management",
+        "claw_eval_id": "P147zh_gws_task_management"
+      }
+    ],
+    "grader_modified": [
+      {
+        "task_id": "task_csv_stock_trend",
+        "claw_eval_id": "P053zh_csv_stock_trend"
+      }
+    ],
+    "simplified_char_findings": [],
+    "english_leakage_findings": []
+  }
+}

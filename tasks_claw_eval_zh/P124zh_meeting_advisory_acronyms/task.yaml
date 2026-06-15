@@ -1,0 +1,169 @@
+task_id: P124zh_meeting_advisory_acronyms
+task_name: NTIA 諮詢委員會縮寫詞彙表
+version: 0.2.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_meeting_advisory_acronyms
+  original_file: tasks/task_meeting_advisory_acronyms.md
+prompt:
+  text: |-
+    我有一份政府諮詢委員會的會議逐字稿，存放在 `meeting-transcript.md`。這是商務部頻譜管理諮詢委員會（Commerce Spectrum Management Advisory Committee, CSMAC）於 2012 年 5 月 30 日召開的會議，討論聯邦頻譜管理與共享。
+
+    請分析這份逐字稿，並在一個名為 `acronym_glossary.md` 的檔案中建立一份完整的縮寫詞彙表。對於每個找到的縮寫或簡稱，請列出：
+
+    - **縮寫（Acronym）**：逐字稿中使用的簡稱
+    - **全稱（Full form）**：它所代表的完整名稱
+    - **脈絡（Context）**：簡述它在本次會議中的使用方式（1-2 句）
+    - **類別（Category）**：政府機關（Government Agency）、頻譜／技術（Spectrum/Technical）、法規（Regulatory）、業界（Industry）、軍事（Military）或其他（Other）
+
+    請依縮寫的字母順序排序，並在最後附上找到的縮寫總數。
+
+    注意：有些縮寫可能在逐字稿中本身就有展開；其他則可能需要頻譜管理與電信政策的領域知識才能解讀。請擷取所有出現的縮寫，包含只出現一次的。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+  dest: meeting-transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立 `acronym_glossary.md` 檔案
+- CSMAC 正確展開
+- NTIA 正確展開
+- 辨識出至少 15 個不重複的縮寫
+- 辨識出至少 20 個不重複的縮寫（加分門檻）
+- 包含技術類縮寫（MHz、GHz、LTE、UAV、STA）
+- 包含政府機關（FCC、DoD、DHS、OMB、OSTP）
+- 對各項目套用類別或分組
+- 採用字母順序排序
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：縮寫涵蓋度（權重 35%）
+
+  **1.0 分**：辨識出 25 個以上縮寫，包含冷僻的如 CSEA、ISART、TSB、CMRS，以及脈絡性用法如 NFL（隱喻）與 TMI。既涵蓋明顯的政府縮寫，也涵蓋技術性頻譜術語。
+
+  **0.75 分**：辨識出 20-24 個縮寫，涵蓋多數主要類別。
+
+  **0.5 分**：辨識出 15-19 個縮寫，涵蓋明顯的縮寫，但漏掉數個領域專有術語。
+
+  **0.25 分**：辨識出 10-14 個縮寫，大多只是廣為人知的政府機關。
+
+  **0.0 分**：辨識出的縮寫少於 10 個。
+
+  ### 評分項 2：展開準確性（權重 30%）
+
+  **1.0 分**：所有縮寫展開皆正確。領域專有術語（CSEA、CSMAC、CMRS、ISART、TSB 10F）準確展開。
+
+  **0.75 分**：多數展開正確，僅有一兩處小錯。
+
+  **0.5 分**：常見縮寫正確，但數個領域專有縮寫錯誤或缺少展開。
+
+  **0.25 分**：多處展開錯誤。
+
+  **0.0 分**：展開大多錯誤或捏造。
+
+  ### 評分項 3：脈絡品質（權重 20%）
+
+  **1.0 分**：每筆項目都包含有意義且貼合本次會議的脈絡描述，說明該縮寫與此次 CSMAC 討論的關聯。
+
+  **0.75 分**：多數項目有實用的脈絡。
+
+  **0.5 分**：有脈絡但偏籠統（只是重述展開，而非會議脈絡）。
+
+  **0.25 分**：脈絡極少或為樣板文字。
+
+  **0.0 分**：完全沒有提供脈絡。
+
+  ### 評分項 4：組織與分類（權重 15%）
+
+  **1.0 分**：依字母排序，分類清楚（Government、Technical、Regulatory、Industry、Military、Other），全篇格式一致。
+
+  **0.75 分**：組織良好，僅有少許格式不一致。
+
+  **0.5 分**：有一些組織，但分類或排序不完整。
+
+  **0.25 分**：組織不佳。
+
+  **0.0 分**：沒有組織。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析會議逐字稿
+  2. 辨識所有縮寫與簡稱
+  3. 由脈絡或領域知識判斷其全稱
+  4. 加以分類並排序
+
+  預期的關鍵縮寫（最低集合）：
+
+  | Acronym | Full Form | Category |
+  |---------|-----------|----------|
+  | CSMAC | Commerce Spectrum Management Advisory Committee | Government Agency |
+  | NTIA | National Telecommunications and Information Administration | Government Agency |
+  | FCC | Federal Communications Commission | Government Agency |
+  | NOAA | National Oceanic and Atmospheric Administration | Government Agency |
+  | DoD | Department of Defense | Government Agency |
+  | DHS | Department of Homeland Security | Government Agency |
+  | OMB | Office of Management and Budget | Government Agency |
+  | OSTP | Office of Science and Technology Policy | Government Agency |
+  | ITS | Institute for Telecommunication Sciences | Government Agency |
+  | ISART | International Symposium on Advanced Radio Technologies | Spectrum/Technical |
+  | MHz | Megahertz | Spectrum/Technical |
+  | GHz | Gigahertz | Spectrum/Technical |
+  | UAV | Unmanned Aerial Vehicle | Military |
+  | LTE | Long-Term Evolution | Industry |
+  | PCS | Personal Communications Service | Spectrum/Technical |
+  | AWS | Advanced Wireless Services | Spectrum/Technical |
+  | CMRS | Commercial Mobile Radio Service | Industry |
+  | STA | Special Temporary Authority | Regulatory |
+  | CSEA | Commercial Spectrum Enhancement Act | Regulatory |
+  | PCAST | President's Council of Advisors on Science and Technology | Government Agency |
+  | CTIA | Cellular Telecommunications Industry Association | Industry |
+  | TIA | Telecommunications Industry Association | Industry |
+  | TSB | Telecommunications Systems Bulletin | Spectrum/Technical |
+  | ITU-R | International Telecommunication Union - Radiocommunication | Spectrum/Technical |
+  | WRC | World Radiocommunication Conference | Spectrum/Technical |
+  | IP | Intellectual Property | Other |
+  | TMI | Too Much Information | Other |
+  | NFL | National Football League（隱喻指代大城市）| Other |
+
+  總計：約 25-30 個縮寫
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+    dest: meeting-transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

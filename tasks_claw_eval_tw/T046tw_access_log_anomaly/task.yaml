@@ -1,0 +1,143 @@
+task_id: T046tw_access_log_anomaly
+task_name: |
+  門禁紀錄異常偵測
+version: 0.3.0
+category: analysis
+difficulty: easy
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_access_log_anomaly.md
+  original_task_id: task_access_log_anomaly
+  original_file: tasks/task_access_log_anomaly.md
+prompt:
+  text: |-
+    請檢視 `access_events.csv` 中的實體門禁事件紀錄，並找出安全異常。這份紀錄涵蓋兩個實體上分開的場所：
+
+    - **HQ Building** 與 **Annex Building** —— 兩者步行相距 15 分鐘，同一張識別證（badge）無法在該時間窗內同時進出兩處
+    - **上班時間（Business hours）**為週一至週五 07:00–19:00
+    - **管制區（Restricted areas）**為任何 `door_id` 含 `SRV` 的門（伺服器機房）；僅限上班時間進入
+
+    請標記出符合下列一種或多種異常類型的每一筆事件：
+
+    | 異常類型 | 定義 |
+    |---|---|
+    | `impossible_travel` | 同一 `badge_id` 在 15 分鐘內於 HQ Building 與 Annex Building 兩處刷卡 |
+    | `after_hours_restricted` | 任何在管制門（`door_id` 含 `SRV`）於上班時間外發生的 `GRANTED` 事件 |
+    | `repeated_denials` | 同一 `badge_id` 在任意 10 分鐘窗內、於同一 `door_id` 發生 4 次以上 `DENIED` 事件 |
+
+    請把你的發現寫入 `anomaly_report.json`，格式為 JSON 陣列。每個元素必須是含下列欄位的物件：
+
+    ```json
+    {
+      "badge_id": "1042",
+      "anomaly_type": "impossible_travel",
+      "description": "Brief explanation referencing timestamps and locations"
+    }
+    ```
+
+    若未發現任何異常，請寫入空陣列 `[]`。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 90
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 工作區中已建立 anomaly_report.json
+- 識別證 1042 被標記為與不可能的行動（impossible travel）相關的異常類型
+- 識別證 2371 被標記為與下班後管制區存取（after-hours restricted）相關的異常類型
+- 識別證 3819 被標記為與重複拒絕（repeated denials）相關的異常類型
+- 識別證 6601 未被標記（三次拒絕——低於門檻）
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應讀取 `access_events.csv`，解析時間戳記與各欄位，再以程式或推理方式套用三條偵測規則。對於 `impossible_travel`，須逐張識別證比對連續事件，檢查兩棟建築是否在 15 分鐘門檻內都出現。對於 `after_hours_restricted`，須針對含 SRV 的門，檢查時間戳記的時間部分是否落在 07:00–19:00 窗外。對於 `repeated_denials`，須依識別證與門、在滾動的 10 分鐘窗內把 DENIED 事件分組。
+
+  助手應把一個格式正確的 JSON 陣列寫入 `anomaly_report.json`。描述（description）應引用所涉及的具體時間戳記或門 ID。
+
+  可接受的變化：
+  - 助手可以任意順序偵測異常
+  - 描述可詳可簡，只要準確即可
+  - 助手可在三個必要欄位之外加入額外的脈絡欄位
+  - 一筆 `impossible_travel` 異常可表示為一個項目或兩個項目（每筆事件一個），兩者皆可
+
+  助手**不應**標記：
+  - 識別證 6601，它只有連續三次拒絕（低於四次的門檻）
+  - 對非管制門的下班後存取（例如主要入口）
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - path: access_events.csv
+    content: |-
+      timestamp,badge_id,door_id,location,event_type,result
+      2026-03-10 02:17:44,2371,D-HQ-SRV-01,HQ Building - Server Room,ACCESS,GRANTED
+      2026-03-10 08:02:11,4105,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 08:05:33,1042,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 08:05:58,1042,D-ANX-MAIN-01,Annex Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 08:07:44,5280,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 08:14:22,4105,D-HQ-F2-01,HQ Building - Floor 2 Office,ACCESS,GRANTED
+      2026-03-10 08:19:05,5280,D-HQ-F2-01,HQ Building - Floor 2 Office,ACCESS,GRANTED
+      2026-03-10 08:33:17,2371,D-ANX-MAIN-01,Annex Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 08:55:41,5280,D-HQ-F3-01,HQ Building - Floor 3 Office,ACCESS,DENIED
+      2026-03-10 08:55:59,5280,D-HQ-F3-01,HQ Building - Floor 3 Office,ACCESS,DENIED
+      2026-03-10 08:56:14,5280,D-HQ-F3-01,HQ Building - Floor 3 Office,ACCESS,DENIED
+      2026-03-10 09:11:03,1042,D-HQ-SRV-01,HQ Building - Server Room,ACCESS,GRANTED
+      2026-03-10 09:44:55,4105,D-HQ-F3-01,HQ Building - Floor 3 Office,ACCESS,GRANTED
+      2026-03-10 10:02:18,5280,D-HQ-F2-01,HQ Building - Floor 2 Office,ACCESS,GRANTED
+      2026-03-10 10:28:41,2371,D-ANX-F1-01,Annex Building - Floor 1 Office,ACCESS,GRANTED
+      2026-03-10 11:15:33,4105,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 11:47:09,4105,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 12:05:22,1042,D-HQ-SRV-01,HQ Building - Server Room,ACCESS,GRANTED
+      2026-03-10 12:19:44,5280,D-HQ-F2-01,HQ Building - Floor 2 Office,ACCESS,GRANTED
+      2026-03-10 13:01:15,2371,D-ANX-F1-01,Annex Building - Floor 1 Office,ACCESS,GRANTED
+      2026-03-10 13:38:02,4105,D-HQ-F3-01,HQ Building - Floor 3 Office,ACCESS,GRANTED
+      2026-03-10 14:22:11,3819,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,DENIED
+      2026-03-10 14:22:38,3819,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,DENIED
+      2026-03-10 14:23:05,3819,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,DENIED
+      2026-03-10 14:23:32,3819,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,DENIED
+      2026-03-10 15:05:48,5280,D-HQ-F2-01,HQ Building - Floor 2 Office,ACCESS,GRANTED
+      2026-03-10 15:22:31,1042,D-HQ-F3-01,HQ Building - Floor 3 Office,ACCESS,GRANTED
+      2026-03-10 16:10:17,2371,D-ANX-MAIN-01,Annex Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 16:44:03,4105,D-HQ-F2-01,HQ Building - Floor 2 Office,ACCESS,GRANTED
+      2026-03-10 17:03:29,1042,D-HQ-SRV-01,HQ Building - Server Room,ACCESS,GRANTED
+      2026-03-10 17:55:14,5280,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 18:02:44,4105,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 18:19:08,1042,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 19:33:51,2371,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+      2026-03-10 20:15:33,6601,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,DENIED
+      2026-03-10 20:15:58,6601,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,DENIED
+      2026-03-10 20:16:24,6601,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,DENIED
+      2026-03-10 21:05:17,4105,D-HQ-MAIN-01,HQ Building - Main Entrance,ACCESS,GRANTED
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

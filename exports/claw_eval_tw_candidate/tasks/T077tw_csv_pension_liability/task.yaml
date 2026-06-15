@@ -1,0 +1,195 @@
+task_id: T077tw_csv_pension_liability
+task_name: 美國退休金負債分析
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_pension_liability.md
+  original_task_id: task_csv_pension_liability
+  original_file: tasks/task_csv_pension_liability.md
+prompt:
+  text: '我的工作區裡有一個 CSV 檔案 `us_pension_by_state.csv`，內含按州與國會選區細分的美國聯邦退休金給付資料。欄位如下：
+
+
+    - `STATE_ABBREV_NAME` — 州縮寫與名稱（例如州總計列為 "OH-OHIO Total"）
+
+    - `DISTRICT` — 國會選區號碼、"At Large" 或年份
+
+    - `PAYEE_AMOUNT` — 給付給目前退休人員的總金額（以 $ 與逗號格式化）
+
+    - `PAYEE_COUNT` — 目前領取者人數
+
+    - `DEFERRED_COUNT` — 遞延（未來）領取者人數，尚未開始請領給付
+
+
+    以 "Total" 結尾的列為州級彙總。第一列是 Grand Total。
+
+
+    請分析退休金負債曝險（liability exposure），並把你的發現寫到 `pension_liability_report.md`。你的報告應包含：
+
+
+    - 每個州的**每位領取者平均給付（average payout per payee）**——依此指標將前 10 大州排名
+
+    - 各州的**遞延總人數（total deferred count by state）**——將遞延（未來）領取者最多的前 10 大州排名
+
+    - **預估未來負債（projected future liability）**：對每個州，以該州的每位領取者平均給付乘以其遞延人數，估算未來年度負債。依此預估負債將前 10 大州排名。
+
+    - **全國摘要（national summary）**：目前年度給付總額、目前領取者總數、遞延領取者總數、整體每位領取者平均給付，以及若所有遞延領取者皆以目前平均水準請領時的預估未來負債總額
+
+    - 一段簡短的**分析**：說明哪些州代表最大的未來財務曝險，以及原因
+
+
+    請注意：預估未來負債是一個估計值，它假設遞延領取者未來將以與目前領取者相同的平均水準請領。強的回應應指出此假設及其限制。'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/us_pension_by_state.csv
+  dest: us_pension_by_state.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks:
+- 本分析僅為公開資料整理，不構成投資或退休理財建議；負債估算有其假設限制
+- 數值須以提供的 CSV 為準，不得捏造或臆測未提供的資料
+expected_actions:
+- 已建立報告檔案 `pension_liability_report.md`
+- 已計算每位領取者平均給付並列出前 10 大州
+- 已指出 Colorado 為平均給付最高（~$9,711）
+- 已列出依遞延人數排名的前 10 大州
+- 已指出 New York 為遞延人數最多（40,592）
+- 已逐州計算預估未來負債
+- 全國摘要含總金額、領取者、遞延與整體平均
+- 已估算預估未來負債總額（~$3.15B）
+- 已提供財務曝險分析
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：計算正確性（權重 35%）
+
+
+  - 1.0：所有計算正確——平均給付、遞延人數、預估負債與全國總計皆符合預期值。正確處理貨幣格式。
+
+  - 0.75：多數計算正確，僅有小幅四捨五入或一處計算錯誤。
+
+  - 0.5：核心方法正確，但有多項數值錯誤，或預估負債方法有瑕疵。
+
+  - 0.25：重大計算錯誤或對資料理解有誤。
+
+  - 0.0：未能完成計算，或結果完全錯誤。
+
+
+  ### 評分項 2：多維度分析（權重 30%）
+
+
+  - 1.0：三種排名維度皆具備（平均給付、遞延人數、預估負債），且彼此區分清楚。展現出對「高負債來自高平均給付『且』高遞延人數的組合」之理解。
+
+  - 0.75：三種維度皆具備，但其中一項不完整，或未探討維度之間的交互作用。
+
+  - 0.5：只分析三者中的兩種，或有排名但無說明。
+
+  - 0.25：只分析一種維度。
+
+  - 0.0：沒有多維度分析。
+
+
+  ### 評分項 3：財務洞見（權重 20%）
+
+
+  - 1.0：對退休金負債集中的成因提供有意義的洞見——聯邦就業模式、生活成本差異、軍事／政府存在。指出依金額排名前段的州與依平均給付排名前段的州有所不同。
+
+  - 0.75：對模式有良好觀察，並有一些脈絡推理。
+
+  - 0.5：基本觀察，缺乏更深入的財務推理。
+
+  - 0.25：除列數字外洞見極少。
+
+  - 0.0：沒有分析或洞見。
+
+
+  ### 評分項 4：報告品質（權重 15%）
+
+
+  - 1.0：報告結構良好，每項排名各有清楚分區，使用表格或清單，全國摘要顯著呈現，流程合理。
+
+  - 0.75：結構良好，僅有小問題。
+
+  - 0.5：有內容但組織不佳。
+
+  - 0.25：雜亂或區段不完整。
+
+  - 0.0：沒有報告或空白檔案。'
+reference_solution: '助手應該：
+
+
+  1. 解析 CSV，去除美元格式與逗號
+
+  2. 計算每個州的每位領取者平均給付（PAYEE_AMOUNT / PAYEE_COUNT）
+
+  3. 依平均給付排名各州——Colorado（~$9,711）、Hawaii（~$9,643）、Washington（~$9,224）居前
+
+  4. 依遞延人數排名各州——New York（40,592）、California（35,564）、Pennsylvania（34,285）居前
+
+  5. 計算每個州的預估負債（平均給付 × 遞延人數）
+
+  6. 回報全國總計：~$5.71B 目前、877,305 名領取者、483,720 遞延、~$6,510 平均
+
+  7. 計算預估未來負債總額：~$6,510 × 483,720 = ~$3.15B
+
+
+  關鍵預期數值：
+
+
+  - 整體平均給付：每位領取者 ~$6,510
+
+  - 平均給付最高：Colorado（~$9,711/領取者）、Hawaii（~$9,643/領取者）、Washington（~$9,224/領取者）
+
+  - 遞延最多：New York（40,592）、California（35,564）、Pennsylvania（34,285）
+
+  - 預估負債前段：New York、California、Ohio、Pennsylvania（高遞延人數 × 中至高平均給付）
+
+  - 全國預估未來負債：~$3.15B'
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/us_pension_by_state.csv
+    dest: us_pension_by_state.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

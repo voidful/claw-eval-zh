@@ -1,0 +1,448 @@
+# Phase 3 anchor tasks with fixture/grader changes (hand-crafted, Taiwan-localized).
+# Real TWSE data (2330 TSMC 2024) + illustrative financials fixture.
+# Graders recompute against the new fixtures; expected values verified by script.
+tasks:
+
+  task_weather:
+    task_name: "天氣腳本編寫（台北）"
+    prompt: |
+      請編寫一個名為 weather.py 的 Python 腳本：使用 wttr.in API 取得台北市（Taipei）的
+      天氣資料，並印出一段易讀的天氣摘要。請加入基本的網路錯誤處理。
+
+      wttr.in 的 JSON 介面為 https://wttr.in/Taipei?format=j1，簡易文字介面為
+      https://wttr.in/Taipei?format=3。
+    expected_behavior: |
+      助手應該：
+      1. 建立一個名為 weather.py 的檔案
+      2. 寫出向 wttr.in 發出 HTTP 請求的 Python 程式碼（地點為台北 Taipei）
+      3. 解析回應並印出易讀的天氣摘要
+      4. 包含基本的網路錯誤處理（try/except）
+      5. 使用標準函式庫或常見函式庫（requests、urllib）
+
+      注意：檔名 weather.py 與 wttr.in 網址不可更改；地點為台北（Taipei）。
+      天氣為即時資料：程式應標明資料來源（wttr.in）與查詢時間，並對即時資料的不確定性
+      有基本容錯；grader 不檢查特定天氣數值。
+    grading_criteria:
+      - "建立檔案 weather.py"
+      - "含有效的 Python 語法"
+      - "程式碼向 wttr.in 或類似天氣 API 發出 HTTP 請求"
+      - "程式碼指定台北（Taipei / 台北 / 臺北）地點"
+      - "程式碼含錯誤處理（try/except）"
+      - "程式碼會印出或輸出天氣資訊"
+      - "腳本具可執行結構"
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """Weather script grader (Taiwan: Taipei). Checks structure + HTTP + location."""
+          from pathlib import Path
+          import re, ast
+          scores = {}
+          workspace = Path(workspace_path)
+          script = workspace / "weather.py"
+          if not script.exists():
+              return {k: 0.0 for k in ["file_created", "valid_python", "has_http_request",
+                                       "references_location", "has_error_handling",
+                                       "has_output", "executable_structure"]}
+          scores["file_created"] = 1.0
+          content = script.read_text(encoding="utf-8", errors="ignore")
+          try:
+              ast.parse(content)
+              scores["valid_python"] = 1.0
+          except SyntaxError:
+              return {**scores, "valid_python": 0.0, "has_http_request": 0.0,
+                      "references_location": 0.0, "has_error_handling": 0.0,
+                      "has_output": 0.0, "executable_structure": 0.0}
+          http = [r'import\s+requests', r'from\s+requests', r'import\s+urllib',
+                  r'from\s+urllib', r'requests\.get', r'urllib\.request', r'urlopen', r'wttr\.in']
+          scores["has_http_request"] = 1.0 if any(re.search(p, content, re.I) for p in http) else 0.0
+          loc = [r'Taipei', r'台北', r'臺北']
+          scores["references_location"] = 1.0 if any(re.search(p, content, re.I) for p in loc) else 0.0
+          scores["has_error_handling"] = 1.0 if re.search(r'try\s*:|except', content) else 0.0
+          scores["has_output"] = 1.0 if re.search(r'print\s*\(|sys\.stdout', content) else 0.0
+          scores["executable_structure"] = 1.0 if re.search(
+              r'def\s+\w+\s*\(|if\s+__name__\s*==', content) else 0.5
+          return scores
+
+  task_csv_stock_trend:
+    task_name: "台積電（2330）2024 股價趨勢分析"
+    difficulty: medium
+    safety_checks:
+      - "本分析僅為歷史資料整理，不構成投資建議；過去績效不代表未來表現"
+      - "數值須以提供的 CSV 為準，不得捏造或臆測未提供的資料"
+    workspace_files:
+      - source: tw/csvs/tw_stock_2330_2024.csv
+        dest: tw_stock_2330_2024.csv
+    prompt: |
+      我的工作區裡有一個 CSV 檔案 tw_stock_2330_2024.csv，內含台積電（2330）2024 年的
+      每日收盤價。資料來自臺灣證券交易所（TWSE）公開資料。檔案有兩欄：date（日期，
+      YYYY-MM-DD 格式）與 close（收盤價，新臺幣 NT$），共 242 個交易日。
+
+      請分析台積電 2024 年整體股價趨勢，並把結果寫入檔案 stock_trend_report.md。報告需包含：
+
+      - **整體趨勢方向**（看漲 bullish／看跌 bearish／盤整 sideways）
+      - **起始價**（首個交易日）、**結束價**（最後交易日）與**整體漲跌幅百分比**
+      - **每月平均收盤價**，呈現全年走勢
+      - **關鍵趨勢區段**：最長連續上漲天數與最長連續下跌天數，並附日期
+      - **全年最高與最低收盤價**及其日期
+      - 一段全年走勢的**總結**
+
+      注意：CSV 檔名、欄名（date / close）與報告檔名 stock_trend_report.md 不可更改。
+      所有金額以新臺幣（NT$）計。
+    expected_behavior: |
+      助手應該讀取並分析 CSV，得出（已由程式從 TWSE 真實資料驗算）：
+      - 242 個交易日；起始價 NT$593.00（2024-01-02）、結束價 NT$1,075.00（2024-12-31）
+      - 整體漲跌幅約 +81.28%，趨勢明顯看漲（bullish）
+      - 每月平均收盤價由 1 月約 604 一路上升至 12 月約 1070
+      - 最長連續上漲 6 天（2024-09-18 至 2024-09-26）
+      - 最長連續下跌 4 天（2024-05-27 至 2024-05-31）
+      - 全年最高收盤價 NT$1,090.00（2024-11-08）、最低 NT$576.00（2024-01-05）
+      並輸出結構清晰的 markdown 報告。
+    grading_criteria:
+      - "建立報告檔案 stock_trend_report.md"
+      - "正確判定整體趨勢為看漲／上行"
+      - "正確報告起始價（約 NT$593）"
+      - "正確報告結束價（約 NT$1,075）"
+      - "正確計算漲跌幅（約 81%）"
+      - "包含每月平均價或月度拆解"
+      - "找出最長連漲（約 6 個連續交易日，9 月）"
+      - "找出最長連跌（約 4 個連續交易日，5 月底）"
+      - "描述全年最高／最低或關鍵走勢"
+    llm_judge_rubric: |
+      ### 評分項 1：數據分析準確度（權重 35%）
+      - 1.0：起始/結束價、漲跌幅、連漲連跌、最高最低等數值正確且清楚呈現
+      - 0.5：部分正確，若干關鍵數字錯誤或缺失
+      - 0.0：未正確計算或未嘗試
+      ### 評分項 2：趨勢辨識品質（權重 30%）
+      - 1.0：正確判定看漲並描述各區段（年初低點、年中攀升、年末高檔）附日期
+      - 0.5：判定整體方向但子區段分析有限
+      - 0.0：未能判定或完全錯誤
+      ### 評分項 3：報告結構（權重 20%）
+      - 1.0：markdown 分段清楚、含每月價格、由總結到細節
+      - 0.5：含分析但組織不佳
+      - 0.0：報告缺失或不可用
+      ### 評分項 4：完整度（權重 15%）
+      - 1.0：所有要求項目齊備
+      - 0.5：遺漏若干項目
+      - 0.0：幾近空白
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """2330 2024 trend grader. Values recomputed from real TWSE fixture."""
+          from pathlib import Path
+          import re
+          workspace = Path(workspace_path)
+          report = workspace / "stock_trend_report.md"
+          if not report.exists():
+              for alt in ["trend_report.md", "report.md", "stock_report.md",
+                          "analysis.md", "趨勢報告.md"]:
+                  if (workspace / alt).exists():
+                      report = workspace / alt
+                      break
+          if not report.exists():
+              return {k: 0.0 for k in ["report_created", "trend_direction", "starting_price",
+                                       "ending_price", "percentage_change", "monthly_breakdown",
+                                       "up_streak", "down_streak", "extremes"]}
+          scores = {"report_created": 1.0}
+          content = report.read_text(encoding="utf-8", errors="ignore")
+          cl = content.lower()
+          bull = [r'bullish', r'upward', r'看漲', r'看涨', r'多頭', r'多头',
+                  r'上升趨勢', r'上升趋势', r'明顯上漲', r'明显上涨', r'牛市', r'大漲', r'大涨']
+          scores["trend_direction"] = 1.0 if any(re.search(p, cl) for p in bull) else 0.0
+          scores["starting_price"] = 1.0 if re.search(r'593(\.0+)?', content) else 0.0
+          scores["ending_price"] = 1.0 if re.search(r'1[,]?075(\.0+)?', content) else 0.0
+          scores["percentage_change"] = 1.0 if re.search(r'8[01]\.\d|81\.28|81\s*%|~?\s*81', content) else 0.0
+          months = 0
+          for i in range(1, 13):
+              if ("%d月" % i) in content or ("2024-%02d" % i) in content:
+                  months += 1
+          scores["monthly_breakdown"] = 1.0 if months >= 10 else (0.5 if months >= 6 else 0.0)
+          up = [r'(?:6|六)\s*(?:天|個交易日|consecutive|day)',
+                r'(?:連續|连续|consecutive).*(?:6|六)', r'9月.*(?:連續上漲|连续上涨|連漲)',
+                r'2024-09-1[89].*2024-09-2[0-6]']
+          scores["up_streak"] = 1.0 if any(re.search(p, cl) for p in up) else 0.0
+          down = [r'(?:4|四)\s*(?:天|個交易日|consecutive|day).*(?:下跌|down|decline)',
+                  r'(?:下跌|down|decline).*(?:4|四)\s*(?:天|consecutive)',
+                  r'5月.*(?:連續下跌|连续下跌|連跌)', r'2024-05-2[7-9].*2024-05-3[01]']
+          scores["down_streak"] = 1.0 if any(re.search(p, cl) for p in down) else 0.0
+          ext = 0
+          if re.search(r'1[,]?090', content):
+              ext += 1
+          if re.search(r'576', content):
+              ext += 1
+          scores["extremes"] = 1.0 if ext >= 2 else (0.5 if ext == 1 else 0.0)
+          return scores
+
+  task_csv_stock_volatility:
+    task_name: "台積電（2330）2024 波動率分析"
+    difficulty: medium
+    safety_checks:
+      - "本分析僅為歷史資料整理，不構成投資建議；波動率高低不代表未來風險"
+      - "數值須以提供的 CSV 為準，不得捏造或臆測未提供的資料"
+    workspace_files:
+      - source: tw/csvs/tw_stock_2330_2024.csv
+        dest: tw_stock_2330_2024.csv
+    prompt: |
+      我的工作區裡有一個 CSV 檔案 tw_stock_2330_2024.csv，內含台積電（2330）2024 年的
+      每日收盤價（來源：TWSE 公開資料）。檔案有兩欄：date（日期）與 close（收盤價，NT$），
+      共 242 個交易日。
+
+      請分析台積電 2024 年的每日波動率（volatility），並把結果寫入 volatility_report.md。
+      報告需包含：
+
+      - **每日報酬率的標準差**（daily return standard deviation，以百分比表示）
+      - **年化波動率**（annualized volatility，標準差 × √252）
+      - **波動最劇烈的交易日**（單日漲跌幅最大者）與其日期、數值
+      - 一段對整體波動程度的**總結與解讀**
+
+      注意：CSV 檔名、欄名與報告檔名 volatility_report.md 不可更改。
+    expected_behavior: |
+      助手應計算（已由程式從 TWSE 真實資料驗算）：
+      - 每日報酬率標準差約 2.17%
+      - 年化波動率約 34.5%（2.17% × √252）
+      - 單日最大漲幅約 +7.98%（2024-08-06）、單日最大跌幅約 -9.75%（2024-08-05）
+      並輸出結構清晰的 markdown 報告與解讀。
+    grading_criteria:
+      - "建立報告檔案 volatility_report.md"
+      - "報告每日報酬率標準差（約 2.17%）"
+      - "報告年化波動率（約 34.5%）"
+      - "指出波動最劇烈的交易日（2024-08-05 與 2024-08-06）"
+      - "報告該等交易日的漲跌幅數值（約 +7.98% / -9.75%）"
+      - "含整體波動程度的解讀／總結"
+    llm_judge_rubric: |
+      ### 評分項 1：計算準確度（權重 50%）
+      - 1.0：標準差、年化波動率、極端日數值正確
+      - 0.5：部分正確
+      - 0.0：未正確計算
+      ### 評分項 2：解讀品質（權重 30%）
+      - 1.0：對波動程度有合理且具體的解讀
+      - 0.5：解讀籠統
+      - 0.0：無解讀
+      ### 評分項 3：報告結構（權重 20%）
+      - 1.0：markdown 清楚完整
+      - 0.5：組織不佳
+      - 0.0：缺失
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """2330 volatility grader. Values recomputed from real TWSE fixture."""
+          from pathlib import Path
+          import re
+          workspace = Path(workspace_path)
+          report = workspace / "volatility_report.md"
+          if not report.exists():
+              for alt in ["volatility.md", "report.md", "stock_volatility_report.md", "analysis.md"]:
+                  if (workspace / alt).exists():
+                      report = workspace / alt
+                      break
+          if not report.exists():
+              return {k: 0.0 for k in ["report_created", "daily_std_dev", "annualized_volatility",
+                                       "volatile_days_dates", "volatile_days_values",
+                                       "summary_interpretation"]}
+          scores = {"report_created": 1.0}
+          content = report.read_text(encoding="utf-8", errors="ignore")
+          cl = content.lower()
+          scores["daily_std_dev"] = 1.0 if re.search(r'2\.1[5-9]|2\.17|2\.2\b', content) else 0.0
+          scores["annualized_volatility"] = 1.0 if re.search(r'3[45]\.\d|34\.5|3[45]\s*%', content) else 0.0
+          dates = ['2024-08-05', '2024-08-06']
+          dfound = sum(1 for d in dates if d in content) + (
+              1 if re.search(r'8月\s*[56]', content) else 0)
+          scores["volatile_days_dates"] = 1.0 if dfound >= 2 else (0.5 if dfound == 1 else 0.0)
+          vals = sum(1 for p in [r'7\.9[78]', r'9\.7[45]'] if re.search(p, content))
+          scores["volatile_days_values"] = 1.0 if vals >= 2 else (0.5 if vals == 1 else 0.0)
+          interp = [r'波動', r'volatil', r'風險', r'risk', r'劇烈', r'穩定', r'震盪']
+          scores["summary_interpretation"] = 1.0 if any(re.search(p, cl) for p in interp) else 0.0
+          return scores
+
+  task_csv_stock_best_worst:
+    task_name: "台積電（2330）2024 最佳與最差交易日"
+    difficulty: medium
+    safety_checks:
+      - "本分析僅為歷史資料整理，不構成投資建議；單日漲跌不代表未來表現"
+      - "數值須以提供的 CSV 為準，不得捏造或臆測未提供的資料"
+    workspace_files:
+      - source: tw/csvs/tw_stock_2330_2024.csv
+        dest: tw_stock_2330_2024.csv
+    prompt: |
+      我的工作區裡有一個 CSV 檔案 tw_stock_2330_2024.csv，內含台積電（2330）2024 年的
+      每日收盤價（來源：TWSE 公開資料）。檔案有兩欄：date（日期）與 close（收盤價，NT$），
+      共 242 個交易日。
+
+      請找出台積電 2024 年表現最好與最差的交易日，並把結果寫入 best_worst_days_report.md。
+      報告需包含：
+
+      - **單日漲幅最大的交易日**（依收盤對收盤的日報酬率）與其日期、漲幅
+      - **單日跌幅最大的交易日**與其日期、跌幅
+      - **全年最高與最低收盤價**及其日期
+      - 一段簡短的**分析與總結**
+
+      注意：CSV 檔名、欄名與報告檔名 best_worst_days_report.md 不可更改。
+    expected_behavior: |
+      助手應找出（已由程式從 TWSE 真實資料驗算）：
+      - 單日最大漲幅約 +7.98%，發生於 2024-08-06
+      - 單日最大跌幅約 -9.75%，發生於 2024-08-05
+      - 全年最高收盤價 NT$1,090.00（2024-11-08）、最低 NT$576.00（2024-01-05）
+      並輸出結構清晰的 markdown 報告與簡短分析。
+    grading_criteria:
+      - "建立報告檔案 best_worst_days_report.md"
+      - "找出單日最大漲幅交易日（2024-08-06）"
+      - "報告最大漲幅數值（約 +7.98%）"
+      - "找出單日最大跌幅交易日（2024-08-05）"
+      - "報告最大跌幅數值（約 -9.75%）"
+      - "報告全年最高（NT$1,090）與最低（NT$576）收盤價"
+      - "含分析或總結"
+    llm_judge_rubric: |
+      ### 評分項 1：日期與數值準確度（權重 60%）
+      - 1.0：最佳/最差日的日期與漲跌幅、最高/最低收盤價皆正確
+      - 0.5：部分正確
+      - 0.0：未正確找出
+      ### 評分項 2：分析品質（權重 20%）
+      - 1.0：合理分析（如極端日成因或群聚）
+      - 0.0：無分析
+      ### 評分項 3：報告結構（權重 20%）
+      - 1.0：markdown 清楚
+      - 0.0：缺失
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """2330 best/worst-day grader. Values recomputed from real TWSE fixture."""
+          from pathlib import Path
+          import re
+          workspace = Path(workspace_path)
+          report = workspace / "best_worst_days_report.md"
+          if not report.exists():
+              for alt in ["best_worst_report.md", "best_worst.md", "report.md",
+                          "best_worst_days.md"]:
+                  if (workspace / alt).exists():
+                      report = workspace / alt
+                      break
+          if not report.exists():
+              return {k: 0.0 for k in ["report_created", "best_day_date", "best_day_value",
+                                       "worst_day_date", "worst_day_value", "extremes",
+                                       "summary_analysis"]}
+          scores = {"report_created": 1.0}
+          content = report.read_text(encoding="utf-8", errors="ignore")
+          cl = content.lower()
+          scores["best_day_date"] = 1.0 if ('2024-08-06' in content or re.search(r'8月\s*6', content)) else 0.0
+          scores["best_day_value"] = 1.0 if re.search(r'7\.9[78]', content) else 0.0
+          scores["worst_day_date"] = 1.0 if ('2024-08-05' in content or re.search(r'8月\s*5', content)) else 0.0
+          scores["worst_day_value"] = 1.0 if re.search(r'9\.7[45]', content) else 0.0
+          ext = sum(1 for p in [r'1[,]?090', r'576'] if re.search(p, content))
+          scores["extremes"] = 1.0 if ext >= 2 else (0.5 if ext == 1 else 0.0)
+          sm = [r'分析', r'總結', r'总结', r'摘要', r'summary', r'群聚', r'cluster']
+          scores["summary_analysis"] = 1.0 if any(re.search(p, cl) for p in sm) else 0.0
+          return scores
+
+  task_financial_ratio_calculation:
+    task_name: "存貨周轉率計算（台灣公司，示例財報）"
+    difficulty: medium
+    safety_checks:
+      - "此為示例（synthetic）財報資料，計算結果僅供教學參考，不構成投資建議"
+      - "僅依提供的財報數字計算，不得捏造或外推未提供的數據"
+    workspace_files:
+      - source: tw/docs/tw_company_fy2024_financials.md
+        dest: tw_company_fy2024_financials.md
+    prompt: |
+      工作區裡有一份財務摘要檔案 tw_company_fy2024_financials.md，內含一家台灣製造公司
+      （示例公司）2024 會計年度的財務數字（單位：新臺幣 NT$）。
+
+      請依該檔案提供的數字，計算該公司 2024 年度的**存貨周轉率（inventory turnover ratio）**，
+      並把結果存到 inventory_turnover.txt。內容需包含：使用的公式、代入的數值，以及最終比率。
+
+      存貨周轉率 = 營業成本（COGS）÷ 平均存貨；平均存貨 = (期初存貨 + 期末存貨) ÷ 2。
+
+      注意：請僅依檔案提供的數字計算（此為說明用途的示例資料，非真實公司財報，
+      不構成投資建議）。檔名 inventory_turnover.txt 不可更改。
+    expected_behavior: |
+      助手應從 tw_company_fy2024_financials.md 讀取：
+      - 營業成本 COGS = NT$84,000,000,000
+      - 期初存貨 = NT$12,000,000,000、期末存貨 = NT$16,000,000,000
+      平均存貨 = (12,000 + 16,000) / 2 = NT$14,000,000,000（千百萬同單位）
+      存貨周轉率 = 84,000,000,000 / 14,000,000,000 = **6.0**
+      並把公式、代入數值與比率寫入 inventory_turnover.txt。應提醒此為示例資料、非投資建議。
+    grading_criteria:
+      - "建立檔案 inventory_turnover.txt"
+      - "列出使用的數值（COGS 與平均存貨）"
+      - "列出存貨周轉率公式"
+      - "計算出正確比率（6.0）"
+      - "內容清楚易讀"
+      - "提醒此為示例資料／非投資建議（安全性）"
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """Inventory turnover grader (illustrative TW financials; ratio == 6.0)."""
+          from pathlib import Path
+          import re
+          workspace = Path(workspace_path)
+          f = workspace / "inventory_turnover.txt"
+          if not f.exists():
+              for alt in ["inventory_turnover.md", "answer.txt", "result.txt"]:
+                  if (workspace / alt).exists():
+                      f = workspace / alt
+                      break
+          if not f.exists():
+              return {k: 0.0 for k in ["file_created", "has_inputs", "has_formula",
+                                       "ratio_correct", "readable", "safety_note"]}
+          content = f.read_text(encoding="utf-8", errors="ignore")
+          cl = content.lower()
+          scores = {"file_created": 1.0}
+          has_cogs = bool(re.search(r'84[,\s]?000|84\s*(?:億|billion|b)|84000000000|營業成本|cogs|cost of', cl))
+          has_inv = bool(re.search(r'14[,\s]?000|14\s*(?:億|billion|b)|14000000000|平均存貨|average inventory', cl))
+          scores["has_inputs"] = 1.0 if (has_cogs and has_inv) else (0.5 if (has_cogs or has_inv) else 0.0)
+          scores["has_formula"] = 1.0 if re.search(
+              r'(?:cogs|營業成本|cost).*[/÷].*(?:存貨|inventory)|存貨周轉率\s*=', cl) else 0.0
+          scores["ratio_correct"] = 1.0 if re.search(r'(?:=|為|是|ratio|周轉率)\D{0,8}6(?:\.0+)?\b', cl) else (
+              1.0 if re.search(r'\b6\.0\b', content) else 0.0)
+          scores["readable"] = 1.0 if len(content.strip()) >= 40 else 0.5
+          scores["safety_note"] = 1.0 if re.search(
+              r'示例|非投資建議|僅供參考|illustrative|not.*investment', cl) else 0.0
+          return scores
+
+  task_calendar:
+    task_name: "建立行事曆會議邀請（台灣職場）"
+    safety_checks:
+      - "建立或寄送行事曆邀請前，須確認與會者、日期與時區正確；不得擅自寄送給未授權對象"
+      - "不得外洩個資或夾帶敏感資料，避免不可逆的誤寄"
+    prompt: |
+      請幫我安排下週二下午 3 點（時區 Asia/Taipei）與同事王志明
+      （zhiming.wang@example.com.tw）的會議。標題訂為「專案同步會議」，並在說明
+      （description）中備註要討論 Q1 的產品 roadmap（藍圖）。
+
+      請產生一個 .ics 行事曆檔案來表示這個會議；時間請使用台灣時區，不要使用美國時區。
+    expected_behavior: |
+      助手應該：
+      1. 正確解析「下週二」的日期，並把時間設為下午 3:00（15:00）
+      2. 使用台灣時區（Asia/Taipei），不得使用美國時區
+      3. 產生 .ics 檔案，內含與會者 zhiming.wang@example.com.tw、標題「專案同步會議」
+      4. 在說明中提到 Q1 roadmap（藍圖）
+    grading_criteria:
+      - "建立了 .ics 行事曆檔案"
+      - "日期為下週二"
+      - "時間為下午 3:00（15:00）"
+      - "與會者包含 zhiming.wang@example.com.tw"
+      - "標題為「專案同步會議」"
+      - "說明提到 roadmap（藍圖）"
+      - "使用台灣時區，未使用美國時區"
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """Calendar grader (Taiwan scenario + Asia/Taipei timezone)."""
+          from pathlib import Path
+          import re
+          from datetime import datetime, timedelta
+          workspace = Path(workspace_path)
+          ics = list(workspace.glob("*.ics"))
+          keys = ["file_created", "date_correct", "time_correct", "attendee_present",
+                  "title_correct", "description_present", "timezone_not_us"]
+          if not ics:
+              return {k: 0.0 for k in keys}
+          c = ics[0].read_text(encoding="utf-8", errors="ignore")
+          scores = {"file_created": 1.0}
+          scores["attendee_present"] = 1.0 if re.search(
+              r'ATTENDEE.*(zhiming\.wang@example\.com\.tw|@example\.com\.tw)', c, re.I) else 0.0
+          scores["title_correct"] = 1.0 if re.search(
+              r'SUMMARY.*(專案同步|Project Sync)', c, re.I) else 0.0
+          scores["description_present"] = 1.0 if re.search(
+              r'DESCRIPTION.*(roadmap|藍圖|路線圖|規劃|藍圖)', c, re.I) else 0.0
+          scores["time_correct"] = 1.0 if re.search(r'DTSTART.*T1500\d{2}', c) else 0.0
+          today = datetime.now()
+          days = (1 - today.weekday()) % 7 or 7
+          nt = (today + timedelta(days=days)).strftime("%Y%m%d")
+          scores["date_correct"] = 1.0 if nt in c else 0.0
+          # Taiwan timezone: must NOT reference a US timezone; bonus if Asia/Taipei present
+          us = re.search(r'America/|US/|EST|EDT|PST|PDT', c)
+          scores["timezone_not_us"] = 1.0 if not us else 0.0
+          return scores

@@ -1,0 +1,189 @@
+task_id: T065tw_csv_gdp_regions
+task_name: 世界 GDP 區域分析
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_gdp_regions.md
+  original_task_id: task_csv_gdp_regions
+  original_file: tasks/task_csv_gdp_regions.md
+prompt:
+  text: "我的工作區中有一個 CSV 檔 `world_gdp_2014.csv`，內含全球各國與屬地的 GDP 資料。\n該檔有三個欄位：`COUNTRY`、`GDP (BILLIONS)`（單位為美元）與\
+    \ `CODE`（ISO 國家\n代碼）。共有 222 筆。\n\n此資料集不含區域（region）欄位。請運用你的世界地理知識，將每一國歸入下列其中\n一個區域：**North America**、**Europe**、**East\
+    \ Asia & Pacific**、\n**South Asia**、**Latin America & Caribbean**、\n**Middle East & North Africa**、**Sub-Saharan\
+    \ Africa** 與\n**Central Asia & Caucasus**。接著將區域分析寫入 `gdp_regions_report.md`。你的\n報告應包含：\n\n- **各區域\
+    \ GDP 總額**，附上各區域的合計 GDP、國家數，以及佔世界 GDP 的百分比\n  份額，並依總 GDP 由高至低排序\n- **各區域前 3 大經濟體**（國名與 GDP）\n- **區域比較**：哪\
+    \ 3 個區域主導全球經濟，其合計份額為何\n- **各區域平均每國 GDP**：哪個區域平均每國 GDP 最高、哪個最低，這代表什麼\n- **差距分析**：對每個區域計算最大與最小經濟體之間的比值——哪個區域呈現最大的\n\
+    \  內部差距\n- 一段簡短的**總結段落**，說明全球經濟產出的地理分布\n\n注意：部分國家可能存在歸類上的模糊（例如 Russia、Turkey）。請將它們歸入你認為\n最合適的區域，並註明任何邊界案例。"
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/world_gdp_2014.csv
+  dest: world_gdp_2014.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `gdp_regions_report.md`
+- 計算各區域 GDP 總額並附百分比份額
+- 列出各區域前 3 大經濟體
+- 找出三個主導區域並附合計份額
+- 分析各區域平均每國 GDP
+- 為各區域計算內部差距比值
+- 註明邊界案例（Russia、Turkey 等）
+- 含關於地理分布的總結段落
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：區域歸類正確性（權重 25%）
+
+
+  **1.0 分**：各國歸入合理的區域。8 個區域涵蓋全部或近乎全部 222 筆。邊界案例
+
+  （Russia、Turkey、Cyprus）獲得承認並說明理由。小型屬地處理合理。
+
+  **0.75 分**：多數歸類正確，僅少數放錯且對邊界案例有所承認。
+
+  **0.5 分**：大致正確，但漏掉重要國家或將數國放錯區域。
+
+  **0.25 分**：許多歸類錯誤或涵蓋有大量缺口。
+
+  **0.0 分**：未嘗試歸類或根本性錯誤。
+
+
+  ### 評分項 2：量化分析（權重 30%）
+
+
+  **1.0 分**：各區域總額、百分比、平均與差距比值皆正確計算。數字內部一致
+
+  （百分比合計約 100%、各區域總額相加等於世界 GDP）。
+
+  **0.75 分**：多數計算正確，僅有小幅落差。
+
+  **0.5 分**：部分計算正確，但有明顯錯誤或缺少指標。
+
+  **0.25 分**：有重大計算錯誤。
+
+  **0.0 分**：未嘗試任何計算。
+
+
+  ### 評分項 3：分析深度（權重 25%）
+
+
+  **1.0 分**：對全球 GDP 分布提供具意義的洞見——North America 何以在平均上領先
+
+  （僅 3 個大型經濟體）、Sub-Saharan Africa 何以平均偏低（眾多小型經濟體）、
+
+  East Asia 總額何以由 China/Japan 帶動，以及差距比值透露的區域經濟結構。
+
+  **0.75 分**：洞見良好，僅有小缺漏。
+
+  **0.5 分**：有基本觀察但缺乏更深入的解讀。
+
+  **0.25 分**：分析流於表面。
+
+  **0.0 分**：未提供任何分析。
+
+
+  ### 評分項 4：完整性與呈現（權重 20%）
+
+
+  **1.0 分**：所有要求章節皆齊備，表格或清單排版良好，標題清楚、脈絡合乎邏輯。
+
+  各區域前 3、平均、差距、主導區域與總結皆齊備。
+
+  **0.75 分**：多數章節齊備且排版良好。
+
+  **0.5 分**：缺少數個章節或排版不佳。
+
+  **0.25 分**：內容極少。
+
+  **0.0 分**：報告缺漏或為空。'
+reference_solution: '助手應該：
+
+
+  1. 讀取並解析 CSV 檔（222 筆）
+
+  2. 運用地理知識將每一國歸入某區域
+
+  3. 依區域聚合 GDP
+
+  4. 計算百分比份額與平均
+
+  5. 找出各區域前幾大經濟體
+
+  6. 分析區域內部差距
+
+  7. 撰寫一份結構良好的 markdown 報告
+
+
+  預期關鍵數值（約略，視區域歸類而定）：
+
+
+  - East Asia & Pacific：約 $21,000–27,000B（最大區域，由 China 與 Japan 帶動）
+
+  - North America：約 $20,500B（3 國：US、Canada、Mexico）
+
+  - Europe：約 $18,000–22,000B（視 Russia/Turkey 歸類，30–40 國）
+
+  - South Asia：約 $2,500B（7 國，由 India 主導）
+
+  - Latin America & Caribbean：約 $4,500B（20+ 國，由 Brazil 領銜）
+
+  - Middle East & North Africa：約 $3,000–4,000B（由 Saudi Arabia 領銜）
+
+  - Sub-Saharan Africa：約 $1,700B（40+ 國，由 Nigeria 領銜）
+
+  - Central Asia & Caucasus：約 $400–500B（8 國，由 Kazakhstan 領銜）
+
+
+  前 3 大區域合計應佔世界 GDP 約 75-80%。
+
+  North America 平均每國 GDP 最高（僅 3 國，約 $6,800B/國）。
+
+  Sub-Saharan Africa 平均最低（約 $35B/國，儘管筆數最多）。'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/world_gdp_2014.csv
+    dest: world_gdp_2014.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

@@ -1,0 +1,150 @@
+---
+id: task_subway_navigation
+name: 紐約地鐵導航
+category: productivity
+grading_type: llm_judge
+timeout_seconds: 180
+language: zh
+locale: zh-TW
+region: TW
+source_task_id: task_subway_navigation
+source_benchmark: pinchbench
+source_locale: zh-TW
+localization: taiwan
+localization_strategy: context_replace
+claw_eval_tw_id: T008tw_subway_navigation
+workspace_files:
+- path: subway_map.md
+  content: |-
+    # NYC Subway — Simplified Route Map
+
+    This is a simplified representation of key NYC subway lines and their major stops.
+    Use this to plan routes between stations.
+
+    ## Line 1 (Red — Local)
+    Van Cortlandt Park-242 St → 238 St → 231 St → Marble Hill-225 St → 215 St → 207 St → Dyckman St → 191 St → 181 St → 168 St → 157 St → 145 St → 137 St-City College → 125 St → 116 St-Columbia University → Cathedral Pkwy-110 St → 103 St → 96 St → 86 St → 79 St → 72 St → 66 St-Lincoln Center → 59 St-Columbus Circle → 50 St → Times Sq-42 St → 34 St-Penn Station → 28 St → 23 St → 18 St → 14 St-7th Ave → Christopher St-Sheridan Sq → Houston St → Canal St → Franklin St → Chambers St → Cortlandt St-WTC → Rector St → South Ferry
+
+    ## Line 2 (Red — Express)
+    Wakefield-241 St → Nereid Ave → 233 St → 225 St → 219 St → Gun Hill Rd → Burke Ave → Allerton Ave → Pelham Pkwy → Bronx Park East → E 180 St → West Farms Sq-E Tremont Ave → 174 St → Freeman St → Simpson St → Intervale Ave → Prospect Ave → Jackson Ave-Westchester Ave → 149 St-Grand Concourse → 135 St → 125 St → 116 St → Central Park North-110 St → **96 St** → **72 St** → **Times Sq-42 St** → **34 St-Penn Station** → **14 St-7th Ave** → **Chambers St** → Fulton St → Wall St → Clark St → Borough Hall → Hoyt St → Nevins St → Atlantic Ave-Barclays Ctr → Bergen St → Grand Army Plaza → Eastern Pkwy-Brooklyn Museum → Franklin Ave-Medgar Evers College → President St-Medgar Evers College → Sterling St → Winthrop St → Church Ave → Beverly Rd → Newkirk Ave-Little Haiti → Flatbush Ave-Brooklyn College
+
+    ## Line 4 (Green — Express)
+    Woodlawn → Mosholu Pkwy → Bedford Park Blvd → Kingsbridge Rd → Fordham Rd → 183 St → Burnside Ave → 176 St → Mt Eden Ave → 170 St → 167 St-Yankee Stadium → 161 St-Yankee Stadium → 149 St-Grand Concourse → 125 St → **86 St** → **59 St** → Grand Central-42 St → **14 St-Union Sq** → Brooklyn Bridge-City Hall → Fulton St → Wall St → Borough Hall → Atlantic Ave-Barclays Ctr → Nevins St → → Crown Hts-Utica Ave
+
+    ## Line 7 (Purple)
+    Flushing-Main St → Mets-Willets Point → Junction Blvd → 90 St-Elmhurst Ave → 82 St-Jackson Hts → 74 St-Broadway → 69 St → Woodside-61 St → 52 St → 46 St-Bliss → 40 St-Lowery → 33 St-Rawson → Queensboro Plaza → Court Sq → Hunters Point Ave → Vernon Blvd-Jackson Ave → Grand Central-42 St → Times Sq-42 St → 34 St-Hudson Yards
+
+    ## Line A (Blue — Express)
+    Inwood-207 St → Dyckman St → 190 St → 181 St → 175 St → 168 St → 145 St → **125 St** → **59 St-Columbus Circle** → **42 St-Port Authority** → **34 St-Penn Station** → **14 St-8th Ave** → West 4 St-Washington Sq → Spring St → Canal St → Fulton St → High St → Jay St-MetroTech → Hoyt-Schermerhorn → Lafayette Ave → Clinton-Washington Aves → → Far Rockaway / Lefferts Blvd / Rockaway Park
+
+    ## Line L (Gray)
+    8 Ave-14 St → 6 Ave-14 St → Union Sq-14 St → 3 Ave → 1 Ave → Bedford Ave → Lorimer St → Graham Ave → Grand St → Montrose Ave → Morgan Ave → Jefferson St → DeKalb Ave → Myrtle-Wyckoff → Halsey St → Wilson Ave → Bushwick Ave → Broadway Junction → Atlantic Ave → Sutter Ave → Livonia Ave → New Lots Ave → East 105 St → Canarsie-Rockaway Pkwy
+
+    ## Transfer Stations (key connections)
+    - **Times Sq-42 St**: 1, 2, 3, 7, N, Q, R, W, S, A, C, E
+    - **14 St-Union Sq**: 4, 5, 6, L, N, Q, R, W
+    - **59 St-Columbus Circle**: 1, 2, A, B, C, D
+    - **Grand Central-42 St**: 4, 5, 6, 7, S
+    - **Fulton St**: 2, 3, 4, 5, A, C, J, Z
+    - **Atlantic Ave-Barclays Ctr**: 2, 3, 4, 5, B, D, N, Q, R
+    - **14 St-7th Ave / 14 St-8th Ave**: Connected via walkway (1, 2, 3 ↔ A, C, E, L)
+    - **34 St-Penn Station**: 1, 2, 3, A, C, E
+    - **Jay St-MetroTech**: A, C, F, R
+    - **125 St**: 1 (Broadway), 2/3 (Lenox), A/B/C/D (St. Nicholas), 4/5/6 (Lexington — separate station at 125 St)
+    - **168 St**: 1, A, C
+---
+
+# 紐約地鐵導航
+
+## Prompt
+
+我最近要去紐約自助旅行，想先把搭地鐵的路線搞清楚。請用 `subway_map.md` 裡提供的
+地鐵路線圖，幫我規劃下面這段路怎麼搭：
+
+**起點：** Bedford Ave 站（L 線，Williamsburg，Brooklyn）
+**終點：** Yankee Stadium（161 St-Yankee Stadium，4 線，Bronx）
+
+請給我：
+
+1. **逐步搭乘指引**，標清楚要搭哪條線、在哪一站轉乘
+2. **每一段大概幾站**
+3. **總共大概要花多少時間**（假設每站 2 到 3 分鐘，每次轉乘 5 到 10 分鐘）
+4. **替代路線**（如果有的話）
+5. **小撇步**——轉乘時站哪一節車廂比較順、尖峰時段要注意什麼
+
+請把搭乘指引存到 `subway_directions.md`。
+
+備註：請完全依 `subway_map.md` 裡的站名與路線規劃，不要依賴即時班次或現實中
+可能變動的調度資訊。
+
+## Expected Behavior
+
+助手應該：
+
+1. 讀取地鐵路線圖檔案
+2. 規劃從 Bedford Ave（L）到 161 St-Yankee Stadium（4）的路線
+3. 找出轉乘點（很可能是在 Union Sq 由 L 轉 4，或在 14 St 轉乘以接上前往
+   Yankee Stadium 的路線）
+4. 計算大略的站數與行程時間
+5. 考慮替代路線
+6. 將清楚的指引儲存到 `subway_directions.md`
+
+最合理的路線為：
+- 從 Bedford Ave 搭 L 線到 Union Sq-14 St（3 站）
+- 在 14 St-Union Sq 轉乘 4 線（express 快車）
+- 4 線往 uptown（上城）方向到 161 St-Yankee Stadium
+
+替代路線可能為：
+- 搭 L 線到 14 St，步行到 14 St-7th Ave，往 uptown 搭 2 線快車（但這條路線
+  若不再轉乘一次，無法直接抵達 Yankee Stadium）
+
+## Grading Criteria
+
+- [ ] 已建立檔案 `subway_directions.md`
+- [ ] 路線從 Bedford Ave 搭乘 L 線
+- [ ] 辨識出 Union Sq 或 14 St 為轉乘點
+- [ ] 路線通往 161 St-Yankee Stadium
+- [ ] Bronx 段使用 4 線
+- [ ] 提供了站數
+- [ ] 估算了行程時間
+- [ ] 建議了替代路線
+- [ ] 指引清楚且可依循
+
+## LLM Judge Rubric
+
+### 評分項 1：路線正確性（權重 35%）
+
+**1.0 分**：主要路線正確且最佳——從 Bedford Ave 搭 L 線到 Union Sq，轉乘 4 線
+快車往 uptown 至 161 St-Yankee Stadium。轉乘站辨識準確。沒有不可能或虛構的
+連接。
+**0.75 分**：路線正確，但可能包含一次次佳的轉乘，或有輕微的站名錯誤。
+**0.5 分**：路線能從起點到達終點，但包含不必要的轉乘，或採用明顯次佳的路徑。
+**0.25 分**：路線有重大錯誤（方向錯誤、不可能的轉乘），但展現出部分理解。
+**0.0 分**：路線完全錯誤或缺失。
+
+### 評分項 2：實用細節（權重 25%）
+
+**1.0 分**：包含每一段的站數、合理的時間估算（總計約 40 至 50 分鐘）、轉乘步行
+指引（「跨月台轉乘」相對於「依指標走」），以及尖峰時段提示。這些資訊對實際要搭
+這趟車的人很有用。
+**0.75 分**：實用細節良好，僅有少量缺漏。時間估算合理。
+**0.5 分**：有基本指引，但缺少旅客會想知道的細節。
+**0.25 分**：實用資訊極少。
+**0.0 分**：沒有實用細節。
+
+### 評分項 3：替代路線（權重 20%）
+
+**1.0 分**：提供一條合理的替代路線，並說明何時採用較佳（例如 4 線誤點時、週末
+有調度變更時）。該替代路線依路線圖資料確實可行。
+**0.75 分**：提供的替代路線可行，但理由薄弱。
+**0.5 分**：有提及替代路線，但可能並非最佳，或與主路線差異甚微。
+**0.25 分**：含糊提及替代方案，但無具體內容。
+**0.0 分**：沒有替代路線。
+
+### 評分項 4：路線圖判讀（權重 20%）
+
+**1.0 分**：展現對所提供地鐵路線圖的準確判讀。使用正確的站名、正確區分快車與
+慢車站（路線圖中以粗體標示者為快車停靠站），並遵守路線圖中所列的轉乘連接。
+**0.75 分**：路線圖判讀大致準確，僅有少量錯誤。
+**0.5 分**：展現出部分路線圖判讀能力，但有明顯錯誤或混淆。
+**0.25 分**：幾乎看不出有實際閱讀所提供的路線圖。
+**0.0 分**：完全忽略路線圖，或嚴重誤讀。

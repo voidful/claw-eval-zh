@@ -1,0 +1,202 @@
+task_id: T016tw_oss_alternative_research
+task_name: 台灣中小企業開源軟體替代方案研究
+version: 0.3.0
+category: research
+difficulty: hard
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- research
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_oss_alternative_research.md
+  original_task_id: task_oss_alternative_research
+  original_file: tasks/task_oss_alternative_research.md
+prompt:
+  text: "有一家台灣中小企業正在尋找以**開源軟體替代商業軟體**的方案，以降低授權成本\n並兼顧資料主權（data sovereignty）。請聚焦於可自架（self-host）的選項，協助\n\
+    他們評估替代常見商業軟體（例如以 Nextcloud 替代雲端硬碟、以 Mattermost 替代\n商業即時通訊、以 Odoo 替代商業 ERP、以 OnlyOffice 替代文書處理）。\n\n\
+    請研究並彙整一份報告，至少涵蓋 5 個開源替代方案。針對每個方案，記錄：\n\n1. **專案名稱與網址**（GitHub/GitLab 儲存庫連結）— 軟體名稱保留原文，不翻譯\n2. **所替代的商業軟體**\n\
+    3. **授權條款**（MIT、AGPL、Apache 等）\n4. **技術棧（tech stack）**\n5. **部署選項**（Docker、Kubernetes、手動安裝）\n6. **關鍵功能**——具體說明與其所替代的商業軟體相比的差異\n\
+    7. **社群健康度**——GitHub 星數、近期提交活躍度、貢獻者人數、發版節奏\n8. **限制與自架複雜度**——相較商業軟體缺少什麼、部署與維護的難度、繁體中文\n   與台灣在地化（如發票、報稅整合）支援程度\n\
+    \n請將報告儲存至 `oss_alternatives.md`，內容須包含置於最上方的摘要比較表格、\n各方案的詳細側寫，以及針對該台灣中小企業使用情境為各方案排序的建議章節。\n\n注意：這是即時資料。請對星數、版本與功能**標示資料來源、標示查詢日期**，並\n\
+    說明**資料限制與不確定性**（專案活躍度與功能持續變動）。切勿捏造或寫死星數\n或版本號。軟體名稱（Nextcloud、Mattermost、Odoo 等）一律保留英文原文。"
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 300
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 oss_alternatives.md
+- 至少記錄 5 個開源替代方案（軟體名稱保留原文）
+- 每個方案皆說明其所替代的商業軟體
+- 每個方案皆有授權條款資訊
+- 提供 GitHub/GitLab 網址
+- 說明部署選項並與商業軟體進行功能比較
+- 包含社群健康度指標
+- 提及繁體中文／台灣在地化支援與限制
+- 包含比較表格與附排序的建議
+- 標示資料來源與查詢日期，並說明資料限制與不確定性
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：研究品質（權重 30%）
+
+
+  **1.0 分**：報告含有具體、可查證的細節——精確的 GitHub 星數、近期發版日期、
+
+  具體版本號、取自實際文件的具體功能清單。資訊明顯來自查核實際儲存庫與文件，
+
+  而非僅憑一般知識。
+
+
+  **0.75 分**：多數方案有良好的具體細節。少數項目可能仰賴一般知識。
+
+
+  **0.5 分**：具體與籠統資訊混雜。部分方案研究充分，其餘流於表面。
+
+
+  **0.25 分**：多為籠統描述，缺乏具體的研究跡證。
+
+
+  **0.0 分**：缺少報告，或含有明顯不準確的資訊。
+
+
+  ### 評分項 2：對台灣中小企業的實用價值（權重 20%）
+
+
+  **1.0 分**：報告能真正協助台灣中小企業做出決策。包含自架複雜度評估、授權成本
+
+  考量，以及繁體中文與台灣在地化（如發票、報稅、第三方金物流整合）支援的誠實
+
+  評估。建議針對所述使用情境（中小企業、降低授權成本、資料主權）量身打造。
+
+
+  **0.75 分**：大致實用，具良好的實務細節，但部分面向缺乏具體性。
+
+
+  **0.5 分**：提供了資訊，但未強力呼應台灣中小企業的具體需求。
+
+
+  **0.25 分**：籠統的概述，無助於實際決策。
+
+
+  **0.0 分**：對決策無用。
+
+
+  ### 評分項 3：來源、查詢日期與不確定性（權重 20%）
+
+
+  **1.0 分**：星數、版本、發版日期等動態資料皆標示可追溯的資料來源，明確標示
+
+  查詢日期，並說明資料限制與不確定性（專案活躍度與功能持續變動）。明顯以引用
+
+  來源取代捏造或寫死的數值。
+
+
+  **0.75 分**：多數動態資料有標示來源並標示查詢日期，對不確定性有提及但較簡略。
+
+
+  **0.5 分**：有標示部分來源或查詢日期，但不一致，或未說明資料限制。
+
+
+  **0.25 分**：僅零星提及來源或日期，未說明不確定性。
+
+
+  **0.0 分**：完全未標示來源或查詢日期，或出現捏造／寫死且未加註的星數或版本號。
+
+
+  ### 評分項 4：涵蓋廣度與比較結構（權重 20%）
+
+
+  **1.0 分**：涵蓋 5 個以上方案，且每個方案皆記錄所要求的主要面向。比較表格乾淨，
+
+  涵蓋關鍵面向（所替代的商業軟體、授權、星數、自架難度、在地化支援），報告組織
+
+  良好、各方案章節一致，易於瀏覽。
+
+
+  **0.75 分**：涵蓋 5 個以上方案，表格與結構良好，僅有小幅缺口。
+
+
+  **0.5 分**：涵蓋 4～5 個方案，各面向涵蓋不一致，或表格不完整。
+
+
+  **0.25 分**：少於 4 個方案，或組織不佳。
+
+
+  **0.0 分**：記錄少於 2 個方案，或無表格、無結構。
+
+
+  ### 評分項 5：對限制的誠實評估（權重 10%）
+
+
+  **1.0 分**：每個方案皆有誠實、具體的限制章節。不過度吹捧任何選項。指出來自
+
+  社群回饋或文件缺口的真實痛點，並坦承沒有任何開源選項能在所有面向完全取代
+
+  對應的商業軟體。
+
+
+  **0.75 分**：多數方案皆有註明限制，並具一定具體性。
+
+
+  **0.5 分**：有提及限制，但流於籠統。
+
+
+  **0.25 分**：對限制幾乎未著墨。
+
+
+  **0.0 分**：未探討任何限制——讀起來像行銷文案。'
+reference_solution: '助手應該：
+
+
+  1. 使用網路搜尋，找出目前可替代商業軟體的開源方案
+
+  2. 造訪 GitHub/GitLab 儲存庫，查核社群健康度指標
+
+  3. 查閱文件，了解部署、功能與繁體中文／台灣在地化細節
+
+  4. 彙整一份結構化的比較報告
+
+  5. 提供有立場且附理由的排序
+
+  6. 儲存至 `oss_alternatives.md`
+
+
+  軟體名稱保留原文（如 Nextcloud、Mattermost、Odoo、OnlyOffice）。因為星數、
+
+  版本與功能屬即時資料，正確行為是**標示資料來源、標示查詢日期，並說明資料
+
+  限制與不確定性**，而非捏造或寫死星數或版本號。'
+primary_dimensions:
+- completion
+- robustness
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: manual_review_only
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

@@ -1,0 +1,147 @@
+task_id: P118zh_meeting_tech_messaging
+task_name: 會議訊息架構擷取
+version: 0.2.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- meeting_analysis
+- multimodal
+source:
+  benchmark: pinchbench
+  original_task_id: task_meeting_tech_messaging
+  original_file: tasks/task_meeting_tech_messaging.md
+prompt:
+  text: |-
+    我有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議接近尾聲時，團隊進行一場協作式的訊息練習，為 GitLab 發展標語（taglines）與訊息支柱（messaging pillars）。
+
+    請擷取並整理會議中討論到的所有訊息架構選項，並寫入一個名為 `messaging_framework.md` 的檔案。你的輸出應包含：
+
+    1. **所有候選標語/語句**：所有被提出的標語/語句，依其所對應的訊息支柱分組
+    2. **評估準則（evaluation criteria）**：團隊所使用的準則（例如語句之間調性的對等性、是否朗朗上口、名詞片語對比動詞片語）
+    3. **每個選項所討論的優缺點**
+    4. **最終選定（final selections）**（團隊決定採用的）
+    5. **被否決的替代方案（rejected alternatives）及其被否決的原因**
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+  dest: meeting_transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 messaging_framework.md
+- 已辨識全部三個訊息支柱
+- 每個支柱列出多個候選語句
+- 「More speed less risk」被辨識為 speed/security 選定的標語
+- 「A single source of truth, countless possibilities」被辨識為 transparency 支柱選定的標語
+- 列出被否決的替代方案及原因（例如「test up」被否決、「no trade-offs」被否決）
+- 已掌握評估準則（對等性/調性、朗朗上口、準確性）
+- 已掌握「Secure the factory and its deliverables」作為資安子標語
+- 最終選定與替代方案清楚區分
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：選項掌握的完整度（權重 30%）
+
+  **1.0 分**：列出橫跨三個支柱的所有提議標語/語句，包含原始版與替代版。至少掌握 8-10 個不同語句並正確歸入支柱。
+  **0.75 分**：掌握多數語句並正確分組，漏掉一兩個。
+  **0.5 分**：掌握數個語句，但漏掉整批替代方案或某一支柱。
+  **0.25 分**：僅掌握最終選定而無替代方案。
+  **0.0 分**：未掌握有意義的選項。
+
+  ### 評分項 2：評估準則與推理（權重 25%）
+
+  **1.0 分**：準確掌握評估架構：調性對等性、朗朗上口、技術準確性、可用於平行句構。並包含否決的具體理由（例如「test up」聽起來蠢、「no trade-offs」違背工程師心態、「move fast with confidence」缺乏名詞片語對等性）。
+  **0.75 分**：掌握多數評估準則並有良好推理。
+  **0.5 分**：提及部分準則但推理不完整。
+  **0.25 分**：提供的推理極少。
+  **0.0 分**：無評估準則或推理。
+
+  ### 評分項 3：最終與否決的區分（權重 25%）
+
+  **1.0 分**：清楚區分最終選定與被否決的替代方案。容易辨識何者被選用、何者被捨棄。
+  **0.75 分**：區分良好，僅有少許模糊。
+  **0.5 分**：有部分區分，但讀者需自行推斷何者為最終。
+  **0.25 分**：所有選項混在一起且無明確結果。
+  **0.0 分**：未做區分。
+
+  ### 評分項 4：細微之處與歸屬（權重 20%）
+
+  **1.0 分**：掌握誰提出了什麼，包含「secure the factory and its deliverables」出自 Cindy 部落格文章的歸功、記下 Ash Withers 的啟發，並反映此練習的協作動態。
+  **0.75 分**：歸屬良好，僅有少許缺口。
+  **0.5 分**：有部分歸屬，但漏掉關鍵貢獻。
+  **0.25 分**：未將想法歸屬到個人。
+  **0.0 分**：無細微之處或歸屬。
+reference_solution: |-
+  助手應該：
+
+  1. 解析逐字稿以找出訊息架構的討論
+  2. 辨識出三個訊息支柱與所有候選語句
+
+  關鍵訊息內容：
+
+  **支柱 1 — Transparency/Single Platform：**
+  - 「From roadmap to company vision, we are transparent」（原始版）
+  - 「A single source of truth, countless possibilities」（提議版，廣受好評）
+  - 「All-in-one for everyone」（提議版，William 喜歡但也承認並非人人都愛）
+
+  **支柱 2 — End-to-end control：**
+  - 「Automate nearly anything, collaborate on everything」（原始版）
+  - 「End to end control over your software factory」（提議版，被形容為較不朗朗上口但具描述性）
+
+  **支柱 3 — Speed/Security：**
+  - 「Scale up, speed up, test up」（原始版——William 很討厭，尤其是「test up」）
+  - 「Move fast with confidence」（提議版——喜歡其意涵，但與其他名詞片語的對等性不佳）
+  - 「More speed less risk」（提議版——團隊共識最愛）
+  - 「Increase speed and stay on track」（提議版——不受青睞）
+  - 「Velocity with confidence」（被當作一個概念提及）
+  - 「No trade-offs」（曾短暫考慮，因工程師心態認為總是有 trade-offs 而被否決）
+  - 「More speed less risk with confidence」（提議的組合版）
+
+  **討論到的評估準則：**
+  - 調性的對等性（名詞片語應與名詞片語相配）
+  - 朗朗上口/精煉有力
+  - 技術準確性（不做絕對化主張，如「no trade-offs」或「100% secure」）
+  - 可用於平行句構的能力（「With GitLab you get X」）
+
+  **最終選定：**
+  - 「A single source of truth, countless possibilities」
+  - 「End to end control over your software factory」
+  - 「More speed less risk」
+
+  **資安子標語：**
+  - 「Secure the factory and its deliverables」（出自 Cindy 的部落格文章）
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+    dest: meeting_transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

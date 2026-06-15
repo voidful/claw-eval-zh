@@ -1,0 +1,151 @@
+task_id: T126tw_meeting_sentiment_analysis
+task_name: '會議情緒分析
+
+  '
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_sentiment_analysis.md
+  original_task_id: task_meeting_sentiment_analysis
+  original_file: tasks/task_meeting_sentiment_analysis.md
+prompt:
+  text: '我手上有一個檔案 `meeting_transcript.md`，內含 GitLab 產品行銷團隊會議的逐字稿。請幫我分析這場會議整體的情緒與情感動態。
+
+
+    請把分析寫入名為 `sentiment_analysis.md` 的檔案，內容涵蓋：
+
+
+    - **整體會議情緒**（正面、負面或混合），並附簡短理由
+
+    - **逐主題情緒拆解**：針對每個主要討論主題，評定其情緒（正面／中性／負面）並說明原因
+
+    - **團隊動態觀察**：記錄出現認同、分歧、熱絡或不滿的時刻
+
+    - **值得注意的引言（notable quotes）**：摘出 3-5 句最能呈現會議情感基調的直接引言
+
+    - **投入程度（engagement level）**：評估參與者的投入程度（積極討論 vs. 被動聆聽）
+
+    - **潛在疑慮**：找出參與者表達遲疑、不確定或反對意見的主題'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+  dest: meeting_transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立 `sentiment_analysis.md` 檔案
+- 整體情緒正確辨識為正面／合作
+- 至少分析 3 個主題並各自評定情緒
+- 包含團隊動態或人際互動觀察
+- 包含至少 2 句來自逐字稿的直接引言
+- 評估了投入程度
+- 至少辨識出一項疑慮或不確定之處
+- 分析能區分不同主題間的不同情感基調
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：分析深度（權重 35%）
+
+
+  **1.0 分**：分析超越表層的情緒標籤。辨識出會議過程中細膩的情緒轉折，解釋為何某些主題更具熱度，並掌握「非正式卻有生產力」的動態。記錄如 Talladega Nights 離題等具體時刻，作為團隊默契的佐證。
+
+
+  **0.75 分**：分析良好，逐主題拆解清楚並具一定細膩度。
+
+
+  **0.5 分**：指派了基本情緒標籤，但說明或洞見有限。
+
+
+  **0.25 分**：分析淺薄，大多只是重述明顯的觀察。
+
+
+  **0.0 分**：未做出有意義的分析。
+
+
+  ### 評分項 2：以證據為本的觀察（權重 30%）
+
+
+  **1.0 分**：論點有逐字稿中的具體引言或時刻佐證。在適當之處將情緒歸於特定人物（例如 William 對標語的強烈意見、Samia 對競品的條理化提問）。引言選得好且具說明力。
+
+
+  **0.75 分**：多數論點有證據支持，引言選擇良好。
+
+
+  **0.5 分**：提供部分證據，但許多論點是無佐證的斷言。
+
+
+  **0.25 分**：引言極少或全無，多為臆測。
+
+
+  **0.0 分**：未使用逐字稿中的任何證據。
+
+
+  ### 評分項 3：實用價值（權重 35%）
+
+
+  **1.0 分**：分析提供團隊主管可用的可執行洞見——辨識潛在摩擦點、團隊同調之處、誰可能需要更多支援，以及哪些主題能激發團隊。「疑慮」區段點出真正值得處理的問題。
+
+
+  **0.75 分**：大致可執行，能良好辨識動態與疑慮。
+
+
+  **0.5 分**：有一些有用觀察，但多為描述性而非可執行。
+
+
+  **0.25 分**：實用價值有限；讀起來更像讀書報告而非有用的分析。
+
+
+  **0.0 分**：沒有可執行的洞見。'
+reference_solution: "助手應該：\n\n1. 讀取會議逐字稿\n2. 辨識整體偏正面／合作的情緒——團隊大致同調且具生產力\n3. 逐主題分析情緒：\n   - 企業活動：中性／略帶不確定（仍在等待各\
+  \ GTM 團隊的回饋）\n   - 產品公告：正面／熱絡（團隊對彙整成果感到興奮）\n   - 競品資訊圖：正面，伴隨輕度爭辯（配色選擇、stage 名稱的描述性）\n   - 訊息框架：高度投入、帶玩鬧氣氛（Talladega\
+  \ Nights 梗、對標語的熱烈討論）\n4. 記錄具體動態：\n   - 對「more speed, less risk」標語的熱情\n   - 玩鬧式打趣（Ricky Bobby／NASCAR\
+  \ 梗、學校集會）\n   - William 直白的「我不是愛就是恨」風格\n   - 對公司不夠慶祝成果的輕微不滿\n   - Samia 對競品試算表方法論的建設性反對意見\n5. 摘出能呈現基調的相關引言\n\
+  6. 評估整體偏高的投入程度"
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.5
+    llm_judge: 0.5
+  workspace_files:
+  - source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+    dest: meeting_transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

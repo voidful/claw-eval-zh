@@ -1,0 +1,68 @@
+task_id: P047zh_financial_ratio_calculation
+task_name: 財務比率計算
+version: 0.2.0
+category: analysis
+difficulty: hard
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_financial_ratio_calculation
+  original_file: tasks/task_financial_ratio_calculation.md
+prompt:
+  text: |-
+    請計算 U.S. Steel 在 2024 會計年度（fiscal year 2024）的存貨週轉率（inventory turnover ratio）。
+
+    請查找所需的財務數字、執行計算，並把結果存到 `us_steel_inventory_turnover.txt`。請附上公式、你使用的數值，以及最終的比率。
+
+    （提醒：本任務僅供資訊與分析參考，不構成投資或財務建議，亦不取代專業財務意見。）
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 240
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已建立 us_steel_inventory_turnover.txt 檔案
+- 檔案含有銷貨成本（cost of sales）與存貨（inventory）輸入值
+- 檔案展示了公式或計算方法
+- 最終比率約為 6.55x
+- 答案易讀且在財務上合理
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+
+  1. 找到計算存貨週轉率所需的 U.S. Steel FY2024 相關數字。
+  2. 使用標準的存貨週轉率公式，例如銷貨成本（cost of sales）除以平均存貨（average inventory）。
+  3. 列出計算中使用的數值。
+  4. 建立 `us_steel_inventory_turnover.txt` 並附上最終答案。
+
+  就 FY2024 而言，以年度銷貨成本與依期初、期末餘額計算的平均存貨來算，正確答案應落在約 6.5x 左右。
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files: []
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

@@ -1,0 +1,141 @@
+task_id: P055zh_csv_stock_best_worst
+task_name: Apple 股票 2014 年最佳與最差交易日
+version: 0.2.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_csv_stock_best_worst
+  original_file: tasks/task_csv_stock_best_worst.md
+prompt:
+  text: |-
+    我的工作區中有一個 CSV 檔 `apple_stock_2014.csv`，內含 Apple (AAPL) 2014 年的
+    調整後收盤價。該檔有兩個欄位：`AAPL_x`（日期，格式為 YYYY-MM-DD）與 `AAPL_y`
+    （調整後收盤價）。共有 240 個交易日的資料。
+
+    請找出 Apple 股票 2014 年最佳與最差的交易日，並將你的發現寫入名為
+    `best_worst_days_report.md` 的檔案。你的報告應包含：
+
+    - **最佳的前 5 個交易日**：每日百分比漲幅（收盤對收盤）最高的日子，列出日期、
+      前一日價格、當日價格、價格變化（美元）與百分比變化。
+    - **最差的前 5 個交易日**：每日百分比跌幅最大的日子，附上相同的細節。
+    - **群聚分析**：指出是否有任何極端日彼此相鄰群聚（例如連續或相近的好日／壞日）。
+    - **分布脈絡**：上漲日與下跌日各佔多少百分比？每日報酬平均值為何？
+    - 一段簡短的**分析**，討論這些極端日可能反映出該股票的何種行為。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/apple_stock_2014.csv
+  dest: apple_stock_2014.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `best_worst_days_report.md`
+- 正確找出最佳的前 5 日並附日期
+- 最佳日的百分比變化正確
+- 正確找出最差的前 5 日並附日期
+- 最差日的百分比變化正確
+- 極端日附上美元價格變化
+- 討論群聚型態
+- 包含上漲日與下跌日的分布
+- 提供總結分析
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：分析正確性（權重 35%）
+
+  **1.0 分**：最佳與最差的前 5 日皆正確找出，日期、美元變化與百分比變化皆準確，
+  且符合預期值。
+  **0.75 分**：多數日子正確找出，僅有一、兩處數值或排序的小錯誤。
+  **0.5 分**：找出數個正確日子，但有明顯的數值錯誤或項目缺漏。
+  **0.25 分**：僅少數數值正確；在辨識或計算上有重大錯誤。
+  **0.0 分**：無任何正確計算，或未嘗試分析。
+
+  ### 評分項 2：型態分析（權重 25%）
+
+  **1.0 分**：提供具洞察力的群聚分析，指出 12 月有兩個最差日相近、4 月有兩個最佳
+  日相近、9 月有兩個最差日，並將型態連結到可能的市場事件。
+  **0.75 分**：找出多數群聚型態並提供一些具意義的解讀。
+  **0.5 分**：指出部分極端日的相近性，但分析有限。
+  **0.25 分**：型態分析極少；大多只是列出日子而未檢視彼此關係。
+  **0.0 分**：未提供群聚或型態分析。
+
+  ### 評分項 3：報告結構與呈現（權重 25%）
+
+  **1.0 分**：報告組織良好，以清楚的表格呈現最佳／最差日，排版正確並顯示所有要求
+  的欄位（日期、價格、變化、百分比），由資料到分析的脈絡流暢。
+  **0.75 分**：報告有條理、可讀，僅有小幅排版問題。
+  **0.5 分**：報告包含分析，但組織不佳或缺少欄位細節。
+  **0.25 分**：報告雜亂或缺少主要章節。
+  **0.0 分**：未建立報告，或報告為空／無法使用。
+
+  ### 評分項 4：脈絡與分布（權重 15%）
+
+  **1.0 分**：包含上漲日／下跌日分布、每日報酬平均值，並將極端日相對於整體分布
+  加以脈絡化。
+  **0.75 分**：包含分布指標，僅有小缺漏。
+  **0.5 分**：提供部分脈絡，但分布資料不完整。
+  **0.25 分**：脈絡資訊非常有限。
+  **0.0 分**：未提供任何分布脈絡。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔
+  2. 計算全部 239 組相鄰日對的每日收盤對收盤百分比變化
+  3. 排序以找出最佳與最差的日子
+  4. 檢查極端日之間是否有群聚型態
+  5. 計算上漲日／下跌日的占比
+  6. 撰寫一份結構良好的 markdown 報告
+
+  預期關鍵數值：
+
+  - 最佳的前 5 日：
+    1. 2014-04-24：+7.40%（+$5.49）
+    2. 2014-10-21：+4.78%（+$4.66）
+    3. 2014-12-10：+3.83%（+$4.20）
+    4. 2014-04-29：+3.65%（+$2.93）
+    5. 2014-01-15：+2.84%（+$2.13）
+  - 最差的前 5 日：
+    1. 2014-01-28：-7.51%（-$5.76）
+    2. 2014-12-02：-4.47%（-$5.29）
+    3. 2014-09-04：-4.13%（-$4.22）
+    4. 2014-12-09：-3.43%（-$3.90）
+    5. 2014-09-16：-2.92%（-$2.98）
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/apple_stock_2014.csv
+    dest: apple_stock_2014.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

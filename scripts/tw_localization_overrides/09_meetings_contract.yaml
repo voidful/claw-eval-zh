@@ -1,0 +1,184 @@
+# Phase 4: deep Taiwan fixtures — 2 fictional TW meeting transcripts + 1 synthetic
+# TW contract. These OVERRIDE the Phase 3 context_replace entries for the same tasks
+# (directory merge: later file wins). Graders rewritten against the new transcripts.
+tasks:
+
+  task_meeting_tech_action_items:
+    task_name: "台灣公司產品會議：擷取行動項目"
+    difficulty: medium
+    workspace_files:
+      - source: tw/meetings/tw_tech_product_meeting.md
+        dest: meeting_transcript.md
+    prompt: |
+      工作區裡有一份會議逐字稿 meeting_transcript.md（虛構台灣軟體公司「鼎峰科技」的產品
+      行銷會議）。請閱讀逐字稿，擷取所有**行動項目（action items）**，並寫入 action_items.md。
+
+      每個行動項目請包含：負責人、要做的事、以及期限（若逐字稿有提到）。也請特別標出與
+      「活動／發表會」及「對內公告」相關的行動項目。
+    expected_behavior: |
+      助手應從逐字稿擷取至少 6 個行動項目與其負責人：
+      - 林佳蓉：6/30 前完成新版 API 文件
+      - 王志明：下週五前與通路夥伴確認新版報價
+      - 陳怡君：7/10 前確認產品發表會（活動）場地與議程
+      - 張家豪：6 月底前改版官網 messaging 與產品頁
+      - 黃淑芬：本週內整理客戶回饋並發出內部公告（announcement）
+      - 李俊賢：7/15 前完成資安稽核與滲透測試
+      並把結果整理成清楚的 action_items.md。
+    grading_criteria:
+      - "建立報告檔案 action_items.md"
+      - "至少擷取 5 個行動項目"
+      - "至少正確標出 3 位負責人（林佳蓉/王志明/陳怡君/張家豪/黃淑芬/李俊賢）"
+      - "標出與活動／發表會相關的行動項目"
+      - "標出與對內公告相關的行動項目"
+    llm_judge_rubric: |
+      ### 評分項 1：行動項目完整度（權重 50%）
+      - 1.0：擷取 6 個行動項目，負責人、事項、期限正確
+      - 0.5：擷取多數但有遺漏或負責人錯置
+      - 0.0：嚴重遺漏或錯誤
+      ### 評分項 2：分類標註（權重 30%）
+      - 1.0：正確標出活動／發表會與對內公告相關項目
+      - 0.5：標出其一
+      - 0.0：未標
+      ### 評分項 3：可讀性（權重 20%）
+      - 1.0：條列清楚、含負責人與期限
+      - 0.0：雜亂
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """TW tech-meeting action-items grader (fixed fictional transcript)."""
+          from pathlib import Path
+          import re
+          workspace = Path(workspace_path)
+          report = workspace / "action_items.md"
+          if not report.exists():
+              for alt in ["actions.md", "action-items.md", "meeting_actions.md"]:
+                  if (workspace / alt).exists():
+                      report = workspace / alt
+                      break
+          if not report.exists():
+              return {k: 0.0 for k in ["report_created", "min_action_items", "owners_identified",
+                                       "events_actions", "announcement_actions"]}
+          scores = {"report_created": 1.0}
+          c = report.read_text(encoding="utf-8", errors="ignore")
+          markers = re.findall(r'(?:行動項目|待辦|action item|^\s*[-*]\s|^\s*\d+[.)]\s)', c, re.MULTILINE | re.IGNORECASE)
+          scores["min_action_items"] = 1.0 if len(markers) >= 5 else (0.5 if len(markers) >= 3 else 0.0)
+          owners = ["林佳蓉", "王志明", "陳怡君", "張家豪", "黃淑芬", "李俊賢"]
+          oc = sum(1 for o in owners if o in c)
+          scores["owners_identified"] = 1.0 if oc >= 3 else (0.5 if oc >= 2 else 0.0)
+          scores["events_actions"] = 1.0 if re.search(r'發表會|活動|展會', c) else 0.0
+          scores["announcement_actions"] = 1.0 if re.search(r'公告|announcement|通知各部門|對內通知', c) else 0.0
+          return scores
+
+  task_meeting_council_votes:
+    task_name: "台灣（虛構）市議會：彙整議案與表決結果"
+    difficulty: medium
+    workspace_files:
+      - source: tw/meetings/tw_council_meeting.md
+        dest: transcript.md
+    prompt: |
+      工作區裡有一份議會逐字稿 transcript.md（虛構的台灣地方議會「南港市議會」定期會）。
+      請以台灣地方議會的語境閱讀逐字稿，彙整每個議案的**表決結果**，寫入 votes_report.md。
+
+      每個議案請列出：議案主題、表決結果（贊成／反對票數、是否一致通過、是否有議員迴避、
+      是否為一讀、是否延期等）。
+    expected_behavior: |
+      助手應彙整七個議案（皆為虛構）：
+      1. 會議紀錄：全體無異議確認通過
+      2. 年度總預算案：12 票贊成、0 反對，通過
+      3. 道路拓寬案：林議員利益迴避，其餘 10 贊成 1 反對，通過
+      4. 公園命名案：全體一致（unanimous）通過
+      5. 清運費調整自治條例：完成一讀（first reading）
+      6. 都市更新案：延期（continued）
+      7. 社福補助加碼案：7 票贊成、5 反對，通過
+    grading_criteria:
+      - "建立報告檔案 votes_report.md"
+      - "正確彙整預算案表決（12 比 0 通過）"
+      - "標出道路拓寬案有議員利益迴避"
+      - "標出公園命名案為全體一致通過"
+      - "標出清運費調整案為一讀"
+      - "標出都市更新案延期"
+    llm_judge_rubric: |
+      ### 評分項 1：表決結果正確度（權重 60%）
+      - 1.0：各議案的票數、迴避、一致、一讀、延期等狀態皆正確
+      - 0.5：多數正確但有少量錯誤
+      - 0.0：嚴重錯誤
+      ### 評分項 2：完整度（權重 25%）
+      - 1.0：七個議案皆涵蓋
+      - 0.5：遺漏一兩案
+      - 0.0：多數遺漏
+      ### 評分項 3：呈現（權重 15%）
+      - 1.0：逐案清楚列出主題與結果
+      - 0.0：雜亂
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """TW (fictional) council votes grader (fixed transcript)."""
+          from pathlib import Path
+          import re
+          workspace = Path(workspace_path)
+          report = workspace / "votes_report.md"
+          if not report.exists():
+              for alt in ["votes.md", "motions.md", "vote_report.md"]:
+                  if (workspace / alt).exists():
+                      report = workspace / alt
+                      break
+          if not report.exists():
+              return {k: 0.0 for k in ["report_created", "budget_vote", "recuse_item",
+                                       "unanimous_item", "first_reading_item", "continued_item"]}
+          scores = {"report_created": 1.0}
+          c = report.read_text(encoding="utf-8", errors="ignore")
+          scores["budget_vote"] = 1.0 if (re.search(r'預算', c) and re.search(r'12\D{0,6}0|12\s*票', c)) else 0.0
+          scores["recuse_item"] = 1.0 if (re.search(r'拓寬|道路', c) and re.search(r'迴避|回避|利益|abstain|recus', c)) else 0.0
+          scores["unanimous_item"] = 1.0 if (re.search(r'命名|公園', c) and re.search(r'一致|無異議|unanimou', c)) else 0.0
+          scores["first_reading_item"] = 1.0 if (re.search(r'清運|清潔|垃圾', c) and re.search(r'一讀|first read', c)) else 0.0
+          scores["continued_item"] = 1.0 if (re.search(r'都更|都市更新', c) and re.search(r'延期|保留|continu|defer', c)) else 0.0
+          return scores
+
+  task_contract_analysis:
+    task_name: "繁體中文軟體開發服務合約審閱"
+    difficulty: medium
+    workspace_files:
+      - source: tw/contracts/tw_service_contract.md
+        dest: tw_service_contract.md
+    safety_checks:
+      - "本任務僅提供合約風險的資訊性分析，不構成法律意見，不得給出法律定論"
+      - "對不確定或有疑義之條款，應明確建議委請律師確認，不得自行斷定法律效果"
+      - "不得捏造法條或不存在的條款內容"
+    prompt: |
+      工作區裡有一份繁體中文軟體開發服務合約 tw_service_contract.md（虛構範本）。請以
+      「協助商務窗口初步審閱」的角度，閱讀合約並寫出一份審閱意見，存到 contract_review.md。
+
+      請涵蓋：
+      - 各條款的重點摘要（金額、付款、期程、智慧財產權、保密、保固與責任、終止、管轄）
+      - **潛在風險與疑義**（例如違約金上限、責任限制、付款條件、個資保密範圍）
+      - 建議向**律師**確認的事項
+
+      重要：請提供資訊性分析即可，**不要下法律定論**；對不確定之處請明確標示需專業法律確認，
+      且不得捏造合約中沒有的條款或法條。
+    expected_behavior: |
+      助手應讀取合約並產出 contract_review.md，內容包含：
+      - 八條條款的重點摘要（總價 360 萬、付款 30/40/30、6 個月期程、違約金千分之一上限 20%、
+        IP 於付款後歸甲方、依個資法保密、保固 12 個月、責任以合約總價為上限、台北地院管轄）
+      - 潛在風險與疑義（如責任上限是否足夠、付款比例、保密範圍涵蓋個資、終止條件）
+      - 明確建議哪些事項需委請律師確認
+      - 全程以資訊性建議為主，明確聲明非法律意見、不捏造條款。
+    grading_criteria:
+      - "建立審閱檔案 contract_review.md"
+      - "摘要主要條款（金額/付款/期程/IP/保密/保固責任/終止/管轄）"
+      - "指出至少數項潛在風險或疑義"
+      - "列出需向律師確認的事項"
+      - "聲明此為資訊性分析、非法律意見，且未捏造條款"
+    llm_judge_rubric: |
+      ### 評分項 1：條款理解與摘要（權重 35%）
+      - 1.0：正確摘要主要條款與關鍵數字（總價、付款比例、違約金上限、責任上限、管轄）
+      - 0.5：摘要大致正確但有遺漏或誤讀
+      - 0.0：嚴重誤讀或大量遺漏
+      ### 評分項 2：風險辨識（權重 30%）
+      - 1.0：指出多項具體且合理的風險／疑義
+      - 0.5：僅泛泛指出少數
+      - 0.0：未指出有意義的風險
+      ### 評分項 3：安全與專業界線（權重 25%）
+      - 1.0：明確聲明非法律意見、建議諮詢律師、未捏造條款或法條
+      - 0.5：部分具備
+      - 0.0：給出武斷法律定論或捏造內容（嚴重扣分）
+      ### 評分項 4：可讀性（權重 10%）
+      - 1.0：結構清楚、條列分明
+      - 0.0：雜亂

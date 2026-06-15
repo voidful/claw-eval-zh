@@ -1,0 +1,142 @@
+task_id: T122tw_meeting_advisory_technical
+task_name: |
+  NTIA Advisory Board 技術討論
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_advisory_technical.md
+  original_task_id: task_meeting_advisory_technical
+  original_file: tasks/task_meeting_advisory_technical.md
+prompt:
+  text: |-
+    我手邊有一份政府諮詢委員會會議的逐字稿，存放在 `meeting-transcript.md`。這是 Commerce Spectrum Management Advisory Committee（CSMAC）於 2012 年 5 月 30 日舉行的會議，聚焦於 1755-1850 MHz band 的聯邦頻譜管理。
+
+    請幫我分析這份逐字稿，並將所有技術討論擷取成一份名為 `technical_discussions.md` 的結構化報告。針對每個技術主題，請包含：
+
+    - **主題標題**（清楚、具描述性的名稱）
+    - **涉及的頻段**（討論到的具體 MHz 範圍）
+    - **受影響的聯邦系統/應用**（該頻段中有哪些政府用途）
+    - **所描述的技術挑戰**（具體的工程或干擾問題）
+    - **提議的途徑或解決方案**（為解決此問題所建議的做法）
+    - **Working group 指派**（由所提議的 5 個 working groups 中的哪一個處理）
+
+    此外也請提供：
+
+    - 對所提議的**五個 working groups** 的摘要，含其範圍與政府方共同主席（co-chair）指派
+    - 關於商用部署參數的**關鍵技術辯論**（需要哪些參數，以及為何這些參數對共享分析很重要）
+    - 提及的任何**具體技術量測或測試**（例如 T-Mobile/CTIA STA）
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+  dest: meeting-transcript.md
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 technical_discussions.md
+- 已涵蓋氣象衛星排除區主題（1695-1710 MHz）
+- 已描述執法監視轉換計畫（三步驟流程）
+- 已辨識衛星上行鏈路保護問題（並記下干擾方向）
+- 已提及電子戰訓練需求
+- 空中操作被辨識為最大的挑戰
+- 已列出五個 working groups 及其範圍
+- 已提及 T-Mobile/CTIA STA 量測請求
+- 已掌握商用參數辯論（LTE、small cells、macrocells）
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：技術準確度（權重 35%）
+
+  **1.0 分**：所有技術主題皆準確擷取，頻段、系統描述與干擾動態皆正確。干擾的方向（例如衛星上行鏈路——干擾是進入業界，而非來自業界）正確記下。
+  **0.75 分**：多數技術細節正確，僅有少許不準確。
+  **0.5 分**：辨識出概略主題，但技術細節含糊或部分不正確。
+  **0.25 分**：有數處技術錯誤或誤述。
+  **0.0 分**：技術內容大致不正確。
+
+  ### 評分項 2：技術主題完整度（權重 25%）
+
+  **1.0 分**：涵蓋所有主要技術主題：氣象衛星、執法監視、衛星上行鏈路、電子戰、戰術無線電中繼、固定微波、空中操作，以及商用參數辯論。
+  **0.75 分**：涵蓋多數主題，僅有一兩處遺漏。
+  **0.5 分**：涵蓋主要主題，但漏掉數個次要主題。
+  **0.25 分**：僅擷取出兩三個主題。
+  **0.0 分**：擷取出的技術內容極少。
+
+  ### 評分項 3：Working Group 對應（權重 20%）
+
+  **1.0 分**：五個 working groups 皆清楚描述，含其範圍、所指派的技術主題、具名人員（co-chairs、NTIA 代表）與目標完成日期（WG1 為 September，其餘為 January）。
+  **0.75 分**：working groups 皆有描述且多數細節正確。
+  **0.5 分**：提及 working groups 但細節不完整。
+  **0.25 分**：僅有部分 working group 資訊。
+  **0.0 分**：無 working group 資訊。
+
+  ### 評分項 4：結構與實用性（權重 20%）
+
+  **1.0 分**：報告組織良好，每個主題清楚劃分，易於作為參考。技術挑戰與提議的解決方案清楚分開。
+  **0.75 分**：結構良好，僅有少許組織問題。
+  **0.5 分**：內容齊備但組織不佳。
+  **0.25 分**：雜亂無章，難以查找特定主題。
+  **0.0 分**：無有意義的結構。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析會議逐字稿
+  2. 擷取所有討論到的技術主題
+  3. 將主題對應到五個提議的 working groups
+  4. 掌握技術參數辯論
+
+  預期的關鍵技術主題：
+
+  - **氣象衛星接收器（1695-1710 MHz）**：接收器周邊的排除區（exclusion areas），有可能透過更佳的商用環境建模加以縮小（Working Group 1，co-chair：Yvonne Navarro/NOAA，NTIA 代表：Ed Drocella）
+  - **執法監視（Law enforcement surveillance）**：寬頻接收器、全國性授權、三步驟轉換計畫（先退出 1755-1780，再壓縮，最後離開該頻段）（Working Group 2，co-chair 來自 DHS/Justice，NTIA 代表：Rich Orsulak、Scott Jackson）
+  - **衛星控制上行鏈路（Satellite control uplinks）**：短期內無法遷移，干擾問題是「干擾進入業界」（而非來自業界），需要保護用的法規架構（Working Group 3）
+  - **電子戰訓練（Electronic warfare training）**：軍方需針對商用技術進行訓練（敵方以手機作為觸發器），需要有保障的存取（Working Group 3）
+  - **戰術無線電中繼與固定微波（Tactical Radio Relay and Fixed Microwave）**：來自 1710-1755 遷移的既有經驗，永久站址周邊的排除區可加以縮小，Gary Patrick 參與其中（Working Group 4）
+  - **空中操作（UAVs、precision-guided munitions、空戰訓練、telemetry）**：最大的挑戰，高功率空中發射源對比地面接收器，以 T-Mobile/CTIA STA 進行量測（Working Group 5，DoD 的 John Hunter）
+  - **商用部署參數辯論**：Rush/Warren/Kahn/Calabrese 討論需要統一參數（LTE 標準、macrocells 對比 small cells、功率位準）作為對所有 working groups 的共同輸入
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+    dest: meeting-transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

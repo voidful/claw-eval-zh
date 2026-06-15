@@ -1,0 +1,776 @@
+# PinchBench 日誌分析任務（第一批）— 繁體中文（zh-TW）翻譯覆蓋檔。
+# 僅翻譯使用者可見內容（prompt / expected_behavior / grading_criteria / llm_judge_rubric）。
+# 不翻譯：日誌檔名（access.log、auth.log、syslog 等）、輸出報告檔名、IP 位址、網址、
+#   HTTP 狀態碼、使用者代理字串、使用者名稱、時間戳記、識別碼、shell 指令、環境變數、
+#   必須完全相符的輸出字串；數值、計數、IP、日期、狀態碼一律保持原樣。
+# 本批 15 個任務均無 ## LLM Judge Rubric 區段，故皆不含 llm_judge_rubric。
+tasks:
+
+  task_log_apache_client_issues:
+    task_name: "Apache 錯誤日誌 — 找出有問題的用戶端 IP"
+    prompt: |
+      請分析位於 `apache_error.log` 的 Apache 錯誤日誌，並找出最有問題的用戶端 IP 位址。此日誌來自一台執行於 Fedora、版本為 Apache 2.0.49 的伺服器，涵蓋 2005 年 6 月 9 日至 16 日。
+
+      對於**錯誤數最多的前 5 個用戶端 IP**，請回報：
+
+      1. IP 位址
+      2. 錯誤條目（error entry）總數
+      3. 該 IP 所產生的主要錯誤類型
+      4. 該用戶端是否疑似在進行惡意活動（掃描、漏洞利用嘗試等）——並說明原因
+
+      請把你的發現寫到 `client_issues_report.md`，以 markdown 文件呈現，先放一個摘要表格，接著對每個 IP 做簡短分析。文末請加上一個區段，列出所有送出 **Invalid method** 請求的 IP（這些是使用畸形 HTTP 方法的漏洞利用嘗試），因為它們代表最高嚴重性的威脅。
+    expected_behavior: |
+      助手應該解析日誌檔，並依用戶端 IP 統計錯誤條目數。錯誤數最多的前 5 個 IP 為：
+
+      | 排名 | IP | 錯誤數 | 主要活動 |
+      |---|---|---|---|
+      | 1 | 202.133.98.6 | ~184 | 掃描 awstats／統計類腳本（檔案不存在、找不到腳本） |
+      | 2 | 81.214.165.213 | ~23 | 探測 `_vti_bin`（FrontPage extensions） |
+      | 3 | 81.199.21.119 | ~23 | 反覆請求 `/var/www/html/sumthin` |
+      | 4 | 194.116.250.2 | ~23 | 反覆請求 `/var/www/html/sumthin` |
+      | 5 | 195.23.79.241 | ~22 | 目錄索引被禁止（大規模掃描） |
+
+      助手也應找出送出 Invalid method 請求的 IP，其中包含針對 Windows IIS 漏洞的利用嘗試（透過 Unicode／雙重編碼路徑穿越攻擊 cmd.exe、root.exe）。送出 Invalid method 請求的不重複 IP 約有 13 個，包括：63.203.254.140、213.61.135.6、201.252.246.11、62.221.237.83、202.118.167.71、64.147.69.59 等。
+
+      可接受的變化：
+      - 由於非用戶端錯誤行的解析存在模糊性，計數有小幅差異（±5）可接受
+      - 若採用不同計數方法，助手對 IP 的排序可能略有不同
+      - 列出前 5 名以外的額外 IP 無妨
+      - 描述的詳盡程度可有所不同
+    grading_criteria:
+      - "已在工作區建立 `client_issues_report.md`"
+      - "已將 IP `202.133.98.6` 判定為最有問題的用戶端（錯誤數最高）"
+      - "報告指出 `202.133.98.6` 在掃描 awstats 或統計相關腳本"
+      - "前 5 個 IP 中至少有 3 個被正確找出，並附上約略錯誤數"
+      - "已列出送出 Invalid method 請求的 IP，並判定為漏洞利用／攻擊嘗試"
+
+  task_log_apache_top_errors:
+    task_name: "Apache 錯誤日誌 — 排序最常見的錯誤類型"
+    prompt: |
+      請分析位於 `apache_error.log` 的 Apache 錯誤日誌，並將所有 `[error]` 等級的條目依錯誤類型分類。請忽略 `[notice]` 等級的條目。
+
+      請產生一份由最常見到最不常見的錯誤類型排名清單。對於每一種錯誤類型，請提供：
+
+      1. 該錯誤類別的描述性名稱
+      2. 出現次數的精確計數
+      3. 一則範例日誌行
+      4. 簡短說明此錯誤的成因，以及它是否代表資安疑慮
+
+      請把你的發現寫到 `error_types_report.json`，以如下結構的 JSON 物件呈現：
+
+      ```json
+      {
+        "total_errors": 753,
+        "error_types": [
+          {
+            "rank": 1,
+            "category": "Descriptive name",
+            "count": 224,
+            "example": "One example log line",
+            "explanation": "What causes this and security implications"
+          }
+        ]
+      }
+      ```
+
+      請聚焦於面向用戶端的錯誤（即帶有 `[client ...]` 者），但同時也納入伺服器內部錯誤（例如 `mod_jk` 初始化失敗與 `env.createBean2()` 工廠錯誤）。
+    expected_behavior: |
+      助手應解析所有 `[error]` 等級的行，並依錯誤訊息樣式分組。預期的主要錯誤類別為：
+
+      | 排名 | 錯誤類型 | 計數 |
+      |---|---|---|
+      | 1 | Directory index forbidden by rule | ~224 |
+      | 2 | File does not exist（各種路徑） | ~200+ |
+      | 3 | script not found or unable to stat | ~66+ |
+      | 4 | mod_jk child init failures | ~48 |
+      | 5 | jk2_init() Can't find child in scoreboard | ~30+ |
+      | 6 | env.createBean2() Factory errors | ~12 |
+      | 7 | config.update() errors | ~12 |
+      | 8 | Invalid method in request | ~17 |
+      | 9 | request failed: URI too long | ~3 |
+
+      `[error]` 行的總數為 753。助手對子類別的分組方式可以不同（例如把所有「File does not exist」變體合併，或依路徑分開）。兩種做法皆可接受。
+
+      可接受的變化：
+      - 視分組策略而定，計數可能有 ±10 的差異
+      - 類別命名可有所不同
+      - 將「File does not exist」條目再細分子組可接受
+    grading_criteria:
+      - "已在工作區建立 `error_types_report.json`"
+      - "已將「Directory index forbidden」判定為最常見的用戶端錯誤（~224）"
+      - "已找出並計數「File does not exist」錯誤"
+      - "已將「Invalid method in request」判定為一個獨立的錯誤類型"
+      - "分析中納入了伺服器內部錯誤（mod_jk、env.createBean2）"
+
+  task_log_apache_error_summary:
+    task_name: "Apache 錯誤日誌 — 產生錯誤摘要報告"
+    prompt: |
+      請分析位於 `apache_error.log` 的 Apache 錯誤日誌，並產生一份完整的摘要報告。此日誌來自一台執行於 Fedora、版本為 Apache 2.0.49 的伺服器，涵蓋 2005 年 6 月約一週的時間。
+
+      你的報告應包含以下區段：
+
+      1. **概觀（Overview）**：日誌條目總數、涵蓋的日期範圍、各日誌等級的分布（error 與 notice）
+      2. **伺服器組態問題（Server Configuration Issues）**：與伺服器啟動、模組初始化或組態問題相關的錯誤（非由用戶端請求引起）
+      3. **用戶端錯誤摘要（Client Error Summary）**：不重複用戶端 IP 總數、與用戶端相關的錯誤總數，以及用戶端錯誤類別的分布
+      4. **資安評估（Security Assessment）**：摘要說明日誌中偵測到的任何掃描、探測或攻擊活動，並附上具體證據
+      5. **建議（Recommendations）**：提出 3 項可降低錯誤量或提升資安的可執行建議
+
+      請把報告寫到 `error_summary.md`，以結構清晰的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析整份日誌，並產生涵蓋下列內容的報告：
+
+      **概觀：**
+      - 約 1000 行日誌
+      - 日期範圍：Thu Jun 9 至 Thu Jun 16, 2005
+      - 約 753 條 error 條目、約 247 條 notice 條目
+
+      **伺服器組態問題：**
+      - JK connector（mod_jk/jk2）初始化失敗——在 scoreboard 中找不到子處理程序
+      - 針對 channel.jni、vm、worker.jni 的 env.createBean2() 工廠錯誤（每次啟動皆重複出現）
+      - 這些發生於 3 次伺服器啟動（Jun 9、Jun 10、Jun 12）以及一次平順重啟（graceful restart，Jun 12）
+
+      **用戶端錯誤摘要：**
+      - 約 159 個不重複用戶端 IP
+      - 約 630 條與用戶端相關的錯誤條目
+      - 主要類別：Directory index forbidden（~224）、File does not exist（~200+）、script not found（~66+）、Invalid method（~17）
+
+      **資安評估：**
+      - 透過 Invalid method 請求進行的 IIS 蠕蟲探測（Nimda/Code Red），攻擊目標為 cmd.exe、root.exe
+      - 使用編碼路徑（%5c、%c0%af、%c1%9c、%e0%80%af、%252e）的目錄路徑穿越（directory traversal）嘗試
+      - 來自 202.133.98.6 的 awstats 漏洞掃描（~184 條錯誤）
+      - 多個 IP 對 FrontPage extensions（_vti_bin）的探測
+      - 來自 212.238.198.203 的 OpenWebMail 掃描
+
+      **建議應涵蓋：**
+      - 新增 DirectoryIndex 或預設頁面，以消除「Directory index forbidden」的雜訊
+      - 封鎖已知掃描器 IP 或實施速率限制
+      - 修正 JK connector 組態以消除啟動錯誤
+
+      可接受的變化：
+      - 精確計數可能有 ±10% 的差異
+      - 只要建議具可執行性且切題，內容可有所不同
+      - 資安評估對同一攻擊可採用不同的用語
+    grading_criteria:
+      - "已在工作區建立 `error_summary.md`"
+      - "報告包含日期範圍與日誌等級分布（error 與 notice 的計數）"
+      - "將伺服器端組態問題（mod_jk、createBean）與用戶端錯誤分開辨識"
+      - "以具體證據指出資安威脅（IIS 蠕蟲、目錄路徑穿越、掃描器 IP）"
+      - "提供至少 2 項可執行的建議"
+
+  task_log_apache_critical:
+    task_name: "Apache 錯誤日誌 — 找出關鍵資安問題"
+    prompt: |
+      你是一名資安分析師，正在檢視位於 `apache_error.log` 的 Apache 錯誤日誌。你的任務是找出所有**與資安相關**的條目——也就是顯示針對此伺服器的主動攻擊、漏洞掃描或漏洞利用嘗試的條目。
+
+      請將每個發現分類到下列其中一個嚴重性等級：
+
+      | 嚴重性 | 定義 |
+      |---|---|
+      | `critical` | 主動的漏洞利用嘗試（例如命令執行、帶編碼酬載的目錄路徑穿越） |
+      | `high` | 針對特定已知漏洞的漏洞掃描 |
+      | `medium` | 偵察活動（目錄探測、來自單一 IP 反覆的 forbidden 請求） |
+      | `low` | 可能代表組態錯誤、但並非攻擊的偶發錯誤 |
+
+      請把你的發現寫到 `security_findings.json`，以 JSON 陣列呈現。每個元素必須是一個物件，包含：
+
+      ```json
+      {
+        "severity": "critical",
+        "category": "Brief category name",
+        "source_ips": ["1.2.3.4", "5.6.7.8"],
+        "evidence": "Description of what was found and why it's a security concern",
+        "sample_entry": "One example log line"
+      }
+      ```
+
+      請依嚴重性由 critical 到 low 排序。
+    expected_behavior: |
+      助手至少應找出下列發現：
+
+      **Critical：**
+      - **IIS 目錄路徑穿越／命令執行嘗試**：多個 IP 送出含有如 `/scripts/..%c0%af../winnt/system32/cmd.exe?/c+dir` 路徑的「Invalid method」請求。這些利用 Unicode 編碼漏洞（CVE-2000-0884、CVE-2001-0333）嘗試遠端命令執行。來源 IP 包括：63.203.254.140、213.61.135.6、201.252.246.11、62.221.237.83、213.205.73.192、64.147.69.59、207.181.126.3、12.216.230.125、220.228.80.199、64.60.251.53、63.197.230.242、61.72.66.8、202.118.167.71。
+      - **IIS 蠕蟲傳播探測**：IP 掃描 root.exe、MSADC、_vti_bin、_mem_bin、msadc，以及路徑穿越路徑（`..%5c..`、`..\xc1\x1c..`、`..\xc0\xaf..`、`..\xc1\x9c..`、`..%2f..`）。這些符合 Nimda/Code Red 蠕蟲行為。
+
+      **High：**
+      - **Awstats 漏洞掃描**：202.133.98.6 送出約 184 次請求，在多個路徑（cgi-bin、/awstats/、/stats/、/cgi/）探測 awstats.pl。AWStats 曾有已知的遠端命令執行漏洞。
+      - **OpenWebMail 掃描**：212.238.198.203 探測 /var/www/cgi-bin/openwebmail 共 20 次。
+      - **緩衝區溢位（buffer overflow）嘗試**：IP 210.91.137.35、211.211.14.224 與 150.161.187.25 送出觸發「URI too long (longer than 8190)」錯誤的請求，並伴隨 _vti_bin 探測。
+
+      **Medium：**
+      - **大規模目錄探測**：多個 IP 反覆請求目錄索引（195.23.79.241 約 22 次、219.133.246.207 約 15 次、218.82.188.130 約 13 次等）
+
+      可接受的變化：
+      - 嚴重性分類可略有不同（例如將 awstats 列為「critical」而非「high」）
+      - 超出預期清單之外的額外發現無妨
+      - 只要關鍵攻擊者被找出，IP 清單不完整亦可
+    grading_criteria:
+      - "已在工作區建立 `security_findings.json`"
+      - "已將命令執行／目錄路徑穿越嘗試判定為 critical（cmd.exe、root.exe 樣式）"
+      - "已找出 Awstats 掃描（202.133.98.6 或 awstats 關鍵字）"
+      - "至少找出 3 種不同的攻擊類別"
+      - "發現結果使用嚴重性分類系統"
+
+  task_log_apache_timeline:
+    task_name: "Apache 錯誤日誌 — 建立錯誤時間軸"
+    prompt: |
+      請分析位於 `apache_error.log` 的 Apache 錯誤日誌，並建立一份重要事件的時間軸。此日誌涵蓋 2005 年 6 月 9 日（星期四）至 6 月 16 日（星期四）。
+
+      對於每一天，請找出：
+
+      1. error 等級條目的數量
+      2. 值得注意的事件（伺服器重啟、攻擊爆發、異常活動高峰）
+      3. 任何活動集中的時段（短時間內出現大量錯誤）
+
+      此外，請找出整份日誌中**單一最劇烈的活動爆發**——也就是包含最多錯誤條目的最短時間窗——並描述該爆發期間發生了什麼。
+
+      請把你的發現寫到 `error_timeline.json`，採用如下結構：
+
+      ```json
+      {
+        "date_range": "2005-06-09 to 2005-06-16",
+        "daily_summary": [
+          {
+            "date": "2005-06-09",
+            "day_of_week": "Thursday",
+            "error_count": 50,
+            "notable_events": ["Description of what happened"]
+          }
+        ],
+        "peak_burst": {
+          "start_time": "2005-06-11 03:03:03",
+          "end_time": "2005-06-11 03:04:02",
+          "duration_seconds": 59,
+          "error_count": 150,
+          "description": "What caused this burst"
+        }
+      }
+      ```
+    expected_behavior: |
+      助手應解析時間戳記並依日分組條目。預期的每日分布（約略）：
+
+      | 日期 | 星期 | 錯誤數 | 值得注意的事件 |
+      |---|---|---|---|
+      | Jun 9 | Thu | ~50 | 伺服器啟動、JK connector 錯誤、目錄掃描開始 |
+      | Jun 10 | Fri | ~80 | 11:32 伺服器重啟、IIS 蠕蟲探測（Invalid method）、210.22.201.x 子網掃描 |
+      | Jun 11 | Sat | ~350+ | 03:03 來自 202.133.98.6 的**大規模爆發**（awstats 掃描導致 scoreboard 耗盡與 mod_jk2 關閉）、IIS 蠕蟲探測持續 |
+      | Jun 12 | Sun | ~100 | 04:04 平順重啟（graceful restart）、210.91.137.35 探測 _vti_bin、URI too long 攻擊 |
+      | Jun 13 | Mon | ~90 | 195.23.79.241 大規模掃描（~22 條錯誤）、218.68.233.47 掃描、218.82.188.130 掃描 |
+      | Jun 14 | Tue | ~80 | 81.214.165.213 探測 _vti_bin（23 次請求）、60.191.134.226 大規模掃描（19 次請求） |
+      | Jun 15 | Wed | ~50 | 219.133.247.159 掃描（18 次請求）、URI too long 攻擊、一般目錄掃描 |
+      | Jun 16 | Thu | ~3 | 僅 2-3 條條目（日誌可能在當天稍早即截斷） |
+
+      **最高峰爆發**為 6 月 11 日（星期六）來自 202.133.98.6 的 awstats 掃描，約於 03:03:03 開始，在 10 分鐘內產生約 150+ 條錯誤條目。此爆發極為劇烈，導致 Apache 衍生（spawn）大量新的子處理程序（從 jk2_init scoreboard 插槽訊息可見），並引發一連串 mod_jk2 關閉。
+
+      可接受的變化：
+      - 視邊界處理方式而定，每日計數可能有 ±15 的差異
+      - 最高峰爆發的辨識為關鍵洞見——時間與 IP 應吻合
+      - 星期標籤可省略
+    grading_criteria:
+      - "已在工作區建立 `error_timeline.json`"
+      - "每日分布涵蓋 8 天中至少 5 天，並附錯誤數"
+      - "已將 6 月 11 日（星期六）判定為錯誤最多的一天"
+      - "已將最高峰爆發歸因於 6 月 11 日約 03:03 來自 202.133.98.6 或 awstats 的掃描"
+      - "已記錄伺服器重啟事件（Jun 9、Jun 10、Jun 12 啟動中至少一項）"
+
+  task_log_syslog_boot:
+    task_name: "Linux Syslog 開機序列分析"
+    prompt: |
+      請分析位於 `linux_syslog.log` 的 Linux syslog 檔案，並產生一份開機序列報告。此日誌包含一台正式環境（production）伺服器的多個開機週期。請聚焦於日誌中記錄的**第一次開機**，並回答下列問題：
+
+      1. **系統識別**：核心（kernel）版本、CPU 型號，以及可用 RAM 總量各為何？
+      2. **儲存裝置**：主要硬碟的型號與總容量為何？根分割區（root partition）使用何種檔案系統類型？
+      3. **開機時間軸**：第一筆日誌條目的時間戳記為何？整個開機過程約花了多久（從 syslogd 重啟到最後一個服務啟動）？
+      4. **服務**：列出在第一次開機序列期間回報「startup succeeded」訊息的所有服務，並計數。
+      5. **錯誤與警告**：找出開機期間的任何錯誤、失敗或值得注意的警告（例如失敗的服務、被停用的功能、資安框架問題）。
+      6. **網路**：偵測到何種網路介面卡？系統上設定了多少個 IP 位址（計算具名／BIND 監聽介面數）？
+
+      請把你的發現寫到 `boot_report.md`，以結構化 markdown 文件呈現，並為上述六個領域各設一個區段。
+    expected_behavior: |
+      助手應解析 syslog 檔，找出始於 `Jun  9 06:06:20` 的第一次開機序列，並從核心訊息與 daemon 啟動行中擷取硬體與服務資訊。
+
+      **第一次開機（Jun 9）的關鍵預期數值：**
+
+      - **核心版本**：`2.6.5-1.358`
+      - **CPU**：Intel Pentium III (Coppermine)
+      - **處理器速度**：~731 MHz（偵測到 731.214 MHz）
+      - **RAM**：126MB LOWMEM 可用、0MB HIGHMEM
+      - **硬碟**：IBM-DTLA-307015，15020 MB（~15 GB）
+      - **根檔案系統**：EXT3（於 hda2）
+      - **網路卡**：3Com PCI 3c905C Tornado
+      - **BIND 介面**：23 個介面（lo + eth0 + eth0:1 至 eth0:22，但若計算監聽行則為 24——lo、eth0，以及 eth0:1 至 eth0:22）
+      - **SELinux**：以寬容模式（permissive mode）啟動，後於執行階段被停用
+      - **ACPI**：因 BIOS 為 2000 年版本過舊而被停用
+      - **失敗的服務**：`mdmpd` 失敗
+      - **值得注意的警告**：telnet 服務啟動失敗（bind address already in use）、ACPI 被停用、SELinux 於執行階段被停用、資安框架註冊失敗
+
+      **第一次開機（Jun 9 06:06:20 至 ~06:07:26）中標示「startup succeeded」的服務：**
+      syslog (syslogd)、syslog (klogd)、irqbalance、portmap、nfslock、rpcidmapd、pcmcia、bluetooth (hcid)、bluetooth (sdpd)、network (parameters)、network (loopback)、netfs、apmd、autofs、smartd、hpoj、cups、sshd、xinetd、sendmail、sm-client、spamassassin、privoxy、gpm、IIim、canna、crond、xfs、anacron、atd、readahead、messagebus、httpd、named、snmpd、ntpd、mysqld、mdmonitor (mdadm succeeded)。
+
+      助手對這些服務的計數方式可能因去重複而不同，但應找出約 25-35 個服務。
+
+      可接受的變化：
+      - 助手可將相關服務分組（例如將 syslog 中的 syslogd + klogd 計為一個或兩個）
+      - RAM 可回報為 126MB 或 ~125MB（核心回報 125312k 可用）
+      - IP 數可能因助手計算監聽行或不重複介面而有所不同
+      - 開機時長估計可能有所不同；第一次開機約從 06:06:20 跨至 06:07:26（核心服務約 66 秒，若計入 named/ntpd 則更長）
+    grading_criteria:
+      - "已在工作區建立 `boot_report.md`"
+      - "已找出核心版本 `2.6.5-1.358`"
+      - "已將 CPU 辨識為 Intel Pentium III (Coppermine)"
+      - "RAM 回報為約 126MB"
+      - "已將硬碟辨識為 IBM-DTLA-307015"
+      - "已將根檔案系統辨識為 EXT3"
+      - "已辨識 3Com 3c905C Tornado 網路卡"
+      - "已列出至少 15 個成功啟動的服務"
+      - "已記錄 `mdmpd` 失敗"
+      - "已提及 SELinux 於執行階段被停用"
+
+  task_log_nginx_status_codes:
+    task_name: "Nginx 存取日誌 — HTTP 狀態碼分布"
+    prompt: |
+      請分析位於 `nginx_access.log` 的 Nginx JSON 存取日誌，並產生一份 HTTP 狀態碼分布報告。每一行都是一個 JSON 物件，欄位有：`time`、`remote_ip`、`remote_user`、`request`、`response`、`bytes`、`referrer`、`agent`。
+
+      你的報告應包含：
+
+      1. **請求總數（Total Requests）**：日誌條目總數
+      2. **狀態碼分布（Status Code Breakdown）**：每個出現過的 HTTP 狀態碼的計數與百分比
+      3. **狀態碼類別（Status Code Categories）**：依類別分組（2xx 成功、3xx 重新導向、4xx 用戶端錯誤、5xx 伺服器錯誤），並附各類總計
+      4. **主要肇因者（Top Offenders）**：對於 4xx 與 5xx 錯誤，列出產生最多錯誤的前 5 個用戶端 IP
+      5. **請求路徑（Requested Paths）**：對於每個狀態碼，列出被請求最多的前 3 個路徑
+      6. **評估（Assessment）**：根據狀態碼分布，對伺服器健康狀況做簡短評估
+
+      請把報告寫到 `status_code_report.md`，以結構清晰的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析全部 1000 筆 JSON 日誌條目，並產生：
+
+      **請求總數：** 1000
+
+      **狀態碼分布：**
+      - 200：35（3.5%）
+      - 206：1（0.1%）
+      - 304：274（27.4%）
+      - 403：2（0.2%）
+      - 404：688（68.8%）
+
+      **狀態碼類別：**
+      - 2xx：36（3.6%）
+      - 3xx：274（27.4%）
+      - 4xx：690（69.0%）
+
+      **關鍵觀察：**
+      - 此日誌涵蓋 2015 年 5 月 17 日，約 08:05–16:05 UTC
+      - 404 錯誤居多——將近占全部請求的 69%
+      - 路徑主要為 `/downloads/product_1` 與 `/downloads/product_2`
+      - 大多數流量來自 Debian APT 套件管理工具用戶端
+      - 80.91.33.133 是最活躍的 IP，約有 210 次請求
+
+      可接受的變化：
+      - 精確百分比可能因四捨五入而不同
+      - 評估用語會有所不同
+      - 歡迎額外分析
+    grading_criteria:
+      - "已在工作區建立 `status_code_report.md`"
+      - "已回報請求總數（1000）"
+      - "已列出所有出現過的狀態碼及其計數（200、206、304、403、404）"
+      - "狀態碼已依類別分組（2xx、3xx、4xx）"
+      - "已找出產生最多錯誤的 IP"
+
+  task_log_nginx_traffic:
+    task_name: "Nginx 存取日誌 — 依時間的流量樣態"
+    prompt: |
+      請分析位於 `nginx_access.log` 的 Nginx JSON 存取日誌，並產生一份隨時間變化的流量樣態報告。每一行都是一個 JSON 物件，欄位有：`time`、`remote_ip`、`remote_user`、`request`、`response`、`bytes`、`referrer`、`agent`。
+
+      你的報告應包含：
+
+      1. **時間範圍（Time Range）**：日誌涵蓋的完整日期／時間範圍
+      2. **每小時流量分布（Hourly Traffic Breakdown）**：每小時的請求數
+      3. **流量高峰與低谷（Peak and Low Traffic）**：找出最繁忙與最清閒的時段
+      4. **隨時間的頻寬（Bandwidth Over Time）**：每小時傳輸的總位元組數
+      5. **請求速率趨勢（Request Rate Trends）**：請求是平穩、突發，還是呈現某種趨勢？
+      6. **各 IP 隨時間的活動（Per-IP Activity Over Time）**：找出跨多個小時出現的 IP，以及只在突發時段出現的 IP
+
+      請把報告寫到 `traffic_report.md`，以結構清晰的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析全部 1000 筆 JSON 日誌條目，並產生：
+
+      **時間範圍：** 2015 年 5 月 17 日，08:05:01 至 16:05:10 UTC（約 8 小時）
+
+      **每小時分布（約略）：**
+      - 08:xx —— 日誌從該小時中途開始
+      - 流量分布於這 8 小時的時間窗中
+      - 日誌包含時間戳記介於 08:05 與 16:05 之間的條目
+
+      **關鍵觀察：**
+      - 此期間共有 73 個不重複用戶端 IP
+      - 80.91.33.133 是最持續的用戶端（約 210 次請求，分散於整段時間範圍）
+      - 大多數流量為 Debian APT 套件管理工具流量（自動更新）
+      - 傳輸位元組數不一——304（Not Modified）回應為 0 位元組；200 回應最高可達約 3318 位元組
+      - 此伺服器看來是一台軟體下載／儲存庫鏡像站
+
+      可接受的變化：
+      - 視解析方式而定，每小時計數可能有所不同
+      - 任何合理的分箱方式（每小時、每 30 分鐘等）皆可接受
+      - 趨勢分析用語會有所不同
+    grading_criteria:
+      - "已在工作區建立 `traffic_report.md`"
+      - "已找出時間範圍（2015 年 5 月 17 日；約 08:05–16:05 UTC）"
+      - "流量已依時段分解（每小時或類似方式）"
+      - "已找出流量高峰／最繁忙時段"
+      - "已分析頻寬或傳輸位元組數"
+
+  task_log_nginx_slow_requests:
+    task_name: "Nginx 存取日誌 — 找出最大回應"
+    prompt: |
+      請分析位於 `nginx_access.log` 的 Nginx JSON 存取日誌，並找出產生最大回應（以傳輸位元組數計）的請求。每一行都是一個 JSON 物件，欄位有：`time`、`remote_ip`、`remote_user`、`request`、`response`、`bytes`、`referrer`、`agent`。
+
+      你的報告應包含：
+
+      1. **前 10 大回應（Top 10 Largest Responses）**：列出位元組數最高的請求，包含時間戳記、用戶端 IP、請求路徑、狀態碼與位元組數
+      2. **位元組分布摘要（Byte Distribution Summary）**：整體統計——傳輸位元組的最小值、最大值、平均數、中位數（排除零位元組回應）
+      3. **零位元組回應（Zero-Byte Responses）**：零位元組回應的計數，以及哪些狀態碼會產生這類回應
+      4. **大型回應分析（Large Response Analysis）**：哪些路徑與用戶端 IP 與最大的傳輸相關？
+      5. **效率評估（Efficiency Assessment）**：有多少百分比的請求造成實際資料傳輸，相對於快取命中（304）？
+
+      請把報告寫到 `large_responses_report.md`，以結構清晰的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析全部 1000 筆 JSON 日誌條目，並產生：
+
+      **最大回應：**
+      - 觀察到的最大位元組數：~3318 位元組
+      - 最大回應為針對 `/downloads/product_1` 與 `/downloads/product_2` 的 200 OK 回應
+      - 最高的位元組值包括：3318、3316、3301、2582、2578 等
+
+      **零位元組分析：**
+      - 304 Not Modified 回應全部為 0 位元組（274 筆）
+      - 404 回應的位元組數很小（通常落在 300-340 範圍）
+
+      **效率：**
+      - 1000 次請求中約有 274 次為 304（快取命中）—— 27.4%
+      - 帶資料的 200 OK：約 35 次請求 —— 3.5%
+      - 404 錯誤：688 次請求——這些傳輸的是小型錯誤頁面
+
+      可接受的變化：
+      - 精確的位元組值由日誌決定，具確定性
+      - 評估用語會有所不同
+      - 列前 10 名或前 20 名皆可
+    grading_criteria:
+      - "已在工作區建立 `large_responses_report.md`"
+      - "已列出最大的回應及其位元組數"
+      - "已將零位元組／304 回應另外分析"
+      - "已提供分布統計（最小值、最大值、平均數或中位數）"
+      - "已找出與最大回應相關的路徑"
+
+  task_log_nginx_user_agents:
+    task_name: "Nginx 存取日誌 — 使用者代理分析"
+    prompt: |
+      請分析位於 `nginx_access.log` 的 Nginx JSON 存取日誌，並產生一份完整的使用者代理（user agent）分析。每一行都是一個 JSON 物件，欄位有：`time`、`remote_ip`、`remote_user`、`request`、`response`、`bytes`、`referrer`、`agent`。
+
+      你的報告應包含：
+
+      1. **不重複使用者代理（Unique User Agents）**：相異使用者代理字串的總數
+      2. **使用者代理排名（User Agent Ranking）**：依請求數排序列出所有使用者代理，並附計數與百分比
+      3. **用戶端類型分類（Client Type Classification）**：將代理分類（套件管理工具、網頁瀏覽器、機器人／爬蟲、命令列工具、未知／空白）
+      4. **代理對 IP 的對應（Agent-to-IP Mapping）**：對於每個使用者代理，有多少個不重複 IP 使用它？
+      5. **各代理的成功與錯誤率（Success vs Error Rate by Agent）**：對於每個代理，有多少百分比的請求造成錯誤（4xx/5xx）？
+      6. **結論（Conclusions）**：根據使用者代理的樣貌，這是何種類型的伺服器？
+
+      請把報告寫到 `user_agent_report.md`，以結構清晰的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析全部 1000 筆 JSON 日誌條目，並產生：
+
+      **不重複使用者代理：** 14 個相異代理字串（包含代表空白的「-」）
+
+      **主要使用者代理：**
+      - `Debian APT-HTTP/1.3 (0.9.7.9)` —— 370 次請求（37.0%）
+      - `Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.16)` —— 177（17.7%）
+      - `Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.22)` —— 118（11.8%）
+      - `Debian APT-HTTP/1.3 (1.0.1ubuntu2)` —— 116（11.6%）
+      - `Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.21)` —— 64（6.4%）
+      - 其他 APT 變體及少數其他代理（Go 1.1 package http、urlgrabber 等）
+
+      **分類：**
+      - 套件管理工具（Debian APT）：絕大多數（約 95%+）
+      - 其他自動化工具：Go HTTP client、urlgrabber
+      - 空白／缺漏代理（「-」）：少量
+
+      **結論：**
+      - 這顯然是一台 Debian/Ubuntu 套件儲存庫或軟體下載鏡像站
+      - 多個 APT 版本顯示用戶端執行不同的 Ubuntu/Debian 發行版
+      - 幾乎沒有人為瀏覽器流量
+
+      可接受的變化：
+      - 精確計數由日誌決定，具確定性
+      - 分類類別可使用不同名稱
+      - 評估語言會有所不同
+    grading_criteria:
+      - "已在工作區建立 `user_agent_report.md`"
+      - "已列出所有使用者代理及其計數"
+      - "代理已依類型分類（套件管理工具、機器人等）"
+      - "已將主要代理（Debian APT）判定為首要用戶端"
+      - "已正確推論伺服器用途（套件儲存庫／下載鏡像站）"
+
+  task_log_nginx_errors:
+    task_name: "Nginx 存取日誌 — 錯誤樣態分析"
+    prompt: |
+      請分析位於 `nginx_access.log` 的 Nginx JSON 存取日誌，並針對錯誤樣態（4xx 與 5xx 回應）產生一份詳盡報告。每一行都是一個 JSON 物件，欄位有：`time`、`remote_ip`、`remote_user`、`request`、`response`、`bytes`、`referrer`、`agent`。
+
+      你的報告應包含：
+
+      1. **錯誤概觀（Error Overview）**：錯誤總數、錯誤率（占全部請求的百分比）、依狀態碼的分布
+      2. **404 分析（404 Analysis）**：哪些路徑回傳 404？這些是合理的資源遺失，還是組態錯誤的路由？
+      3. **403 分析（403 Analysis）**：什麼被禁止存取，來自哪些 IP？
+      4. **依用戶端 IP 的錯誤（Error by Client IP）**：哪些 IP 產生最多錯誤？列出前 10 名及計數
+      5. **依路徑的錯誤（Error by Path）**：哪些請求路徑產生最多錯誤？列出前 10 名及計數
+      6. **時間樣態（Temporal Pattern）**：錯誤集中在某些時段，還是均勻分布？
+      7. **修補建議（Remediation Recommendations）**：根據錯誤樣態，提出 3 項具體修正
+
+      請把報告寫到 `error_analysis.md`，以結構清晰的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析全部 1000 筆 JSON 日誌條目，並產生：
+
+      **錯誤概觀：**
+      - 錯誤總數：690（占全部請求的 69.0%）
+      - 404：688 個錯誤
+      - 403：2 個錯誤
+      - 未觀察到 5xx 錯誤
+
+      **404 分析：**
+      - 所有 404 皆指向 `/downloads/product_1` 與 `/downloads/product_2`
+      - 這些相同路徑在其他時間也回傳 200 與 304
+      - 這暗示是資源間歇性可用，而非永久遺失檔案
+
+      **403 分析：**
+      - 2 個 forbidden 請求——找出其 IP 與路徑
+
+      **主要錯誤 IP：**
+      - 80.91.33.133 是整體流量最高的 IP，也很可能是產生最多錯誤者
+      - 其他高頻 IP：5.83.131.103、202.143.95.26、50.57.209.92
+
+      **關鍵洞見：**
+      - 在一台套件下載伺服器上出現極高的 404 率（68.8%）並不尋常
+      - 套件管理工具會自動重試，因而放大了錯誤數
+      - 根本原因很可能是下載資源的暫時性不可用
+
+      可接受的變化：
+      - 精確計數具確定性
+      - 修補建議會有所不同
+      - 評估深度可有所不同
+    grading_criteria:
+      - "已在工作區建立 `error_analysis.md`"
+      - "已提供錯誤率與狀態碼分布（690 個錯誤、69%、404/403 拆分）"
+      - "已依路徑分析 404 錯誤（/downloads/product_1、/downloads/product_2）"
+      - "已列出產生最多錯誤的 IP"
+      - "已提供至少 2 項修補建議"
+
+  task_log_ssh_failed_logins:
+    task_name: "SSH 認證日誌 — 登入失敗分析"
+    prompt: |
+      請分析位於 `auth.log` 的 OpenSSH 認證日誌，並針對登入失敗嘗試產生一份詳盡報告。此日誌來自一台名為「LabSZ」的伺服器，記錄 SSH 認證事件。
+
+      你的報告應包含：
+
+      1. **概觀（Overview）**：日誌條目總數、日期範圍、登入失敗嘗試總數
+      2. **密碼失敗嘗試（Failed Password Attempts）**：「Failed password」條目的計數，並依來源 IP 拆分
+      3. **無效使用者嘗試（Invalid User Attempts）**：使用不存在使用者名稱的嘗試計數，並列出最常被嘗試的前 10 個使用者名稱
+      4. **主要攻擊 IP（Top Attacking IPs）**：依失敗嘗試次數列出前 10 個來源 IP 及計數
+      5. **認證方法（Authentication Methods）**：正在嘗試哪些認證方法（password、publickey 等）？
+      6. **反向 DNS 失敗（Reverse DNS Failures）**：有多少條目顯示「POSSIBLE BREAK-IN ATTEMPT」警告？
+      7. **總結評估（Summary Assessment）**：此伺服器是否正遭受主動攻擊？這些樣態說明了什麼？
+
+      請把報告寫到 `failed_login_report.md`，以結構清晰的 markdown 文件呈現。
+    expected_behavior: |
+      助手應解析這 1500 筆日誌條目，並產生：
+
+      **概觀：**
+      - 1500 筆日誌條目
+      - 日期：12 月 10 日（時間範圍約 06:55 至 10:59）
+      - 約 366 筆「Failed password」條目
+      - 約 100 筆「Invalid user」條目
+
+      **主要攻擊 IP：**
+      - 183.62.140.253 —— 約 307 筆條目（主要攻擊者）
+      - 187.141.143.180 —— 約 189 筆條目
+      - 103.99.0.122 —— 約 83 筆條目
+      - 112.95.230.3 —— 約 54 筆條目
+      - 5.188.10.180 —— 約 30 筆條目
+
+      **最常見的無效使用者名稱：**
+      - admin（18）、oracle（6）、support（5）、test（4）、inspur（3）、0（3）、matlab（3）、webmaster（2）、guest（2）、1234（2）
+
+      **關鍵觀察：**
+      - 整份日誌中只有 1 次成功登入（使用者「fztu」，來自 119.137.62.142）
+      - 因反向 DNS 失敗而觸發的 85 次「POSSIBLE BREAK-IN ATTEMPT」警告
+      - 此伺服器顯然正遭受主動的暴力破解（brute force）攻擊
+      - 攻擊來自少數幾個各自產生數百次嘗試的 IP
+
+      可接受的變化：
+      - 視解析方式而定，精確計數可能有 ±5 的差異
+      - 評估語言會有所不同
+    grading_criteria:
+      - "已在工作區建立 `failed_login_report.md`"
+      - "已計數失敗嘗試總數（約 366 筆密碼失敗）"
+      - "已找出主要攻擊 IP（183.62.140.253 為頭號攻擊者）"
+      - "已列出無效使用者名稱（admin、oracle、support 為主要目標）"
+      - "已評估此伺服器正遭受暴力破解攻擊"
+
+  task_log_ssh_brute_force:
+    task_name: "SSH 認證日誌 — 暴力破解偵測"
+    prompt: |
+      你是一名資安分析師，正在檢視位於 `auth.log` 的 OpenSSH 認證日誌。你的任務是偵測暴力破解（brute-force）攻擊樣態，並產生一份威脅評估。
+
+      暴力破解攻擊的定義為：**在日誌期間內，來自單一 IP 位址的認證失敗嘗試超過 10 次**。
+
+      你的報告應包含：
+
+      1. **暴力破解來源（Brute Force Sources）**：列出所有達到暴力破解門檻的 IP，並附各 IP 的失敗嘗試總數
+      2. **攻擊強度（Attack Intensity）**：對每個暴力破解來源，計算約略的嘗試速率（每分鐘嘗試次數）
+      3. **使用者名稱樣態（Username Patterns）**：對每個攻擊 IP，他們嘗試了哪些使用者名稱？是字典攻擊（dictionary attack，眾多使用者名稱）還是定向攻擊（targeted，少數使用者名稱）？
+      4. **攻擊時間軸（Attack Timeline）**：每個攻擊何時開始與停止？攻擊者之間是否有重疊？
+      5. **反向 DNS 分析（Reverse DNS Analysis）**：哪些攻擊 IP 觸發了「POSSIBLE BREAK-IN ATTEMPT」警告？
+      6. **風險評估（Risk Assessment）**：評定整體威脅等級，並建議具體的對策
+
+      請把報告寫到 `brute_force_report.json`，採用如下結構的 JSON 文件：
+
+      ```json
+      {
+        "summary": "Brief summary",
+        "brute_force_sources": [
+          {
+            "ip": "x.x.x.x",
+            "total_attempts": 100,
+            "first_seen": "Dec 10 HH:MM:SS",
+            "last_seen": "Dec 10 HH:MM:SS",
+            "usernames_tried": ["user1", "user2"],
+            "attack_type": "dictionary|targeted",
+            "reverse_dns_warning": true
+          }
+        ],
+        "risk_level": "critical|high|medium|low",
+        "recommendations": ["rec1", "rec2"]
+      }
+      ```
+    expected_behavior: |
+      助手應找出這些暴力破解來源：
+
+      **主要攻擊者：**
+      - **183.62.140.253** —— 約 307 筆條目，最重度的攻擊者，很可能是字典攻擊
+      - **187.141.143.180** —— 約 189 筆條目，持續性攻擊
+      - **103.99.0.122** —— 約 83 筆條目
+      - **112.95.230.3** —— 約 54 筆條目
+      - **5.188.10.180** —— 約 30 筆條目
+      - **185.190.58.151** —— 約 26 筆條目
+
+      **關鍵發現：**
+      - 來自不同 IP 的多重並行暴力破解攻擊
+      - 攻擊橫跨約 4 小時（06:55–10:59）
+      - 使用者名稱樣態包含常見預設值（admin、root、test、oracle、support）
+      - 85 次「POSSIBLE BREAK-IN ATTEMPT」警告，顯示反向 DNS 遭偽造或設定錯誤
+      - 風險等級應評為 high 或 critical
+
+      可接受的變化：
+      - 暴力破解偵測的門檻可有所不同
+      - 速率計算取決於如何判定第一次／最後一次時間戳記
+      - 建議的具體內容會有所不同
+    grading_criteria:
+      - "已在工作區建立 `brute_force_report.json`"
+      - "已找出至少 3 個暴力破解來源 IP"
+      - "已將 183.62.140.253 判定為頭號攻擊者"
+      - "已為每個來源分類攻擊類型（字典攻擊 vs 定向攻擊）"
+      - "已提供對策建議"
+
+  task_log_ssh_successful:
+    task_name: "SSH 認證日誌 — 成功認證摘要"
+    prompt: |
+      請分析位於 `auth.log` 的 OpenSSH 認證日誌，並產生一份聚焦於成功認證的報告。請在眾多失敗嘗試的雜訊中，找出所有合法存取。
+
+      你的報告應包含：
+
+      1. **成功登入（Successful Logins）**：列出每一次成功認證，包含時間戳記、使用者名稱、來源 IP、連接埠與認證方法
+      2. **成功對失敗比（Success vs Failure Ratio）**：所有認證嘗試中有多少百分比成功？
+      3. **合法使用者輪廓（Legitimate User Profile）**：對每位成功認證的使用者，描述其存取樣態
+      4. **工作階段活動（Session Activity）**：是否有登入後發生事件的證據（session opened/closed 事件）？
+      5. **來源 IP 驗證（Source IP Validation）**：成功登入的 IP 是否同時也與某些失敗嘗試相關聯？
+      6. **異常檢查（Anomaly Check）**：此次成功登入看來合法，還是可疑（例如來自同時也在進行暴力破解的 IP）？
+
+      請把報告寫到 `successful_auth_report.md`，以結構清晰的 markdown 文件呈現。
+    expected_behavior: |
+      助手應找出：
+
+      **成功登入：**
+      - 整份日誌中只有 1 次成功登入：
+        - 時間：Dec 10 09:32:20
+        - 使用者：fztu
+        - 來源：119.137.62.142
+        - 連接埠：49116
+        - 方法：password (ssh2)
+        - 條目：「Accepted password for fztu from 119.137.62.142 port 49116 ssh2」
+
+      **成功對失敗比：**
+      - 數百次嘗試中只有 1 次成功——成功率極低
+      - 這再次印證此日誌捕捉到一台正遭受暴力破解攻擊的伺服器
+
+      **異常檢查：**
+      - 應將 119.137.62.142（成功登入的 IP）與失敗嘗試清單核對
+      - 若它只出現在成功條目中，很可能是合法使用者
+      - 若它也有失敗嘗試，則可能是遭洩漏的憑證（compromised credential）
+
+      **工作階段活動：**
+      - 找尋使用者 fztu 對應的「session opened」／「session closed」事件
+
+      可接受的變化：
+      - 分析深度可有所不同
+      - 部分助手可能找到額外的工作階段相關條目
+      - 異常評估用語會有所不同
+    grading_criteria:
+      - "已在工作區建立 `successful_auth_report.md`"
+      - "已找出唯一一次成功登入（使用者 fztu、IP 119.137.62.142）"
+      - "已計算成功／失敗比（1 次成功 vs 數百次失敗）"
+      - "已將成功登入的 IP 與失敗嘗試來源核對"
+      - "已提供此次登入是否看來合法的評估"
+
+  task_log_ssh_user_activity:
+    task_name: "SSH 認證日誌 — 使用者登入活動報告"
+    prompt: |
+      請分析位於 `auth.log` 的 OpenSSH 認證日誌，並產生一份以使用者為核心的活動報告。對於日誌中提到的每個使用者名稱（無論有效或無效），請摘要其認證活動。
+
+      你的報告應包含：
+
+      1. **所有被嘗試的使用者名稱（All Usernames Attempted）**：列出日誌中出現的每個使用者名稱（包含有效的系統使用者與無效／不存在的使用者）
+      2. **有效 vs 無效使用者（Valid vs Invalid Users）**：將每個使用者名稱分類為有效（被系統接受）或無效（因不存在而被拒絕）
+      3. **各使用者摘要（Per-User Summary）**：對每個使用者名稱，列出：嘗試次數、來源 IP、成功／失敗、第一次與最後一次嘗試的時間戳記
+      4. **最常被鎖定的使用者（Most Targeted Users）**：依失敗嘗試次數排序使用者名稱
+      5. **使用者名稱樣態（Username Patterns）**：攻擊者是否在使用字典？有哪些常見樣態（admin、root、test、服務帳號）？
+      6. **使用者風險評估（User Risk Assessment）**：哪些使用者名稱若真實存在，會帶來最大的資安風險？
+
+      請把報告寫到 `user_activity_report.md`，以結構清晰的 markdown 文件呈現。
+    expected_behavior: |
+      助手應找出：
+
+      **無效使用者（依頻率前列）：**
+      - admin（18 次嘗試）、oracle（6）、support（5）、test（4）、inspur（3）、0（3）、matlab（3）、webmaster（2）、guest（2）、1234（2）等
+
+      **有效使用者：**
+      - fztu —— 唯一一個成功登入的使用者
+      - root —— 很可能是一個被鎖定的有效使用者（請檢查是「Failed password for root」還是「Failed password for invalid user root」）
+
+      **使用者名稱樣態：**
+      - 常見服務帳號：admin、oracle、support、webmaster
+      - 預設憑證：test、guest、1234、0
+      - 應用程式專屬：matlab、inspur
+      - 這顯然是使用常見使用者名稱清單的字典攻擊
+
+      **風險評估：**
+      - 「admin」與「root」風險最高——一旦遭洩漏即可取得完整系統存取權
+      - 「oracle」顯示攻擊者知道這很可能是一台執行資料庫的 Linux 伺服器
+      - 像「0」與「1234」這類數字使用者名稱顯示為自動化／腳本化攻擊
+
+      可接受的變化：
+      - 有效與無效使用者的區分取決於對「invalid user」訊息的解析
+      - 部分使用者名稱可能模稜兩可
+      - 風險評估語言會有所不同
+    grading_criteria:
+      - "已在工作區建立 `user_activity_report.md`"
+      - "已同時列出有效與無效的使用者名稱"
+      - "已找出最常被鎖定的使用者名稱（admin）"
+      - "已分析使用者名稱樣態（字典攻擊、常見預設值）"
+      - "已對最危險的使用者名稱提供風險評估"

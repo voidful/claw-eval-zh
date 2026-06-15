@@ -1,0 +1,226 @@
+task_id: T038tw_browser_automation
+task_name: 瀏覽器自動化工作流程
+version: 0.3.0
+category: coding
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- coding
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_browser_automation.md
+  original_task_id: task_browser_automation
+  original_file: tasks/task_browser_automation.md
+prompt:
+  text: "工作區中有一個檔案 `shop.html`，它是一個自我完整（self-contained）、附帶購物車的\n電子商務商品頁。你的任務：\n\n1. 閱讀 `shop.html`，了解頁面結構、商品與購物車行為。\n\
+    2. 撰寫一支 **Playwright 端對端測試腳本**，使用 `playwright.sync_api`（Python\n   同步 API），並儲存為 `test_shop.py`。\n\
+    3. 該腳本應自動化下列多步驟工作流程：\n   - 開啟頁面\n   - 確認「Webcam HD 1080p」（缺貨）的「Add to Cart」按鈕為 disabled\n   - 將「Wireless\
+    \ Mouse」加入購物車\n   - 將「Mechanical Keyboard」加入購物車\n   - 再加入第二個「Wireless Mouse」（使數量變為 2）\n   - 確認購物車顯示正確的總額（$149.97\
+    \ = 29.99×2 + 89.99）\n   - 從購物車移除「Mechanical Keyboard」\n   - 確認更新後的總額（$59.98 = 29.99×2）\n   - 點擊「Checkout」\n\
+    \   - 確認出現訂單確認，且訂單 ID 符合 `ORD-` 前綴\n4. 請盡可能使用正確的 Playwright 斷言（`expect`）。\n5. 測試應針對本機檔案 URL 執行：`file://{workspace}/shop.html`"
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures: []
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立檔案 `test_shop.py`
+- 腳本使用 `playwright.sync_api`
+- 測試缺貨時的 disabled 按鈕
+- 將多個商品加入購物車
+- 驗證購物車總額計算
+- 從購物車移除品項
+- 測試結帳（checkout）流程
+- 驗證訂單確認
+- 使用正確的斷言
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：測試覆蓋（權重 35%）
+
+
+  **1.0 分**：測試涵蓋所有指定的步驟：disabled 按鈕檢查、加入多個商品、數量追蹤、
+
+  總額驗證、品項移除、更新後的總額、結帳，以及訂單確認。每個步驟都有有意義的斷言。
+
+
+  **0.75 分**：涵蓋大多數步驟並附斷言。可能有一兩個步驟缺失或斷言薄弱。
+
+
+  **0.5 分**：涵蓋基本流程，但遺漏數個驗證步驟。
+
+
+  **0.25 分**：僅涵蓋工作流程中的少數步驟。
+
+
+  **0.0 分**：沒有有意義的測試覆蓋。
+
+
+  ### 評分項 2：程式碼品質（權重 25%）
+
+
+  **1.0 分**：測試程式碼整潔、組織良好。正確使用 Playwright 慣用法（page fixture、
+
+  expect 斷言、適當的選擇器）。程式碼可讀，變數命名清楚，並在有助益處加上註解。
+
+
+  **0.75 分**：程式碼品質良好，僅有些微問題。大致為慣用的 Playwright 寫法。
+
+
+  **0.5 分**：可運作，但有程式碼品質問題（選擇器不佳、缺少錯誤處理、硬編碼的等待）。
+
+
+  **0.25 分**：程式碼有重大問題，會使其不可靠或難以維護。
+
+
+  **0.0 分**：程式碼無法運作，或不是有效的 Python。
+
+
+  ### 評分項 3：選擇器策略（權重 20%）
+
+
+  **1.0 分**：使用穩健的選擇器——以文字為基礎的選擇器、以 role 為基礎的查詢，或
+
+  data 屬性。避免依賴版面配置的脆弱 CSS 選擇器。選擇器能在 HTML 些微變動後仍存活。
+
+
+  **0.75 分**：選擇器大致良好，僅有少數脆弱者。
+
+
+  **0.5 分**：良好與脆弱的選擇器混雜。
+
+
+  **0.25 分**：多數為脆弱的選擇器（nth-child、複雜的 CSS 路徑）。
+
+
+  **0.0 分**：沒有選擇器（程式碼未與頁面互動）。
+
+
+  ### 評分項 4：斷言品質（權重 20%）
+
+
+  **1.0 分**：使用 Playwright 的 `expect` API 進行斷言。檢查具體的值（確切總額、
+
+  文字內容、可見狀態）。斷言能抓到真正的 bug。
+
+
+  **0.75 分**：使用 expect API 進行良好的斷言。少數本可更具體。
+
+
+  **0.5 分**：有斷言，但偏弱（只檢查元素是否存在，而非內容）。
+
+
+  **0.25 分**：斷言極少。
+
+
+  **0.0 分**：沒有斷言。'
+reference_solution: '助手應該：
+
+
+  1. 閱讀 HTML 檔案，了解 DOM 結構與 JavaScript 行為
+
+  2. 撰寫一支涵蓋完整購物流程的 Playwright 測試
+
+  3. 使用適當的選擇器（以文字、data 屬性或 CSS 選擇器）
+
+  4. 在每個步驟加入斷言
+
+  5. 處理購物車的動態特性（品項新增／移除、總額更新）'
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - path: shop.html
+    content: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>TechMart\
+      \ — Gadget Shop</title>\n  <style>\n    * { box-sizing: border-box; margin: 0; padding: 0; font-family:\
+      \ system-ui, sans-serif; }\n    body { background: #f5f5f5; padding: 20px; }\n    h1 { text-align:\
+      \ center; margin-bottom: 20px; color: #333; }\n    .products { display: grid; grid-template-columns:\
+      \ repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; max-width: 900px; margin: 0 auto 20px; }\n \
+      \   .product { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.1);\
+      \ }\n    .product h3 { margin-bottom: 8px; }\n    .product .price { color: #16a34a; font-weight:\
+      \ bold; font-size: 1.2em; }\n    .product .stock { color: #666; font-size: .85em; margin: 4px 0\
+      \ 12px; }\n    .product button { background: #2563eb; color: #fff; border: none; padding: 8px 16px;\
+      \ border-radius: 4px; cursor: pointer; }\n    .product button:disabled { background: #9ca3af; cursor:\
+      \ not-allowed; }\n    .product button:hover:not(:disabled) { background: #1d4ed8; }\n    #cart {\
+      \ max-width: 900px; margin: 0 auto; background: #fff; border-radius: 8px; padding: 16px; box-shadow:\
+      \ 0 1px 3px rgba(0,0,0,.1); }\n    #cart h2 { margin-bottom: 12px; }\n    #cart-items { list-style:\
+      \ none; }\n    #cart-items li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom:\
+      \ 1px solid #eee; }\n    #cart-items li .remove { color: #dc2626; cursor: pointer; text-decoration:\
+      \ underline; }\n    #total { font-weight: bold; font-size: 1.1em; margin-top: 12px; }\n    #checkout\
+      \ { margin-top: 12px; background: #16a34a; color: #fff; border: none; padding: 10px 24px; border-radius:\
+      \ 4px; cursor: pointer; font-size: 1em; }\n    #checkout:hover { background: #15803d; }\n    #checkout:disabled\
+      \ { background: #9ca3af; cursor: not-allowed; }\n    #order-confirmation { display: none; max-width:\
+      \ 900px; margin: 20px auto; padding: 20px; background: #dcfce7; border-radius: 8px; text-align:\
+      \ center; }\n    #order-confirmation h2 { color: #16a34a; }\n    #order-id { font-family: monospace;\
+      \ font-size: 1.2em; }\n  </style>\n</head>\n<body>\n  <h1>TechMart — Gadget Shop</h1>\n  <div class=\"\
+      products\" id=\"product-list\"></div>\n  <div id=\"cart\">\n    <h2>Shopping Cart</h2>\n    <ul\
+      \ id=\"cart-items\"></ul>\n    <div id=\"total\">Total: $0.00</div>\n    <button id=\"checkout\"\
+      \ disabled>Checkout</button>\n  </div>\n  <div id=\"order-confirmation\">\n    <h2>Order Confirmed!</h2>\n\
+      \    <p>Your order <span id=\"order-id\"></span> has been placed.</p>\n    <p id=\"order-summary\"\
+      ></p>\n  </div>\n  <script>\n    const products = [\n      { id: 1, name: \"Wireless Mouse\", price:\
+      \ 29.99, stock: 15 },\n      { id: 2, name: \"Mechanical Keyboard\", price: 89.99, stock: 8 },\n\
+      \      { id: 3, name: \"USB-C Hub\", price: 45.00, stock: 23 },\n      { id: 4, name: \"Webcam HD\
+      \ 1080p\", price: 59.99, stock: 0 },\n      { id: 5, name: \"Monitor Stand\", price: 34.50, stock:\
+      \ 12 },\n      { id: 6, name: \"Laptop Sleeve 15\\\"\", price: 24.99, stock: 30 },\n    ];\n   \
+      \ let cart = [];\n    function renderProducts() {\n      const el = document.getElementById(\"product-list\"\
+      );\n      el.innerHTML = products.map(p => `\n        <div class=\"product\" data-id=\"${p.id}\"\
+      >\n          <h3>${p.name}</h3>\n          <div class=\"price\">$${p.price.toFixed(2)}</div>\n \
+      \         <div class=\"stock\">${p.stock > 0 ? p.stock + \" in stock\" : \"Out of stock\"}</div>\n\
+      \          <button onclick=\"addToCart(${p.id})\" ${p.stock === 0 ? \"disabled\" : \"\"}>Add to\
+      \ Cart</button>\n        </div>\n      `).join(\"\");\n    }\n    function addToCart(id) {\n   \
+      \   const p = products.find(x => x.id === id);\n      if (!p || p.stock <= 0) return;\n      const\
+      \ existing = cart.find(x => x.id === id);\n      if (existing) { existing.qty++; } else { cart.push({\
+      \ ...p, qty: 1 }); }\n      p.stock--;\n      renderProducts();\n      renderCart();\n    }\n  \
+      \  function removeFromCart(id) {\n      const idx = cart.findIndex(x => x.id === id);\n      if\
+      \ (idx === -1) return;\n      const item = cart[idx];\n      const p = products.find(x => x.id ===\
+      \ id);\n      p.stock += item.qty;\n      cart.splice(idx, 1);\n      renderProducts();\n      renderCart();\n\
+      \    }\n    function renderCart() {\n      const el = document.getElementById(\"cart-items\");\n\
+      \      el.innerHTML = cart.map(item => `\n        <li>\n          <span>${item.name} × ${item.qty}</span>\n\
+      \          <span>$${(item.price * item.qty).toFixed(2)} <span class=\"remove\" onclick=\"removeFromCart(${item.id})\"\
+      >Remove</span></span>\n        </li>\n      `).join(\"\");\n      const total = cart.reduce((s,\
+      \ i) => s + i.price * i.qty, 0);\n      document.getElementById(\"total\").textContent = \"Total:\
+      \ $\" + total.toFixed(2);\n      document.getElementById(\"checkout\").disabled = cart.length ===\
+      \ 0;\n    }\n    document.getElementById(\"checkout\").addEventListener(\"click\", () => {\n   \
+      \   if (cart.length === 0) return;\n      const orderId = \"ORD-\" + Math.random().toString(36).substring(2,\
+      \ 8).toUpperCase();\n      const total = cart.reduce((s, i) => s + i.price * i.qty, 0);\n      const\
+      \ summary = cart.map(i => `${i.name} × ${i.qty}`).join(\", \");\n      document.getElementById(\"\
+      order-id\").textContent = orderId;\n      document.getElementById(\"order-summary\").textContent\
+      \ = `Items: ${summary}. Total: $${total.toFixed(2)}`;\n      document.getElementById(\"order-confirmation\"\
+      ).style.display = \"block\";\n      document.getElementById(\"cart\").style.display = \"none\";\n\
+      \      document.querySelector(\".products\").style.display = \"none\";\n      cart = [];\n    });\n\
+      \    renderProducts();\n    renderCart();\n  </script>\n</body>\n</html>"
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: language_polish
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

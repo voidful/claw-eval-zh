@@ -1,0 +1,131 @@
+task_id: T097tw_log_hdfs_slow_ops
+task_name: HDFS DataNode 日誌 — 慢速操作偵測
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_hdfs_slow_ops.md
+  original_task_id: task_log_hdfs_slow_ops
+  original_file: tasks/task_log_hdfs_slow_ops.md
+prompt:
+  text: "請分析位於 `hdfs_datanode.log` 的 HDFS DataNode 日誌，找出耗時超出預期的操作。此\n日誌記錄了帶有時間戳的區塊接收、配置與複製。\n\n你的報告應包含：\n\
+    \n1. **區塊生命週期時序（Block Lifecycle Timing）**：對於同時有「Receiving block」與\n   「Received block」條目的區塊，計算經過時間\n\
+    2. **配置到接收時序（Allocation-to-Receive Timing）**：對於同時有「allocateBlock」與\n   第一筆「Receiving block」條目的區塊，計算延遲\n\
+    3. **複製時序（Replication Timing）**：複製請求在區塊配置後多快發出？\n4. **最慢的操作（Slowest Operations）**：依經過時間排名前 5 慢的區塊操作\n\
+    5. **區塊大小與時間的相關性（Block Size vs Time Correlation）**：較大的區塊是否耗時較長？\n   在兩者皆可取得時，將區塊大小與傳輸時間相關聯\n6. **效能總結（Performance\
+    \ Summary）**：對此期間叢集效能的整體評估\n\n請將報告寫入 `hdfs_slow_ops_report.md`，以結構良好的 markdown 文件呈現。"
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/hdfs_datanode.log
+  dest: hdfs_datanode.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `hdfs_slow_ops_report.md`
+- 至少為一個區塊計算其生命週期時序
+- 在有資料時將區塊大小與操作時間相關聯
+- 正確辨識日誌的時間範圍（約 28 秒）
+- 提供效能評估
+user_agent:
+  enabled: false
+judge_rubric: '依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+
+  - 已在工作區建立 `hdfs_slow_ops_report.md`
+
+  - 至少為一個區塊計算其生命週期時序
+
+  - 在有資料時將區塊大小與操作時間相關聯
+
+  - 正確辨識日誌的時間範圍（約 28 秒）
+
+  - 提供效能評估'
+reference_solution: '助手應從 `YYMMDD HHMMSS` 日誌格式解析時間戳並計算：
+
+
+  **區塊生命週期：**
+
+  - 此日誌僅涵蓋約 28 秒（203518 到 203546）
+
+  - 多數區塊操作在 1-3 秒內完成
+
+  - 已確認且附大小的區塊接收：91178 bytes、233217 bytes、11971 bytes、11977 bytes
+
+
+  **重點觀察：**
+
+  - blk_-1608999687919862906（91178 bytes）：於 203518 配置、203518 首次接收、203519 確認（約 1 秒）
+
+  - blk_7503483334202473044（233217 bytes）：於 203520 配置、203521 確認（約 1 秒）
+
+  - blk_-3544583377289625738（11971 bytes）：於 203522-203523 確認
+
+  - 區塊操作非常快速 — 與健康叢集在正常負載下的表現相符
+
+
+  **複製：**
+
+  - blk_-1608999687919862906 有 4 筆複製請求，分別於 203521、203524、203527、203530 發出
+
+  - 各複製躍程（hop）之間約間隔 3 秒
+
+
+  **效能：**
+
+  - 所有操作皆在 1-3 秒內完成 — 未偵測到慢速操作
+
+  - 此快照期間叢集表現良好
+
+
+  可接受的差異：
+
+  - 時間戳解析度為 1 秒，故部分時序分析將為概略值
+
+  - 配對開始/結束事件的不同做法皆屬有效
+
+  - 區塊大小相關性分析可能因資料不足而無法得出有意義結論'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: hdfs_datanode.log
+    source: logs/hdfs_datanode.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

@@ -1,0 +1,160 @@
+task_id: T061tw_csv_life_exp_outliers
+task_name: 平均壽命離群值偵測
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_life_exp_outliers.md
+  original_task_id: task_csv_life_exp_outliers
+  original_file: tasks/task_csv_life_exp_outliers.md
+prompt:
+  text: |-
+    我的工作區中有一個 CSV 檔 `gapminder_life_expectancy.csv`，內含取自 Gapminder
+    資料集的平均壽命資料。該檔有下列欄位：`country`、`year`、`pop`、`continent`、
+    `lifeExp` 與 `gdpPercap`。資料涵蓋 5 大洲的 142 個國家，自 1952 至 2007 每 5 年
+    一筆。
+
+    請找出平均壽命資料中的離群值（outliers）與異常（anomalies），並將你的發現寫入
+    名為 `life_exp_outliers.md` 的檔案。你的報告應包含：
+
+    - **2007 年的統計離群值偵測**：使用 z-score 或 IQR 法找出平均壽命異常高或異常低
+      的國家。回報所用方法、門檻，以及哪些國家屬於離群值。
+    - **大洲內離群值**：找出 2007 年明顯偏離其所屬大洲平均的國家（例如某非洲國家的
+      平均壽命遠高於非洲平均）。
+    - **時序異常**：找出平均壽命在相鄰時間點（5 年區間）之間**下降**的國家。由於
+      平均壽命通常隨時間上升，這類情形相當令人意外。列出國家、時間區間與下降幅度。
+    - **最劇烈的單期下降**：找出所有國家中相鄰時間點之間最大的 5 次平均壽命下降。
+    - 一段簡短的**分析**，說明可能驅動這些離群值與異常的因素（例如 HIV/AIDS 疫情、
+      戰爭、種族滅絕）。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/gapminder_life_expectancy.csv
+  dest: gapminder_life_expectancy.csv
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `life_exp_outliers.md`
+- 描述統計離群值方法（z-score、IQR 或類似方法）
+- 找出 2007 年低端離群值（Swaziland、Mozambique 等）
+- 分析大洲內離群值
+- 找出 Afghanistan 為 Asia 內的離群值
+- 找出平均壽命的時序下降
+- 找出 Rwanda 1987-1992 的下降為極端（約 20 年降幅）
+- 列出最劇烈的下降並附幅度
+- 提供真實世界的解釋（HIV/AIDS、衝突等）
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：統計嚴謹性（權重 30%）
+
+  **1.0 分**：清楚描述所用統計方法，回報門檻與具體數值（z-score 或 IQR 界限），
+  正確找出離群值及其統計量，並指出其侷限（例如分布甚廣時 IQR 可能標不出離群值）。
+  **0.75 分**：使用有效的統計方法並正確找出多數離群值，但在門檻或方法論細節上有
+  缺漏。
+  **0.5 分**：找出離群值，但統計佐證薄弱或不清楚。
+  **0.25 分**：提及離群值但缺乏適當的統計分析。
+  **0.0 分**：未嘗試統計離群值偵測。
+
+  ### 評分項 2：異常偵測廣度（權重 30%）
+
+  **1.0 分**：涵蓋三類異常：全域統計離群值、大洲內離群值與時序下降。對每一類皆
+  提供具體國家、時間區間與幅度。
+  **0.75 分**：涵蓋至少兩類異常並具良好細節。
+  **0.5 分**：將一類處理得當，或多類但流於表面。
+  **0.25 分**：僅有基本的離群值辨識而無深度。
+  **0.0 分**：無具意義的異常偵測。
+
+  ### 評分項 3：脈絡分析（權重 25%）
+
+  **1.0 分**：將離群值連結到真實世界事件（南部非洲的 HIV/AIDS 疫情、盧安達種族
+  滅絕、柬埔寨赤柬、伊拉克／索馬利亞的戰爭），並有具體引述。
+  **0.75 分**：對多數離群值提供合理解釋，但缺少一些關鍵連結。
+  **0.5 分**：提供一些解釋，但缺乏具體性或遺漏主要成因。
+  **0.25 分**：解釋含糊或籠統。
+  **0.0 分**：未嘗試任何解釋。
+
+  ### 評分項 4：報告品質（權重 15%）
+
+  **1.0 分**：報告結構良好，分節清楚，以表格或排版過的清單呈現資料，由方法論到
+  發現再到分析的脈絡合乎邏輯。
+  **0.75 分**：結構良好，僅有小問題。
+  **0.5 分**：內容齊備，但組織不佳。
+  **0.25 分**：不易閱讀或缺少章節。
+  **0.0 分**：無報告或輸出無法使用。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔
+  2. 對 2007 年資料套用統計方法（z-score 或 IQR）。以 z-score（離平均 >2 個標準差）
+     找出 6 個低離群值：Swaziland (z=-2.27)、Mozambique (z=-2.06)、Zambia (z=-2.04)、
+     Sierra Leone (z=-2.02)、Lesotho (z=-2.02)、Angola (z=-2.01)。無高離群值。
+     以 IQR（1.5×IQR）則因分布甚廣（IQR=19.556）而找不到離群值。
+  3. 找出 2007 年大洲內離群值——偏離其大洲平均 >1.5 個標準差的國家：
+     - Africa：Reunion (76.442, z=2.25)、Libya (73.952)、Tunisia (73.923)、
+       Algeria (72.301)、Mauritius (72.801)、Morocco (71.164)、Egypt (71.338) 偏高；
+       Swaziland (39.613, z=-1.58) 偏低
+     - Americas：Haiti (60.916, z=-2.86) 明顯偏低；Canada (80.653) 與
+       Bolivia (65.554) 為離群值
+     - Asia：Afghanistan (43.828, z=-3.38) 為極端離群值
+     - Europe：Turkey (71.777)、Romania (72.476)、Bulgaria (73.005) 為低離群值
+  4. 找出時序下降——平均壽命在相鄰 5 年區間之間下滑的國家
+  5. 標示最劇烈的下降：Rwanda 1987-1992 (-20.421)、Zimbabwe 1992-1997 (-13.568)、
+     Lesotho 1997-2002 (-10.965)、Swaziland 1997-2002 (-10.420)、
+     Botswana 1992-1997 (-10.189)
+  6. 將離群值連結到真實世界事件（南部非洲的 HIV/AIDS、盧安達種族滅絕、柬埔寨種族
+     滅絕、戰爭）
+
+  預期關鍵數值：
+
+  - 2007 年 z-score 離群值（z < -2）：Swaziland、Mozambique、Zambia、Sierra Leone、
+    Lesotho、Angola
+  - 最嚴重的大洲內離群值：Asia 的 Afghanistan（z=-3.38）
+  - 最大的單期下降：Rwanda 1987-1992（-20.421 年，自 44.02 降至 23.599）
+  - 第二大：Zimbabwe 1992-1997（-13.568）
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/gapminder_life_expectancy.csv
+    dest: gapminder_life_expectancy.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

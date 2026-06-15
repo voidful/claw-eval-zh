@@ -1,0 +1,160 @@
+task_id: T132tw_meeting_gov_qa_extract
+task_name: |
+  NASA UAP 聽證會問答擷取
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- multimodal
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_gov_qa_extract.md
+  original_task_id: task_meeting_gov_qa_extract
+  original_file: tasks/task_meeting_gov_qa_extract.md
+prompt:
+  text: |-
+    我手上有一份逐字稿檔案 `transcript.md`，來自 NASA 首場關於不明異常現象（UAPs/UFOs）的公開會議。這場會議包含多場報告，報告後有小組成員與報告者之間的問答交流，以及後來一場經篩選的公眾問答（public Q&A）。
+
+    請幫我讀過逐字稿，把所有問答交流擷取到名為 `qa_exchanges.md` 的檔案。對於每一筆交流，請列出：
+
+    - **提問者（Questioner）**：姓名與角色（若知道）
+    - **回答者（Respondent）**：姓名與角色（若知道）
+    - **主題（Topic）**：簡短標籤，例如「Data calibration」「Sensor limitations」
+    - **問題（Question）**：摘述或引用
+    - **回答（Answer）**：摘述重點
+
+    請依時間順序組織各筆交流，把小組對報告者的問答與後來的公眾問答區隔開來，並把每筆交流依序編號。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: meetings/2025-07-30-nasa-holds-first-public-meeting-on-ufos-transcript.md
+  dest: transcript.md
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立輸出檔案 `qa_exchanges.md`
+- 辨識出至少 10 筆不同的問答交流
+- 小組對報告者的問答與公眾問答區段分開
+- 包含 Drake 向 Kirkpatrick 提問資料庫數字的交流
+- 包含 Kirkpatrick 關於 800+ 案例與 2-5% 異常的回應
+- 包含至少一筆與 FAA 相關的問答交流
+- 包含公眾問答中關於非人類智慧／外星起源的問題
+- 問題與回答正確歸於具名發言者
+- 各筆交流有編號或清楚分隔
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：交流完整性（權重 30%）
+
+  **1.0 分**：擷取出至少 12 筆不同的問答交流，涵蓋所有主要報告問答場次與公眾問答。沒有遺漏重要交流。
+
+  **0.75 分**：擷取 8-11 筆交流，涵蓋多數場次。
+
+  **0.5 分**：擷取 5-7 筆交流，但漏掉一些關鍵的。
+
+  **0.25 分**：少於 5 筆交流，或有重大缺口。
+
+  **0.0 分**：未擷取任何交流。
+
+  ### 評分項 2：歸屬準確性（權重 25%）
+
+  **1.0 分**：所有問題與回答都正確歸於對的發言者，姓名與角色準確。
+
+  **0.75 分**：多數歸屬正確，僅有一兩處錯誤。
+
+  **0.5 分**：數處歸屬錯誤或缺少姓名。
+
+  **0.25 分**：頻繁誤歸。
+
+  **0.0 分**：沒有歸屬或全然錯誤。
+
+  ### 評分項 3：摘要品質（權重 25%）
+
+  **1.0 分**：問題與回答皆精簡且準確地摘述，掌握必要資訊而不冗長。關鍵細節如具體數字、例子與結論皆保留。
+
+  **0.75 分**：摘要良好，僅有少許遺漏。
+
+  **0.5 分**：有摘要，但漏掉關鍵細節或過於模糊。
+
+  **0.25 分**：摘要品質差。
+
+  **0.0 分**：沒有摘要，或只是無脈絡的原始引言。
+
+  ### 評分項 4：組織（權重 20%）
+
+  **1.0 分**：依時間順序清楚組織，小組問答與公眾問答分開。每筆交流有編號並附主題標籤。便於查閱。
+
+  **0.75 分**：組織良好，僅有少許問題。
+
+  **0.5 分**：有一些組織，但區段混雜或難以瀏覽。
+
+  **0.25 分**：組織不佳。
+
+  **0.0 分**：沒有可辨識的組織。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析完整逐字稿
+  2. 辨識出有別於事先準備好的報告的問答交流
+  3. 擷取小組內部提問與公眾問答兩部分
+  4. 準確把問題與回答歸於正確的發言者
+  5. 精簡摘述問題與回答
+
+  關鍵問答交流包括：
+
+  - Spergel 問 Fox 關於 NASA 的資料校準流程
+  - Bontempi 問 Spergel 關於不同科學挑戰中的資料品質
+  - Gold 問 Spergel 關於宇宙學中的高風險／高報酬研究
+  - Drake 問 Kirkpatrick 關於具體數字（資料庫規模、年數、「few」的定義）
+  - Fox 問 Kirkpatrick 關於解密 P-3 影像的細節
+  - Walter 問 Kirkpatrick 關於感測器假影與資料處理
+  - Berea 問 Kirkpatrick 關於 AI/ML 技術
+  - Gold 問 Kirkpatrick 何謂異常＋污名化的影響
+  - Walter 問 Freie 關於雷達資料保存與運作模式
+  - Bianco 問 Freie 關於通報偏差與感測器部署決策
+  - Wright 問 Freie 關於非合作式監視的異常
+  - Gold 問 Freie 關於飛行員通報流程與歸檔
+  - 公眾問答：非人類智慧的證據、NASA 的 UAP 預算、發現外星生命的協定
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.5
+    llm_judge: 0.5
+  workspace_files:
+  - source: meetings/2025-07-30-nasa-holds-first-public-meeting-on-ufos-transcript.md
+    dest: transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: context_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

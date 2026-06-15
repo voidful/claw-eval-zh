@@ -1,0 +1,149 @@
+task_id: T094tw_log_ssh_unusual_times
+task_name: SSH 驗證日誌 — 異常時段登入偵測
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_ssh_unusual_times.md
+  original_task_id: task_log_ssh_unusual_times
+  original_file: tasks/task_log_ssh_unusual_times.md
+prompt:
+  text: '請分析位於 `auth.log` 的 OpenSSH 驗證日誌，找出發生在異常時段的登入活動。
+
+    假設正常上班時間為伺服器本地時間 08:00–18:00。
+
+
+    你的報告應包含：
+
+
+    1. **每小時分布（Hourly Distribution）**：每個小時的驗證事件計數
+
+    2. **非上班時段活動（Off-Hours Activity）**：所有發生在 08:00 之前或 18:00 之後的驗證事件
+
+    3. **清晨分析（Early Morning Analysis）**：詳細拆解 06:00–08:00 之間的事件（日誌中最早的時段）
+
+    4. **成功登入時點（Successful Logins Timing）**：成功登入發生在什麼時候？是否在上班時間內？
+
+    5. **攻擊時點型態（Attack Timing Patterns）**：攻擊者是否偏好特定時段？是否有規律？
+
+    6. **時間性風險評估（Temporal Risk Assessment）**：依時點型態判斷，哪些時段應最密切監控？
+
+
+    請將報告寫入 `unusual_hours_report.md`，以結構良好的 markdown 文件呈現。'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/openssh_auth.log
+  dest: auth.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `unusual_hours_report.md`
+- 提供事件的每小時分布
+- 另行標示出非上班時段（08:00 之前）的事件
+- 記下成功登入的時點（09:32:20，在上班時間內）
+- 分析攻擊時點型態
+user_agent:
+  enabled: false
+judge_rubric: '依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+
+  - 已在工作區建立 `unusual_hours_report.md`
+
+  - 提供事件的每小時分布
+
+  - 另行標示出非上班時段（08:00 之前）的事件
+
+  - 記下成功登入的時點（09:32:20，在上班時間內）
+
+  - 分析攻擊時點型態'
+reference_solution: '助手應解析日誌並產出：
+
+
+  **每小時分布：**
+
+  - 06:xx — 7 筆（日誌從 06:55 開始）
+
+  - 07:xx — 169 筆
+
+  - 08:xx — 118 筆
+
+  - 09:xx — 676 筆（尖峰小時）
+
+  - 10:xx — 530 筆（日誌於 10:59 結束）
+
+
+  **非上班時段活動：**
+
+  - 08:00 之前有 7 筆（在 06:55–06:56）
+
+  - 所有 08:00 之前的條目皆為攻擊流量（登入失敗、BREAK-IN 警告）
+
+
+  **成功登入時點：**
+
+  - 使用者 fztu 於 09:32:20 登入 — 在上班時間內
+
+
+  **攻擊時點型態：**
+
+  - 攻擊量從 07:xx 到 09:xx 急遽升高
+
+  - 尖峰攻擊量出現在 09:xx，共 676 筆
+
+  - 這可能代表攻擊者位於另一個時區，當地 09:00（LabSZ 時間）正是其工作時段
+
+  - 清晨的條目（06:55）代表一波攻擊行動的尾聲或起點
+
+
+  可接受的差異：
+
+  - 「異常時段」的定義可能不同
+
+  - 時區假設可能不同
+
+  - 評估用語會有所不同'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: auth.log
+    source: logs/openssh_auth.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

@@ -1,0 +1,291 @@
+---
+id: task_daily_summary
+name: 每日研究摘要產製
+category: productivity
+grading_type: llm_judge
+timeout_seconds: 300
+language: zh
+locale: zh-TW
+source_task_id: task_daily_summary
+source_benchmark: pinchbench
+claw_eval_id: P005zh_daily_summary
+workspace_files:
+- path: research/market_analysis.txt
+  content: |
+    Market Analysis Report - February 15, 2026
+    Analyst: Sarah Chen, Senior Market Strategist
+
+    Key Market Movements:
+    - S&P 500 closed at 5,842.31, up 1.2% on strong tech earnings
+    - NASDAQ gained 1.8%, led by semiconductor stocks
+    - Dow Jones rose 0.7% to 42,156.88
+    - 10-year Treasury yield steady at 4.32%
+
+    Sector Performance:
+    - Technology: +2.1% (best performer)
+    - Healthcare: +0.9%
+    - Energy: -0.3% (only declining sector)
+    - Financials: +0.6%
+
+    Notable Company News:
+    - TechCorp announced Q4 earnings beat, revenue up 23% YoY
+    - GlobalPharma received FDA approval for new cancer treatment
+    - AutoEV recalled 50,000 vehicles due to battery concerns
+    - CloudServices acquired DataSecure for $2.3B
+
+    Market Outlook:
+    Analysts remain cautiously optimistic heading into March. The Fed's next meeting
+    is expected to maintain current interest rates. Consumer spending data released
+    today showed resilience despite inflation concerns.
+- path: research/competitor_intelligence.txt
+  content: |
+    Competitor Intelligence Brief - Daily Update
+    Prepared by: Intelligence Team
+
+    === COMPETITOR A (Nexus Technologies) ===
+    - Launched new AI assistant product "NexusAI" targeting enterprise customers
+    - Pricing: $99/user/month, undercutting our premium tier by 15%
+    - Early reviews mention strong integration capabilities but limited customization
+    - Hired 3 senior engineers from our ML team last month (ongoing retention concern)
+
+    === COMPETITOR B (DataFlow Inc) ===
+    - Announced Series D funding of $180M at $2.1B valuation
+    - Planning expansion into European markets Q2 2026
+    - New partnership with Microsoft for Azure integration
+    - CEO quoted saying they aim to "dominate the mid-market segment"
+
+    === COMPETITOR C (SwiftCloud) ===
+    - Experiencing service outages (3rd incident this month)
+    - Customer complaints increasing on social media
+    - Opportunity: Their enterprise clients may be looking for alternatives
+    - Our sales team should prioritize outreach to SwiftCloud's top 50 accounts
+
+    === STRATEGIC RECOMMENDATIONS ===
+    1. Accelerate enterprise AI features to counter Nexus launch
+    2. Review pricing strategy for premium tier
+    3. Strengthen employee retention programs
+    4. Develop targeted campaign for SwiftCloud defectors
+- path: research/customer_feedback.txt
+  content: |
+    Customer Feedback Summary - Daily Digest
+    Date: February 15, 2026
+    Compiled by: Customer Success Team
+
+    SUPPORT TICKETS (Last 24 hours):
+    - Total: 247 tickets
+    - Critical: 12 (down from 18 yesterday)
+    - High Priority: 45
+    - Medium/Low: 190
+
+    TOP ISSUES:
+    1. API rate limiting errors (34 tickets) - Engineering investigating
+    2. Dashboard loading slowly (28 tickets) - Related to yesterday's update
+    3. Export feature not working for large datasets (19 tickets) - Known issue, fix ETA Monday
+    4. Mobile app crashes on Android 14 (15 tickets) - New issue, escalated to mobile team
+
+    POSITIVE FEEDBACK HIGHLIGHTS:
+    - "The new reporting feature saved our team 10 hours this week" - Enterprise client
+    - "Best customer support I've experienced in SaaS" - NPS score 72 this month
+    - 3 case studies approved by customers for marketing use
+    - 15 new G2 reviews, average rating 4.6 stars
+
+    CHURN RISK ALERTS:
+    - MegaCorp (ARR $450K) - Evaluating competitors, exec meeting scheduled
+    - TechStart (ARR $85K) - Missed renewal call, follow-up required
+    - GlobalRetail (ARR $220K) - Budget cuts mentioned, may downgrade
+
+    UPSELL OPPORTUNITIES:
+    - FinanceHub (current ARR $120K) - Interested in enterprise tier
+    - HealthTech (current ARR $95K) - Expanding team, needs more seats
+- path: research/product_updates.txt
+  content: |
+    Product & Engineering Daily Standup Notes
+    Date: February 15, 2026
+    Sprint: Phoenix-23 (Day 8 of 14)
+
+    SHIPPED TODAY:
+    ✓ Real-time collaboration feature (beta) - 500 users enrolled
+    ✓ Performance improvements to dashboard (40% faster load times)
+    ✓ Bug fix: CSV export encoding issues resolved
+    ✓ Security patch: XSS vulnerability in comments section
+
+    IN PROGRESS:
+    → AI-powered insights feature (65% complete, on track for Feb 28)
+    → Mobile app v3.0 redesign (80% complete, QA starting Monday)
+    → API v2 migration tools (40% complete)
+    → SOC 2 Type II audit preparation (documentation phase)
+
+    BLOCKED:
+    ⚠ Third-party payment integration - waiting on vendor API access
+    ⚠ Enterprise SSO feature - Legal reviewing data processing agreement
+
+    UPCOMING RELEASES (Next 2 weeks):
+    - Feb 18: AI insights beta launch to 1000 users
+    - Feb 21: Mobile app v3.0 public release
+    - Feb 25: New pricing page and plan comparison tool
+    - Feb 28: API v2 general availability
+
+    TECHNICAL DEBT:
+    - Scheduled database migration this weekend (Saturday 2am-6am EST)
+    - Expected 30-minute downtime, customers notified
+- path: research/industry_news.txt
+  content: |-
+    Industry News Roundup - February 15, 2026
+
+    REGULATORY DEVELOPMENTS:
+    - EU AI Act enforcement begins March 1, 2026
+      * Companies must disclose AI-generated content
+      * Fines up to 6% of global revenue for violations
+      * Our compliance team confirms we're ready
+
+    - California Consumer Privacy Act amendment proposed
+      * Would require explicit consent for data sharing
+      * Tech industry lobbying against stricter requirements
+
+    INDUSTRY TRENDS:
+    - Gartner Report: Enterprise AI spending to reach $280B by 2027
+    - McKinsey Study: 67% of companies plan to increase SaaS budgets in 2026
+    - Remote work tools market growing 18% annually
+
+    NOTABLE FUNDING ROUNDS THIS WEEK:
+    - AIStartup raised $500M Series E (largest AI funding this year)
+    - WorkflowTool raised $75M Series B
+    - SecurityFirst raised $120M Series C
+
+    PARTNERSHIPS & ACQUISITIONS:
+    - Salesforce + Anthropic: Expanded AI partnership announced
+    - Google acquired DocuAI for $1.8B
+    - Microsoft investing $2B in OpenAI competitors
+
+    CONFERENCES & EVENTS:
+    - TechCrunch Disrupt (Feb 20-22, San Francisco) - Our CEO speaking
+    - SaaStr Annual (March 10-12, Phoenix) - We're a Gold Sponsor
+    - Enterprise Connect (March 25-28, Orlando) - Booth #342
+---
+
+# 每日研究摘要產製
+
+## Prompt
+
+你是一位協助準備每日簡報的高階主管助理。請檢視 research/ 資料夾中的所有檔案，
+並將一份完整的每日摘要撰寫到 daily_briefing.md。這份摘要應簡潔扼要、凸顯最需要
+高階主管關注的重點項目，並以清楚的章節加以組織。
+
+## Expected Behavior
+
+助手應該：
+
+1. 探索並讀取 `research/` 目錄中的所有檔案
+2. 分析並整合來自多個來源的資訊：
+   - 市場分析資料
+   - 競爭對手情報
+   - 客戶意見回饋
+   - 產品更新
+   - 產業新聞
+3. 製作一份組織良好的每日簡報，內容須：
+   - 以一段簡短的執行摘要（executive summary）開頭（3 至 5 項關鍵要點）
+   - 將資訊整理為邏輯清楚的章節
+   - 凸顯需要立即關注或做出決策的項目
+   - 註明任何風險或機會
+   - 保持摘要簡潔（目標約 500 至 800 字）
+4. 將簡報儲存到 `daily_briefing.md`
+
+這項任務測試助手是否能夠：
+
+- 探索並發現目錄中的檔案
+- 讀取並理解多份文件
+- 整合來自不同來源的資訊
+- 排定優先順序並凸顯關鍵資訊
+- 撰寫專業的高階主管溝通文件
+
+## Grading Criteria
+
+- [ ] 助手發現了 research/ 目錄中的檔案
+- [ ] 助手讀取了全部 5 份研究檔案
+- [ ] 已建立檔案 `daily_briefing.md`
+- [ ] 摘要包含執行摘要（executive summary）章節
+- [ ] 摘要涵蓋市場／財務資訊
+- [ ] 摘要涵蓋競爭對手情報
+- [ ] 摘要涵蓋客戶意見回饋／風險
+- [ ] 摘要涵蓋產品更新
+- [ ] 摘要涵蓋產業新聞／法規項目
+- [ ] 摘要指出需要採取的行動項目或需做出的決策
+- [ ] 文筆專業、適合高階主管閱讀
+- [ ] 摘要長度適中且簡潔（未過度冗長）
+
+## LLM Judge Rubric
+
+### 評分項 1：資訊涵蓋度與正確性（權重 30%）
+
+**1.0 分**：摘要精準擷取了「全部五份」來源文件中的關鍵資訊。包含市場走勢、競爭
+威脅（特別是 Nexus 的產品發布與 SwiftCloud 帶來的機會）、客戶風險（MegaCorp
+的流失風險）、產品里程碑（已上線功能、即將發布項目）以及法規項目（EU AI Act）。
+無重大遺漏或事實錯誤。
+
+**0.75 分**：摘要涵蓋 4 至 5 個來源中多數重要資訊，僅有少量遺漏。關鍵項目皆在，
+但部分次要細節缺漏。
+
+**0.5 分**：摘要涵蓋 3 至 4 個來源，但遺漏了一份或多份文件中的重要項目。可能有
+少量不準確之處。
+
+**0.25 分**：摘要僅涵蓋 1 至 2 個來源，或有重大事實錯誤。關鍵資訊出現重大遺漏。
+
+**0.0 分**：摘要缺失、不準確，或未能整合研究檔案內容。
+
+### 評分項 2：整合與優先排序（權重 25%）
+
+**1.0 分**：跨來源整合出色。正確辨識出最高優先項目：競爭對手產品發布的威脅、
+MegaCorp 的流失風險、EU AI Act 的期限、SwiftCloud 的機會。能串連相關資訊
+（例如競爭對手定價與我方留客之間的關係）。清楚區分緊急項目與純資訊性項目。
+
+**0.75 分**：整合良好，多數優先項目都被辨識出來。在優先排序或串連相關資訊上有
+少許瑕疵。
+
+**0.5 分**：具備基本整合，但優先排序薄弱。重要項目可能被埋沒，或與次要項目被等
+同看待。
+
+**0.25 分**：整合不佳，多半只是列出各來源的資訊，缺乏有意義的整合或優先排序。
+
+**0.0 分**：未嘗試整合，或優先排序完全錯誤。
+
+### 評分項 3：結構與組織（權重 20%）
+
+**1.0 分**：組織專業出色，最上方有清楚的執行摘要、章節標題邏輯分明、版面易於快速
+瀏覽。善用條列、粗體或其他格式。各章節銜接流暢。行動項目清楚標示。
+
+**0.75 分**：組織良好，章節與執行摘要清楚。僅有少量結構問題或格式不一致。
+
+**0.5 分**：具備基本結構，但組織仍有改進空間。可能缺少執行摘要，或章節劃分不清。
+
+**0.25 分**：組織不佳，難以找到關鍵資訊。內容雜亂或呈現為一大段文字。
+
+**0.0 分**：看不出任何結構或組織。
+
+### 評分項 4：文筆品質與語氣（權重 15%）
+
+**1.0 分**：文筆專業、適合高階主管閱讀。語言簡潔、清楚、以行動為導向。使用專業
+術語時皆有說明背景。詳略程度適合 C 級主管讀者。文法與拼字完美無誤。
+
+**0.75 分**：文筆專業良好，僅有少量瑕疵。語氣大致得宜，偶有冗長或措辭不清。
+
+**0.5 分**：文筆尚可，但語氣可能不適合高階主管。可能過於隨意、過於瑣碎，或有明顯
+文法／拼字問題。
+
+**0.25 分**：文筆品質不佳。語氣不專業、表達不清，或錯誤多處。
+
+**0.0 分**：文字無法理解，或完全不得體。
+
+### 評分項 5：簡潔度與篇幅（權重 10%）
+
+**1.0 分**：摘要長度適中且簡潔（500 至 800 字），在不犧牲清晰度的前提下維持高
+資訊密度。無冗贅或填充內容。
+
+**0.75 分**：篇幅略超過或略低於目標（400 至 500 字或 800 至 1000 字），但仍然
+有效。僅有少量冗贅。
+
+**0.5 分**：明顯過長（1000 至 1500 字）或過短（200 至 400 字）。有部分灌水，或
+因過短而遺漏重要細節。
+
+**0.25 分**：嚴重過長（超過 1500 字）或嚴重過短（少於 200 字），難以發揮作用。
+
+**0.0 分**：篇幅完全不得當，或內容缺失。

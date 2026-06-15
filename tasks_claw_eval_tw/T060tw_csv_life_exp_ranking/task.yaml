@@ -1,0 +1,149 @@
+task_id: T060tw_csv_life_exp_ranking
+task_name: 各國平均壽命排名
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_life_exp_ranking.md
+  original_task_id: task_csv_life_exp_ranking
+  original_file: tasks/task_csv_life_exp_ranking.md
+prompt:
+  text: |-
+    我的工作區中有一個 CSV 檔 `gapminder_life_expectancy.csv`，內含取自 Gapminder
+    資料集的平均壽命（life expectancy）資料。該檔有下列欄位：`country`、`year`、
+    `pop`、`continent`、`lifeExp` 與 `gdpPercap`。資料涵蓋 5 大洲（Africa、
+    Americas、Asia、Europe、Oceania）的 142 個國家，自 1952 至 2007 每 5 年一筆。
+
+    請分析各國依平均壽命的排名，並將你的發現寫入名為 `life_exp_ranking.md` 的檔案。
+    你的報告應包含：
+
+    - **平均壽命最高的前 10 國**（2007 年），附上其所屬大洲與確切的平均壽命數值
+    - **平均壽命最低的後 10 國**（2007 年），附上其所屬大洲與確切的平均壽命數值
+    - **各大洲平均壽命平均值**（2007 年）
+    - **排名隨時間的變化**：比較 1952 與 2007 的前 5 國與後 5 國
+    - 一段簡短的**總結**，說明排名中的關鍵型態（例如哪些大洲主導頂端／底端、有無
+      任何意外之處）
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/gapminder_life_expectancy.csv
+  dest: gapminder_life_expectancy.csv
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔 `life_exp_ranking.md`
+- 正確列出 2007 年前 10 國並附平均壽命數值
+- 正確找出 Japan 為第 1 名（82.603）
+- 正確列出 2007 年後 10 國
+- 正確找出 Swaziland 為最低（39.613）
+- 計算並回報各大洲平均
+- 指出 Africa 的大洲平均最低
+- 包含歷史比較（1952 vs 2007）
+- 提供型態總結
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：排名正確性（權重 35%）
+
+  **1.0 分**：前 10 國與後 10 國皆正確找出，平均壽命數值準確。所有數值皆符合
+  資料集。
+  **0.75 分**：多數排名正確，僅有一、兩國位置不對或數值小錯。
+  **0.5 分**：大方向正確（頂端／底端國家正確），但數個具體名次或數值錯誤。
+  **0.25 分**：找出一些正確國家，但排名多半錯誤或不完整。
+  **0.0 分**：未嘗試排名或完全錯誤。
+
+  ### 評分項 2：分析深度（權重 30%）
+
+  **1.0 分**：包含各大洲平均、歷史比較與具洞察力的型態分析。指出關鍵觀察，例如
+  Africa 主導底端排名、最高與最低之間 43 年的差距，以及排名自 1952 至 2007 的
+  變化。
+  **0.75 分**：包含多數分析元素並有良好觀察，但缺少一個元件。
+  **0.5 分**：有基本分析，但缺乏深度——缺少各大洲平均、歷史比較或型態分析其中之一。
+  **0.25 分**：除列出國家外幾無分析。
+  **0.0 分**：除原始數字外毫無分析。
+
+  ### 評分項 3：報告結構與呈現（權重 20%）
+
+  **1.0 分**：markdown 組織良好，分節清楚，以排版過的表格或清單呈現排名，由概覽到
+  細節的脈絡流暢。
+  **0.75 分**：組織良好，僅有小幅排版問題。
+  **0.5 分**：內容齊備，但組織不佳。
+  **0.25 分**：雜亂或不易閱讀。
+  **0.0 分**：無報告或輸出無法使用。
+
+  ### 評分項 4：完整性（權重 15%）
+
+  **1.0 分**：所有要求元素皆齊備：前 10、後 10、各大洲平均、歷史比較與總結。
+  **0.75 分**：多數元素齊備，僅有一處小缺漏。
+  **0.5 分**：缺少數個要求元素。
+  **0.25 分**：僅部分完成。
+  **0.0 分**：報告缺漏或近乎空白。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔（1704 列、142 個國家、12 個時間點）
+  2. 篩選出 2007 年資料並依平均壽命排序
+  3. 找出前 10 名：Japan (82.603)、Hong Kong China (82.208)、Iceland (81.757)、
+     Switzerland (81.701)、Australia (81.235)、Spain (80.941)、Sweden (80.884)、
+     Israel (80.745)、France (80.657)、Canada (80.653)
+  4. 找出後 10 名：Swaziland (39.613)、Mozambique (42.082)、Zambia (42.384)、
+     Sierra Leone (42.568)、Lesotho (42.592)、Angola (42.731)、Zimbabwe (43.487)、
+     Afghanistan (43.828)、Central African Republic (44.741)、Liberia (45.678)
+  5. 計算各大洲平均：Africa（約 54.806）、Americas（約 73.608）、Asia（約 70.728）、
+     Europe（約 77.649）、Oceania（約 80.719）
+  6. 比較 1952 與 2007 的排名，呈現其變化
+  7. 指出 2007 年後 10 國除 Afghanistan 外皆為非洲國家
+
+  預期關鍵數值：
+
+  - 2007 年第 1 名：Japan (82.603)
+  - 2007 年第 142 名（最後）：Swaziland (39.613)
+  - 最高大洲平均：Oceania（約 80.72）
+  - 最低大洲平均：Africa（約 54.81）
+  - 2007 年範圍：82.603 - 39.613 = 42.99 年
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/gapminder_life_expectancy.csv
+    dest: gapminder_life_expectancy.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

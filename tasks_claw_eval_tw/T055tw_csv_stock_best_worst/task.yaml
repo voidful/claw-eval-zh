@@ -1,0 +1,107 @@
+task_id: T055tw_csv_stock_best_worst
+task_name: 台積電（2330）2024 最佳與最差交易日
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_stock_best_worst.md
+  original_task_id: task_csv_stock_best_worst
+  original_file: tasks/task_csv_stock_best_worst.md
+prompt:
+  text: |-
+    我的工作區裡有一個 CSV 檔案 tw_stock_2330_2024.csv，內含台積電（2330）2024 年的
+    每日收盤價（來源：TWSE 公開資料）。檔案有兩欄：date（日期）與 close（收盤價，NT$），
+    共 242 個交易日。
+
+    請找出台積電 2024 年表現最好與最差的交易日，並把結果寫入 best_worst_days_report.md。
+    報告需包含：
+
+    - **單日漲幅最大的交易日**（依收盤對收盤的日報酬率）與其日期、漲幅
+    - **單日跌幅最大的交易日**與其日期、跌幅
+    - **全年最高與最低收盤價**及其日期
+    - 一段簡短的**分析與總結**
+
+    注意：CSV 檔名、欄名與報告檔名 best_worst_days_report.md 不可更改。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: tw/csvs/tw_stock_2330_2024.csv
+  dest: tw_stock_2330_2024.csv
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks:
+- 本分析僅為歷史資料整理，不構成投資建議；單日漲跌不代表未來表現
+- 數值須以提供的 CSV 為準，不得捏造或臆測未提供的資料
+expected_actions:
+- 建立報告檔案 best_worst_days_report.md
+- 找出單日最大漲幅交易日（2024-08-06）
+- 報告最大漲幅數值（約 +7.98%）
+- 找出單日最大跌幅交易日（2024-08-05）
+- 報告最大跌幅數值（約 -9.75%）
+- 報告全年最高（NT$1,090）與最低（NT$576）收盤價
+- 含分析或總結
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：日期與數值準確度（權重 60%）
+  - 1.0：最佳/最差日的日期與漲跌幅、最高/最低收盤價皆正確
+  - 0.5：部分正確
+  - 0.0：未正確找出
+  ### 評分項 2：分析品質（權重 20%）
+  - 1.0：合理分析（如極端日成因或群聚）
+  - 0.0：無分析
+  ### 評分項 3：報告結構（權重 20%）
+  - 1.0：markdown 清楚
+  - 0.0：缺失
+reference_solution: |-
+  助手應找出（已由程式從 TWSE 真實資料驗算）：
+  - 單日最大漲幅約 +7.98%，發生於 2024-08-06
+  - 單日最大跌幅約 -9.75%，發生於 2024-08-05
+  - 全年最高收盤價 NT$1,090.00（2024-11-08）、最低 NT$576.00（2024-01-05）
+  並輸出結構清晰的 markdown 報告與簡短分析。
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: tw/csvs/tw_stock_2330_2024.csv
+    dest: tw_stock_2330_2024.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: fixture_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

@@ -1,0 +1,149 @@
+task_id: T085tw_log_nginx_status_codes
+task_name: Nginx 存取日誌 — HTTP 狀態碼分布
+version: 0.3.0
+category: log_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- log_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_log_nginx_status_codes.md
+  original_task_id: task_log_nginx_status_codes
+  original_file: tasks/task_log_nginx_status_codes.md
+prompt:
+  text: '請分析位於 `nginx_access.log` 的 Nginx JSON 存取日誌，並產生一份 HTTP 狀態碼分布報告。每一行都是一個 JSON 物件，欄位有：`time`、`remote_ip`、`remote_user`、`request`、`response`、`bytes`、`referrer`、`agent`。
+
+
+    你的報告應包含：
+
+
+    1. **請求總數（Total Requests）**：日誌條目總數
+
+    2. **狀態碼分布（Status Code Breakdown）**：每個出現過的 HTTP 狀態碼的計數與百分比
+
+    3. **狀態碼類別（Status Code Categories）**：依類別分組（2xx 成功、3xx 重新導向、4xx 用戶端錯誤、5xx 伺服器錯誤），並附各類總計
+
+    4. **主要肇因者（Top Offenders）**：對於 4xx 與 5xx 錯誤，列出產生最多錯誤的前 5 個用戶端 IP
+
+    5. **請求路徑（Requested Paths）**：對於每個狀態碼，列出被請求最多的前 3 個路徑
+
+    6. **評估（Assessment）**：根據狀態碼分布，對伺服器健康狀況做簡短評估
+
+
+    請把報告寫到 `status_code_report.md`，以結構清晰的 markdown 文件呈現。'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: logs/nginx_access_json.log
+  dest: nginx_access.log
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立 `status_code_report.md`
+- 已回報請求總數（1000）
+- 已列出所有出現過的狀態碼及其計數（200、206、304、403、404）
+- 狀態碼已依類別分組（2xx、3xx、4xx）
+- 已找出產生最多錯誤的 IP
+user_agent:
+  enabled: false
+judge_rubric: '依下列評分標準逐項評估（每項 0.0–1.0，最後取平均）：
+
+  - 已在工作區建立 `status_code_report.md`
+
+  - 已回報請求總數（1000）
+
+  - 已列出所有出現過的狀態碼及其計數（200、206、304、403、404）
+
+  - 狀態碼已依類別分組（2xx、3xx、4xx）
+
+  - 已找出產生最多錯誤的 IP'
+reference_solution: '助手應解析全部 1000 筆 JSON 日誌條目，並產生：
+
+
+  **請求總數：** 1000
+
+
+  **狀態碼分布：**
+
+  - 200：35（3.5%）
+
+  - 206：1（0.1%）
+
+  - 304：274（27.4%）
+
+  - 403：2（0.2%）
+
+  - 404：688（68.8%）
+
+
+  **狀態碼類別：**
+
+  - 2xx：36（3.6%）
+
+  - 3xx：274（27.4%）
+
+  - 4xx：690（69.0%）
+
+
+  **關鍵觀察：**
+
+  - 此日誌涵蓋 2015 年 5 月 17 日，約 08:05–16:05 UTC
+
+  - 404 錯誤居多——將近占全部請求的 69%
+
+  - 路徑主要為 `/downloads/product_1` 與 `/downloads/product_2`
+
+  - 大多數流量來自 Debian APT 套件管理工具用戶端
+
+  - 80.91.33.133 是最活躍的 IP，約有 210 次請求
+
+
+  可接受的變化：
+
+  - 精確百分比可能因四捨五入而不同
+
+  - 評估用語會有所不同
+
+  - 歡迎額外分析'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - dest: nginx_access.log
+    source: logs/nginx_access_json.log
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

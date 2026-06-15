@@ -1,0 +1,171 @@
+task_id: T031tw_playwright_e2e
+task_name: Playwright E2E 表單測試
+version: 0.3.0
+category: coding
+difficulty: hard
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- coding
+- multimodal
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_playwright_e2e.md
+  original_task_id: task_playwright_e2e
+  original_file: tasks/task_playwright_e2e.md
+prompt:
+  text: |-
+    工作區中有一個檔案 `form.html`，它是一個以純 HTML、CSS 與 JavaScript（無任何
+    框架）打造、自我完整（self-contained）的三步驟註冊表單。你的任務：
+
+    1. 仔細閱讀 `form.html`，以了解表單結構與導覽方式
+    2. 撰寫一支 Playwright 端對端（end-to-end）測試腳本，儲存為 `test_form.py`
+    3. 腳本應使用 `playwright.sync_api`（Python 同步 API）
+    4. 依序走過全部 3 個步驟：
+       - 步驟 1：填寫個人資訊（full name、email、phone）
+       - 步驟 2：填寫地址細節（street、city、state 下拉選單、ZIP code）
+       - 步驟 3：確認 review 摘要顯示正確資料，然後送出
+    5. 送出後，確認成功面板（success panel）可見，且包含一組 submission ID
+    6. 在每個步驟，驗證 UI 狀態（正確的步驟可見、進度條已更新）
+    7. 為選擇器（selector）互動加入重試邏輯——若某個選擇器失敗，最多重試 3 次，
+       並在每次之間短暫延遲
+    8. 將最終成功狀態的螢幕截圖儲存為 `success.png`
+
+    該表單會驗證輸入（必填欄位、email 格式、5 位數 ZIP）——請提供能通過驗證的資料。
+
+    請盡可能使用 `data-testid` 選擇器——它們是最具韌性的選擇器策略。
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: form.html
+  dest: form.html
+environment:
+  timeout_seconds: 300
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已在工作區建立檔案 `test_form.py`
+- 檔案包含有效的 Python 語法
+- 腳本從 `playwright.sync_api` 匯入
+- 腳本引用 `form.html` 以開啟表單
+- 腳本跨多個步驟填寫欄位（至少 5 次不同的欄位互動）
+- 腳本包含重試或明確的等待邏輯
+- 腳本包含用於狀態驗證的 assertion／expect 呼叫
+- 腳本將螢幕截圖儲存為 `success.png`
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：多步驟導覽（權重 30%）
+
+  **1.0 分**：腳本正確地依序走過全部 3 個表單步驟。每次步驟轉換都很明確——填寫
+  欄位、點擊 Next，並在繼續前確認新步驟為 active。以 `select_option` 處理 state
+  下拉選單。有測試返回（back）導覽，或至少未使其失效。
+
+  **0.75 分**：全部 3 個步驟皆正確導覽，但有些微問題（例如轉換之間沒有明確的等待，
+  或以 click 而非 select_option 處理 state 下拉選單）。
+
+  **0.5 分**：3 個步驟中有 2 個處理正確，或 3 個皆有嘗試但欄位名稱錯誤、或缺少
+  能通過驗證的資料。
+
+  **0.25 分**：僅處理 1 個步驟，或導覽邏輯有根本性瑕疵。
+
+  **0.0 分**：未嘗試任何有意義的步驟導覽。
+
+  ### 評分項 2：Review 資料斷言（權重 25%）
+
+  **1.0 分**：腳本驗證步驟 3 的 review 摘要顯示步驟 1 與步驟 2 中輸入的確切資料。
+  以文字內容斷言檢查至少 3 個 review 欄位（name、email、address）。
+
+  **0.75 分**：以正確的斷言驗證 2 個以上的 review 欄位。
+
+  **0.5 分**：檢查 review 步驟為可見，但未驗證具體的資料值。
+
+  **0.25 分**：review 斷言極少或不正確。
+
+  **0.0 分**：未嘗試任何 review 驗證。
+
+  ### 評分項 3：錯誤處理與重試（權重 25%）
+
+  **1.0 分**：實作了具可設定最大嘗試次數（3 次以上）的重試包裝，捕捉特定的
+  Playwright 例外（TimeoutError 或類似者），在每次重試之間加入延遲，並有適當的
+  清理（在 finally 區塊中呼叫 browser.close）。
+
+  **0.75 分**：具備重試邏輯（2 次以上嘗試）與基本的錯誤捕捉。清理方面有小缺漏。
+
+  **0.5 分**：使用 Playwright 內建的等待（wait_for_selector、expect），但沒有自訂
+  的重試迴圈。
+
+  **0.25 分**：錯誤處理極少——只有基本的 try/except，沒有重試。
+
+  **0.0 分**：完全沒有錯誤處理。
+
+  ### 評分項 4：程式碼品質與最佳實務（權重 20%）
+
+  **1.0 分**：程式碼整潔、組織良好。一致地使用 `data-testid` 選擇器。為 playwright
+  使用適當的 context manager。以函式／類別封裝可重複使用的邏輯。變數命名有意義。
+  註解說明了不顯而易見的選擇。
+
+  **0.75 分**：程式碼品質良好，僅有些微風格問題。大致使用 data-testid 選擇器。
+
+  **0.5 分**：可運作但組織不佳。混用了良好與脆弱的選擇器。沒有輔助函式。
+
+  **0.25 分**：程式碼凌亂、硬編碼數值、整支使用脆弱的 CSS／XPath 選擇器。
+
+  **0.0 分**：程式碼無法運作或難以理解。
+reference_solution: |-
+  助手應該：
+
+  1. 閱讀 `form.html` 並分析 DOM 結構，留意 `data-testid` 屬性、表單驗證規則與
+     步驟導覽邏輯
+  2. 使用 `playwright.sync_api` 搭配 `sync_playwright` context manager 建立
+     `test_form.py`
+  3. 啟動 Chromium 瀏覽器（headless 模式）
+  4. 以 `file://` URL 開啟本機的 `form.html` 檔案
+  5. 以有效的測試資料填寫步驟 1 的欄位（fullname、email、phone）
+  6. 點擊「Next」，確認步驟 2 為 active 且步驟 1 已隱藏
+  7. 以有效資料填寫步驟 2 的欄位（street、city、state 下拉選單、zip）
+  8. 點擊「Next」，確認步驟 3 顯示 review 摘要
+  9. 斷言（assert）review 中的值與輸入的內容相符
+  10. 點擊「Submit Registration」
+  11. 確認成功面板可見且包含一組 submission ID
+  12. 擷取螢幕截圖並儲存為 `success.png`
+  13. 加入重試／等待邏輯，避免不穩定（flaky）的選擇器使測試立即失敗
+  14. 使用正確的 Playwright 慣用法：`page.locator()`、`data-testid` 選擇器、
+      `expect()` 斷言
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights: {}
+  workspace_files:
+  - source: form.html
+    dest: form.html
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: language_polish
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

@@ -1,0 +1,134 @@
+task_id: P049zh_contract_analysis
+task_name: 合約／法律分析
+version: 0.2.0
+category: analysis
+difficulty: hard
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- analysis
+- multimodal
+source:
+  benchmark: pinchbench
+  original_task_id: task_contract_analysis
+  original_file: tasks/task_contract_analysis.md
+prompt:
+  text: |-
+    請閱讀工作區裡的 `sample_contract.pdf`，這是兩家公司之間的軟體服務協議（Software Services Agreement）。請進行一份完整的法律分析，並把你的發現存到 `contract_analysis.md`。
+
+    你的分析必須包含下列區段：
+
+    1. **Key Dates and Deadlines（關鍵日期與期限）** —— 擷取合約中提及的所有重要日期、里程碑與期限，並依時間先後順序呈現。
+    2. **Party Obligations（各方義務）** —— 摘要各方（Provider 與 Client）的主要義務，依當事方分類整理。
+    3. **Risks and Concerns（風險與疑慮）** —— 找出對各方而言的潛在風險、不利條款或值得關注之處。請考量責任限制、終止條件、智慧財產權（IP）歸屬、資料保護要求，以及任何其他可能有問題的條款。
+    4. **Financial Summary（財務摘要）** —— 摘要合約總價值、付款排程，以及任何財務條件（逾期費、保留款 retainage 等）。
+
+    （提醒：本分析僅供資訊參考，旨在提示潛在風險，不構成法律意見，亦不取代合格律師的專業諮詢。）
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: sample_contract.pdf
+  dest: sample_contract.pdf
+environment:
+  timeout_seconds: 300
+  max_turns: 1
+scoring_components:
+- name: llm_judge
+  weight: 1.0
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 助手成功讀取／解析 PDF 檔
+- 已建立輸出檔 contract_analysis.md
+- 分析含有完整的關鍵日期區段，且日期依時間順序排列
+- 分析正確辨識出生效日（September 15, 2024）
+- 分析含有所有主要專案里程碑及其日期區間
+- 分析分別辨識 Provider 與 Client 的義務
+- 分析辨識出 Provider 交付 ERP 平台的核心義務
+- 分析辨識出資料保護／資安義務（CCPA、GDPR、SOC 2）
+- 分析辨識出 48 小時資安事件通報要求
+- 分析辨識出與責任限制相關的風險
+- 分析辨識出與智財歸屬及 Provider 保留權利相關的風險
+- 分析辨識出仲裁條款及其影響
+- 分析含有財務摘要與合約總價值（$2,400,000）
+- 分析含有付款排程明細
+- 分析辨識出逾期付款利率（每月 1.5%）
+- 分析組織良好，區段標題清楚
+- 分析展現真正的法律推理，而非僅是摘要
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：關鍵日期擷取（權重 25%）
+
+  **1.0 分**：所有重要日期與期限都被擷取並以清楚的時間順序呈現。包含生效日（September 15, 2024）、全部六個專案里程碑階段及其日期區間、所有付款到期日、正式部署日（November 1, 2025）、上線後支援結束日（April 30, 2026），以及關鍵的時限性義務（48 小時資安事件通報、30 天補正期、60 天終止通知、5 年保密存續、12 個月禁止招攬、12 個月保固期、90 天不可抗力上限）。日期準確且完整。
+  **0.75 分**：多數關鍵日期正確擷取，僅有小遺漏（例如漏掉一兩個付款日或時限性義務）。時間順序大致正確。
+  **0.5 分**：擷取了數個重要日期，但有明顯缺口——漏掉多個里程碑階段、付款日或時限性義務。部分日期可能不準確。
+  **0.25 分**：只提及少數日期，或日期雜亂且不完整。可能漏掉主要里程碑或生效日。
+  **0.0 分**：未擷取任何日期，或日期區段完全缺失。
+
+  ### 評分項 2：各方義務分析（權重 25%）
+
+  **1.0 分**：Provider 與 Client 雙方的義務都被完整辨識並依當事方清楚分類。Provider 義務包括：依規格交付 ERP 平台、指派專責專案經理、遵循 CCPA/GDPR/SOC 2、48 小時內通知 Client 資安事件、執行年度資安稽核、提供 12 個月一致性保固、就智財侵權與重大過失對 Client 提供賠償保證，以及終止時交付工作成果。Client 義務包括：於收到發票後 30 天內依里程碑付款、提供系統存取／人員／資訊、就濫用對 Provider 提供賠償保證，以及適用時支付逾期費。
+  **0.75 分**：雙方多數義務都被辨識，僅有小遺漏。依當事方分類清楚。
+  **0.5 分**：辨識出部分義務，但涵蓋不均——某一方義務寫得詳盡，另一方則稀疏。可能混淆雙方義務。
+  **0.25 分**：只提到表面義務，或義務未依當事方分類。
+  **0.0 分**：沒有義務分析，或區段缺失。
+
+  ### 評分項 3：風險辨識與法律推理（權重 30%）
+
+  **1.0 分**：分析透過辨識風險並說明其影響，展現真正的法律推理。辨識出的關鍵風險包括：(i) 責任上限以已付總費用為限，並就智財／保密／資料保護設例外——分析指出這可能限制 Client 在重大失誤時的求償；(ii) 排除衍生性與間接損害——標記為雙方的重大風險；(iii) Provider 保留既有智財並授權 Client 使用——指出潛在依賴風險；(iv) 於 Austin, TX 進行具拘束力的仲裁——指出對位於加州的 Client 的地理劣勢；(v) 不可抗力上限 90 天——指出長期中斷時可能讓各方暴露於風險；(vi) 60 天便利終止——分析其對雙方在專案進行中的影響；(vii) 10% 保留款——指出對 Provider 的現金流影響與對 Client 的籌碼；(viii) 重大違約的 30 天補正期——分析其是否充足；(ix) 禁止招攬條款——指出對招募的限制。分析超越條款條列，說明這些條款為何重要。
+  **0.75 分**：多數重要風險都被辨識，並有一些法律推理。可能漏掉一兩個重要風險，或對其影響的分析較淺。
+  **0.5 分**：辨識出數個風險，但分析偏描述而非分析。對所辨識條款為何構成風險或其實務影響的說明有限。
+  **0.25 分**：只提及一兩個明顯風險，分析極少。讀起來比較像合約摘要而非風險評估。
+  **0.0 分**：沒有風險分析，或區段缺失。
+
+  ### 評分項 4：財務摘要與任務完成度（權重 20%）
+
+  **1.0 分**：財務摘要準確掌握合約總價值（$2,400,000）、列出全部六期付款及其正確金額與到期日、辨識出每月 1.5% 的逾期付款利息、指出 10% 保留款條款，且輸出已存到 `contract_analysis.md`，格式與區段標題清楚。整體分析結構良好且專業。
+  **0.75 分**：財務摘要大致準確，僅有小遺漏（例如漏掉一期付款或保留款細節）。檔案已建立且格式合理。
+  **0.5 分**：合約總價值正確，但付款明細不完整或有錯誤。檔案已建立但組織有很大改善空間。
+  **0.25 分**：財務資訊稀疏或含明顯錯誤。檔案可能存在但結構不佳。
+  **0.0 分**：沒有財務摘要、未建立檔案，或助手未能讀取 PDF。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 PDF 檔 `sample_contract.pdf`（一份介於 Pinnacle Digital Solutions, Inc. 與 GreenLeaf Enterprises, LLC 之間、多頁的軟體服務協議）
+  2. 擷取並依時間順序整理所有關鍵日期，包括：
+     - 生效日（Effective Date）：September 15, 2024
+     - 需求蒐集、設計、開發各階段、UAT、部署與上線後支援的里程碑日期
+     - 與里程碑掛鉤的付款到期日
+     - 保密義務存續期間（終止後 5 年）
+     - 禁止招攬（non-solicitation）期間（終止後 12 個月）
+  3. 辨識各方義務：
+     - Provider：交付 ERP 平台、指派專案經理、維持資安合規（CCPA、GDPR、SOC 2）、48 小時內通報資安事件、年度資安稽核、12 個月保固、智財侵權的賠償保證（indemnification）
+     - Client：依里程碑付款、提供系統存取與人員、適用時支付逾期費
+  4. 辨識風險，例如：
+     - 責任上限以已付總費用為限（智財、保密、資料保護違約除外）
+     - 排除間接／衍生性損害（consequential/indirect damages）
+     - 不可抗力（force majeure）限於 90 天
+     - 於 Austin, TX 進行具拘束力的仲裁（對位於加州的 Client 可能不利）
+     - Provider 保留既有工具／智財的權利
+     - Client 的 10% 保留款（retainage）權利及其影響
+     - 60 天便利終止（termination for convenience）條款
+     - 重大違約的 30 天補正期（cure period）
+  5. 摘要 $2,400,000 的合約總價值，並列出分期付款明細
+  6. 把完整分析存到 `contract_analysis.md`
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  grading_type: llm_judge
+  grading_weights: {}
+  workspace_files:
+  - source: sample_contract.pdf
+    dest: sample_contract.pdf
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

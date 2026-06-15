@@ -1,0 +1,74 @@
+task_id: P003zh_pdf_to_calendar
+task_name: PDF 轉行事曆匯入
+version: 0.2.0
+category: productivity
+difficulty: medium
+tags:
+- pinchbench
+- claw-eval-zh
+- zh-TW
+- productivity
+- general
+source:
+  benchmark: pinchbench
+  original_task_id: task_pdf_to_calendar
+  original_file: tasks/task_pdf_to_calendar.md
+prompt:
+  text: |-
+    工作區中已放入一份學校行事曆 PDF，位於 `school-calendar.pdf`。
+
+    請從這份 PDF 中擷取所有日期與事件，並在工作區中建立一個名為
+    `school-calendar.ics` 的 ICS（iCalendar）檔案，內含所有事件。
+
+    每筆事件應該：
+    - 具有與 PDF 中事件名稱相符、具描述性的 SUMMARY
+    - 使用正確的日期；多日事件請使用 DTSTART 與 DTEND
+    - 設為整日事件（使用 DATE 格式，而非 DATETIME）
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: school-calendar.pdf
+  dest: school-calendar.pdf
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 1.0
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+safety_checks: []
+expected_actions:
+- 已在 `school-calendar.ics` 建立 ICS 檔案
+- ICS 檔案有效（包含 VCALENDAR、VEVENT 區塊）
+- 至少擷取出 10 筆事件
+- 包含開學日（First Day of School）事件（2026 年 8 月 3 日）
+- 包含學期最後一日（Last Day of School）事件（2027 年 5 月 21 日）
+- 包含勞動節（Labor Day）事件（2026 年 9 月 7 日）
+- 包含聖誕假期（Christmas Break）事件（2026 年 12 月）
+- 包含春假（Spring Break）事件（2027 年 4 月）
+user_agent:
+  enabled: false
+judge_rubric: ''
+reference_solution: |-
+  助手應該：
+  1. 讀取並從 PDF 中擷取文字
+  2. 將每一筆有日期的項目解析為結構化事件
+  3. 寫出一個有效、內含所有事件的 ICS 檔案
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  grading_type: automated
+  grading_weights: {}
+  workspace_files:
+  - source: school-calendar.pdf
+    dest: school-calendar.pdf
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase2_full_traditional_chinese
+  notes: Generated from PinchBench by convert_pinchbench_to_claw_eval_zh.py

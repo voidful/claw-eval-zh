@@ -1,0 +1,373 @@
+# Smoke-test tasks — Traditional Chinese (繁體中文). Phase 2.
+# csv_stock_trend keeps a bilingual grader (簡體+繁體+English); the others rely
+# on the converter's normalize wrapper (scripts/lib_zh.py) for Chinese reports.
+tasks:
+
+  task_sanity:
+    task_name: "健全性檢查"
+    prompt: "請回覆「你好，我已準備好了！」以確認你可以正常回應。"
+    expected_behavior: |
+      助手應該：
+      1. 回覆一句問候或確認訊息
+      2. 證明自己能夠處理並回應簡單指令
+
+      這是一個基礎的健全性檢查，用來確認評測系統運作正常。評分只看「是否有任何
+      助手回應」，不檢查精確字串。
+    grading_criteria:
+      - "助手成功回應（任何回應都算）"
+
+  task_weather:
+    task_name: "天氣腳本編寫"
+    prompt: |
+      請編寫一個名為 weather.py 的 Python 腳本：使用 wttr.in API 取得舊金山
+      （San Francisco）的天氣資料，並印出一段易讀的天氣摘要。請加入基本的網路
+      錯誤處理。
+
+      wttr.in 的 JSON 介面為 https://wttr.in/San_Francisco?format=j1，
+      簡易文字介面為 https://wttr.in/San_Francisco?format=3。
+    expected_behavior: |
+      助手應該：
+      1. 建立一個名為 weather.py 的檔案
+      2. 寫出向 wttr.in 發出 HTTP 請求的 Python 程式碼
+      3. 解析回應，取出天氣資訊
+      4. 印出一段易讀的天氣摘要
+      5. 包含基本的網路錯誤處理（try/except 之類）
+      6. 使用標準函式庫或常見函式庫（requests、urllib）
+
+      注意：檔名 weather.py、地名 San Francisco、以及 wttr.in 網址都不可更改。
+
+  task_humanizer:
+    task_name: "把 AI 生成的部落格改寫得更像真人撰寫"
+    prompt: |
+      我的工作區（workspace）裡有一篇 ai_blog.txt，讀起來太生硬、太像 AI 寫的。
+      請先用 `/install humanizer` 從 skill registry 安裝 humanizer 技能，再用它把
+      文字改寫得更自然、更像真人撰寫；如果該技能不可用，你可以手動改寫。
+
+      **請保留原文語言（英文），不要翻譯成中文。** 把改寫後的版本儲存到
+      humanized_blog.txt。
+    expected_behavior: |
+      助手應該：
+      1. 讀取 ai_blog.txt 裡的 AI 生成部落格
+      2. 使用 humanizer 技能／工具轉換內容（不可用時手動改寫）
+      3. 保持原文語言為英文，僅讓其更自然
+      4. 把改寫結果儲存到 humanized_blog.txt
+
+      改寫應處理常見的 AI 寫作痕跡：濫用轉折詞、過度修飾語氣、句式重複、不用縮寫、
+      過度正式、套話開頭（"In today's fast-paced world"）、像清單的段落等。
+    grading_criteria:
+      - "助手讀取了輸入的部落格檔案"
+      - "助手使用了 humanizer 技能／工具（或合理地手動改寫）"
+      - "建立了含改寫內容的輸出檔案 humanized_blog.txt"
+      - "內容保留原意與重點"
+      - "文字讀起來更自然、更像真人撰寫"
+      - "AI 常見痕跡被減少或消除"
+    llm_judge_rubric: |
+      ### 評分項 1：技能使用或手動改寫（權重 25%）
+      - 1.0：正確安裝並使用 humanizer 技能，或完成高品質的手動改寫
+      - 0.75：嘗試安裝／使用技能，並適當退回手動改寫
+      - 0.5：有嘗試但方法不理想
+      - 0.25：僅做了極少量改寫
+      - 0.0：完全沒有嘗試改寫
+
+      ### 評分項 2：輸出品質—自然語氣（權重 35%）
+      - 1.0：讀起來像真人撰寫，善用縮寫、句式多樣、語氣自然，無機械痕跡
+      - 0.75：大致自然，僅殘留少量機械感
+      - 0.5：有改善但仍有明顯 AI 痕跡或彆扭措辭
+      - 0.25：相較原文幾乎沒有改善
+      - 0.0：未改、變差或缺失
+
+      ### 評分項 3：內容保留（權重 25%）
+      - 1.0：完整保留原文所有重點、建議與含義
+      - 0.75：大致保留，僅少量遺漏或更動
+      - 0.5：保留主要內容但遺失／扭曲部分重點
+      - 0.25：重大內容遺失或語意扭曲
+      - 0.0：內容完全改變或缺失
+
+      ### 評分項 4：任務完成度（權重 15%）
+      - 1.0：正確處理兩個檔案—讀取輸入、輸出存到正確位置
+      - 0.75：完成但檔案處理有小瑕疵
+      - 0.5：部分完成—檔案位置／格式有誤
+      - 0.25：有嘗試但輸出未正確儲存
+      - 0.0：未建立輸出檔案
+
+      注意：本任務要求保留英文原文語言，若助手把內容翻成中文應視為偏離任務並扣分。
+
+  task_iterative_code_refine:
+    task_name: "迭代式程式碼改進"
+    expected_behavior: |
+      這是一個多輪任務（見 frontmatter 的 sessions）。助手應該：
+      1. 第 1 輪：建立 calculator.py，含 add、subtract、multiply、divide 函式
+         （divide 先不做錯誤處理）
+      2. 第 2 輪：修改 calculator.py，讓 divide 在除以 0 時拋出 ValueError
+         ("Cannot divide by zero")，新增 power 與 modulo（modulo 也處理除以 0），
+         並保留既有函式
+      3. 第 3 輪（全新 session）：讀取 calculator.py，驗證 6 個函式與錯誤處理是否
+         齊全，並把驗證結果寫入 review.txt
+
+      注意：calculator.py、review.txt、以及所有函式名與 "Cannot divide by zero"
+      字串都不可更改。
+    grading_criteria:
+      - "calculator.py 存在且含 add、subtract、multiply 函式"
+      - "calculator.py 的 divide 在除以 0 時拋出 ValueError"
+      - "calculator.py 含 power 函式"
+      - "calculator.py 的 modulo 在除以 0 時拋出 ValueError"
+      - "review.txt 存在且提及全部 6 個函式"
+      - "review.txt 提及錯誤處理 / ValueError"
+    sessions:
+      - prompt: |
+          請建立一個名為 calculator.py 的 Python 腳本，實作一個簡單計算機，包含以下函式：
+          1. add(a, b) —— 回傳 a + b
+          2. subtract(a, b) —— 回傳 a - b
+          3. multiply(a, b) —— 回傳 a * b
+          4. divide(a, b) —— 回傳 a / b（暫時不做錯誤處理）
+
+          請把檔案儲存為工作區裡的 calculator.py。
+      - prompt: |
+          我發現 divide 函式沒有處理除以 0 的情況。請更新 calculator.py：
+          1. 讓 divide(a, b) 在 b 為 0 時拋出 ValueError，訊息為 "Cannot divide by zero"
+          2. 新增 power(a, b) 函式，回傳 a ** b
+          3. 新增 modulo(a, b) 函式，回傳 a % b（同樣處理除以 0 的情況）
+
+          請保留所有既有函式，只新增上述改進。
+      - prompt: |
+          請讀取工作區裡的 calculator.py，確認它具備下列特性：
+          1. 函式：add、subtract、multiply、divide、power、modulo
+          2. divide 與 modulo 都在除以 0 時拋出 ValueError
+          3. 所有函式都能正確運作
+
+          然後把驗證結果寫入 review.txt，說明有哪些函式、以及是否具備錯誤處理。
+
+  task_gws_email_triage:
+    task_name: "GWS 郵件分類整理（Triage）"
+    prompt: |
+      你可以透過 gws CLI 工具操作一個 Google Workspace 帳號（用 `gws --help` 查看
+      用法）。
+
+      你的收件匣有數封未讀郵件，請整理（triage）它們：
+      1. 檢查未讀郵件
+      2. 逐封閱讀，理解內容與緊急程度
+      3. 針對最緊急的一封郵件，草擬一封回覆（存成草稿，不要寄出）
+      4. 建立一份分類報告，存到 triage_report.md，列出每封郵件的優先級（P0–P3）、
+         分類與建議動作，並依優先級排序（最緊急在前）
+    expected_behavior: |
+      助手應該：
+      1. 探索並使用 gws 的 Gmail 指令來列出與閱讀郵件
+      2. 分析郵件內容、寄件人與緊急程度
+      3. 找出最緊急的一封並建立草稿回覆
+      4. 把結構化的分類報告寫入 triage_report.md
+
+      本任務測試助手能否探索並使用 gws CLI 完成多步驟郵件流程：列出、閱讀、草擬、
+      彙整。注意：gws 指令、triage_report.md 檔名與 P0–P3 標記都不可更改。
+    grading_criteria:
+      - "助手用 gws 列出未讀郵件"
+      - "助手用 gws 閱讀個別郵件"
+      - "助手為最緊急郵件建立草稿回覆"
+      - "工作區建立了檔案 triage_report.md"
+      - "報告涵蓋所有未讀郵件"
+      - "每封郵件都標了優先級（P0–P3）"
+      - "每封郵件都有建議動作"
+      - "報告依優先級排序"
+    llm_judge_rubric: |
+      ### 評分項 1：GWS CLI 探索與使用（權重 30%）
+      - 1.0：流暢探索並使用 gws Gmail 指令（list、get、drafts），參數正確
+      - 0.75：使用正確，但參數有小問題或有多餘呼叫
+      - 0.5：用了部分指令，但語法卡頓或漏掉關鍵指令
+      - 0.25：幾乎沒用 gws CLI 或指令錯誤
+      - 0.0：完全沒用 gws CLI
+
+      ### 評分項 2：分類品質（權重 40%）
+      - 1.0：所有郵件優先級正確、分類準確、建議具體可執行
+      - 0.75：多數正確，僅少量誤判，建議合理
+      - 0.5：部分正確但有明顯判斷錯誤，建議籠統
+      - 0.25：優先級多半錯誤或缺失
+      - 0.0：沒有做有意義的分類
+
+      ### 評分項 3：草稿回覆品質（權重 30%）
+      - 1.0：草稿針對正確的緊急郵件，回覆專業並切合情境
+      - 0.75：針對正確郵件、回覆合理，但語氣或內容可再加強
+      - 0.5：有草稿但對象較不恰當，或內容籠統
+      - 0.25：有草稿但格式錯誤或內容不相關
+      - 0.0：沒有建立草稿
+
+  task_csv_stock_trend:
+    task_name: "蘋果股票 2014 年趨勢分析"
+    prompt: |
+      我的工作區裡有一個 CSV 檔案 apple_stock_2014.csv，內含蘋果（AAPL）2014 年
+      的調整後收盤價（adjusted closing price）。檔案有兩欄：AAPL_x（日期，
+      YYYY-MM-DD 格式）與 AAPL_y（調整後收盤價），共 240 個交易日。
+
+      請分析蘋果股票 2014 年整體價格趨勢，並把結果寫入檔案 stock_trend_report.md。
+      報告需包含：
+
+      - **整體趨勢方向**（看漲 bullish／看跌 bearish／盤整 sideways）
+      - **起始價**（首個交易日）、**結束價**（最後交易日）與**整體漲跌幅百分比**
+      - **每月平均價**，呈現全年走勢
+      - **關鍵趨勢區段**：找出最長的連續上漲天數與連續下跌天數，並附上日期
+      - **持續性走勢**：指出明顯的持續上漲或下跌時段（如數週的反彈或回落）
+      - 一段全年價格走勢的**總結**
+
+      注意：CSV 檔名、欄名（AAPL_x / AAPL_y）與報告檔名 stock_trend_report.md 都
+      不可更改。
+    expected_behavior: |
+      助手應該：
+      1. 讀取並解析 CSV 檔案
+      2. 計算起始價（2014-01-02 為 $77.45）與結束價（2014-12-12 為 $110.03）
+      3. 計算整體漲跌幅（約 +42.07%）
+      4. 判定整體趨勢為看漲（明顯上行）
+      5. 計算每月平均價，呈現上行軌跡
+      6. 找出最長連續上漲（9 天，2014-08-11 至 2014-08-21）
+      7. 找出最長連續下跌（5 天，2014-01-27 至 2014-01-31）
+      8. 指出關鍵轉折（1 月回落、4 月突破、5 月至年底穩步攀升）
+      9. 寫出結構清晰的 markdown 報告
+
+      已知正確值：240 個交易日；起始 $77.45（2014-01-02）、結束 $110.03
+      （2014-12-12）；整體 +42.07%；趨勢看漲；最長連漲 9 天、最長連跌 5 天。
+    grading_criteria:
+      - "建立報告檔案 stock_trend_report.md"
+      - "正確判定整體趨勢為看漲／上行"
+      - "正確報告起始價（約 $77.45）"
+      - "正確報告結束價（約 $110.03）"
+      - "正確計算漲跌幅（約 42%）"
+      - "包含每月平均價或月度拆解"
+      - "找出最長連漲（8 月約 9 個連續交易日）"
+      - "找出最長連跌（1 月底約 5 個連續交易日）"
+      - "描述關鍵趨勢區段或顯著走勢"
+    llm_judge_rubric: |
+      ### 評分項 1：資料分析準確度（權重 35%）
+      - 1.0：所有計算值（起始／結束價、漲跌幅、連漲連跌）數值正確且清楚呈現
+      - 0.75：大多正確，僅一兩處小誤差
+      - 0.5：部分正確，但若干關鍵數字錯誤或缺失
+      - 0.25：僅少數正確，存在重大計算錯誤
+      - 0.0：沒有正確計算或未嘗試分析
+
+      ### 評分項 2：趨勢辨識品質（權重 30%）
+      - 1.0：正確判定看漲，詳述各區段（1 月回落、4 月突破、夏季攀升、年底延續）並附具體日期
+      - 0.75：正確判定看漲，並合理描述多數主要區段
+      - 0.5：判定整體方向，但子區段或關鍵轉折分析有限
+      - 0.25：趨勢判定模糊或部分錯誤，佐證不足
+      - 0.0：未能判定趨勢或分析完全錯誤
+
+      ### 評分項 3：報告結構與呈現（權重 20%）
+      - 1.0：結構清晰、markdown 分段良好，含每月價格表格，由總結到細節邏輯流暢
+      - 0.75：組織良好、易讀，僅排版小瑕疵
+      - 0.5：含分析但組織不佳或難以閱讀
+      - 0.25：雜亂或缺少主要段落
+      - 0.0：未建立報告或報告為空／不可用
+
+      ### 評分項 4：完整度（權重 15%）
+      - 1.0：所有要求項目齊備（整體趨勢、起／結價、漲跌幅、月度拆解、連漲連跌、持續走勢、總結）
+      - 0.75：大多齊備，僅一兩處小遺漏
+      - 0.5：遺漏若干要求項目
+      - 0.25：僅含少數要求項目
+      - 0.0：報告缺失或幾近空白
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """Stock trend analysis grader (trilingual: 繁體 + 简体 + English).
+
+          Numeric expectations (77.45 / 110.03 / 42%) are unchanged from
+          PinchBench. Natural-language regex additionally accepts Chinese.
+          """
+          from pathlib import Path
+          import re
+
+          scores = {}
+          workspace = Path(workspace_path)
+
+          report_path = workspace / "stock_trend_report.md"
+          if not report_path.exists():
+              alternatives = [
+                  "trend_report.md", "report.md", "stock_report.md",
+                  "analysis.md", "stock_trend.md", "趨勢報告.md", "趋势报告.md",
+              ]
+              for alt in alternatives:
+                  alt_path = workspace / alt
+                  if alt_path.exists():
+                      report_path = alt_path
+                      break
+
+          if not report_path.exists():
+              return {
+                  "report_created": 0.0, "trend_direction": 0.0,
+                  "starting_price": 0.0, "ending_price": 0.0,
+                  "percentage_change": 0.0, "monthly_breakdown": 0.0,
+                  "up_streak": 0.0, "down_streak": 0.0, "trend_periods": 0.0,
+              }
+
+          scores["report_created"] = 1.0
+          content = report_path.read_text(encoding="utf-8")
+          content_lower = content.lower()
+
+          bullish_patterns = [
+              r'bullish', r'upward\s*trend', r'positive\s*trend',
+              r'strong\s*uptrend', r'significant.*(?:gain|increase|growth|rise)',
+              r'看漲', r'看涨', r'多頭', r'多头', r'上升趨勢', r'上升趋势',
+              r'明顯上漲', r'明显上涨', r'上漲趨勢', r'上涨趋势', r'牛市',
+          ]
+          scores["trend_direction"] = 1.0 if any(
+              re.search(p, content_lower) for p in bullish_patterns) else 0.0
+
+          scores["starting_price"] = 1.0 if re.search(r'77\.4[45]', content) else 0.0
+          scores["ending_price"] = 1.0 if re.search(r'110\.0[23]', content) else 0.0
+          pct_patterns = [r'4[12]\.\d+%', r'4[12]\.0\d*%', r'42\.07', r'42%', r'~42']
+          scores["percentage_change"] = 1.0 if any(
+              re.search(p, content) for p in pct_patterns) else 0.0
+
+          month_names = ['january', 'february', 'march', 'april', 'may', 'june',
+                         'july', 'august', 'september', 'october', 'november', 'december']
+          month_abbrs = ['jan', 'feb', 'mar', 'apr', 'may', 'jun',
+                         'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+          month_nums = ['2014-01', '2014-02', '2014-03', '2014-04', '2014-05', '2014-06',
+                        '2014-07', '2014-08', '2014-09', '2014-10', '2014-11', '2014-12']
+          month_count = 0
+          for i, (mn, ma, mnum) in enumerate(zip(month_names, month_abbrs, month_nums), start=1):
+              cn = "%d月" % i
+              if mn in content_lower or ma in content_lower or mnum in content or cn in content:
+                  month_count += 1
+          scores["monthly_breakdown"] = 1.0 if month_count >= 10 else (
+              0.5 if month_count >= 6 else 0.0)
+
+          up_streak_patterns = [
+              r'(?:9|nine)\s*(?:consecutive|day|trading)',
+              r'(?:consecutive|streak).*(?:9|nine)',
+              r'aug(?:ust)?.*(?:up|gain|positive).*(?:streak|consecutive)',
+              r'(?:up|gain|positive).*(?:streak|consecutive).*aug(?:ust)?',
+              r'2014-08-1[1-9].*2014-08-2[01]',
+              r'(?:連續|连续|連漲|连涨).*(?:9|九)',
+              r'(?:9|九).*(?:連續|连续|天).*(?:上漲|上涨)',
+              r'8月.*(?:連續上漲|连续上涨|連漲|连涨)',
+              r'(?:連續上漲|连续上涨).*8月',
+          ]
+          scores["up_streak"] = 1.0 if any(
+              re.search(p, content_lower) for p in up_streak_patterns) else 0.0
+
+          down_streak_patterns = [
+              r'(?:5|five)\s*(?:consecutive|day|trading).*(?:down|decline|loss|negative|drop)',
+              r'(?:down|decline|loss|negative|drop).*(?:5|five)\s*(?:consecutive|day|trading)',
+              r'(?:down|decline|loss|negative|drop).*(?:streak|consecutive).*jan(?:uary)?',
+              r'jan(?:uary)?.*(?:down|decline|loss|negative|drop).*(?:streak|consecutive)',
+              r'2014-01-2[789].*2014-01-3[01]',
+              r'(?:連續|连续).*(?:5|五).*(?:下跌)',
+              r'(?:5|五).*(?:連續|连续|天).*(?:下跌)',
+              r'1月.*(?:連續下跌|连续下跌|連跌|连跌)',
+              r'(?:連續下跌|连续下跌).*1月',
+          ]
+          scores["down_streak"] = 1.0 if any(
+              re.search(p, content_lower) for p in down_streak_patterns) else 0.0
+
+          trend_indicators = 0
+          if (re.search(r'jan(?:uary)?.*(?:dip|drop|decline|sell-?off|fall)', content_lower)
+                  or re.search(r'1月.*(?:下跌|回調|回调|拋售|抛售|下挫)', content)):
+              trend_indicators += 1
+          if (re.search(r'apr(?:il)?.*(?:breakout|rally|surge|jump|spike)', content_lower)
+                  or re.search(r'4月.*(?:突破|大漲|大涨|反彈|反弹|飆升|飙升)', content)):
+              trend_indicators += 1
+          if (re.search(r'(?:rally|climb|rise|growth|upward).*(?:may|summer|q[23])', content_lower)
+                  or re.search(r'(?:5月|夏|三季度|第三季).*(?:上漲|上涨|攀升|爬升)', content)):
+              trend_indicators += 1
+          if (re.search(r'(?:nov(?:ember)?|q4).*(?:high|peak|rally|climb)', content_lower)
+                  or re.search(r'(?:11月|12月|四季度|第四季).*(?:新高|高點|高点|峰值)', content)):
+              trend_indicators += 1
+          scores["trend_periods"] = 1.0 if trend_indicators >= 2 else (
+              0.5 if trend_indicators >= 1 else 0.0)
+
+          return scores

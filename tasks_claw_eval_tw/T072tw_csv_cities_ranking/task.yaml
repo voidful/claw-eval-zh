@@ -1,0 +1,142 @@
+task_id: T072tw_csv_cities_ranking
+task_name: 美國城市人口排名
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_cities_ranking.md
+  original_task_id: task_csv_cities_ranking
+  original_file: tasks/task_csv_cities_ranking.md
+prompt:
+  text: |-
+    我的工作區裡有一個 CSV 檔案 `us_cities_top1000.csv`，內含美國人口最多的 1,000 個城市的資料。檔案欄位有：`City`、`State`、`Population`、`lat`、`lon`。
+
+    請分析人口排名，並把你的發現寫到名為 `cities_ranking_report.md` 的檔案。你的報告應包含：
+
+    - **人口前 10 大城市（top 10 cities）**：附上所屬州別與確切人口
+    - **資料集中人口最少的 10 個城市（bottom 10 cities）**（即前 1,000 大中最小的）
+    - 全部 1,000 個城市的**總人口（total population）**
+    - 人口的**平均值與中位數（mean and median）**
+    - 依該州在資料集中各城市人口加總排名的**人口前 10 大州（top 10 states）**，包含各州的城市數
+    - **人口分布（population distribution）**：有多少城市落在下列各區間：<50k、50k-100k、100k-250k、250k-500k、500k-1M、>1M
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: csvs/us_cities_top1000.csv
+  dest: us_cities_top1000.csv
+environment:
+  timeout_seconds: 180
+  timezone: Asia/Taipei
+  locale: zh-TW
+  region: TW
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    entrypoint: grader.py
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 已建立報告檔案 `cities_ranking_report.md`
+- 正確列出人口前 10 大城市，且 New York 為第 1 名
+- 列出人口最少的 10 個城市，且 Panama City, FL 為最小者
+- 正確回報總人口（~131,132,443）
+- 正確計算平均人口（~131,132）
+- 正確計算中位數人口（~68,224）
+- 列出人口加總最高的州，且 California 為第 1 名
+- 已包含人口分布區間
+- 報告結構清晰、分區明確
+user_agent:
+  enabled: false
+judge_rubric: |-
+  ### 評分項 1：資料正確性（權重 35%）
+
+  - 1.0：所有排名、總計、平均值、中位數與州級彙總皆數值正確。
+  - 0.75：多數數值正確，僅有一兩處小幅數值錯誤。
+  - 0.5：部分數值正確，但有多項關鍵數字錯誤。
+  - 0.25：多項指標有重大計算錯誤。
+  - 0.0：沒有正確計算，或未進行分析。
+
+  ### 評分項 2：完整性（權重 30%）
+
+  - 1.0：所有要求的元素皆具備：前 10、後 10、總計／平均／中位數、州級排名、分布區間。
+  - 0.75：多數元素具備，僅有一處小幅缺漏。
+  - 0.5：有多項要求的元素缺漏。
+  - 0.25：只有少數元素。
+  - 0.0：報告缺漏或幾乎空白。
+
+  ### 評分項 3：報告品質（權重 20%）
+
+  - 1.0：markdown 組織良好，分區清楚，排名以表格呈現，流程合理。
+  - 0.75：組織良好、易讀，僅有小幅排版問題。
+  - 0.5：有分析但組織不佳。
+  - 0.25：雜亂或不易閱讀。
+  - 0.0：沒有報告或無法使用。
+
+  ### 評分項 4：洞見品質（權重 15%）
+
+  - 1.0：超越原始數字，指出模式——例如 California 的主導地位、第 1 名與第 2 名之間的巨大差距、小型城市的長尾現象。
+  - 0.75：對資料中的模式有一些觀察。
+  - 0.5：大多是原始數字，詮釋極少。
+  - 0.25：純數字、無評論。
+  - 0.0：沒有進行分析。
+reference_solution: |-
+  助手應該：
+
+  1. 讀取並解析 CSV 檔案（1,000 列資料、5 個欄位）
+  2. 依人口排序城市以找出排名
+  3. 計算彙總統計
+  4. 依州分組以進行州級排名
+  5. 建立人口分布區間
+  6. 撰寫一份結構清晰的 markdown 報告
+
+  關鍵預期數值：
+
+  - 第 1 名城市：New York, New York — 8,405,837
+  - 第 2 名：Los Angeles, California — 3,884,307
+  - 第 3 名：Chicago, Illinois — 2,718,782
+  - 第 4 名：Houston, Texas — 2,195,914
+  - 第 5 名：Philadelphia, Pennsylvania — 1,553,165
+  - 資料集中最小的城市：Panama City, Florida — 36,877
+  - 總人口：131,132,443
+  - 平均人口：~131,132
+  - 中位數人口：~68,224
+  - 人口加總最高的州：California（212 個城市，27,910,620）
+  - 人口 > 1M 的城市：10 個
+  - 人口 >= 500k 的城市：34 個
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: csvs/us_cities_top1000.csv
+    dest: us_cities_top1000.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: copy
+  manual_review_required: false
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py

@@ -1,0 +1,117 @@
+task_id: T109tw_meeting_council_votes
+task_name: 台灣（虛構）市議會：彙整議案與表決結果
+version: 0.3.0
+category: meeting_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- meeting_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_meeting_council_votes.md
+  original_task_id: task_meeting_council_votes
+  original_file: tasks/task_meeting_council_votes.md
+prompt:
+  text: '工作區裡有一份議會逐字稿 transcript.md（虛構的台灣地方議會「南港市議會」定期會）。
+
+    請以台灣地方議會的語境閱讀逐字稿，彙整每個議案的**表決結果**，寫入 votes_report.md。
+
+
+    每個議案請列出：議案主題、表決結果（贊成／反對票數、是否一致通過、是否有議員迴避、
+
+    是否為一讀、是否延期等）。'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: tw/meetings/tw_council_meeting.md
+  dest: transcript.md
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.5
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.5
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks: []
+expected_actions:
+- 建立報告檔案 votes_report.md
+- 正確彙整預算案表決（12 比 0 通過）
+- 標出道路拓寬案有議員利益迴避
+- 標出公園命名案為全體一致通過
+- 標出清運費調整案為一讀
+- 標出都市更新案延期
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：表決結果正確度（權重 60%）
+
+  - 1.0：各議案的票數、迴避、一致、一讀、延期等狀態皆正確
+
+  - 0.5：多數正確但有少量錯誤
+
+  - 0.0：嚴重錯誤
+
+  ### 評分項 2：完整度（權重 25%）
+
+  - 1.0：七個議案皆涵蓋
+
+  - 0.5：遺漏一兩案
+
+  - 0.0：多數遺漏
+
+  ### 評分項 3：呈現（權重 15%）
+
+  - 1.0：逐案清楚列出主題與結果
+
+  - 0.0：雜亂'
+reference_solution: '助手應彙整七個議案（皆為虛構）：
+
+  1. 會議紀錄：全體無異議確認通過
+
+  2. 年度總預算案：12 票贊成、0 反對，通過
+
+  3. 道路拓寬案：林議員利益迴避，其餘 10 贊成 1 反對，通過
+
+  4. 公園命名案：全體一致（unanimous）通過
+
+  5. 清運費調整自治條例：完成一讀（first reading）
+
+  6. 都市更新案：延期（continued）
+
+  7. 社福補助加碼案：7 票贊成、5 反對，通過'
+primary_dimensions:
+- completion
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.5
+    llm_judge: 0.5
+  workspace_files:
+  - source: tw/meetings/tw_council_meeting.md
+    dest: transcript.md
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: new_tw_variant
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false

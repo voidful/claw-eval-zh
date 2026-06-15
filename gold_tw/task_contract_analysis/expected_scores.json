@@ -1,0 +1,5 @@
+{
+  "task_id": "task_contract_analysis",
+  "cases": {},
+  "note": "llm_judge：無 deterministic 分數；以 judge_checklist.md 校準 rubric。"
+}

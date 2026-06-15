@@ -1,0 +1,130 @@
+task_id: T054tw_csv_stock_volatility
+task_name: 台積電（2330）2024 波動率分析
+version: 0.3.0
+category: data_analysis
+difficulty: medium
+tags:
+- pinchbench-derived
+- claw-style
+- taiwan
+- zh-TW
+- csv_analysis
+- general
+source:
+  benchmark: pinchbench
+  phase2_source: tasks_zh/task_csv_stock_volatility.md
+  original_task_id: task_csv_stock_volatility
+  original_file: tasks/task_csv_stock_volatility.md
+prompt:
+  text: '我的工作區裡有一個 CSV 檔案 tw_stock_2330_2024.csv，內含台積電（2330）2024 年的
+
+    每日收盤價（來源：TWSE 公開資料）。檔案有兩欄：date（日期）與 close（收盤價，NT$），
+
+    共 242 個交易日。
+
+
+    請分析台積電 2024 年的每日波動率（volatility），並把結果寫入 volatility_report.md。
+
+    報告需包含：
+
+
+    - **每日報酬率的標準差**（daily return standard deviation，以百分比表示）
+
+    - **年化波動率**（annualized volatility，標準差 × √252）
+
+    - **波動最劇烈的交易日**（單日漲跌幅最大者）與其日期、數值
+
+    - 一段對整體波動程度的**總結與解讀**
+
+
+    注意：CSV 檔名、欄名與報告檔名 volatility_report.md 不可更改。'
+  language: zh
+tools: []
+tool_endpoints: []
+services: []
+fixtures:
+- source: tw/csvs/tw_stock_2330_2024.csv
+  dest: tw_stock_2330_2024.csv
+environment:
+  timeout_seconds: 180
+  max_turns: 1
+scoring_components:
+- name: automated
+  weight: 0.6
+  check:
+    type: python
+    description: 確定性檢查，見 grader.py
+- name: llm_judge
+  weight: 0.4
+  check:
+    type: llm_judge
+    description: 語意評分，依 judge_rubric
+safety_checks:
+- 本分析僅為歷史資料整理，不構成投資建議；波動率高低不代表未來風險
+- 數值須以提供的 CSV 為準，不得捏造或臆測未提供的資料
+expected_actions:
+- 建立報告檔案 volatility_report.md
+- 報告每日報酬率標準差（約 2.17%）
+- 報告年化波動率（約 34.5%）
+- 指出波動最劇烈的交易日（2024-08-05 與 2024-08-06）
+- 報告該等交易日的漲跌幅數值（約 +7.98% / -9.75%）
+- 含整體波動程度的解讀／總結
+user_agent:
+  enabled: false
+judge_rubric: '### 評分項 1：計算準確度（權重 50%）
+
+  - 1.0：標準差、年化波動率、極端日數值正確
+
+  - 0.5：部分正確
+
+  - 0.0：未正確計算
+
+  ### 評分項 2：解讀品質（權重 30%）
+
+  - 1.0：對波動程度有合理且具體的解讀
+
+  - 0.5：解讀籠統
+
+  - 0.0：無解讀
+
+  ### 評分項 3：報告結構（權重 20%）
+
+  - 1.0：markdown 清楚完整
+
+  - 0.5：組織不佳
+
+  - 0.0：缺失'
+reference_solution: '助手應計算（已由程式從 TWSE 真實資料驗算）：
+
+  - 每日報酬率標準差約 2.17%
+
+  - 年化波動率約 34.5%（2.17% × √252）
+
+  - 單日最大漲幅約 +7.98%（2024-08-06）、單日最大跌幅約 -9.75%（2024-08-05）
+
+  並輸出結構清晰的 markdown 報告與解讀。'
+primary_dimensions:
+- completion
+- safety
+metadata:
+  locale: zh-TW
+  region: TW
+  timezone: Asia/Taipei
+  grading_type: hybrid
+  grading_weights:
+    automated: 0.6
+    llm_judge: 0.4
+  workspace_files:
+  - source: tw/csvs/tw_stock_2330_2024.csv
+    dest: tw_stock_2330_2024.csv
+  source_benchmark: pinchbench
+  translation_status: complete
+  conversion_stage: phase3_taiwan_localized
+  localization_strategy: fixture_replace
+  manual_review_required: true
+  notes: Generated from tasks_zh by convert_zh_to_tw_localized.py
+  grader_entrypoint: grader.py
+  env_locale: zh-TW
+  env_region: TW
+  export_candidate: true
+  official_compat: false
