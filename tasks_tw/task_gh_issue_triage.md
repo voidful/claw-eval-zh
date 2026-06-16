@@ -18,6 +18,9 @@ workspace_files: []
 grading_weights:
   automated: 0.5
   llm_judge: 0.5
+prerequisites:
+- npm:@juppytt/fws
+- cli:gh
 ---
 
 # GitHub Issue 分流

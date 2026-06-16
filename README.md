@@ -59,6 +59,27 @@ Phase 3 **不覆蓋** Phase 2；台灣版是獨立第三層。為什麼需要分
 
 ---
 
+## 用一個 HuggingFace model id 跑（最省事）
+
+只給一個 HF model id,整套任務就能跑(含原本會失敗的 skills / integrations)。
+細節見 [docs/run_with_huggingface.md](docs/run_with_huggingface.md)。
+
+```bash
+export HF_TOKEN=hf_xxx          # router 模式(免 GPU)
+which openclaw                  # 必裝:agent 執行器
+
+# 一鍵:台灣在地版、自動裝 fws mock、跳過環境未就緒的任務(不污染分數)
+uv run scripts/run_hf_benchmark.py --hf-model Qwen/Qwen2.5-7B-Instruct --auto-install
+
+# 先看環境就緒狀況(離線,不連網)
+uv run scripts/preflight_env.py --language tw --suite all
+# 先預覽會跑什麼,不啟動模型
+uv run scripts/run_hf_benchmark.py --hf-model Qwen/Qwen2.5-7B-Instruct --dry-run
+```
+
+裝好 OpenClaw 後 **142/147 題只需模型**即可跑;GWS/GitHub 類用 `fws` 本地 mock
+(**不需真實 Google 憑證**),影像任務需 `OPENROUTER_API_KEY`。preflight 會逐項告訴你補法。
+
 ## 如何跑中文 benchmark
 
 > 範例一律加 `--no-upload`。實際執行 agent 需要可用的 OpenClaw 與模型。

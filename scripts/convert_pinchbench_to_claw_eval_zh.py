@@ -309,6 +309,12 @@ def build_zh_markdown(task: Task, tr: Translation) -> str:
     }
     if task.grading_weights:
         fm["grading_weights"] = task.grading_weights
+    # Preserve prerequisites (e.g. npm:@juppytt/fws, cli:gws/gh) so the runner's
+    # fws mock-server lifecycle (lib_fws.is_fws_task) still triggers for the
+    # localized tasks — otherwise gws/github tasks would fail in --language zh.
+    prereqs = task.frontmatter.get("prerequisites") or []
+    if prereqs:
+        fm["prerequisites"] = prereqs
     sessions = task.frontmatter.get("sessions")
     if sessions:
         fm["multi_session"] = True

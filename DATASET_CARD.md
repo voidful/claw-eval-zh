@@ -71,6 +71,9 @@ meeting_analysis、memory、skills、integrations。
 - 驗證：`validate_claw_eval_zh_tasks.py`、`validate_tw_localization.py --strict-release`、
   `run_tw_gold_checks.py`、`export_official_claw_eval_candidate.py --validate`、`pytest -q`。
 - 測試不連網、不呼叫 LLM。
+- 執行：`scripts/run_hf_benchmark.py --hf-model <id>` 一鍵以 HuggingFace 模型跑全套；
+  `scripts/preflight_env.py` 檢查/補齊環境。GWS/GitHub 任務用 `fws` 本地 mock（無真實憑證）。
+  詳見 [docs/run_with_huggingface.md](docs/run_with_huggingface.md)。
 
 ## 14. Citation / Attribution
 - PinchBench（MIT）、Claw-Eval（任務結構參考，MIT）、TWSE 公開資料（政府公開資訊）。

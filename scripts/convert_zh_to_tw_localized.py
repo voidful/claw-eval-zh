@@ -177,6 +177,11 @@ def render_tw_markdown(task: Task, tr: C.Translation, tw_id: str, strategy: str,
     }
     if task.grading_weights:
         fm["grading_weights"] = task.grading_weights
+    # Preserve prerequisites so lib_fws.is_fws_task triggers the fws mock server
+    # for localized gws/github tasks under --language tw (otherwise they fail).
+    prereqs = task.frontmatter.get("prerequisites") or []
+    if prereqs:
+        fm["prerequisites"] = prereqs
     sessions = task.frontmatter.get("sessions")
     if sessions:
         fm["multi_session"] = True

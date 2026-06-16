@@ -13,6 +13,9 @@ workspace_files: []
 grading_weights:
   automated: 0.5
   llm_judge: 0.5
+prerequisites:
+- npm:@juppytt/fws
+- cli:gws
 ---
 
 # GWS 郵件分類整理（Triage）

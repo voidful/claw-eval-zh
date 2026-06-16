@@ -30,5 +30,14 @@
 - 🔶 1 個 accepted warning（`task_playwright_e2e` 的 ZIP code，固定英文表單 asset；非 blocker）。
 - ⬜ 以真實模型 + OpenClaw 跑一次端到端 benchmark（本環境無模型，未執行）。
 
+## 執行環境（可跑性）
+- ✅ 一鍵 HF 執行器 `scripts/run_hf_benchmark.py`：給一個 HuggingFace model id 即可跑
+  （router / 本機 vLLM / 自訂端點三模式；見 [docs/run_with_huggingface.md](docs/run_with_huggingface.md)）。
+- ✅ 前置檢查 `scripts/preflight_env.py`：逐任務列出就緒/缺項與補法；可自動安裝 `fws` mock。
+- ✅ 修正：在地化 gws/github 任務的 `prerequisites` 已隨 `--language zh/tw` 保留，
+  `lib_fws.is_fws_task` 會正確啟動 fws mock（先前會在 zh/tw 漏啟動而失敗）。
+- ✅ 裝好 OpenClaw 後 **142/147 題只需模型**即可跑；GWS/GitHub 用 fws 本地 mock（不需真實憑證）。
+- ✅ 未就緒任務由執行器**跳過**（不計入分母），不再出現「整類 0% 失敗」假象。
+
 ## 發佈動作
 - ⬜ 打 tag `v0.4.0-rc1`（本回合未自動 commit/tag）

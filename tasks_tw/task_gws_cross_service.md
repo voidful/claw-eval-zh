@@ -18,6 +18,9 @@ workspace_files: []
 grading_weights:
   automated: 0.6
   llm_judge: 0.4
+prerequisites:
+- npm:@juppytt/fws
+- cli:gws
 ---
 
 # GWS 跨服務工作流程
