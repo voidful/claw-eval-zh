@@ -35,6 +35,21 @@ target-version = ['py310']
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+# Generated benchmark artifacts are produced deterministically by the converter /
+# builders and inherit upstream grader bodies verbatim; they are data outputs, not
+# hand-maintained source. Upstream keeps grader code in unlinted .md tasks, so we
+# do not lint these generated .py graders either (regeneration stays reproducible).
+extend-exclude = [
+    "tasks_claw_eval_zh",
+    "tasks_claw_eval_tw",
+    "exports",
+    "gold_tw",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests prepend sys.path before importing project modules, so module-level imports
+# legitimately appear after code (E402).
+"tests/*" = ["E402"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

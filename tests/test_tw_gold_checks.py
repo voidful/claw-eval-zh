@@ -2,7 +2,8 @@
 
 CI-safe: no LLM, no network. Reuses run_tw_gold_checks.run().
 """
-import sys, unittest
+import sys
+import unittest
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))

@@ -26,8 +26,6 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import yaml
-
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_ROOT = SCRIPT_DIR.parent
 if str(SCRIPT_DIR) not in sys.path:

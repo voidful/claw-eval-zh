@@ -1,5 +1,7 @@
 """All TW graders import with a callable grade()."""
-import importlib.util, sys, unittest
+import importlib.util
+import sys
+import unittest
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))

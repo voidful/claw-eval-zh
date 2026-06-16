@@ -1,5 +1,7 @@
 """Runner selects the correct tasks dir for en/zh/tw and --region TW."""
-import argparse, sys, unittest
+import argparse
+import sys
+import unittest
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))

@@ -1,9 +1,10 @@
 """tasks_tw covers the full original manifest."""
-import sys, unittest
+import unittest
 from pathlib import Path
 import yaml
 ROOT = Path(__file__).resolve().parents[1]
-TASKS = ROOT / "tasks"; TW = ROOT / "tasks_tw"
+TASKS = ROOT / "tasks"
+TW = ROOT / "tasks_tw"
 
 
 def manifest_ids(p):

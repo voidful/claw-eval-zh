@@ -1,11 +1,13 @@
 """No simplified characters in TW user-facing fields."""
-import sys, unittest
+import sys
+import unittest
 from pathlib import Path
 import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import lib_zh
-CLAW = ROOT / "tasks_claw_eval_tw"; TW = ROOT / "tasks_tw"
+CLAW = ROOT / "tasks_claw_eval_tw"
+TW = ROOT / "tasks_tw"
 
 
 def user_fields(d):

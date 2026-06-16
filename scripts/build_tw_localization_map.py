@@ -110,7 +110,6 @@ def classify(task: Task) -> Dict[str, Any]:
     safety = C.is_safety_sensitive(task)
     live = C.is_live_web(task)
     ext = C.is_external_service(task)
-    multi = C.has_sessions(task) or cat == "memory"
     finance = _kw(task, FINANCE_KW)
     legal = _kw(task, LEGAL_KW)
     security = _kw(task, SECURITY_KW)

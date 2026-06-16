@@ -4,7 +4,8 @@ Anchor tasks (weather, calendar) and fixture_replace tasks must be Taiwan-based.
 Other tasks may legitimately keep a fixed US asset; those are reported (warnings)
 by the validator, not asserted here.
 """
-import json, unittest
+import json
+import unittest
 from pathlib import Path
 import yaml
 ROOT = Path(__file__).resolve().parents[1]
