@@ -19,7 +19,7 @@ metadata:
 的中文任務風格**（`tasks/<TaskID>/task.yaml` + `grader.py`）。完整出處見
 [NOTICE.md](NOTICE.md)。
 
-> **全繁體中文（zh-TW）**：文件與全部 147 個任務的 user-facing 內容皆為繁體中文。
+> **全繁體中文（zh-TW）**：文件與全部 143 個任務的 user-facing 內容皆為繁體中文。
 > `task.yaml` 以 `prompt.language: zh` + `metadata.locale: zh-TW` 標記。詳見
 > [docs/task_translation_policy.md](docs/task_translation_policy.md)。
 

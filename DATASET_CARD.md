@@ -20,11 +20,14 @@
 - `tasks_tw/` + `tasks_claw_eval_tw/`（**台灣在地版**，Phase 3–4，`locale: zh-TW`、`region: TW`）
 
 ## 5. 任務數
-每層 **147** 個任務（與原始 manifest 對齊）。
+每層 **143** 個任務。已自原始 PinchBench 的 147 題移除 4 個需要非-HF 基建的任務
+（3 個 GWS：`task_gws_email_triage`/`task_gws_cross_service`/`task_gws_task_management`，
+以及影像生成 `task_image_gen`），三層（含英文 `tasks/`）一併移除，使整套可只靠
+HuggingFace model id 執行。
 
 ## 6. 任務類別
 productivity、research、writing、coding、analysis、csv_analysis、log_analysis、
-meeting_analysis、memory、skills、integrations。
+meeting_analysis、memory、skills。（原 integrations 類因移除 GWS 任務而不再存在。）
 
 ## 7. 評分方式
 - 單任務 0–1：`automated`（確定性 Python grader）、`llm_judge`（rubric）、`hybrid`。

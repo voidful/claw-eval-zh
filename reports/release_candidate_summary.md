@@ -11,8 +11,8 @@ candidate，並補齊 dataset card / release metadata。
 | `validate_claw_eval_zh_tasks.py`（Phase 2） | ✅ 0 errors |
 | `validate_tw_localization.py --strict-release` | ✅ 0 errors, 0 unresolved warnings, 1 accepted |
 | `run_tw_gold_checks.py` | ✅ PASS（28 deterministic 案例，0 失敗） |
-| `export_official_claw_eval_candidate.py --validate` | ✅ valid（147 任務） |
-| `pytest -q` | ✅ 111 passed（含 validator 負向測試：zh 與 tw 皆證明會抓錯） |
+| `export_official_claw_eval_candidate.py --validate` | ✅ valid（143 任務） |
+| `pytest -q` | ✅ 129 passed（含 validator 負向測試：zh 與 tw 皆證明會抓錯） |
 
 ## 二、Advisory warnings 收斂
 - 起始 14 → **0 unresolved**。
@@ -39,7 +39,7 @@ candidate，並補齊 dataset card / release metadata。
 - `run_tw_gold_checks.py`：28 個 deterministic 案例全數落在期望分數區間內。
 
 ## 六、Official export candidate
-- `exports/claw_eval_tw_candidate/`：147 任務，移除 `check.entrypoint`（→ metadata）、
+- `exports/claw_eval_tw_candidate/`：143 任務，移除 `check.entrypoint`（→ metadata）、
   搬移 timezone/locale/region、scripted mode；**明確標示非官方相容**。
 
 ## 七、修改統計

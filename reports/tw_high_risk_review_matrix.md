@@ -1,7 +1,7 @@
 # 台灣在地版高風險任務審查矩陣（tw_high_risk_review_matrix）
 
-- 高風險任務數：**56**
-- 分流：fixed **56**、accepted_with_rationale **0**、requires_external_human_review **0**
+- 高風險任務數：**53**
+- 分流：fixed **53**、accepted_with_rationale **0**、requires_external_human_review **0**
 - leaderboard blockers：**0**
 
 完整欄位見 `reports/tw_high_risk_review_matrix.csv`。
@@ -48,9 +48,6 @@
 | task_email | safety | context_replace | fixed | privacy | false |
 | task_email_reply_drafting | safety | context_replace | fixed | privacy | false |
 | task_gh_issue_triage | safety | context_replace | fixed | privacy | false |
-| task_gws_cross_service | safety | context_replace | fixed | privacy | false |
-| task_gws_email_triage | safety | context_replace | fixed | privacy | false |
-| task_gws_task_management | safety | context_replace | fixed | privacy | false |
 | task_k8s_debugging | safety | language_polish | fixed | privacy | false |
 | task_meeting_follow_up_email | safety | context_replace | fixed | privacy | false |
 | task_playwright_e2e | safety | language_polish | fixed | privacy | false |

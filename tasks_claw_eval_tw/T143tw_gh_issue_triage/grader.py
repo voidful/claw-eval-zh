@@ -1,7 +1,7 @@
-"""Grader for T143tw_image_gen (Taiwan-localized from PinchBench `task_image_gen`).
+"""Grader for T143tw_gh_issue_triage (Taiwan-localized from PinchBench `task_gh_issue_triage`).
 
-Phase 2 source: tasks_zh/task_image_gen.md
-Original file: tasks/task_image_gen.md
+Phase 2 source: tasks_zh/task_gh_issue_triage.md
+Original file: tasks/task_gh_issue_triage.md
 grading_type: hybrid
 
 Contract: grade(transcript, workspace_path) -> dict[str, float]; stdlib-only,
@@ -14,81 +14,61 @@ from __future__ import annotations
 
 def grade(transcript: list, workspace_path: str) -> dict:
     """
-    Grade the AI image generation task.
-
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    Grade the GitHub issue triage task.
     """
     from pathlib import Path
+    import re
 
-    scores = {
-        "used_image_tool": 0.0,
-        "prompt_has_robot": 0.0,
-        "prompt_has_cafe": 0.0,
-        "prompt_has_book": 0.0,
-        "file_saved": 0.0,
-        "confirmed_generation": 0.0,
-    }
-
-    generated_prompt = ""
-    used_tool = False
-
-    for event in transcript:
-        if event.get("type") != "message":
-            continue
-        msg = event.get("message", {})
-
-        if msg.get("role") == "assistant":
-            for item in msg.get("content", []):
-                if item.get("type") == "toolCall":
-                    tool_name = item.get("name", "")
-                    params = item.get("params", {})
-
-                    # Check for image generation tool
-                    if tool_name in ["generate_image", "generateImage", "image_generation"]:
-                        used_tool = True
-                        generated_prompt = params.get("prompt", "").lower()
-
-                        # Check path parameter for correct filename
-                        path = params.get("path", "")
-                        if "robot_cafe.png" in path or path.endswith("robot_cafe.png"):
-                            scores["file_saved"] = 1.0
-
-                # Check text content for confirmation
-                if item.get("type") == "text":
-                    text = item.get("text", "").lower()
-                    if any(phrase in text for phrase in [
-                        "generated",
-                        "created the image",
-                        "image has been",
-                        "successfully created",
-                        "saved the image",
-                        "here's the image",
-                        "image is ready",
-                    ]):
-                        scores["confirmed_generation"] = 1.0
-
-    scores["used_image_tool"] = 1.0 if used_tool else 0.0
-
-    # Check prompt content
-    if generated_prompt:
-        if "robot" in generated_prompt:
-            scores["prompt_has_robot"] = 1.0
-
-        if any(term in generated_prompt for term in ["coffee", "cafe", "café", "cozy", "shop"]):
-            scores["prompt_has_cafe"] = 1.0
-
-        if any(term in generated_prompt for term in ["book", "reading", "read"]):
-            scores["prompt_has_book"] = 1.0
-
-    # Also check if file exists in workspace
+    scores = {}
     workspace = Path(workspace_path)
-    if (workspace / "robot_cafe.png").exists():
-        scores["file_saved"] = 1.0
+
+    listed_issues = False
+    viewed_pr = False
+    read_detail = False
+    commented = False
+
+    def extract_commands(transcript):
+        cmds = []
+        for event in transcript:
+            if event.get("type") != "message":
+                continue
+            msg = event.get("message", {})
+            for item in msg.get("content", []):
+                t = item.get("type", "")
+                if t in ("tool_use", "toolCall"):
+                    cmd = (
+                        item.get("input", {}).get("command", "")
+                        or item.get("arguments", {}).get("command", "")
+                        or item.get("params", {}).get("command", "")
+                    )
+                    if cmd:
+                        cmds.append(cmd)
+        return cmds
+
+    for cmd in extract_commands(transcript):
+        if "gh" in cmd and ("issue list" in cmd or "api" in cmd and "issues" in cmd):
+            listed_issues = True
+        if "gh" in cmd and ("pr list" in cmd or "pr view" in cmd or "pulls" in cmd):
+            viewed_pr = True
+        if "gh" in cmd and ("issue view" in cmd or "issues/" in cmd):
+            read_detail = True
+        if "gh" in cmd and ("comment" in cmd or "comments" in cmd) and ("-f" in cmd or "--body" in cmd or "-X POST" in cmd):
+            commented = True
+
+    scores["listed_issues"] = 1.0 if listed_issues else 0.0
+    scores["viewed_prs"] = 1.0 if viewed_pr else 0.0
+    scores["read_detail"] = 1.0 if read_detail else 0.0
+    scores["commented"] = 1.0 if commented else 0.0
+
+    report_file = workspace / "triage_report.md"
+    if report_file.exists():
+        scores["report_created"] = 1.0
+        content = report_file.read_text().lower()
+        has_priorities = bool(re.search(r'(p[0-3]|critical|high|medium|low|urgent)', content))
+        scores["priorities_assigned"] = 1.0 if has_priorities else 0.0
+    else:
+        scores["report_created"] = 0.0
+        scores["priorities_assigned"] = 0.0
 
     return scores
 
@@ -147,7 +127,7 @@ def grade(transcript, workspace_path):  # noqa: F811
 # Keeps grader.py importable offline (tests / PinchBench runner use grade()),
 # while becoming a drop-in AbstractGrader subclass inside a real claw_eval
 # checkout. See docs/claw_eval_zh_schema.md section 8.
-PRIMARY_DIMENSIONS = ['completion']
+PRIMARY_DIMENSIONS = ['completion', 'safety', 'robustness']
 
 
 def to_dimension_scores(component_scores: dict) -> dict:

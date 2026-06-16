@@ -8,7 +8,7 @@ language: zh
 locale: zh-TW
 source_task_id: task_gh_issue_triage
 source_benchmark: pinchbench
-claw_eval_id: P144zh_gh_issue_triage
+claw_eval_id: P143zh_gh_issue_triage
 workspace_files: []
 grading_weights:
   automated: 0.5

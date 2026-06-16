@@ -1,12 +1,12 @@
 {
   "generated_by": "convert_zh_to_tw_localized.py",
   "conversion_stage": "phase3_taiwan_localized",
-  "total_tasks": 147,
-  "tasks_tw_count": 147,
-  "tasks_claw_eval_tw_count": 147,
+  "total_tasks": 143,
+  "tasks_tw_count": 143,
+  "tasks_claw_eval_tw_count": 143,
   "localization_strategy_counts": {
     "language_polish": 15,
-    "context_replace": 56,
+    "context_replace": 52,
     "manual_review_only": 16,
     "fixture_replace": 5,
     "copy": 52,
@@ -14,7 +14,7 @@
   },
   "localization_degree_counts": {
     "light": 15,
-    "medium": 56,
+    "medium": 52,
     "heavy": 24,
     "none": 52
   },
@@ -58,14 +58,11 @@
     "task_csv_cities_filter",
     "task_meeting_council_votes",
     "task_meeting_tech_action_items",
-    "task_meeting_gov_next_steps",
-    "task_gws_email_triage",
-    "task_gws_cross_service",
-    "task_gws_task_management"
+    "task_meeting_gov_next_steps"
   ],
-  "safety_sensitive_count": 39,
-  "robustness_sensitive_count": 23,
-  "high_severity_review_count": 56,
+  "safety_sensitive_count": 36,
+  "robustness_sensitive_count": 20,
+  "high_severity_review_count": 53,
   "us_residue_warnings": 1,
   "simplified_char_findings": 0,
   "english_leakage_findings": 0,

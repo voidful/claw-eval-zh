@@ -7,10 +7,12 @@
 評分引擎與 fixtures），**任務格式參考 [Claw-Eval](https://github.com/claw-eval/claw-eval)**
 的中文任務風格。完整出處與致謝見 [NOTICE.md](NOTICE.md)。
 
-- **全繁體中文（zh-TW）**：文件與**全部 147 個任務**的 user-facing 內容皆為繁體中文。
+- **全繁體中文（zh-TW）**：文件與**全部 143 個任務**的 user-facing 內容皆為繁體中文。
 - **三層並存**：英文原版 `tasks/`、繁中直譯版 `tasks_zh/`、**台灣在地版 `tasks_tw/`**，
   可各自重跑、可比較。
-- **不破壞**原 PinchBench 英文 benchmark：`--language en`（預設）行為與上游一致。
+- **可只靠 HuggingFace model id 執行**：已自原始 147 題移除 4 個需要非-HF 基建的任務
+  （3 個 GWS + `task_image_gen`，三層含英文一併移除），現為 **143 題**。
+- `--language en` 為 PinchBench 衍生的英文層（除上述 4 題外與上游一致）。
 - 本專案定位為「**參考 Claw-Eval 風格（Claw-Eval-style）**」，非官方 Claw-Eval runner
   可直接執行（差異見 [docs/claw_eval_zh_schema.md](docs/claw_eval_zh_schema.md) §9）。
 - 用字標準：內文用「**台灣**」，正式機關名稱保留原名（如「臺北市政府」「臺灣證券交易所」）。
@@ -61,7 +63,7 @@ Phase 3 **不覆蓋** Phase 2；台灣版是獨立第三層。為什麼需要分
 
 ## 用一個 HuggingFace model id 跑（最省事）
 
-只給一個 HF model id,整套任務就能跑(含原本會失敗的 skills / integrations)。
+只給一個 HF model id,整套 143 題就能跑(需非-HF 基建的 4 題已移除)。
 細節見 [docs/run_with_huggingface.md](docs/run_with_huggingface.md)。
 
 ```bash
@@ -77,8 +79,9 @@ uv run scripts/preflight_env.py --language tw --suite all
 uv run scripts/run_hf_benchmark.py --hf-model Qwen/Qwen2.5-7B-Instruct --dry-run
 ```
 
-裝好 OpenClaw 後 **142/147 題只需模型**即可跑;GWS/GitHub 類用 `fws` 本地 mock
-(**不需真實 Google 憑證**),影像任務需 `OPENROUTER_API_KEY`。preflight 會逐項告訴你補法。
+裝好 OpenClaw 後 **142/143 題只需模型**即可跑;唯一需額外前置的是 `task_gh_issue_triage`
+(GitHub 任務,用 `fws` 本地 mock + `gh`,**不需真實憑證**,`--auto-install` 會補 fws)。
+preflight 會逐項告訴你補法。
 
 ## 如何跑中文 benchmark
 
@@ -190,7 +193,7 @@ uv run scripts/validate_claw_eval_zh_tasks.py
 
 ## 後續人工審查流程
 
-**全部 147 個任務皆已翻成繁體中文**（`translation_status: complete`，0 TODO、
+**全部 143 個任務皆已翻成繁體中文**（`translation_status: complete`，0 TODO、
 0 簡體殘留）。後續工作是**人工覆核**與微調：
 
 1. 看 `reports/manual_review_required.json`（high：50、medium：88），優先覆核
@@ -218,7 +221,7 @@ pytest -q
 
 ## 已知限制
 
-- **147/147 任務皆完整繁體中文**，但**翻譯由多個平行 subagent 產生**並經 OpenCC 簡體
+- **143/143 任務皆完整繁體中文**，但**翻譯由多個平行 subagent 產生**並經 OpenCC 簡體
   掃描 + schema 驗證；高風險領域仍建議人工逐項覆核（見
   `reports/manual_review_required.json`）。並非每個任務都已逐字人工校對。
 - grader 雙語化以中→英正規化 wrapper 為主；對「順序敏感的英文片語」criterion 可能漏分

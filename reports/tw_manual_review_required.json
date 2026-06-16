@@ -1,6 +1,6 @@
 {
   "generated_by": "convert_zh_to_tw_localized.py",
-  "count": 96,
+  "count": 92,
   "items": [
     {
       "task_id": "task_calendar",
@@ -913,50 +913,10 @@
       "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
     },
     {
-      "task_id": "task_image_gen",
-      "tw_task_path": "tasks_tw/task_image_gen.md",
-      "claw_eval_tw_path": "tasks_claw_eval_tw/T143tw_image_gen/",
-      "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變",
-      "severity": "medium",
-      "domain": "general",
-      "localization_strategy": "context_replace",
-      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
-    },
-    {
       "task_id": "task_gh_issue_triage",
       "tw_task_path": "tasks_tw/task_gh_issue_triage.md",
-      "claw_eval_tw_path": "tasks_claw_eval_tw/T144tw_gh_issue_triage/",
+      "claw_eval_tw_path": "tasks_claw_eval_tw/T143tw_gh_issue_triage/",
       "reason": "外部服務 / mock；改台灣職場語境，保留 mock 語意",
-      "severity": "high",
-      "domain": "safety",
-      "localization_strategy": "context_replace",
-      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
-    },
-    {
-      "task_id": "task_gws_email_triage",
-      "tw_task_path": "tasks_tw/task_gws_email_triage.md",
-      "claw_eval_tw_path": "tasks_claw_eval_tw/T145tw_gws_email_triage/",
-      "reason": "保留 fws/gws mock；信件內容改台灣職場語境",
-      "severity": "high",
-      "domain": "safety",
-      "localization_strategy": "context_replace",
-      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
-    },
-    {
-      "task_id": "task_gws_cross_service",
-      "tw_task_path": "tasks_tw/task_gws_cross_service.md",
-      "claw_eval_tw_path": "tasks_claw_eval_tw/T146tw_gws_cross_service/",
-      "reason": "保留 mock；行事曆/文件改台灣職場語境",
-      "severity": "high",
-      "domain": "safety",
-      "localization_strategy": "context_replace",
-      "suggested_review_action": "人工逐欄檢查台灣語境、安全 rubric、fixture 與 grader 一致性。"
-    },
-    {
-      "task_id": "task_gws_task_management",
-      "tw_task_path": "tasks_tw/task_gws_task_management.md",
-      "claw_eval_tw_path": "tasks_claw_eval_tw/T147tw_gws_task_management/",
-      "reason": "保留 mock；任務內容改台灣職場語境",
       "severity": "high",
       "domain": "safety",
       "localization_strategy": "context_replace",

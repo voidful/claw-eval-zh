@@ -1,8 +1,8 @@
 {
-  "total_tasks": 147,
+  "total_tasks": 143,
   "localization_strategy_counts": {
     "language_polish": 15,
-    "context_replace": 56,
+    "context_replace": 52,
     "manual_review_only": 16,
     "fixture_replace": 5,
     "copy": 52,
@@ -10,14 +10,14 @@
   },
   "localization_degree_counts": {
     "light": 15,
-    "medium": 56,
+    "medium": 52,
     "heavy": 24,
     "none": 52
   },
   "manual_review_severity_counts": {
     "low": 51,
-    "high": 56,
-    "medium": 40
+    "high": 53,
+    "medium": 39
   },
   "anchor_tasks": [
     "task_sanity",
@@ -34,10 +34,7 @@
     "task_csv_cities_filter",
     "task_meeting_council_votes",
     "task_meeting_tech_action_items",
-    "task_meeting_gov_next_steps",
-    "task_gws_email_triage",
-    "task_gws_cross_service",
-    "task_gws_task_management"
+    "task_meeting_gov_next_steps"
   ],
   "fixture_replace_tasks": [
     "task_financial_ratio_calculation",
@@ -5728,49 +5725,9 @@
       }
     },
     {
-      "task_id": "task_image_gen",
-      "tw_task_id": "task_image_gen",
-      "claw_eval_tw_id": "T143tw_image_gen",
-      "source_task_id": "task_image_gen",
-      "source_locale": "zh-TW",
-      "target_locale": "zh-TW",
-      "category": "skills",
-      "grading_type": "hybrid",
-      "localization_strategy": "context_replace",
-      "localization_degree": "medium",
-      "anchor": false,
-      "taiwan_context": {
-        "timezone": "Asia/Taipei",
-        "region": "TW"
-      },
-      "fixture_changes": {
-        "required": false,
-        "files": []
-      },
-      "grader_changes": {
-        "required": false,
-        "reason": ""
-      },
-      "expected_value_recalculation": {
-        "required": false,
-        "method": ""
-      },
-      "risk": {
-        "safety_sensitive": false,
-        "live_web": false,
-        "legal_or_financial": false,
-        "security_sensitive": false
-      },
-      "manual_review": {
-        "required": true,
-        "severity": "medium",
-        "reason": "改台灣語境（地點/人名/公司/格式）；核心資料不變"
-      }
-    },
-    {
       "task_id": "task_gh_issue_triage",
       "tw_task_id": "task_gh_issue_triage",
-      "claw_eval_tw_id": "T144tw_gh_issue_triage",
+      "claw_eval_tw_id": "T143tw_gh_issue_triage",
       "source_task_id": "task_gh_issue_triage",
       "source_locale": "zh-TW",
       "target_locale": "zh-TW",
@@ -5805,126 +5762,6 @@
         "required": true,
         "severity": "high",
         "reason": "外部服務 / mock；改台灣職場語境，保留 mock 語意"
-      }
-    },
-    {
-      "task_id": "task_gws_email_triage",
-      "tw_task_id": "task_gws_email_triage",
-      "claw_eval_tw_id": "T145tw_gws_email_triage",
-      "source_task_id": "task_gws_email_triage",
-      "source_locale": "zh-TW",
-      "target_locale": "zh-TW",
-      "category": "integrations",
-      "grading_type": "hybrid",
-      "localization_strategy": "context_replace",
-      "localization_degree": "medium",
-      "anchor": true,
-      "taiwan_context": {
-        "timezone": "Asia/Taipei",
-        "region": "TW"
-      },
-      "fixture_changes": {
-        "required": false,
-        "files": []
-      },
-      "grader_changes": {
-        "required": false,
-        "reason": ""
-      },
-      "expected_value_recalculation": {
-        "required": false,
-        "method": ""
-      },
-      "risk": {
-        "safety_sensitive": true,
-        "live_web": false,
-        "legal_or_financial": false,
-        "security_sensitive": false
-      },
-      "manual_review": {
-        "required": true,
-        "severity": "high",
-        "reason": "保留 fws/gws mock；信件內容改台灣職場語境"
-      }
-    },
-    {
-      "task_id": "task_gws_cross_service",
-      "tw_task_id": "task_gws_cross_service",
-      "claw_eval_tw_id": "T146tw_gws_cross_service",
-      "source_task_id": "task_gws_cross_service",
-      "source_locale": "zh-TW",
-      "target_locale": "zh-TW",
-      "category": "integrations",
-      "grading_type": "hybrid",
-      "localization_strategy": "context_replace",
-      "localization_degree": "medium",
-      "anchor": true,
-      "taiwan_context": {
-        "timezone": "Asia/Taipei",
-        "region": "TW"
-      },
-      "fixture_changes": {
-        "required": false,
-        "files": []
-      },
-      "grader_changes": {
-        "required": false,
-        "reason": ""
-      },
-      "expected_value_recalculation": {
-        "required": false,
-        "method": ""
-      },
-      "risk": {
-        "safety_sensitive": true,
-        "live_web": false,
-        "legal_or_financial": false,
-        "security_sensitive": false
-      },
-      "manual_review": {
-        "required": true,
-        "severity": "high",
-        "reason": "保留 mock；行事曆/文件改台灣職場語境"
-      }
-    },
-    {
-      "task_id": "task_gws_task_management",
-      "tw_task_id": "task_gws_task_management",
-      "claw_eval_tw_id": "T147tw_gws_task_management",
-      "source_task_id": "task_gws_task_management",
-      "source_locale": "zh-TW",
-      "target_locale": "zh-TW",
-      "category": "integrations",
-      "grading_type": "hybrid",
-      "localization_strategy": "context_replace",
-      "localization_degree": "medium",
-      "anchor": true,
-      "taiwan_context": {
-        "timezone": "Asia/Taipei",
-        "region": "TW"
-      },
-      "fixture_changes": {
-        "required": false,
-        "files": []
-      },
-      "grader_changes": {
-        "required": false,
-        "reason": ""
-      },
-      "expected_value_recalculation": {
-        "required": false,
-        "method": ""
-      },
-      "risk": {
-        "safety_sensitive": true,
-        "live_web": false,
-        "legal_or_financial": false,
-        "security_sensitive": false
-      },
-      "manual_review": {
-        "required": true,
-        "severity": "high",
-        "reason": "保留 mock；任務內容改台灣職場語境"
       }
     }
   ]

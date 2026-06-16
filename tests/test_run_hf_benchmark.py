@@ -56,12 +56,12 @@ class TestSuiteResolution(unittest.TestCase):
 
     def test_none_when_nothing_ready(self):
         with mock.patch.object(rh.pf, "ready_task_ids", return_value=set()):
-            suite = rh.resolve_suite(_args(suite="integrations", include_unready=False))
+            suite = rh.resolve_suite(_args(suite="skills", include_unready=False))
         self.assertIsNone(suite)
 
     def test_include_unready_passes_through(self):
-        suite = rh.resolve_suite(_args(suite="integrations", include_unready=True))
-        self.assertEqual(suite, "integrations")
+        suite = rh.resolve_suite(_args(suite="skills", include_unready=True))
+        self.assertEqual(suite, "skills")
 
 
 class TestBuildCmd(unittest.TestCase):

@@ -17,7 +17,7 @@ class TwGraderImports(unittest.TestCase):
             spec.loader.exec_module(m)
             self.assertTrue(callable(getattr(m, "grade", None)), d.name)
             n += 1
-        self.assertGreaterEqual(n, 147)
+        self.assertGreaterEqual(n, 143)
 
 
 if __name__ == "__main__":

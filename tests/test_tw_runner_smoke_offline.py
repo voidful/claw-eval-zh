@@ -19,7 +19,7 @@ class TwRunnerSmokeOffline(unittest.TestCase):
 
     def test_counts_match(self):
         self.assertEqual(self.out["counts"]["tw"], self.out["counts"]["en"])
-        self.assertGreaterEqual(self.out["counts"]["tw"], 147)
+        self.assertGreaterEqual(self.out["counts"]["tw"], 143)
 
     def test_manifest_full(self):
         self.assertEqual(self.out["manifest_missing"], [])

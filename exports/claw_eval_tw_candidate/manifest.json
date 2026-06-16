@@ -2,7 +2,7 @@
   "benchmark": "claw-style-taiwan",
   "export": "official-schema-candidate",
   "official_compatible": false,
-  "task_count": 147,
+  "task_count": 143,
   "tasks": [
     {
       "task_id": "T001tw_sanity",
@@ -1491,44 +1491,8 @@
       "fixtures": []
     },
     {
-      "task_id": "T143tw_image_gen",
+      "task_id": "T143tw_gh_issue_triage",
       "category": "skills",
-      "language": "zh",
-      "locale": "zh-TW",
-      "grading_type": "hybrid",
-      "grader_entrypoint": "grader.py",
-      "fixtures": []
-    },
-    {
-      "task_id": "T144tw_gh_issue_triage",
-      "category": "skills",
-      "language": "zh",
-      "locale": "zh-TW",
-      "grading_type": "hybrid",
-      "grader_entrypoint": "grader.py",
-      "fixtures": []
-    },
-    {
-      "task_id": "T145tw_gws_email_triage",
-      "category": "integrations",
-      "language": "zh",
-      "locale": "zh-TW",
-      "grading_type": "hybrid",
-      "grader_entrypoint": "grader.py",
-      "fixtures": []
-    },
-    {
-      "task_id": "T146tw_gws_cross_service",
-      "category": "integrations",
-      "language": "zh",
-      "locale": "zh-TW",
-      "grading_type": "hybrid",
-      "grader_entrypoint": "grader.py",
-      "fixtures": []
-    },
-    {
-      "task_id": "T147tw_gws_task_management",
-      "category": "integrations",
       "language": "zh",
       "locale": "zh-TW",
       "grading_type": "hybrid",

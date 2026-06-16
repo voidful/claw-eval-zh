@@ -1,12 +1,13 @@
-"""Grader for T147tw_gws_task_management (Taiwan-localized from PinchBench `task_gws_task_management`).
+"""Grader for P143zh_gh_issue_triage (adapted from PinchBench task `task_gh_issue_triage`).
 
-Phase 2 source: tasks_zh/task_gws_task_management.md
-Original file: tasks/task_gws_task_management.md
+Original file: tasks/task_gh_issue_triage.md
 grading_type: hybrid
 
-Contract: grade(transcript, workspace_path) -> dict[str, float]; stdlib-only,
-importable without claw_eval. Bilingual report normalization + optional
-Claw-Eval AbstractGrader adapter (see docs/claw_eval_zh_schema.md §8).
+Contract (see docs/claw_eval_zh_schema.md §8):
+  * grade(transcript, workspace_path) -> dict[str, float]
+      Deterministic check, stdlib-only, importable without claw_eval.
+  * ClawEvalZhGrader (AbstractGrader subclass) — only when claw_eval
+      is importable; adapts grade() into DimensionScores.
 """
 
 from __future__ import annotations
@@ -14,20 +15,20 @@ from __future__ import annotations
 
 def grade(transcript: list, workspace_path: str) -> dict:
     """
-    Grade the GWS task management task.
+    Grade the GitHub issue triage task.
     """
     from pathlib import Path
+    import re
 
     scores = {}
     workspace = Path(workspace_path)
 
-    listed_tasks = False
-    updated_task = False
-    read_emails = False
-    created_task = False
+    listed_issues = False
+    viewed_pr = False
+    read_detail = False
+    commented = False
 
     def extract_commands(transcript):
-        """Extract shell commands from transcript, handling multiple tool call formats."""
         cmds = []
         for event in transcript:
             if event.get("type") != "message":
@@ -46,27 +47,29 @@ def grade(transcript: list, workspace_path: str) -> dict:
         return cmds
 
     for cmd in extract_commands(transcript):
-        if "gws" not in cmd:
-            continue
-        if "tasks" in cmd and "list" in cmd:
-            listed_tasks = True
-        if "tasks" in cmd and ("patch" in cmd or "update" in cmd):
-            updated_task = True
-        if "gmail" in cmd and ("messages" in cmd or "triage" in cmd):
-            read_emails = True
-        if "tasks" in cmd and "insert" in cmd:
-            created_task = True
+        if "gh" in cmd and ("issue list" in cmd or "api" in cmd and "issues" in cmd):
+            listed_issues = True
+        if "gh" in cmd and ("pr list" in cmd or "pr view" in cmd or "pulls" in cmd):
+            viewed_pr = True
+        if "gh" in cmd and ("issue view" in cmd or "issues/" in cmd):
+            read_detail = True
+        if "gh" in cmd and ("comment" in cmd or "comments" in cmd) and ("-f" in cmd or "--body" in cmd or "-X POST" in cmd):
+            commented = True
 
-    scores["listed_tasks"] = 1.0 if listed_tasks else 0.0
-    scores["updated_completed"] = 1.0 if updated_task else 0.0
-    scores["read_emails"] = 1.0 if read_emails else 0.0
-    scores["created_new_task"] = 1.0 if created_task else 0.0
+    scores["listed_issues"] = 1.0 if listed_issues else 0.0
+    scores["viewed_prs"] = 1.0 if viewed_pr else 0.0
+    scores["read_detail"] = 1.0 if read_detail else 0.0
+    scores["commented"] = 1.0 if commented else 0.0
 
-    summary_file = workspace / "task_summary.md"
-    if summary_file.exists():
-        scores["summary_created"] = 1.0
+    report_file = workspace / "triage_report.md"
+    if report_file.exists():
+        scores["report_created"] = 1.0
+        content = report_file.read_text().lower()
+        has_priorities = bool(re.search(r'(p[0-3]|critical|high|medium|low|urgent)', content))
+        scores["priorities_assigned"] = 1.0 if has_priorities else 0.0
     else:
-        scores["summary_created"] = 0.0
+        scores["report_created"] = 0.0
+        scores["priorities_assigned"] = 0.0
 
     return scores
 

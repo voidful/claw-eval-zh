@@ -1,6 +1,6 @@
 {
   "opencc_available": true,
-  "tasks_checked": 147,
+  "tasks_checked": 143,
   "error_count": 0,
   "warning_count": 1,
   "errors": [],
@@ -576,23 +576,7 @@
       "status": "complete",
       "grading_type": "automated"
     },
-    "P143zh_image_gen": {
-      "status": "complete",
-      "grading_type": "hybrid"
-    },
-    "P144zh_gh_issue_triage": {
-      "status": "complete",
-      "grading_type": "hybrid"
-    },
-    "P145zh_gws_email_triage": {
-      "status": "complete",
-      "grading_type": "hybrid"
-    },
-    "P146zh_gws_cross_service": {
-      "status": "complete",
-      "grading_type": "hybrid"
-    },
-    "P147zh_gws_task_management": {
+    "P143zh_gh_issue_triage": {
       "status": "complete",
       "grading_type": "hybrid"
     }

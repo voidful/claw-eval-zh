@@ -62,7 +62,7 @@ class SchemaTests(unittest.TestCase):
 
     def test_count_is_full(self) -> None:
         self.assertEqual(len(self.data), len(list(ZH.glob("*.md"))))
-        self.assertGreaterEqual(len(self.data), 147)
+        self.assertGreaterEqual(len(self.data), 143)
 
     def test_required_fields(self) -> None:
         for name, data in self.data.items():

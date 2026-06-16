@@ -23,7 +23,6 @@ core:
 - task_memory
 - task_files
 - task_skill_search
-- task_gws_email_triage
 categories:
   productivity:
   - task_sanity
@@ -177,9 +176,4 @@ categories:
   - task_workflow
   - task_clawdhub
   - task_skill_search
-  - task_image_gen
   - task_gh_issue_triage
-  integrations:
-  - task_gws_email_triage
-  - task_gws_cross_service
-  - task_gws_task_management

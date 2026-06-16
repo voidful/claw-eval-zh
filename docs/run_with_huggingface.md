@@ -1,7 +1,7 @@
 # 用一個 HuggingFace model id 跑 claw-eval-zh
 
 目標：**只給一個 HuggingFace model id,整套任務就能跑起來**(含原本會失敗的
-skills / integrations 類)。本文說明背後機制與一鍵指令。
+skills 類純檔案任務)。本文說明背後機制與一鍵指令。
 
 ---
 
@@ -56,22 +56,25 @@ python scripts/run_hf_benchmark.py --hf-model my/model --serve endpoint \
 
 ---
 
-## 2. 任務就緒矩陣（147 題）
+## 2. 任務就緒矩陣（143 題）
 
-裝好 OpenClaw 後,**142/147 題只需要模型**就能跑。其餘 5 題需要額外前置:
+> 原始 147 題中,4 個需要非-HF 基建的任務（3 個 GWS + `task_image_gen`)已自三層
+> （含英文)移除,現為 **143 題**。
+
+裝好 OpenClaw 後,**142/143 題只需要模型**就能跑。唯一需要額外前置的是:
 
 | 任務 | 需要 | 能自動裝? | 說明 |
 |---|---|:---:|---|
-| `task_gws_email_triage`、`task_gws_cross_service`、`task_gws_task_management` | `fws` + `gws` CLI | fws ✅ / gws ✋ | GWS 任務 |
-| `task_gh_issue_triage` | `fws` + `gh` CLI | fws ✅ / gh 多半已裝 | GitHub 任務 |
-| `task_image_gen` | `OPENROUTER_API_KEY` | ✋ | 影像生成工具 |
+| `task_gh_issue_triage` | `fws` + `gh` CLI | fws ✅ / gh 多半已裝 | GitHub 任務,用 fws 本地 mock(不需真實憑證) |
+
+`--auto-install` 會補上 `fws`;`gh` 多數環境已內建,故此題實務上也能「近乎只靠 HF」跑。
 
 隨時可查就緒狀況:
 
 ```bash
-python scripts/preflight_env.py --language tw --suite all          # 全部
-python scripts/preflight_env.py --language tw --suite integrations # 只看某類
-python scripts/preflight_env.py --language tw --install            # 順便自動裝 fws
+python scripts/preflight_env.py --language tw --suite all      # 全部
+python scripts/preflight_env.py --language tw --suite skills   # 只看某類
+python scripts/preflight_env.py --language tw --install        # 順便自動裝 fws
 ```
 
 ---

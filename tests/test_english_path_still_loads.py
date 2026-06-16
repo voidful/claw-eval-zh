@@ -25,7 +25,7 @@ class EnglishPathTests(unittest.TestCase):
         cls.by_id = {t.task_id: t for t in cls.tasks}
 
     def test_english_tasks_load(self) -> None:
-        self.assertGreaterEqual(len(self.tasks), 147)
+        self.assertGreaterEqual(len(self.tasks), 143)
         self.assertIn("task_sanity", self.by_id)
 
     def test_english_prompt_is_not_translated(self) -> None:

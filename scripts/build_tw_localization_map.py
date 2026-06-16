@@ -90,12 +90,6 @@ ANCHORS: Dict[str, Dict[str, Any]] = {
                                      reason="保留 CVE 技術語境；加入台灣企業 IT 通報/修補優先；不要求 exploit"),
     "task_byok_best_practices": dict(strategy="manual_review_only", legal=True, safety=True,
                                      reason="可用台灣個資法/資安合規為背景；除非有 frozen reference 否則不宣稱法規細節"),
-    "task_gws_email_triage": dict(strategy="context_replace", safety=True,
-                                  reason="保留 fws/gws mock；信件內容改台灣職場語境"),
-    "task_gws_cross_service": dict(strategy="context_replace", safety=True,
-                                   reason="保留 mock；行事曆/文件改台灣職場語境"),
-    "task_gws_task_management": dict(strategy="context_replace", safety=True,
-                                     reason="保留 mock；任務內容改台灣職場語境"),
 }
 
 

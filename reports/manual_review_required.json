@@ -1,6 +1,6 @@
 {
   "generated_by": "convert_pinchbench_to_claw_eval_zh.py",
-  "count": 138,
+  "count": 134,
   "items": [
     {
       "task_id": "task_calendar",
@@ -1961,23 +1961,8 @@
       "suggested_action": "人工逐欄檢查翻譯語意、確認 grader 與 reference solution 一致、必要時補充 safety rubric。"
     },
     {
-      "task_id": "task_image_gen",
-      "claw_eval_id": "P143zh_image_gen",
-      "severity": "medium",
-      "reasons": [
-        "grader 仰賴英文自然語言關鍵字；中文報告靠 normalize wrapper 對應，建議人工驗證",
-        "含 LLM judge rubric，翻譯後主觀評分可能受影響"
-      ],
-      "files": [
-        "tasks_zh/task_image_gen.md",
-        "tasks_claw_eval_zh/P143zh_image_gen/task.yaml",
-        "tasks_claw_eval_zh/P143zh_image_gen/grader.py"
-      ],
-      "suggested_action": "人工逐欄檢查翻譯語意、確認 grader 與 reference solution 一致、必要時補充 safety rubric。"
-    },
-    {
       "task_id": "task_gh_issue_triage",
-      "claw_eval_id": "P144zh_gh_issue_triage",
+      "claw_eval_id": "P143zh_gh_issue_triage",
       "severity": "high",
       "reasons": [
         "安全敏感領域（finance/medical/legal/security/email/external/credential）",
@@ -1985,56 +1970,8 @@
       ],
       "files": [
         "tasks_zh/task_gh_issue_triage.md",
-        "tasks_claw_eval_zh/P144zh_gh_issue_triage/task.yaml",
-        "tasks_claw_eval_zh/P144zh_gh_issue_triage/grader.py"
-      ],
-      "suggested_action": "人工逐欄檢查翻譯語意、確認 grader 與 reference solution 一致、必要時補充 safety rubric。"
-    },
-    {
-      "task_id": "task_gws_email_triage",
-      "claw_eval_id": "P145zh_gws_email_triage",
-      "severity": "high",
-      "reasons": [
-        "安全敏感領域（finance/medical/legal/security/email/external/credential）",
-        "grader 仰賴英文自然語言關鍵字；中文報告靠 normalize wrapper 對應，建議人工驗證",
-        "含 LLM judge rubric，翻譯後主觀評分可能受影響"
-      ],
-      "files": [
-        "tasks_zh/task_gws_email_triage.md",
-        "tasks_claw_eval_zh/P145zh_gws_email_triage/task.yaml",
-        "tasks_claw_eval_zh/P145zh_gws_email_triage/grader.py"
-      ],
-      "suggested_action": "人工逐欄檢查翻譯語意、確認 grader 與 reference solution 一致、必要時補充 safety rubric。"
-    },
-    {
-      "task_id": "task_gws_cross_service",
-      "claw_eval_id": "P146zh_gws_cross_service",
-      "severity": "high",
-      "reasons": [
-        "安全敏感領域（finance/medical/legal/security/email/external/credential）",
-        "grader 仰賴英文自然語言關鍵字；中文報告靠 normalize wrapper 對應，建議人工驗證",
-        "含 LLM judge rubric，翻譯後主觀評分可能受影響"
-      ],
-      "files": [
-        "tasks_zh/task_gws_cross_service.md",
-        "tasks_claw_eval_zh/P146zh_gws_cross_service/task.yaml",
-        "tasks_claw_eval_zh/P146zh_gws_cross_service/grader.py"
-      ],
-      "suggested_action": "人工逐欄檢查翻譯語意、確認 grader 與 reference solution 一致、必要時補充 safety rubric。"
-    },
-    {
-      "task_id": "task_gws_task_management",
-      "claw_eval_id": "P147zh_gws_task_management",
-      "severity": "high",
-      "reasons": [
-        "安全敏感領域（finance/medical/legal/security/email/external/credential）",
-        "grader 仰賴英文自然語言關鍵字；中文報告靠 normalize wrapper 對應，建議人工驗證",
-        "含 LLM judge rubric，翻譯後主觀評分可能受影響"
-      ],
-      "files": [
-        "tasks_zh/task_gws_task_management.md",
-        "tasks_claw_eval_zh/P147zh_gws_task_management/task.yaml",
-        "tasks_claw_eval_zh/P147zh_gws_task_management/grader.py"
+        "tasks_claw_eval_zh/P143zh_gh_issue_triage/task.yaml",
+        "tasks_claw_eval_zh/P143zh_gh_issue_triage/grader.py"
       ],
       "suggested_action": "人工逐欄檢查翻譯語意、確認 grader 與 reference solution 一致、必要時補充 safety rubric。"
     }

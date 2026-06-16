@@ -14,19 +14,10 @@ class TestRequirements(unittest.TestCase):
     def _task(self, tid):
         return {t.task_id: t for t in pf.load_tasks("tw")}[tid]
 
-    def test_gws_task_requires_fws_and_gws(self):
-        req = pf.task_requirements(self._task("task_gws_email_triage"))
-        self.assertIn("fws", req["bins"])
-        self.assertIn("gws", req["bins"])
-
     def test_gh_triage_requires_fws_and_gh(self):
         req = pf.task_requirements(self._task("task_gh_issue_triage"))
         self.assertIn("fws", req["bins"])
         self.assertIn("gh", req["bins"])
-
-    def test_image_gen_requires_openrouter_key(self):
-        req = pf.task_requirements(self._task("task_image_gen"))
-        self.assertIn("OPENROUTER_API_KEY", req["envs"])
 
     def test_pure_file_task_has_no_extra_reqs(self):
         req = pf.task_requirements(self._task("task_files"))
@@ -35,21 +26,21 @@ class TestRequirements(unittest.TestCase):
 
 
 class TestDataFixRegression(unittest.TestCase):
-    """The localized gws/gh tasks must keep prerequisites so fws starts."""
+    """The localized fws tasks must keep prerequisites so fws starts."""
 
-    def test_localized_gws_tasks_trigger_fws(self):
+    def test_localized_fws_tasks_trigger_fws(self):
         for lang in ("zh", "tw"):
             tasks = {t.task_id: t for t in pf.load_tasks(lang)}
-            t = tasks["task_gws_email_triage"]
+            t = tasks["task_gh_issue_triage"]
             self.assertTrue(t.frontmatter.get("prerequisites"),
                             f"{lang} lost prerequisites")
             self.assertTrue(is_fws_task(t.frontmatter),
-                            f"{lang} gws task no longer triggers fws")
+                            f"{lang} fws task no longer triggers fws")
 
 
 class TestEvaluate(unittest.TestCase):
     def test_ready_when_all_present(self):
-        task = {t.task_id: t for t in pf.load_tasks("tw")}["task_gws_email_triage"]
+        task = {t.task_id: t for t in pf.load_tasks("tw")}["task_gh_issue_triage"]
         with mock.patch.object(pf, "_which", return_value=True), \
                 mock.patch.object(pf, "_has_env", return_value=True):
             res = pf.evaluate_task(task, runtime_ok=True)
@@ -57,14 +48,14 @@ class TestEvaluate(unittest.TestCase):
         self.assertEqual(res["missing"], [])
 
     def test_missing_runtime_and_bins(self):
-        task = {t.task_id: t for t in pf.load_tasks("tw")}["task_gws_email_triage"]
+        task = {t.task_id: t for t in pf.load_tasks("tw")}["task_gh_issue_triage"]
         with mock.patch.object(pf, "_which", return_value=False), \
                 mock.patch.object(pf, "_has_env", return_value=False):
             res = pf.evaluate_task(task, runtime_ok=False)
         self.assertFalse(res["ready"])
         self.assertIn("openclaw", res["missing"])
         self.assertIn("fws", res["missing"])
-        self.assertIn("gws", res["missing"])
+        self.assertIn("gh", res["missing"])
 
     def test_ready_task_ids_subset(self):
         ids = pf.ready_task_ids("tw", "skills")
@@ -79,9 +70,9 @@ class TestFilterSuite(unittest.TestCase):
 
     def test_category(self):
         tasks = pf.load_tasks("tw")
-        got = pf.filter_suite(tasks, "integrations")
+        got = pf.filter_suite(tasks, "skills")
         self.assertTrue(got)
-        self.assertTrue(all(t.category == "integrations" for t in got))
+        self.assertTrue(all(t.category == "skills" for t in got))
 
     def test_comma_ids(self):
         tasks = pf.load_tasks("tw")

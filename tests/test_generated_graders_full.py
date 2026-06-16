@@ -39,7 +39,7 @@ class AllImportTests(unittest.TestCase):
             m = load(d.name)
             self.assertTrue(callable(getattr(m, "grade", None)), d.name)
             n += 1
-        self.assertGreaterEqual(n, 147)
+        self.assertGreaterEqual(n, 143)
 
 
 class SanityTests(unittest.TestCase):

@@ -27,7 +27,7 @@ class OfficialExportCandidate(unittest.TestCase):
     def test_manifest_and_count(self):
         man = json.loads((self.out / "manifest.json").read_text(encoding="utf-8"))
         self.assertFalse(man["official_compatible"])
-        self.assertGreaterEqual(man["task_count"], 147)
+        self.assertGreaterEqual(man["task_count"], 143)
 
     def test_entrypoint_relocated(self):
         d = yaml.safe_load((self.out / "tasks" / "T053tw_csv_stock_trend" / "task.yaml").read_text(encoding="utf-8"))

@@ -22,7 +22,7 @@ class TwSchema(unittest.TestCase):
         cls.data = {d.name: yaml.safe_load((d / "task.yaml").read_text(encoding="utf-8")) for d in dirs()}
 
     def test_count(self):
-        self.assertGreaterEqual(len(self.data), 147)
+        self.assertGreaterEqual(len(self.data), 143)
 
     def test_required_fields(self):
         for n, d in self.data.items():

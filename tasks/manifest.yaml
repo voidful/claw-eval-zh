@@ -52,8 +52,6 @@ core:
   # skills (2)
   - task_files           # automated - file ops
   - task_skill_search    # automated - skill discovery
-  # integrations (1)
-  - task_gws_email_triage         # hybrid - integration test
 
 categories:
   productivity:
@@ -217,10 +215,4 @@ categories:
     - task_workflow
     - task_clawdhub
     - task_skill_search
-    - task_image_gen
     - task_gh_issue_triage
-
-  integrations:
-    - task_gws_email_triage
-    - task_gws_cross_service
-    - task_gws_task_management

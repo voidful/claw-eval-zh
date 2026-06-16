@@ -132,7 +132,8 @@
 1. converter 先讀 `scripts/translation_overrides.yaml`（已淨空為 stub），
    再合併 `scripts/translation_overrides/*.yaml`（目錄，每個批次一檔；目錄優先）。
 2. 若該 task 有 override → 用人工翻譯，標 `translation_status: complete`。
-3. Phase 2 的目標是**全部 147 個任務都有完整繁體中文 override**（無 scaffold、無 TODO）。
+3. Phase 2 的目標是**全部任務都有完整繁體中文 override**（無 scaffold、無 TODO）。
+   （原 147 題，後移除 4 個需非-HF 基建的任務，現為 143 題。）
 4. 若仍有未翻譯任務 → converter 會產生標記 `translation_status: scaffold` 的占位，
    並列入 `reports/translation_coverage.json` 與 `reports/manual_review_required.json`，
    **絕不隱藏**。
@@ -165,7 +166,7 @@ tasks:
 
 ## 12. 全量轉換狀態（Phase 2）
 
-- **147 / 147** 個任務皆有完整繁體中文 override（`translation_status: complete`）。
+- **143 / 143** 個任務皆有完整繁體中文 override（`translation_status: complete`）。
 - 兩種格式同步產出：`tasks_zh/<id>.md`（PinchBench markdown）與
   `tasks_claw_eval_zh/<P###zh_slug>/{task.yaml,grader.py}`（Claw-Eval 風格）。
 - 重點任務策略：

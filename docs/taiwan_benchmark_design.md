@@ -28,7 +28,7 @@
 ## 3. 在地化策略（localization_strategy）
 
 由 `scripts/build_tw_localization_map.py` 確定性分類，存於
-`reports/tw_localization_map.json`（147 題逐題）。分佈：
+`reports/tw_localization_map.json`（143 題逐題）。分佈：
 
 | strategy | 數 | 作法 |
 |---|---|---|

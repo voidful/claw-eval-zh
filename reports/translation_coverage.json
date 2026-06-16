@@ -1,23 +1,23 @@
 {
   "generated_by": "convert_pinchbench_to_claw_eval_zh.py",
   "conversion_stage": "phase2_full_traditional_chinese",
-  "total_source_tasks": 147,
-  "total_tasks_zh": 147,
-  "total_claw_eval_zh": 147,
-  "fully_translated_count": 147,
-  "manual_review_required_count": 138,
+  "total_source_tasks": 143,
+  "total_tasks_zh": 143,
+  "total_claw_eval_zh": 143,
+  "fully_translated_count": 143,
+  "manual_review_required_count": 134,
   "tasks_with_todo": 0,
   "tasks_with_untranslated_english_prompt": 0,
-  "tasks_with_english_output_grader_assumption": 63,
+  "tasks_with_english_output_grader_assumption": 59,
   "tasks_with_live_web_dependency": 16,
-  "tasks_with_safety_sensitive_domain": 38,
+  "tasks_with_safety_sensitive_domain": 35,
   "simplified_char_findings": 0,
   "english_leakage_findings": 0,
   "grader_modified_count": 1,
-  "safety_sensitive_count": 38,
+  "safety_sensitive_count": 35,
   "multi_turn_count": 4,
-  "multimodal_count": 12,
-  "integration_count": 4,
+  "multimodal_count": 11,
+  "integration_count": 1,
   "failed_tasks": [],
   "details": {
     "translated": [
@@ -590,24 +590,8 @@
         "claw_eval_id": "P142zh_skill_search"
       },
       {
-        "task_id": "task_image_gen",
-        "claw_eval_id": "P143zh_image_gen"
-      },
-      {
         "task_id": "task_gh_issue_triage",
-        "claw_eval_id": "P144zh_gh_issue_triage"
-      },
-      {
-        "task_id": "task_gws_email_triage",
-        "claw_eval_id": "P145zh_gws_email_triage"
-      },
-      {
-        "task_id": "task_gws_cross_service",
-        "claw_eval_id": "P146zh_gws_cross_service"
-      },
-      {
-        "task_id": "task_gws_task_management",
-        "claw_eval_id": "P147zh_gws_task_management"
+        "claw_eval_id": "P143zh_gh_issue_triage"
       }
     ],
     "todo": [],
@@ -848,22 +832,6 @@
       {
         "task_id": "task_meeting_gov_next_steps",
         "claw_eval_id": "P136zh_meeting_gov_next_steps"
-      },
-      {
-        "task_id": "task_image_gen",
-        "claw_eval_id": "P143zh_image_gen"
-      },
-      {
-        "task_id": "task_gws_email_triage",
-        "claw_eval_id": "P145zh_gws_email_triage"
-      },
-      {
-        "task_id": "task_gws_cross_service",
-        "claw_eval_id": "P146zh_gws_cross_service"
-      },
-      {
-        "task_id": "task_gws_task_management",
-        "claw_eval_id": "P147zh_gws_task_management"
       }
     ],
     "live_web_dependency": [
@@ -1071,19 +1039,7 @@
       },
       {
         "task_id": "task_gh_issue_triage",
-        "claw_eval_id": "P144zh_gh_issue_triage"
-      },
-      {
-        "task_id": "task_gws_email_triage",
-        "claw_eval_id": "P145zh_gws_email_triage"
-      },
-      {
-        "task_id": "task_gws_cross_service",
-        "claw_eval_id": "P146zh_gws_cross_service"
-      },
-      {
-        "task_id": "task_gws_task_management",
-        "claw_eval_id": "P147zh_gws_task_management"
+        "claw_eval_id": "P143zh_gh_issue_triage"
       }
     ],
     "multi_turn": [
@@ -1148,28 +1104,12 @@
       {
         "task_id": "task_meeting_gov_controversy",
         "claw_eval_id": "P135zh_meeting_gov_controversy"
-      },
-      {
-        "task_id": "task_image_gen",
-        "claw_eval_id": "P143zh_image_gen"
       }
     ],
     "integration": [
       {
         "task_id": "task_gh_issue_triage",
-        "claw_eval_id": "P144zh_gh_issue_triage"
-      },
-      {
-        "task_id": "task_gws_email_triage",
-        "claw_eval_id": "P145zh_gws_email_triage"
-      },
-      {
-        "task_id": "task_gws_cross_service",
-        "claw_eval_id": "P146zh_gws_cross_service"
-      },
-      {
-        "task_id": "task_gws_task_management",
-        "claw_eval_id": "P147zh_gws_task_management"
+        "claw_eval_id": "P143zh_gh_issue_triage"
       }
     ],
     "grader_modified": [

@@ -109,8 +109,8 @@ tasks/manifest.yaml + tasks/*.md   (PinchBench, 英文, 原樣)
 - 6 個 smoke 任務（當時為**簡體中文**，對齊 Claw-Eval 官方示例）。
 
 ### 第二階段（Phase 2，全量繁體中文）
-- **全部 147 個任務**翻成**繁體中文（zh-TW）**，兩種格式同步產出：
-  `tasks_zh/`（147）與 `tasks_claw_eval_zh/`（147）。`translation_status` 全為
+- **全部 143 個任務**翻成**繁體中文（zh-TW）**，兩種格式同步產出：
+  `tasks_zh/`（143）與 `tasks_claw_eval_zh/`（143）。`translation_status` 全為
   `complete`，TODO 與簡體字殘留皆為 0。
 - 翻譯由分類批次的 `scripts/translation_overrides/01..12_*.yaml` 提供
   （由多個平行 subagent 產生並逐一 OpenCC 簡體掃描 + schema 驗證）。

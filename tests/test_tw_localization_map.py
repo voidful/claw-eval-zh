@@ -18,8 +18,8 @@ class TwMap(unittest.TestCase):
         cls.items = {r["task_id"]: r for r in cls.m["items"]}
 
     def test_count(self):
-        self.assertEqual(self.m["total_tasks"], 147)
-        self.assertEqual(len(self.items), 147)
+        self.assertEqual(self.m["total_tasks"], 143)
+        self.assertEqual(len(self.items), 143)
 
     def test_every_entry_has_strategy(self):
         for tid, r in self.items.items():

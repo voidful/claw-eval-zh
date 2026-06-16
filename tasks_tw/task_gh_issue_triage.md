@@ -13,7 +13,7 @@ source_benchmark: pinchbench
 source_locale: zh-TW
 localization: taiwan
 localization_strategy: context_replace
-claw_eval_tw_id: T144tw_gh_issue_triage
+claw_eval_tw_id: T143tw_gh_issue_triage
 workspace_files: []
 grading_weights:
   automated: 0.5

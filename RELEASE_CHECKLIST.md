@@ -7,11 +7,12 @@
 - ✅ `python scripts/validate_claw_eval_zh_tasks.py`（Phase 2）：0 errors
 - ✅ `python scripts/validate_tw_localization.py --strict-release`：0 errors, 0 unresolved warnings
 - ✅ `python scripts/run_tw_gold_checks.py`：PASS（28 deterministic 案例，0 失敗）
-- ✅ `python scripts/export_official_claw_eval_candidate.py --validate`：valid（147 任務）
+- ✅ `python scripts/export_official_claw_eval_candidate.py --validate`：valid（143 任務）
 - ✅ `pytest -q`：111 passed（含 zh 與 tw validator 的「真的會抓錯」負向測試）
 
 ## 內容品質
-- ✅ 三層共存（en / zh / tw），各 147 任務；英文原版未改、Phase 2 zh 未回歸
+- ✅ 三層共存（en / zh / tw），各 143 任務（自原始 147 移除 4 個需非-HF 基建的任務：
+  3 GWS + task_image_gen，三層含英文一併移除）
 - ✅ 簡體字殘留（required user-facing fields）：0
 - ✅ TODO / placeholder 殘留：0
 - ✅ accepted warnings 已逐筆審查（reason/risk/owner/future_action）：1 筆（playwright zip）
@@ -36,7 +37,8 @@
 - ✅ 前置檢查 `scripts/preflight_env.py`：逐任務列出就緒/缺項與補法；可自動安裝 `fws` mock。
 - ✅ 修正：在地化 gws/github 任務的 `prerequisites` 已隨 `--language zh/tw` 保留，
   `lib_fws.is_fws_task` 會正確啟動 fws mock（先前會在 zh/tw 漏啟動而失敗）。
-- ✅ 裝好 OpenClaw 後 **142/147 題只需模型**即可跑；GWS/GitHub 用 fws 本地 mock（不需真實憑證）。
+- ✅ 裝好 OpenClaw 後 **142/143 題只需模型**即可跑；唯一需額外前置者為 task_gh_issue_triage
+  （fws 本地 mock + gh，不需真實憑證，--auto-install 會補 fws）。
 - ✅ 未就緒任務由執行器**跳過**（不計入分母），不再出現「整類 0% 失敗」假象。
 
 ## 發佈動作
