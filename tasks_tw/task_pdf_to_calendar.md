@@ -1,6 +1,6 @@
 ---
 id: task_pdf_to_calendar
-name: PDF 學校行事曆轉 ICS 匯入
+name: 大學行事曆 PDF 轉 ICS 匯入（中興大學 114 學年度）
 category: productivity
 grading_type: automated
 timeout_seconds: 180
@@ -14,110 +14,122 @@ localization: taiwan
 localization_strategy: context_replace
 claw_eval_tw_id: T003tw_pdf_to_calendar
 workspace_files:
-- source: school-calendar.pdf
+- source: tw/docs/nchu_114_calendar.pdf
   dest: school-calendar.pdf
 ---
 
-# PDF 學校行事曆轉 ICS 匯入
+# 大學行事曆 PDF 轉 ICS 匯入（中興大學 114 學年度）
 
 ## Prompt
 
-我家小朋友學校寄來一份學年度行事曆 PDF，已經放在工作區的 `school-calendar.pdf`。
-我想把上面的活動全部匯入手機的行事曆 App，可以麻煩你幫我整理嗎？
+我家小朋友（大學生）學校寄來「國立中興大學 114 學年度行事曆」的 PDF，已放在工作區的
+`school-calendar.pdf`（中英雙語版）。我想把上面的重要日期全部匯入手機的行事曆 App，
+可以麻煩你幫我整理嗎？
 
-請從這份 PDF 擷取所有日期與活動，並在工作區建立一個名為 `school-calendar.ics`
+請從這份 PDF 擷取所有重要日期與活動，並在工作區建立一個名為 `school-calendar.ics`
 的 ICS（iCalendar）檔案，內含所有活動。
 
 每一筆活動請做到：
-- SUMMARY 要與 PDF 上的活動名稱相符、具描述性
+- SUMMARY 要與行事曆上的活動名稱相符、具描述性（中文或中英皆可）
 - 使用正確的日期；跨多天的活動請用 DTSTART 與 DTEND
 - 設為整日活動（使用 DATE 格式，而非 DATETIME）
 
-備註：這份 PDF 是英文版的學校行事曆，活動名稱請沿用原文（例如 First Day of
-School、Labor Day），不用翻成中文，以免日期對不上。
+備註：
+- 這是以**民國紀年**標示的學年行事曆。114 學年度第 1 學期為 2025 年 8 月至 2026 年 1 月，
+  第 2 學期為 2026 年 2 月至 7 月。請把民國年正確換算成西元年（**114 年 = 2025、
+  115 年 = 2026**），不要把月／日對應錯年份。
+- 行事曆為中英雙語，活動名稱可沿用原文（中文或英文皆可），以免日期對不上。
 
 ## Expected Behavior
 
 助手應該：
-1. 讀取並從 PDF 中擷取文字
-2. 將每一筆有日期的項目解析為結構化活動
-3. 寫出一個有效、內含所有活動的 ICS 檔案
+1. 讀取並從 PDF 中擷取文字（中英雙語的學年行事曆）
+2. 將每一筆有日期的重要記事解析為結構化活動，並正確把民國年換算成西元年
+3. 寫出一個有效、內含所有活動的 ICS 檔案 `school-calendar.ics`
 
-備註：檔名 `school-calendar.pdf` 與輸出檔名 `school-calendar.ics` 不可更改；
-活動名稱與日期皆以 PDF 原始內容為準（英文活動名、原始學年度日期）。
+關鍵事件與正確日期（民國114學年度＝2025–2026）：
+- 2025-09-08 全校學生開學、開始上課（註冊日）
+- 2025-10-06 中秋節（放假）
+- 2025-10-10 國慶日（放假）
+- 2025-11-01 校慶
+- 2025-12-22 第 1 學期期末考試（12/22–12/26）
+- 2025-12-29 寒假開始
+- 2026-01-01 元旦（放假）
+- 2026-02-23 第 2 學期開學、開始上課（註冊日）
+- 2026-02-28 和平紀念日（放假）
+- 2026-04-04 兒童節（放假）、2026-04-05 清明節（放假）
+- 2026-05-01 勞動節（放假）
+- 2026-05-30 畢業典禮
+- 2026-06-08 第 2 學期期末考試（6/8–6/12）
+- 2026-06-19 端午節（放假）
+
+備註：輸出檔名 `school-calendar.ics` 不可更改；日期須與 PDF 內容一致，且民國年已正確
+換算為西元年。
 
 ## Grading Criteria
 
 - [ ] 已在 `school-calendar.ics` 建立 ICS 檔案
 - [ ] ICS 檔案有效（包含 VCALENDAR、VEVENT 區塊）
 - [ ] 至少擷取出 10 筆活動
-- [ ] 包含開學日（First Day of School）活動（2026 年 8 月 3 日）
-- [ ] 包含學期最後一日（Last Day of School）活動（2027 年 5 月 21 日）
-- [ ] 包含勞動節（Labor Day）活動（2026 年 9 月 7 日）
-- [ ] 包含聖誕假期（Christmas Break）活動（2026 年 12 月）
-- [ ] 包含春假（Spring Break）活動（2027 年 4 月）
+- [ ] 包含第 1 學期開學／上課活動（2025-09-08）
+- [ ] 包含中秋節活動（2025-10-06）
+- [ ] 包含國慶日活動（2025-10-10）
+- [ ] 包含第 1 學期期末考試（2025-12-22）
+- [ ] 包含寒假開始（2025-12-29）
+- [ ] 包含元旦（2026-01-01）
+- [ ] 包含第 2 學期開學／上課（2026-02-23）
+- [ ] 包含和平紀念日（2026-02-28）
+- [ ] 包含畢業典禮（2026-05-30）
+- [ ] 包含端午節（2026-06-19）
+- [ ] 民國年已正確換算為西元年（114 年→2025、115 年→2026）
 
 ## Automated Checks
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the PDF-to-calendar task.
+    """T003 中興大學 114 學年度行事曆 → ICS grader（台灣在地版）。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    檢查 agent 產出的 school-calendar.ics 是否含正確的西元日期；重點在民國年→西元年
+    換算（114=2025、115=2026）。以日期為主要訊號（PDF 內各日期幾乎一對一對應到單一
+    事件），輔以結構檢查。僅用標準函式庫。
     """
     from pathlib import Path
-    import re
 
-    scores = {}
-    workspace = Path(workspace_path)
+    ws = Path(workspace_path)
+    ics = ws / "school-calendar.ics"
+    if not ics.exists():
+        cands = sorted(ws.glob("**/*.ics"))
+        ics = cands[0] if cands else None
 
-    ics_path = workspace / "school-calendar.ics"
+    # (check_name, ISO 日期) — 取自 PDF 之實際重要記事
+    KEY = [
+        ("fall_classes_begin", "2025-09-08"),
+        ("mid_autumn", "2025-10-06"),
+        ("national_day", "2025-10-10"),
+        ("fall_final_exam", "2025-12-22"),
+        ("winter_break", "2025-12-29"),
+        ("new_year_day", "2026-01-01"),
+        ("spring_classes_begin", "2026-02-23"),
+        ("peace_memorial", "2026-02-28"),
+        ("graduation", "2026-05-30"),
+        ("dragon_boat", "2026-06-19"),
+    ]
+    scores = {"ics_created": 0.0, "ics_valid": 0.0, "min_events": 0.0}
+    for name, _ in KEY:
+        scores[name] = 0.0
+    if not ics or not ics.exists():
+        return scores
 
-    if not ics_path.exists():
-        return {
-            "file_created": 0.0,
-            "valid_ics": 0.0,
-            "min_events": 0.0,
-            "first_day_of_school": 0.0,
-            "last_day_of_school": 0.0,
-            "labor_day": 0.0,
-            "christmas_break": 0.0,
-            "spring_break": 0.0,
-        }
+    text = ics.read_text(encoding="utf-8", errors="ignore")
+    up = text.upper()
+    scores["ics_created"] = 1.0
+    scores["ics_valid"] = 1.0 if ("VCALENDAR" in up and "VEVENT" in up) else 0.0
+    n = up.count("BEGIN:VEVENT")
+    scores["min_events"] = 1.0 if n >= 10 else round(min(n, 10) / 10.0, 2)
 
-    scores["file_created"] = 1.0
-    content = ics_path.read_text()
-
-    # Valid ICS structure
-    has_vcalendar = "BEGIN:VCALENDAR" in content and "END:VCALENDAR" in content
-    has_vevents = content.count("BEGIN:VEVENT") >= 1
-    scores["valid_ics"] = 1.0 if has_vcalendar and has_vevents else 0.0
-
-    # At least 10 events
-    event_count = content.count("BEGIN:VEVENT")
-    scores["min_events"] = 1.0 if event_count >= 10 else round(event_count / 10, 1)
-
-    # First Day of School - August 3, 2026
-    scores["first_day_of_school"] = 1.0 if "20260803" in content else 0.0
-
-    # Last Day of School - May 21, 2027
-    scores["last_day_of_school"] = 1.0 if "20270521" in content else 0.0
-
-    # Labor Day - September 7, 2026
-    scores["labor_day"] = 1.0 if "20260907" in content else 0.0
-
-    # Christmas Break - December 21, 2026
-    scores["christmas_break"] = 1.0 if "20261221" in content else 0.0
-
-    # Spring Break - April 5, 2027
-    scores["spring_break"] = 1.0 if "20270405" in content else 0.0
-
+    for name, iso in KEY:
+        compact = iso.replace("-", "")          # 20250908
+        scores[name] = 1.0 if (compact in text or iso in text) else 0.0
     return scores
 
 

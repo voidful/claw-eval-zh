@@ -68,6 +68,7 @@ grader.py）：
 | 會議·政府 | gov_*（T131-136） | NASA UAP 公聽會 → 數位治理委員會 AI 公聽會 | 同上 |
 | CSV | csv_stations_*（T066-68）、csv_cities_*（T072/74/75）、csv_pension_*（T076-78） | Idaho/美國城市/美國退休金 → 台灣氣象站/鄉鎮市區/退休金 | grader 對台灣 CSV 動態計算正解 |
 | asset | todo_list_cleanup/email_triage/second_brain（hybrid）；daily_summary/summary/humanizer/email_reply/video（llm_judge） | 英文 asset → 繁中台灣 asset | hybrid 改查中文內容；T138 導師 `Elena Vasquez·Stanford`→`林淑芬·臺大` + 同步 grader |
+| PDF | `task_pdf_to_calendar`（T003，automated） | 英文學校行事曆 PDF → **國立中興大學 114 學年度行事曆（真實公開雙語 PDF）** | grader 改查擷取出的西元日期（民國114學年=2025–2026）：開學/中秋/國慶/期末考/寒假/元旦/第二學期開學/和平紀念/畢業典禮/端午 等，重點在**民國→西元換算**。已實測 GOOD=1.0／PARTIAL=0.5／EMPTY=0.0 |
 
 > 驗證：143 個 grader 全部可 import；對全部 hybrid grader 做「鑑別測試」（正確中文報告高分、
 > 空白/錯誤報告趨近 0）皆通過；council_votes、tech_action_items 兩個 gold 範例已對新逐字稿重建。

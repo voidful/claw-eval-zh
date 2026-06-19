@@ -196,6 +196,17 @@
       "deterministic": true,
       "license": "synthetic / 公開概值",
       "risk_notes": "示例/概值，明確標示非官方統計；grader 對此 fixture 動態計算。"
+    },
+    {
+      "path": "assets/tw/docs/nchu_114_calendar.pdf",
+      "source_task": [
+        "task_pdf_to_calendar"
+      ],
+      "origin": "real_public",
+      "data_source": "國立中興大學 114 學年度行事曆（中英雙語版），公開資料，來源 https://www.nchu.edu.tw/calendar/",
+      "deterministic": true,
+      "license": "大學公開行事曆（公開資訊）；僅作為 PDF→ICS 擷取評測之 fixture",
+      "risk_notes": "真實公開學年行事曆；grader 檢查擷取出的西元日期（民國114學年=2025–2026），重點在民國→西元換算。"
     }
   ]
 }

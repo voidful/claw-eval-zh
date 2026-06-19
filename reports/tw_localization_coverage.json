@@ -18,8 +18,9 @@
     "heavy": 24,
     "none": 52
   },
-  "fixture_replaced_count": 53,
+  "fixture_replaced_count": 54,
   "fixture_replaced": [
+    "task_pdf_to_calendar",
     "task_todo_list_cleanup",
     "task_daily_summary",
     "task_email_triage",
@@ -74,9 +75,10 @@
     "task_meeting_gov_next_steps",
     "task_second_brain"
   ],
-  "grader_changed_count": 49,
+  "grader_changed_count": 50,
   "grader_changed": [
     "task_calendar",
+    "task_pdf_to_calendar",
     "task_todo_list_cleanup",
     "task_email_triage",
     "task_stock",
