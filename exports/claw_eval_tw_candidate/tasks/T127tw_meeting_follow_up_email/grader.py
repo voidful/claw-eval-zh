@@ -13,96 +13,144 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting follow-up email task.
+    """鼎峰科技產品週會「會後追蹤郵件」grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    做法：先從台灣逐字稿 meeting_transcript.md「動態推導」出應有事實
+    （被指派的負責人、活動名稱、選定的主標語、星期幾的期限），再比對 agent
+    產出的中文追蹤郵件 follow_up_email.md。盡量不硬寫英文原版事實，提升可重現性。
+    僅用標準函式庫。
     """
-    from pathlib import Path
     import re
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if file exists
-    report_path = workspace / "follow_up_email.md"
-    if not report_path.exists():
-        alternatives = ["followup_email.md", "follow_up.md", "email.md", "meeting_followup.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+    # --- 找 agent 報告（郵件）---
+    report = workspace / "follow_up_email.md"
+    if not report.exists():
+        for alt in ["followup_email.md", "follow_up.md", "email.md",
+                    "meeting_followup.md", "後續追蹤郵件.md", "追蹤郵件.md"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
                 break
 
-    if not report_path.exists():
-        return {
-            "file_created": 0.0,
-            "has_subject": 0.0,
-            "decisions_section": 0.0,
-            "decisions_count": 0.0,
-            "action_items_with_owners": 0.0,
-            "action_items_count": 0.0,
-            "deadline_mentioned": 0.0,
-            "tone_appropriate": 0.0,
-            "concise": 0.0,
-        }
+    keys = ["file_created", "has_subject", "decisions_section",
+            "decisions_count", "action_items_with_owners", "action_items_count",
+            "deadline_mentioned", "tone_appropriate", "concise"]
+    if not report.exists():
+        return {k: 0.0 for k in keys}
 
-    scores["file_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    scores = {"file_created": 1.0}
+    c = report.read_text(encoding="utf-8", errors="ignore")
 
-    # Subject line
-    subject_patterns = [r'subject\s*:', r're\s*:', r'^#\s*.*(?:follow|recap|summary)', r'\*\*subject\*\*']
-    scores["has_subject"] = 1.0 if any(re.search(p, content_lower, re.MULTILINE) for p in subject_patterns) else 0.0
+    # --- 讀逐字稿，動態推導「應有事實」---
+    tpath = workspace / "meeting_transcript.md"
+    tx = ""
+    if tpath.exists():
+        tx = tpath.read_text(encoding="utf-8", errors="ignore")
 
-    # Decisions section
-    decision_section_patterns = [r'decision', r'key\s*outcome', r'(?:what\s*we\s*)?(?:agreed|decided)', r'outcome', r'conclusion']
-    scores["decisions_section"] = 1.0 if any(re.search(p, content_lower) for p in decision_section_patterns) else 0.0
+    han = re.compile(r"[一-鿿]{2,3}")
 
-    # Count specific decisions
+    # (a) 與會者姓名白名單（逐字稿「與會者」區塊：行首為 - 姓名（角色…）
+    attendees = set(re.findall(r"[-\s]([一-鿿]{2,3})（", tx)) if tx else set()
+
+    # (b) 真正在「**行動項目…**」句子裡被點名的負責人
+    assigned = []
+    for m in re.finditer(r"行動項目[（(]?[^）)]*[）)]?[：:]\s*([^\n*。]{0,40})", tx):
+        for nm in han.findall(m.group(1)):
+            if nm in attendees and nm not in assigned:
+                assigned.append(nm)
+    if not assigned and attendees:
+        assigned = list(attendees)
+    if not assigned:
+        assigned = ["戴立安", "高敏哲", "蔡思敏", "王志明", "陳柏宇", "林淑芬"]
+
+    # (c) 從逐字稿動態抓出三場活動名稱（查核決議用）
+    event_terms = [t for t in ["COSCUP", "DevOpsDays", "Kubernetes Day"]
+                   if (not tx or t in tx)]
+
+    # (d) 選定的主標語（會議結尾複習句／「…當主標語」）
+    tagline = ""
+    mt = re.search(r"主標語[，、\s]*「([^」]{2,20})」", tx) if tx else None
+    if not mt and tx:
+        mt = re.search(r"「([^」]{2,20})」\s*當主標語", tx)
+    tagline = mt.group(1) if mt else "更快交付，更低風險"
+
+    # --- 計分 ---
+
+    # 1) 主旨行
+    subject_patterns = [r"主旨", r"subject\s*[:：]", r"^#\s",
+                        r"\*\*主旨\*\*", r"re\s*[:：]"]
+    scores["has_subject"] = 1.0 if any(
+        re.search(p, c, re.MULTILINE | re.IGNORECASE)
+        for p in subject_patterns) else 0.0
+
+    # 2) 決議／關鍵結論區段
+    decision_section = [r"決議", r"決定", r"結論", r"關鍵結論", r"做成的決議",
+                        r"共識", r"decision"]
+    scores["decisions_section"] = 1.0 if any(
+        re.search(p, c, re.IGNORECASE) for p in decision_section) else 0.0
+
+    # 3) 具體決議計數（盡量以逐字稿動態詞彙比對）
     decision_count = 0
-    if re.search(r'(?:platform|re:?\s*invent)', content_lower):
+    # 活動分工：抓到任一動態活動名稱，或泛指「平台/CI/CD/GitOps + 活動」
+    if any(t in c for t in event_terms) or re.search(
+            r"(?:平台|Platform).{0,12}(?:COSCUP|開源人)", c, re.IGNORECASE):
         decision_count += 1
-    if re.search(r'(?:ci.*cd|google\s*next)', content_lower):
+    # 主標語
+    if (tagline in c) or re.search(r"更快交付|更低風險", c):
         decision_count += 1
-    if re.search(r'(?:gitops|kubecon)', content_lower):
+    # 資訊圖只用綠色
+    if re.search(r"只用綠色|僅用綠色|綠色.{0,6}配色|不用紅色|不放紅色|配色", c):
         decision_count += 1
-    if re.search(r'more\s*speed.*less\s*risk', content_lower):
+    # 漏洞管理（資安主打）
+    if re.search(r"漏洞管理|vulnerability\s*management", c, re.IGNORECASE):
         decision_count += 1
-    if re.search(r'(?:green|no\s*red|color\s*scheme)', content_lower):
+    # 競品方法論：只比 tier 1 ／新增鼎峰一列 ／每個 stage 只放相關對手
+    if re.search(r"tier\s*1|只.{0,4}相關.{0,4}對手|鼎峰一列|鼎峰.{0,4}列|"
+                 r"每個\s*stage|每個分頁", c, re.IGNORECASE):
         decision_count += 1
-    if re.search(r'vulnerability\s*management', content_lower):
-        decision_count += 1
-    scores["decisions_count"] = 1.0 if decision_count >= 3 else (0.5 if decision_count >= 2 else 0.0)
+    scores["decisions_count"] = 1.0 if decision_count >= 3 else (
+        0.5 if decision_count >= 2 else 0.0)
 
-    # Action items with owners (names from the meeting)
-    names = ['cormac', 'cindy', 'brian', 'samia', 'william', 'tai']
-    names_found = sum(1 for n in names if n in content_lower)
-    action_patterns = [r'action\s*item', r'to[\s-]*do', r'(?:will|should|needs?\s*to|please)\s+\w+']
-    has_actions = any(re.search(p, content_lower) for p in action_patterns)
-    scores["action_items_with_owners"] = 1.0 if (names_found >= 2 and has_actions) else (0.5 if names_found >= 1 or has_actions else 0.0)
+    # 4) 行動項目＋負責人（用逐字稿推導出的被指派負責人）
+    names_found = sum(1 for nm in assigned if nm in c)
+    action_patterns = [r"行動項目", r"待辦", r"to[\s-]*do", r"負責",
+                       r"(?:請|需|要|會|應|將)\s*\S"]
+    has_actions = any(re.search(p, c, re.IGNORECASE) for p in action_patterns)
+    scores["action_items_with_owners"] = 1.0 if (
+        names_found >= 2 and has_actions) else (
+        0.5 if (names_found >= 1 or has_actions) else 0.0)
 
-    # Count action items (look for list items in action section)
-    action_list_items = re.findall(r'(?:^|\n)\s*[-*•\d]+[.)]\s*.{10,}', content)
-    scores["action_items_count"] = 1.0 if len(action_list_items) >= 5 else (0.5 if len(action_list_items) >= 3 else 0.0)
+    # 5) 行動項目數量（條列／編號）
+    action_list_items = re.findall(
+        r"(?:^|\n)\s*(?:[-*+•]|\d+[.)、])\s*\S.{6,}", c)
+    n = len(action_list_items)
+    scores["action_items_count"] = 1.0 if n >= 5 else (0.5 if n >= 3 else 0.0)
 
-    # Tuesday deadline mentioned
-    deadline_patterns = [r'tuesday', r'due\s*(?:date|by|end\s*of)', r'deadline', r'end\s*of\s*(?:the\s*)?day']
-    scores["deadline_mentioned"] = 1.0 if any(re.search(p, content_lower) for p in deadline_patterns) else 0.0
+    # 6) 期限：星期二（Tuesday）／截止／期限
+    deadline_patterns = [r"星期二", r"週二", r"禮拜二", r"tuesday",
+                        r"截止", r"期限", r"下班前", r"本週", r"deadline",
+                        r"end\s*of\s*(?:the\s*)?day"]
+    scores["deadline_mentioned"] = 1.0 if any(
+        re.search(p, c, re.IGNORECASE) for p in deadline_patterns) else 0.0
 
-    # Tone (professional but approachable - look for greeting and closing)
-    has_greeting = bool(re.search(r'(?:hi|hey|hello|dear|team|everyone|all)', content_lower[:200]))
-    has_closing = bool(re.search(r'(?:thanks|thank\s*you|best|regards|cheers|talk\s*soon)', content_lower[-300:]))
-    scores["tone_appropriate"] = 1.0 if (has_greeting and has_closing) else (0.5 if (has_greeting or has_closing) else 0.0)
+    # 7) 語氣：開頭有稱呼語、結尾有結語
+    head = c[:200]
+    tail = c[-300:]
+    has_greeting = bool(re.search(
+        r"團隊|大家|各位|嗨|您好|你好|敬啟|親愛的|dear|hi|hello", head,
+        re.IGNORECASE))
+    has_closing = bool(re.search(
+        r"謝謝|感謝|辛苦了|敬上|祝|順頌|此致|best|regards|thanks", tail,
+        re.IGNORECASE))
+    scores["tone_appropriate"] = 1.0 if (has_greeting and has_closing) else (
+        0.5 if (has_greeting or has_closing) else 0.0)
 
-    # Conciseness
-    word_count = len(content.split())
-    scores["concise"] = 1.0 if word_count <= 600 else (0.5 if word_count <= 900 else 0.0)
+    # 8) 精簡度（中文以字元數估算，約 600 字 ≈ 600 個中文字）
+    han_chars = len(re.findall(r"[一-鿿]", c))
+    scores["concise"] = 1.0 if han_chars <= 700 else (
+        0.5 if han_chars <= 1100 else 0.0)
 
     return scores
 

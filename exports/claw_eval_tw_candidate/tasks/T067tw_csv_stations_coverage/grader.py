@@ -13,91 +13,185 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the coverage gap analysis task.
+    """全臺氣象站涵蓋缺口分析 grader（台灣 CSV）。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    以工作區內的台灣 CSV（dest=tw_weather_stations.csv）動態計算「應有的
+    涵蓋／密度／海拔／機關」正解，再比對 agent 產出的中文報告 coverage_report.md。
+    不沿用原始美國資料集數值。僅用標準函式庫。
+    轉換器會在其後自動接上中→英正規化 wrapper，毋須自行處理。
     """
     from pathlib import Path
+    import csv as _csv
     import re
+    from collections import Counter
 
-    scores = {}
     workspace = Path(workspace_path)
+    keys = [
+        "report_created", "missing_county_identified", "county_counts",
+        "elevation_bands", "agency_comparison", "missing_data", "recommendations",
+    ]
 
+    # --- 報告檔（容許數種常見命名） ---
     report_path = workspace / "coverage_report.md"
     if not report_path.exists():
-        for alt in ["coverage.md", "report.md", "gap_analysis.md", "analysis.md", "coverage_analysis.md"]:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in ["coverage.md", "report.md", "gap_analysis.md", "analysis.md",
+                    "coverage_analysis.md", "涵蓋分析.md", "涵蓋報告.md",
+                    "氣象站涵蓋分析.md", "coverage_report.txt"]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
+                break
+    if not report_path.exists():
+        return {k: 0.0 for k in keys}
+
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
+    content_lower = content.lower()
+    scores = {"report_created": 1.0}
+
+    # --- 從台灣 CSV 動態讀出正解（避免硬寫；以實際 fixture 為準） ---
+    csv_path = workspace / "tw_weather_stations.csv"
+    if not csv_path.exists():
+        for alt in ["weather_stations.csv", "stations.csv"]:
+            if (workspace / alt).exists():
+                csv_path = workspace / alt
                 break
 
-    if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "payette_identified": 0.0,
-            "county_counts": 0.0,
-            "elevation_bands": 0.0,
-            "agency_comparison": 0.0,
-            "missing_data": 0.0,
-            "recommendations": 0.0,
-        }
+    rows = []
+    if csv_path.exists():
+        with open(csv_path, encoding="utf-8-sig", errors="ignore") as f:
+            reader = _csv.DictReader(f)
+            for r in reader:
+                rows.append({(k or "").strip(): (v.strip() if v else "")
+                             for k, v in r.items()})
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # 台灣 22 個直轄市／縣／市
+    tw22 = [
+        "臺北市", "新北市", "桃園市", "臺中市", "臺南市", "高雄市",
+        "宜蘭縣", "新竹縣", "苗栗縣", "彰化縣", "南投縣", "雲林縣", "嘉義縣",
+        "屏東縣", "臺東縣", "花蓮縣", "澎湖縣", "金門縣", "連江縣",
+        "基隆市", "新竹市", "嘉義市",
+    ]
 
-    # Check Payette County identified as missing
-    has_payette = bool(re.search(r'payette', content_lower))
-    has_zero_or_no = bool(re.search(r'payette.*(?:no |zero|0 |missing|without|lack)', content_lower) or
-                         re.search(r'(?:no |zero|0 |missing|without|lack).*payette', content_lower))
-    scores["payette_identified"] = 1.0 if has_payette else 0.0
+    counties = [r.get("County", "") for r in rows]
+    nonblank = [c for c in counties if c]
+    blank_rows = [r for r in rows if not r.get("County", "")]
+    cc = Counter(nonblank)
+    present = set(nonblank)
+    missing_counties = [c for c in tw22 if c not in present]  # 應為 ['連江縣']
+    top_counties = [c for c, _ in cc.most_common(6)]          # 南投縣居首
+    single_counties = sorted([c for c, n in cc.items() if n == 1])
+    n_blank = len(blank_rows)                                 # 應為 5
+    blank_station_names = [r.get("Station Name", "") for r in blank_rows]
 
-    # Check county station counts
-    top_counties = ['idaho', 'blaine', 'shoshone', 'custer', 'clearwater']
-    county_mentions = sum(1 for c in top_counties if re.search(rf'\b{c}\b.*\b1[0-3]\b|\b1[0-3]\b.*\b{c}\b', content_lower))
-    scores["county_counts"] = 1.0 if county_mentions >= 3 else (0.5 if county_mentions >= 1 else 0.0)
+    # 若 CSV 缺失，退回硬編碼正解（以實際 fixture 計算所得）作為保底
+    if not rows:
+        missing_counties = ["連江縣"]
+        top_counties = ["南投縣", "花蓮縣", "高雄市", "臺中市", "臺東縣", "宜蘭縣"]
+        single_counties = ["基隆市", "新竹市", "金門縣"]
+        cc = Counter({"南投縣": 17})
+        n_blank = 5
+        blank_station_names = ["大霸尖山站", "拉拉山野溪站", "南湖大山林道站",
+                               "玉山保線所站", "關山山站"]
 
-    # Check elevation band distribution
+    # === 1. 缺漏縣市（連江縣）已被指認 ===
+    miss_score = 0.0
+    for mc in missing_counties:
+        if mc and mc in content:
+            # 報告中應指出此縣市「沒有／零」氣象站
+            near = re.search(re.escape(mc) + r"[^。\n]{0,40}(?:沒有|零|0|缺|無|未設|不足)",
+                             content)
+            near2 = re.search(r"(?:沒有|零|缺|無|未設)[^。\n]{0,40}" + re.escape(mc),
+                              content)
+            miss_score = 1.0 if (near or near2) else 0.6
+            break
+    scores["missing_county_identified"] = miss_score
+
+    # === 2. 各縣市氣象站數，且最多的縣市（南投縣 17）正確 ===
+    # 取實際前五多縣市，檢查報告中縣市名旁是否出現對應正確計數。
+    top5 = cc.most_common(5)
+    hit = 0
+    for cname, cnum in top5:
+        # 縣市名出現，且其正確計數（cnum）也出現在縣市名附近（任一方向，60 字內）
+        pat1 = re.escape(cname) + r"[^\n]{0,60}\b" + str(cnum) + r"\b"
+        pat2 = r"\b" + str(cnum) + r"\b[^\n]{0,30}" + re.escape(cname)
+        if re.search(pat1, content) or re.search(pat2, content):
+            hit += 1
+    if hit >= 3:
+        scores["county_counts"] = 1.0
+    elif hit >= 1:
+        scores["county_counts"] = 0.5
+    else:
+        scores["county_counts"] = 0.0
+
+    # === 3. 海拔帶分布 ===
     elev_indicators = 0
-    if re.search(r'elevation.*band|band.*elevation|elevation.*range|elevation.*distribution', content_lower):
+    # 「海拔」要與分組概念詞鄰近（同一段、30 字內），避免「氣象站分布在全臺」
+    # 之類泛用「分布」誤觸。
+    if re.search(r"海拔[^\n]{0,30}(?:帶|分組|區間|級距)"
+                 r"|(?:海拔)?(?:帶|分組|區間|級距)[^\n]{0,12}海拔"
+                 r"|海拔[^\n]{0,12}分布", content):
         elev_indicators += 1
-    if re.search(r'(?:4[,.]?000|5[,.]?000|6[,.]?000)', content):
+    # 出現多個海拔分組數字（公尺刻度）
+    if re.search(r"(?:500|1[,.]?000|1[,.]?500|2[,.]?000|3[,.]?000)\s*(?:公尺|m|公里)?",
+                 content):
         elev_indicators += 1
-    if re.search(r'(?:37|42)\s*station', content_lower) or re.search(r'(?:over|under).*represent', content_lower):
+    # 指出低海拔密集 / 高海拔稀疏（涵蓋過多／不足）
+    if (re.search(r"(?:低海拔|1[,.]?000\s*公尺以下|0[\-－~～]500)", content)
+            and re.search(r"(?:集中|密集|最多|過多|偏多)", content)) or \
+       re.search(r"(?:稀疏|不足|偏少|稀少|涵蓋過少)", content):
         elev_indicators += 1
-    scores["elevation_bands"] = 1.0 if elev_indicators >= 2 else (0.5 if elev_indicators >= 1 else 0.0)
+    if elev_indicators >= 2:
+        scores["elevation_bands"] = 1.0
+    elif elev_indicators >= 1:
+        scores["elevation_bands"] = 0.5
+    else:
+        scores["elevation_bands"] = 0.0
 
-    # Check NWS vs NRCS comparison
-    has_nws = bool(re.search(r'\bnws\b', content_lower))
-    has_nrcs = bool(re.search(r'\bnrcs\b', content_lower))
-    has_143 = bool(re.search(r'\b143\b', content))
-    has_70 = bool(re.search(r'\b70\b', content))
-    scores["agency_comparison"] = 1.0 if (has_nws and has_nrcs and (has_143 or has_70)) else (0.5 if (has_nws and has_nrcs) else 0.0)
+    # === 4. 機關比較（中央氣象署 / 林業署 / 水利署） ===
+    agencies = Counter(r.get("Managing Agency", "") for r in rows if r)
+    # 實際三大機關名稱（取出現的機關）
+    agency_names = [a for a, _ in agencies.most_common() if a] or \
+        ["中央氣象署", "林業署", "水利署"]
+    agency_hit = sum(1 for a in agency_names[:3] if a and a in content)
+    # 機關計數是否出現（任一機關名旁有其正確站數）
+    count_hit = False
+    for a, n in agencies.most_common(3):
+        if a and re.search(re.escape(a) + r"[^\n]{0,40}\b" + str(n) + r"\b", content):
+            count_hit = True
+            break
+    # 海拔／地理差異敘述
+    geo_hit = bool(re.search(r"(?:平地|沿海|低海拔|高山|山區|高海拔|流域|中海拔)",
+                             content))
+    if agency_hit >= 2 and (count_hit or geo_hit):
+        scores["agency_comparison"] = 1.0
+    elif agency_hit >= 2:
+        scores["agency_comparison"] = 0.5
+    else:
+        scores["agency_comparison"] = 0.0
 
-    # Check missing data identification
-    missing_patterns = [
-        r'(?:5|five)\s*station.*(?:missing|blank|empty)',
-        r'(?:missing|blank|empty).*(?:5|five)\s*station',
-        r'(?:missing|blank|empty).*county',
-        r'county.*(?:missing|blank|empty)',
-    ]
-    scores["missing_data"] = 1.0 if any(re.search(p, content_lower) for p in missing_patterns) else 0.0
+    # === 5. 資料品質：縣市別空白的氣象站已被指認 ===
+    md_score = 0.0
+    # 報告提到「空白／缺漏的縣市別」與站數，或直接點名空白站
+    name_hits = sum(1 for nm in blank_station_names if nm and nm in content)
+    mentions_blank = bool(re.search(r"(?:縣市|county)[^\n]{0,20}"
+                                    r"(?:空白|缺漏|缺失|遺漏|未填|無資料|空缺)", content)
+                          or re.search(r"(?:空白|缺漏|缺失|遺漏|未填|空缺)[^\n]{0,20}"
+                                       r"(?:縣市|county)", content))
+    mentions_count = bool(re.search(r"\b" + str(n_blank) + r"\b[^\n]{0,20}"
+                                    r"(?:個|站|筆|個站)", content)
+                          and mentions_blank)
+    if name_hits >= 3 or mentions_count:
+        md_score = 1.0
+    elif mentions_blank or name_hits >= 1:
+        md_score = 0.6
+    scores["missing_data"] = md_score
 
-    # Check recommendations
+    # === 6. 建議區段 ===
     rec_patterns = [
-        r'recommend',
-        r'suggest',
-        r'additional\s*station',
-        r'improv.*coverage',
-        r'gap.*(?:fill|address|close)',
+        r"建議", r"增設", r"增點", r"補強", r"改善[^\n]{0,10}涵蓋",
+        r"新增[^\n]{0,10}(?:氣象站|測站|站)", r"加強",
     ]
-    scores["recommendations"] = 1.0 if any(re.search(p, content_lower) for p in rec_patterns) else 0.0
+    scores["recommendations"] = 1.0 if any(re.search(p, content)
+                                           for p in rec_patterns) else 0.0
 
     return scores
 

@@ -13,53 +13,127 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
+    """評分台灣在地化版「第二大腦」記憶持久化任務。
+
+    作法：先從工作區佈署的 facts/REFERENCE.md 動態讀出「應有事實」，
+    再檢查 agent 產生的 memory/MEMORY.md 是否含有這些中文事實，
+    不在程式中寫死任何台灣導師姓名／單位等內容。
+    回傳 {check_name: 0.0~1.0}。
     """
-    Grade the second brain knowledge persistence task.
-
-    Checks if the agent created the memory file with correct content.
-
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
-    """
-    from pathlib import Path
     import re
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if memory file was created
+    # --- 1) 從參考卡動態讀出應有事實 ------------------------------------
+    def _load_reference():
+        ref = workspace / "facts" / "REFERENCE.md"
+        facts = {}
+        if not ref.exists():
+            return facts
+        try:
+            text = ref.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            return facts
+        # 接受全形或半形冒號
+        for line in text.splitlines():
+            m = re.match(r"\s*([^：:]+?)\s*[：:]\s*(.+?)\s*$", line)
+            if not m:
+                continue
+            key, val = m.group(1).strip(), m.group(2).strip()
+            facts[key] = val
+        return facts
+
+    ref_facts = _load_reference()
+
+    # 解析後備：萬一參考卡缺漏，用在地化常數補齊，確保 grader 仍可運作。
+    fallback = {
+        "最愛語言": "Rust",
+        "開始日期": "2024 年 1 月 15 日",
+        "導師姓名": "林淑芬 教授",
+        "導師單位": "國立臺灣大學",
+        "專案名稱": "NeonDB",
+        "專案描述": "分散式鍵值儲存系統",
+        "團隊暗號": "紫色大象日出",
+    }
+    for k, v in fallback.items():
+        ref_facts.setdefault(k, v)
+
+    # --- 2) 找出 agent 產生的記憶檔 -------------------------------------
     memory_file = workspace / "memory" / "MEMORY.md"
     if not memory_file.exists():
-        # Try alternative paths
-        alt_paths = [
-            workspace / "MEMORY.md",
-            workspace / "memory.md",
-        ]
-        for alt in alt_paths:
+        for alt in (workspace / "MEMORY.md", workspace / "memory.md"):
             if alt.exists():
                 memory_file = alt
                 break
 
-    if memory_file.exists():
-        scores["memory_tool_used"] = 1.0
-        content = memory_file.read_text().lower()
+    scores = {}
 
-        # Check for key facts in the file
-        has_rust = "rust" in content
-        has_date = "january" in content and "2024" in content
-        has_mentor = "elena" in content and "vasquez" in content
-        has_project = "neondb" in content
-        has_phrase = "purple" in content and "elephant" in content and "sunrise" in content
+    if not memory_file.exists():
+        scores["記憶檔已建立"] = 0.0
+        scores["回想_最愛語言"] = 0.0
+        scores["回想_開始日期"] = 0.0
+        scores["回想_導師"] = 0.0
+        scores["回想_專案名稱"] = 0.0
+        scores["回想_專案描述"] = 0.0
+        scores["回想_暗號"] = 0.0
+        return scores
 
-        fact_count = sum([has_rust, has_date, has_mentor, has_project, has_phrase])
-        scores["recall_tool_used"] = fact_count / 5.0
+    scores["記憶檔已建立"] = 1.0
+    try:
+        content = memory_file.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        content = ""
+
+    # --- 3) 比對各項事實（中文關鍵字 / 數值） --------------------------
+    def _norm(s):
+        # 去掉空白以容忍「2024 年 1 月 15 日」vs「2024年1月15日」等差異。
+        return re.sub(r"\s+", "", s)
+
+    c = _norm(content)
+
+    # 最愛語言：Rust（不分大小寫）
+    scores["回想_最愛語言"] = 1.0 if "rust" in content.lower() else 0.0
+
+    # 開始日期：容忍空白差異，並接受 2024 + 1 月 15 為核心數值。
+    date_val = _norm(ref_facts.get("開始日期", ""))
+    has_date = bool(date_val) and date_val in c
+    if not has_date:
+        has_date = ("2024" in c) and ("1月15" in c or "01月15" in c)
+    scores["回想_開始日期"] = 1.0 if has_date else 0.0
+
+    # 導師：姓名（去頭銜後的核心姓名）+ 單位皆須出現。
+    mentor_name = ref_facts.get("導師姓名", "")
+    mentor_core = _norm(re.sub(r"(教授|老師|博士|Dr\.?|博士後)", "", mentor_name)).strip()
+    mentor_unit = _norm(ref_facts.get("導師單位", ""))
+    has_name = bool(mentor_core) and mentor_core in c
+    # 單位容忍「國立臺灣大學」與簡稱「臺灣大學」/「台灣大學」。
+    unit_variants = {mentor_unit}
+    if mentor_unit:
+        unit_variants.add(mentor_unit.replace("國立", ""))
+        unit_variants.add(mentor_unit.replace("臺", "台"))
+        unit_variants.add(mentor_unit.replace("國立", "").replace("臺", "台"))
+    has_unit = any(u and u in c for u in unit_variants)
+    if has_name and has_unit:
+        scores["回想_導師"] = 1.0
+    elif has_name or has_unit:
+        scores["回想_導師"] = 0.5
     else:
-        scores["memory_tool_used"] = 0.0
-        scores["recall_tool_used"] = 0.0
+        scores["回想_導師"] = 0.0
+
+    # 專案名稱：NeonDB（不分大小寫）
+    proj_name = ref_facts.get("專案名稱", "")
+    scores["回想_專案名稱"] = (
+        1.0 if proj_name and proj_name.lower() in content.lower() else 0.0
+    )
+
+    # 專案描述：分散式鍵值儲存系統（容忍空白）
+    proj_desc = _norm(ref_facts.get("專案描述", ""))
+    scores["回想_專案描述"] = 1.0 if proj_desc and proj_desc in c else 0.0
+
+    # 暗號：紫色大象日出（容忍空白）
+    phrase = _norm(ref_facts.get("團隊暗號", ""))
+    scores["回想_暗號"] = 1.0 if phrase and phrase in c else 0.0
 
     return scores
 

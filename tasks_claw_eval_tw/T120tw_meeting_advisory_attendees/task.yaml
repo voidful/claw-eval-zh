@@ -1,6 +1,5 @@
 task_id: T120tw_meeting_advisory_attendees
-task_name: |
-  NTIA Advisory Board 與會者名單
+task_name: 數位治理顧問委員會逐字稿 — 整理結構化與會者名單
 version: 0.3.0
 category: meeting_analysis
 difficulty: medium
@@ -18,23 +17,30 @@ source:
   original_file: tasks/task_meeting_advisory_attendees.md
 prompt:
   text: |-
-    我手邊有一份政府諮詢委員會會議的逐字稿，存放在 `meeting-transcript.md`。這是 Commerce Spectrum Management Advisory Committee（CSMAC）於 2012 年 5 月 30 日舉行的會議。
+    工作區裡有一份政府諮詢委員會會議的逐字稿，存放在 `meeting-transcript.md`。這是
+    虛構的「數位治理委員會 智慧城市暨資安顧問委員會（DGC-SCAB）」第 14 次會議，
+    日期 2025 年 5 月 30 日，時區 Asia/Taipei，地點在台北市南港數位治理大樓，部分委員
+    以視訊連線出席。會議主題是 1755-1850 MHz 聯邦級頻段的政府與商用寬頻共用與遷移。
 
-    請幫我分析這份逐字稿，並在一個名為 `attendees.md` 的檔案中建立一份結構化的與會者名單。針對每位與會者，請包含：
+    請幫我分析這份逐字稿，並在一個名為 `attendees.md` 的檔案中建立一份結構化的與會者
+    名單。針對每位與會者，請包含：
 
-    - **全名**（若有提及頭銜，如 Dr.、Esq.，請一併附上）
-    - **會議中的角色**（Chair、Member、Also Present、Public Participant）
-    - **所屬組織與職稱**（依逐字稿所述）
-    - **與會方式**（In-person 或 Phone/Remote）
-    - **發言角色**（是否做了實質發言、提問，或僅報出自己的身分）
+    - **全名**（含頭銜或職務，例如「主席」「委員」「政務次長」「副署長」「先生」）
+    - **會議中的角色**（主席、委員、列席官員、公眾參與者）
+    - **所屬機關或公司與職稱**（依逐字稿所述）
+    - **與會方式**（親自到場 in-person 或 視訊連線 remote/phone）
+    - **發言角色**（是否做了實質發言、提問，或僅在點名時報出自己的身分）
 
-    請將名單整理為以下區段：Committee Leadership、Committee Members (In-Person)、Committee Members (Remote)、Non-Member Officials、Public Participants。最後附上與會者總數的彙總計數。
+    請將名單整理為以下區段：委員會主席（Committee Leadership）、委員（親自到場）、
+    委員（視訊連線）、列席官員（非委員）、公眾參與者。最後附上與會者總數的彙總計數。
+
+    報告請以繁體中文（zh-TW）撰寫，分區段條列清楚，方便後續查找與點名核對。
   language: zh
 tools: []
 tool_endpoints: []
 services: []
 fixtures:
-- source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+- source: tw/meetings/tw_advisory_meeting.md
   dest: meeting-transcript.md
 environment:
   timeout_seconds: 180
@@ -56,74 +62,67 @@ scoring_components:
     description: 語意評分，依 judge_rubric
 safety_checks: []
 expected_actions:
-- 已建立檔案 attendees.md
-- Brian Fontes 正確辨識為 Chair 並具 NENA 隸屬
-- 至少具名辨識出 15 位委員會成員
-- 正確辨識遠端/電話與會者（Hatfield、Feldman、McGinnis、Stancil、Reaser、Donovan）
-- 已列出非成員官員（Strickling、Nebbia、Power、Washington）
-- 多數與會者皆含所屬組織/隸屬
-- 正確記下與會方式（in-person 對比 phone）
-- Mr. Snider 辨識為公眾參與者
-- 已包含與會者彙總計數
+- 已建立報告檔案 attendees.md
+- 王志明 正確辨識為主席（Chair），並標出鼎峰緊急救難協會 NESA 隸屬
+- 至少具名辨識出 15 位委員會成員（含主席）
+- 正確辨識視訊連線（remote/phone）委員（何信宏、馮淑惠、麥國輝、史丹利、雷瑞瑟、唐諾文 等）
+- 已列出列席的非委員官員（史國良、聶必亞、鮑威霖、包柏特）
+- 多數與會者皆附所屬機關／公司隸屬
+- 正確記下與會方式（親自到場 對比 視訊連線／電話）
+- 史耐德 先生 辨識為公眾參與者
+- 已包含與會者總數的彙總計數
 user_agent:
   enabled: false
 judge_rubric: |-
   ### 評分項 1：與會者辨識完整度（權重 35%）
-
-  **1.0 分**：所有委員會成員、官員與公眾參與者皆以正確姓名與角色辨識。無一遺漏。
-  **0.75 分**：辨識出多數與會者（18 位以上），僅有少許遺漏。
-  **0.5 分**：辨識出多數，但有數位與會者缺漏。
-  **0.25 分**：僅辨識出最突出的發言者。
-  **0.0 分**：辨識出的與會者不到一半。
-
+  - 1.0：所有委員、列席官員與公眾參與者皆以正確姓名與角色辨識，無一遺漏（21 位）。
+  - 0.75：辨識出多數與會者（18 位以上），僅少許遺漏。
+  - 0.5：辨識出多數，但有數位缺漏（14-17 位）。
+  - 0.25：僅辨識出最突出的發言者。
+  - 0.0：辨識出的與會者不到一半。
   ### 評分項 2：細節準確度（權重 30%）
-
-  **1.0 分**：所有組織、職稱與與會方式皆正確。Remote 對比 in-person 的狀態與逐字稿的星號標記及點名相符。
-  **0.75 分**：多數細節正確，僅一兩處小誤。
-  **0.5 分**：組織或與會方式有數處錯誤。
-  **0.25 分**：隸屬或角色有許多不準確之處。
-  **0.0 分**：細節大致錯誤或為杜撰。
-
+  - 1.0：所有機關、職稱與與會方式皆正確；視訊連線 對比 親自到場 與逐字稿的星號標記
+    及點名相符（如何信宏、馮淑惠等 9 位為視訊連線；6 位委員與主席為親自到場）。
+  - 0.75：多數細節正確，僅一兩處小誤。
+  - 0.5：機關或與會方式有數處錯誤。
+  - 0.25：隸屬或角色有許多不準確之處。
+  - 0.0：細節大致錯誤或為杜撰。
   ### 評分項 3：組織與結構（權重 20%）
-
-  **1.0 分**：清楚分區，分開 leadership、in-person 成員、remote 成員、官員與公眾。易於瀏覽與查閱。
-  **0.75 分**：組織良好，僅有少許結構問題。
-  **0.5 分**：有部分組織，但區段不清楚或不一致。
-  **0.25 分**：組織不佳，難以查找。
-  **0.0 分**：無有意義的結構。
-
+  - 1.0：清楚分區——主席、親自到場委員、視訊連線委員、列席官員、公眾參與者，易於瀏覽。
+  - 0.75：組織良好，僅少許結構問題。
+  - 0.5：有部分組織，但區段不清楚或不一致。
+  - 0.25：組織不佳，難以查找。
+  - 0.0：無有意義的結構。
   ### 評分項 4：發言角色評估（權重 15%）
-
-  **1.0 分**：準確區分積極參與者（提問、做出發言）與僅在點名時報出身分者。
-  **0.75 分**：多數發言角色正確記下。
-  **0.5 分**：嘗試記下參與程度但不完整。
-  **0.25 分**：區分參與程度的努力極少。
-  **0.0 分**：未評估發言角色。
+  - 1.0：準確區分積極參與者（致詞、提問、技術發言）與僅在點名時報出身分者。
+  - 0.75：多數發言角色正確記下。
+  - 0.5：嘗試記下參與程度但不完整。
+  - 0.25：區分參與程度的努力極少。
+  - 0.0：未評估發言角色。
 reference_solution: |-
-  助手應該：
+  助手應讀取 meeting-transcript.md，從「一、出席名單」區塊（含親自到場、視訊連線、
+  列席官員、公眾參與者四類）與「二、會議逐字內容」的點名與對話交叉比對，整理出所有
+  具名人物（皆為虛構），並正確歸類與會方式與發言角色：
 
-  1. 讀取並解析會議逐字稿
-  2. 從「Members Present」名單、「Also Present」區段與對話中辨識出所有具名人物
-  3. 從星號標記（電話）與點名（roll call）判定與會方式
-  4. 將每位人物的角色與參與程度分類
-  5. 產出一份結構良好的 markdown 文件
+  - 委員會主席（親自到場）：王志明 主席，鼎峰緊急救難協會（NESA）理事長。
+  - 委員（親自到場，6 位）：林淑芬（DGC 頻率管理處 處長）、陳建宏（中華電信寬頻技術
+    研究所 所長）、周明德（南港大學電機工程學系 教授）、鄭雅文（鼎峰科技 標準與法規部
+    協理）、黃國昌（台灣公共利益網路基金會 PINF 執行長）、吳孟儒（玉山防務系統 DZX
+    首席工程師）。
+  - 委員（視訊連線，9 位，姓名後標星號*）：何信宏（南港大學頻譜政策研究中心 主任）、
+    馮淑惠（遠傳行動通訊 政策研究部 副總）、麥國輝（台電綜合研究所 通訊組 組長）、
+    史丹利（中央科技大學 NC 無線實驗室 教授）、雷瑞瑟（雷神防務台灣分公司 經理）、
+    唐諾文（台灣有線電視業者協會 技術顧問）、包大維（工研院 通訊技術組 資深研究員）、
+    賴明達（南港市政府 智慧城市辦公室 主任）、柯怡君（資安署 風險評估科 科長）。
+  - 列席官員（非委員，親自到場，4 位）：史國良（經濟與數位發展部 政務次長）、
+    聶必亞（頻譜管理署 OSM 副署長）、鮑威霖（指定政府聯絡官 DGO）、包柏特（行政院
+    科技與政策辦公室 OSTP 諮詢委員）。
+  - 公眾參與者：史耐德 先生（一般民眾，於公眾意見時段發言）。
 
-  預期的關鍵與會者：
-
-  - Dr. Brian Fontes（Chair，NENA）— In-person
-  - Larry Strickling（Asst. Secretary of Commerce）— In-person，Also Present
-  - Karl Nebbia（Associate Administrator，Office of Spectrum Management）— In-person，Also Present
-  - Tom Power（White House OSTP）— In-person，Also Present
-  - Bruce M. Washington（Designated Federal Officer）— In-person，Also Present
-  - Dale Hatfield（University of Colorado）— Remote（phone）
-  - Molly Feldman（Verizon Wireless）— Remote（phone）
-  - Doug McGinnis（Exelon）— Remote（phone）
-  - Dan Stancil（NC State）— Remote（phone）
-  - Rick Reaser（Raytheon）— Remote（phone）
-  - David Donovan — Remote（phone）
-  - Mr. Snider — Public participant（於公眾意見時段發言）
-  - 委員會成員總數：約 19-20 人
-  - 含官員與公眾的與會者總數：約 23-24 人
+  與會方式判定：星號（*）與點名回應為「在線上／連線」者屬視訊連線；其餘為親自到場。
+  發言角色：主席、史國良、聶必亞、包柏特等有實質致詞或政策發言；多數委員在技術討論
+  與工作小組分工時有發言；少數委員僅在點名時報出身分。委員具名人數共 16 位（含主席），
+  連同 4 位列席官員與 1 位公眾參與者，與會者總數約 21 位。
 primary_dimensions:
 - completion
 metadata:
@@ -135,7 +134,7 @@ metadata:
     automated: 0.6
     llm_judge: 0.4
   workspace_files:
-  - source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+  - source: tw/meetings/tw_advisory_meeting.md
     dest: meeting-transcript.md
   source_benchmark: pinchbench
   translation_status: complete

@@ -13,97 +13,164 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting TL;DR task.
+    """TW 鼎峰科技 會議 TL;DR grader（依台灣逐字稿動態推導應有事實）。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    對齊原 task_meeting_tldr 的查核項，但改查台灣逐字稿（meeting_transcript.md）
+    推導之事實 + agent 的中文 TL;DR 報告 meeting_tldr.md。僅用標準函式庫。
+    字數查核改用 CJK 字元數（中文無空白可切）。
     """
     from pathlib import Path
     import re
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if file exists
+    keys = [
+        "file_created", "one_line_summary", "bullet_points",
+        "events_mentioned", "messaging_decision", "deadline_mentioned",
+        "word_count_ok", "no_filler",
+    ]
+
+    # --- 1) 定位 agent 報告（含常見替代檔名）---
     report_path = workspace / "meeting_tldr.md"
     if not report_path.exists():
-        alternatives = ["tldr.md", "tl_dr.md", "meeting_tl_dr.md", "summary.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in ["tldr.md", "tl_dr.md", "meeting_tl_dr.md", "summary.md",
+                    "會議速覽.md", "速覽.md", "會議摘要.md"]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
-
     if not report_path.exists():
-        return {
-            "file_created": 0.0,
-            "one_line_summary": 0.0,
-            "bullet_points": 0.0,
-            "events_mentioned": 0.0,
-            "messaging_decision": 0.0,
-            "deadline_mentioned": 0.0,
-            "word_count_ok": 0.0,
-            "no_filler": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
-    scores["file_created"] = 1.0
-    content = report_path.read_text()
+    scores = {"file_created": 1.0}
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
     content_lower = content.lower()
-    word_count = len(content.split())
 
-    # One-line summary at top (first non-empty, non-heading line or first heading)
-    lines = [l.strip() for l in content.split('\n') if l.strip()]
+    # --- helper：CJK 字元數（中文以字計，不靠空白切詞）---
+    def cjk_len(s):
+        # 計入中日韓統一表意文字；其餘非空白可見字元也粗略計入，
+        # 但全形標點不計（避免懲罰正常標點）。
+        cjk = len(re.findall(r"[一-鿿]", s))
+        # 半形英數連續詞（如 COSCUP、tier 1、CI/CD）各算一個詞
+        latin_tokens = re.findall(r"[A-Za-z0-9][A-Za-z0-9/_:.\-]*", s)
+        return cjk + len(latin_tokens)
+
+    word_count = cjk_len(content)
+
+    # --- helper：寬鬆比對（去全形標點與空白）---
+    def norm(s):
+        for ch in "，、。「」（）(),：:；; ":
+            s = s.replace(ch, "")
+        return re.sub(r"\s+", "", s)
+
+    # --- 2) 從逐字稿動態讀出「應有事實」（避免硬寫英文原版）---
+    tpath = workspace / "meeting_transcript.md"
+    if not tpath.exists():
+        for alt in ["transcript.md", "meeting.md"]:
+            if (workspace / alt).exists():
+                tpath = workspace / alt
+                break
+    tx = tpath.read_text(encoding="utf-8", errors="ignore") if tpath.exists() else ""
+    tx_norm = norm(tx)
+
+    def in_tx(*phrases):
+        return any(norm(p) in tx_norm for p in phrases)
+
+    # 三場活動主線（逐字稿原文，皆為虛構台灣研討會）
+    event_candidates = [
+        ("COSCUP", r"coscup|開源人年會"),
+        ("DevOpsDays Taipei", r"devopsdays"),
+        ("Kubernetes Day Taiwan", r"kubernetes\s*day|k8s\s*day"),
+    ]
+    present_events = [(name, pat) for (name, pat) in event_candidates
+                      if in_tx(name) or re.search(pat, tx, re.IGNORECASE)]
+
+    # 訊息主標語（逐字稿宣布的最終定案）
+    messaging_final = "更快交付，更低風險"
+    messaging_in_tx = in_tx(messaging_final, "更快交付更低風險")
+
+    # 期限（逐字稿明示產品發布試算表的截止）
+    deadline_in_tx = bool(re.search(r"星期二|週二|tuesday", tx, re.IGNORECASE))
+
+    # --- 3) 一行總結（最上方第一個非空、非純標題行，長度合理）---
+    lines = [ln.strip() for ln in content.split("\n") if ln.strip()]
     if lines:
-        first_content = lines[0] if not lines[0].startswith('#') else (lines[1] if len(lines) > 1 else lines[0])
-        # Should be a short summary line (under 30 words)
-        first_words = len(first_content.split())
-        scores["one_line_summary"] = 1.0 if first_words <= 30 else 0.5
+        first = lines[0]
+        if first.startswith("#") and len(lines) > 1:
+            first = lines[1]
+        # 去掉粗體標記再量長度
+        first_clean = first.replace("**", "").replace("*", "").lstrip("#").strip()
+        first_len = cjk_len(first_clean)
+        # 一句總結應簡短（約 50 字以內為佳）
+        scores["one_line_summary"] = 1.0 if first_len <= 50 else 0.5
     else:
         scores["one_line_summary"] = 0.0
 
-    # Bullet points (3-5)
-    bullets = re.findall(r'(?:^|\n)\s*[-*•]\s+.+', content)
-    if 3 <= len(bullets) <= 7:
+    # --- 4) 重點符號（3-5，寬鬆容許 3-7）---
+    bullets = re.findall(r"(?:^|\n)\s*(?:[-*•]|\d+[.)、])\s+\S", content)
+    n = len(bullets)
+    if 3 <= n <= 7:
         scores["bullet_points"] = 1.0
-    elif 2 <= len(bullets) <= 9:
+    elif 2 <= n <= 9:
         scores["bullet_points"] = 0.5
     else:
         scores["bullet_points"] = 0.0
 
-    # Event assignments mentioned
-    event_patterns = [r're:?\s*invent', r'google\s*next', r'kubecon']
-    events_found = sum(1 for p in event_patterns if re.search(p, content_lower))
-    scores["events_mentioned"] = 1.0 if events_found >= 2 else (0.5 if events_found >= 1 else 0.0)
+    # --- 5) 活動分工：依逐字稿實際出現的活動，數報告命中幾個 ---
+    events_found = 0
+    for (name, pat) in present_events:
+        if norm(name) in norm(content) or re.search(pat, content, re.IGNORECASE):
+            events_found += 1
+    scores["events_mentioned"] = (
+        1.0 if events_found >= 2 else (0.5 if events_found >= 1 else 0.0)
+    )
 
-    # Messaging decision
-    scores["messaging_decision"] = 1.0 if re.search(r'more\s*speed.*less\s*risk', content_lower) else 0.0
+    # --- 6) 訊息決議：「更快交付，更低風險」（僅在逐字稿確有此定案時查核）---
+    if messaging_in_tx:
+        hit = (norm(messaging_final) in norm(content)) or bool(
+            re.search(r"更快交付[，,]?\s*更低風險", content)
+        )
+        scores["messaging_decision"] = 1.0 if hit else 0.0
+    else:
+        # 逐字稿若無此事實則不懲罰（理論上不會發生）
+        scores["messaging_decision"] = 1.0
 
-    # Deadline mentioned
-    scores["deadline_mentioned"] = 1.0 if re.search(r'tuesday|deadline|due', content_lower) else 0.0
+    # --- 7) 期限：星期二／週二／截止／期限 ---
+    if deadline_in_tx:
+        scores["deadline_mentioned"] = 1.0 if re.search(
+            r"星期二|週二|tuesday|截止|期限|deadline|due", content, re.IGNORECASE
+        ) else 0.0
+    else:
+        scores["deadline_mentioned"] = 1.0
 
-    # Word count (target: ≤150, acceptable: ≤200)
-    if word_count <= 150:
+    # --- 8) 字數（目標 ≤150 漢字）---
+    # 註：cjk_len 會把每個半形英數詞（COSCUP、DevOpsDays、tier 1…）各算一個，
+    # 而這類雙語技術 TL;DR 必然帶不少英文活動／產品名，純漢字本來就逼近上限。
+    # 為避免「完整覆蓋所有決議的正確答案」反被字數懲罰（本題作者範例答案即達
+    # 約 183），門檻放寬到 ≤200 給滿分、≤300 給半分，超過 300 才視為「這是
+    # 摘要不是 TL;DR」給 0；如此仍能與冗長前言版本拉開差距。
+    if word_count <= 200:
         scores["word_count_ok"] = 1.0
-    elif word_count <= 200:
+    elif word_count <= 300:
         scores["word_count_ok"] = 0.5
     else:
         scores["word_count_ok"] = 0.0
 
-    # No filler/preamble
+    # --- 9) 無填充／前言（中英文常見開場白）---
     filler_patterns = [
-        r'in\s*this\s*meeting',
-        r'the\s*team\s*(?:discussed|met|gathered)',
-        r'this\s*(?:document|summary)\s*(?:provides|contains|covers)',
-        r'here\s*(?:is|are)\s*(?:the|a)\s*(?:summary|overview)',
-        r'below\s*(?:is|are)',
+        r"在(這|本)?(場|次)?(會議|會中)",
+        r"團隊(討論|開會|聚集|進行了)",
+        r"(本|這)(份)?(文件|摘要|報告)(提供|包含|涵蓋)",
+        r"(以下|底下)(是|為)",
+        r"in\s*this\s*meeting",
+        r"the\s*team\s*(?:discussed|met|gathered)",
     ]
-    filler_count = sum(1 for p in filler_patterns if re.search(p, content_lower))
-    scores["no_filler"] = 1.0 if filler_count == 0 else (0.5 if filler_count == 1 else 0.0)
+    filler_count = sum(
+        1 for p in filler_patterns
+        if re.search(p, content, re.IGNORECASE)
+    )
+    scores["no_filler"] = (
+        1.0 if filler_count == 0 else (0.5 if filler_count == 1 else 0.0)
+    )
 
     return scores
 

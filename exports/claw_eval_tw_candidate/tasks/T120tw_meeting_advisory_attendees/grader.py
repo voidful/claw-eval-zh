@@ -13,121 +13,151 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting attendee list task.
+    """數位治理顧問委員會（虛構）與會者名單 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    事實全部由台灣逐字稿 meeting-transcript.md 動態推導後，再比對 agent 產出的
+    中文報告 attendees.md。僅用標準函式庫。
     """
     from pathlib import Path
     import re
 
-    scores = {}
     workspace = Path(workspace_path)
 
+    # --- 1. 從台灣逐字稿動態讀出「應有事實」（避免硬寫） ---
+    transcript_path = workspace / "meeting-transcript.md"
+    tcontent = ""
+    if transcript_path.exists():
+        tcontent = transcript_path.read_text(encoding="utf-8", errors="ignore")
+
+    def _names(header_regex):
+        """擷取某出席名單小節下，條列項中的『某某 委員/主席/…』中文姓名。"""
+        m = re.search(header_regex + r"\*\*\n(.*?)\n\n", tcontent, re.DOTALL)
+        if not m:
+            return []
+        out = []
+        for line in m.group(1).splitlines():
+            nm = re.match(
+                r"-\s*([一-鿿]{2,4})\s*(?:委員|主席|政務次長|副署長|"
+                r"指定聯絡官|先生|女士)", line)
+            if nm:
+                out.append(nm.group(1))
+        return out
+
+    # 主席
+    chair_list = _names(r"委員會主席（Chair）") or ["王志明"]
+    chair = chair_list[0] if chair_list else "王志明"
+
+    # 親自到場委員（6 位）
+    inperson = _names(r"委員（親自到場 in-person）")
+    if len(inperson) < 5:
+        inperson = ["林淑芬", "陳建宏", "周明德", "鄭雅文", "黃國昌", "吳孟儒"]
+
+    # 視訊連線委員（9 位）
+    remote = _names(r"委員（視訊連線 remote / phone）")
+    if len(remote) < 6:
+        remote = ["何信宏", "馮淑惠", "麥國輝", "史丹利", "雷瑞瑟",
+                  "唐諾文", "包大維", "賴明達", "柯怡君"]
+
+    # 列席官員（4 位，非委員）
+    officials = _names(r"列席官員（Also Present，非委員）")
+    if len(officials) < 3:
+        officials = ["史國良", "聶必亞", "鮑威霖", "包柏特"]
+
+    # 對應原版 6 位 remote 查核（Hatfield/Feldman/McGinnis/Stancil/Reaser/Donovan）。
+    remote_core = remote[:6] if len(remote) >= 6 else [
+        "何信宏", "馮淑惠", "麥國輝", "史丹利", "雷瑞瑟", "唐諾文"]
+
+    # 全體委員（含主席）名單，用於 member_count。
+    all_members = [chair] + inperson + remote
+
+    checks = ["report_created", "chair_identified", "member_count",
+              "remote_attendees", "officials_listed", "organizations_included",
+              "attendance_mode", "public_participant", "summary_count"]
+
+    # --- 2. 找出 agent 的報告檔 ---
     report_path = workspace / "attendees.md"
     if not report_path.exists():
-        alternatives = ["attendee_list.md", "attendees_list.md", "meeting_attendees.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in ["attendee_list.md", "attendees_list.md",
+                    "meeting_attendees.md", "與會者名單.md", "出席名單.md",
+                    "與會者.md", "報告.md"]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
-
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "chair_identified": 0.0,
-            "member_count": 0.0,
-            "remote_attendees": 0.0,
-            "officials_listed": 0.0,
-            "organizations_included": 0.0,
-            "attendance_mode": 0.0,
-            "public_participant": 0.0,
-            "summary_count": 0.0,
-        }
+        return {k: 0.0 for k in checks}
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    scores = {"report_created": 1.0}
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
 
-    # Check Chair identification
+    # --- 3. 逐項比對中文關鍵字／人物 ---
+    # 主席：王志明 + 「主席」+ NESA／鼎峰緊急救難協會。
     chair_ok = (
-        "fontes" in content_lower
-        and ("chair" in content_lower)
-        and re.search(r'nena|national emergency number', content_lower) is not None
+        chair in content
+        and re.search(r"主席|Chair", content)
+        and re.search(r"NESA|鼎峰緊急救難", content)
     )
     scores["chair_identified"] = 1.0 if chair_ok else 0.0
 
-    # Check member count (at least 15 of ~19 committee members named)
-    members = [
-        "fontes", "borth", "calabrese", "dombrowsky", "donovan",
-        "feldman", "furchtgott", "gibson", "hatfield", "kahn",
-        "mcginnis", "mchenry", "obuchowski", "povelites", "reaser",
-        "rush", "stancil", "tramont", "warren"
-    ]
-    found = sum(1 for m in members if m in content_lower)
-    scores["member_count"] = 1.0 if found >= 15 else (0.5 if found >= 10 else 0.0)
+    # 委員具名人數（含主席，共 16 位）：命中 15 位以上滿分。
+    found = sum(1 for m in all_members if m and m in content)
+    scores["member_count"] = (
+        1.0 if found >= 15 else (0.5 if found >= 10 else 0.0))
 
-    # Check remote/phone attendees identified
-    remote_members = ["hatfield", "feldman", "mcginnis", "stancil", "reaser", "donovan"]
+    # 視訊連線委員：須出現姓名且其附近有「視訊／連線／遠端／電話／線上／*」等標記。
+    remote_kw = r"視訊|連線|遠端|遠距|電話|線上|remote|phone|virtual|dial|\*"
     remote_found = 0
-    for rm in remote_members:
-        # Check if the member is mentioned near phone/remote/telephone keywords
-        if rm in content_lower:
-            # Look for phone/remote indicators near the name
-            patterns = [
-                rf'{rm}.*(?:phone|remote|virtual|telephone|dial)',
-                rf'(?:phone|remote|virtual|telephone|dial).*{rm}',
-            ]
-            if any(re.search(p, content_lower) for p in patterns):
+    for rm in remote_core:
+        if rm and rm in content:
+            near = (
+                re.search(rm + r".{0,30}(?:" + remote_kw + r")", content)
+                or re.search(r"(?:" + remote_kw + r").{0,30}" + rm, content)
+            )
+            if near:
                 remote_found += 1
-            elif re.search(r'\*', content):
-                # Asterisk convention mentioned
+            elif re.search(r"\*", content):
                 remote_found += 0.5
-    scores["remote_attendees"] = 1.0 if remote_found >= 4 else (0.5 if remote_found >= 2 else 0.0)
+    scores["remote_attendees"] = (
+        1.0 if remote_found >= 4 else (0.5 if remote_found >= 2 else 0.0))
 
-    # Check non-member officials
-    officials = ["strickling", "nebbia", "power", "washington"]
-    officials_found = sum(1 for o in officials if o in content_lower)
-    scores["officials_listed"] = 1.0 if officials_found >= 3 else (0.5 if officials_found >= 2 else 0.0)
+    # 列席非委員官員：命中 3 位以上滿分。
+    officials_found = sum(1 for o in officials if o and o in content)
+    scores["officials_listed"] = (
+        1.0 if officials_found >= 3 else (0.5 if officials_found >= 2 else 0.0))
 
-    # Check organizations included
-    orgs = [
-        "nena", "national emergency number",
-        "verizon", "at&t", "att", "intel",
-        "lockheed", "raytheon", "comsearch",
-        "new america", "wiley rein", "wilkinson barker",
-        "shared spectrum", "exelon", "ntia",
-        "furchtgott-roth", "nc state", "north carolina",
-        "colorado", "freedom technologies"
+    # 所屬機關／公司：從逐字稿出現的關鍵組織名取交集後再比對報告。
+    org_candidates = [
+        "NESA", "鼎峰緊急救難", "鼎峰科技", "中華電信", "遠傳", "台電",
+        "工研院", "雷神", "玉山防務", "南港大學", "中央科技大學",
+        "資安署", "頻譜管理署", "經濟與數位發展部", "數位治理委員會",
+        "公共利益網路基金會", "PINF", "有線電視業者協會", "南港市政府",
+        "頻譜政策研究中心", "智慧城市辦公室",
     ]
-    org_found = sum(1 for o in orgs if o in content_lower)
-    scores["organizations_included"] = 1.0 if org_found >= 10 else (0.5 if org_found >= 5 else 0.0)
+    orgs = [o for o in org_candidates if o in tcontent] or org_candidates
+    org_found = sum(1 for o in orgs if o in content)
+    scores["organizations_included"] = (
+        1.0 if org_found >= 8 else (0.5 if org_found >= 4 else 0.0))
 
-    # Check attendance mode notation
-    mode_patterns = [
-        r'in[- ]person', r'on[- ]?site', r'physical',
-        r'phone', r'remote', r'virtual', r'telephone', r'dial'
-    ]
-    mode_found = sum(1 for p in mode_patterns if re.search(p, content_lower))
-    scores["attendance_mode"] = 1.0 if mode_found >= 2 else (0.5 if mode_found >= 1 else 0.0)
+    # 與會方式標記：須同時出現「親自到場」類與「視訊／連線／電話」類用語。
+    inperson_kw = re.search(r"親自到場|現場|到場|實體|in[- ]?person", content)
+    remote_mode = re.search(
+        r"視訊|連線|遠端|遠距|電話|線上|remote|phone|virtual|dial", content)
+    mode_found = (1 if inperson_kw else 0) + (1 if remote_mode else 0)
+    scores["attendance_mode"] = (
+        1.0 if mode_found >= 2 else (0.5 if mode_found >= 1 else 0.0))
 
-    # Check public participant (Snider)
-    scores["public_participant"] = 1.0 if "snider" in content_lower else 0.0
+    # 公眾參與者 史耐德。
+    scores["public_participant"] = 1.0 if "史耐德" in content else 0.0
 
-    # Check summary count
+    # 彙總計數：報告中須出現「總數／合計／共 N 位」等含數字的彙總敘述。
     count_patterns = [
-        r'total.*\d+', r'\d+.*total',
-        r'(?:attendee|participant|member)s?.*\d+',
-        r'\d+.*(?:attendee|participant|member)',
-        r'count.*\d+', r'summary.*\d+'
+        r"總(?:數|計|人數).{0,12}\d+",
+        r"\d+.{0,12}總(?:數|計|人數)",
+        r"(?:合計|共|總共).{0,8}\d+\s*(?:位|人|名)",
+        r"\d+\s*(?:位|人|名).{0,8}與會",
+        r"與會(?:者|人數).{0,12}\d+",
     ]
-    scores["summary_count"] = 1.0 if any(re.search(p, content_lower) for p in count_patterns) else 0.0
+    scores["summary_count"] = (
+        1.0 if any(re.search(p, content) for p in count_patterns) else 0.0)
 
     return scores
 

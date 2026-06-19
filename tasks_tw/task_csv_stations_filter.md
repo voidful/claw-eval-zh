@@ -1,6 +1,6 @@
 ---
 id: task_csv_stations_filter
-name: 愛達荷州氣象站多條件篩選
+name: 台灣氣象站多條件篩選
 category: csv_analysis
 grading_type: hybrid
 timeout_seconds: 180
@@ -14,140 +14,227 @@ localization: taiwan
 localization_strategy: copy
 claw_eval_tw_id: T068tw_csv_stations_filter
 workspace_files:
-- source: csvs/idaho_weather_stations.csv
-  dest: idaho_weather_stations.csv
+- source: tw/csvs/tw_weather_stations.csv
+  dest: tw_weather_stations.csv
 grading_weights:
   automated: 0.6
   llm_judge: 0.4
 ---
 
-# 愛達荷州氣象站多條件篩選
+# 台灣氣象站多條件篩選
 
 ## Prompt
 
-我的工作區裡有一個 CSV 檔案 `idaho_weather_stations.csv`，內含愛達荷州（Idaho）213 個氣象站的資料。檔案欄位有：`OBJECTID`、`Station Name`、`Station Code`、`Managing Agency`、`County`、`Longitude`、`Latitude`、`Elevation (feet)`、`x`、`y`。
+我的工作區裡有一個 CSV 檔案 `tw_weather_stations.csv`，內含台灣 190 座氣象／水文
+測站的資料。檔案欄位有：`OBJECTID`、`Station Name`（站名）、`Station Code`（站碼）、
+`Managing Agency`（管理機構）、`County`（縣市）、`Longitude`（經度）、`Latitude`（緯度）、
+`Elevation (meters)`（海拔，單位為公尺）、`x`、`y`。管理機構共三類：林業署、
+中央氣象署、水利署。注意此檔含 UTF-8 BOM，且少數測站的縣市欄位為空白。
 
-請執行下列篩選與分析任務，並把結果寫到 `filter_report.md`：
+請執行下列篩選與分析任務，並把結果寫到 `filter_report.md`（請用繁體中文撰寫）：
 
-1. **高海拔 NWS 氣象站**：找出所有由 NWS 管理、海拔在 5,000 ft 以上（含）的氣象站。依海拔由高到低排序，列出站名、海拔與郡別。共有幾個？
+1. **林業署高海拔測站**：找出所有由「林業署」管理、海拔在 3,000 公尺以上（含）的
+   測站。依海拔由高到低排序，列出站名、海拔（公尺）與縣市。共有幾座？
 
-2. **Custer County 的 NRCS 氣象站**：找出所有位於 Custer County、由 NRCS 管理的氣象站。依海拔由高到低排序，列出站名與海拔。
+2. **高雄市的水利署測站**：找出所有位於「高雄市」、由「水利署」管理的測站。依海拔
+   由高到低排序，列出站名與海拔。共有幾座？
 
-3. **南部低海拔氣象站**：找出所有海拔介於 3,000 到 4,000 ft（含）之間、且位於北緯 43°N 以南的氣象站。緯度欄位為 DMS 格式（例如 "42 57 00"）。列出站名、郡別、海拔與緯度。
+3. **南部中海拔測站**：找出所有海拔介於 1,000 到 2,000 公尺（含）之間、且位於
+   北緯 23.5°N 以南的測站。緯度欄位為 DMS 格式（例如「23 14 44」代表
+   23°14′44″N = 23.245°N）。請正確把 DMS 換算成十進位度再比對門檻。列出站名、
+   縣市、海拔與緯度。共有幾座？
 
-4. **彙總表**：建立一個交叉統計表（cross-tabulation），呈現各管理機構（NWS、NRCS）與各海拔類別（Below 3000、3000-4999、5000-6999、7000+）的氣象站數。
+4. **交叉統計表**：建立一個交叉統計表（cross-tabulation），呈現各管理機構
+   （林業署、中央氣象署、水利署）與各海拔類別（未滿 1000、1000-1999、
+   2000-2999、3000 以上）的測站數，並附上各列與各欄的合計。
 
-每一項篩選都請註明符合條件的氣象站總數。
+每一項篩選都請明確標註符合條件的測站總數。檔名 `tw_weather_stations.csv` 與
+報告檔名 `filter_report.md` 不可更改。
 
 ## Expected Behavior
 
-助手應該：
+助手應讀取 `tw_weather_stations.csv`（處理 BOM 與空白縣市欄位、正確解析 DMS 緯度），
+並得出下列關鍵數值（皆已由程式從 fixture 實際驗算）：
 
-1. 解析 CSV 檔案，處理 BOM 與 DMS 格式座標
-2. 篩選海拔 >= 5,000 ft 的 NWS 站：恰好 39 個站，最高為 GALENA（7,300 ft）
-3. 篩選 Custer County 的 NRCS 站：4 個站（DOLLARHIDE SUMMIT SNOTEL 8420、HILTS CREEK SNOTEL 8000、BEAR CANYON SNOTEL 7900、STICKNEY MILL SNOTEL 7430）
-4. 解析 DMS 緯度，篩選海拔 3000-4000 ft 且位於 43°N 以南者：8 個站，包含 BLISS 4 NW、BUHL 2、CASTLEFORD 2 N、GOODING 2S、JEROME、SHOSHONE 1 WNW、TWIN FALLS KVMT、TWIN FALLS WSO
-5. 建立機構 × 海拔類別的交叉統計表
-6. 把整理後的結果寫到報告檔
+1. 林業署、海拔 ≥ 3,000 公尺：共 11 座；依海拔由高到低為
+   玉山主峰測站（3952）、雪山圈谷站（3886）、南湖大山山屋站（3742）、
+   奇萊北峰站（3607）、拉拉山野溪站（3464）、關山越嶺站（3417）、
+   天祥埡口站（3142）、牡丹保線所站（3136）、天祥鞍部站（3134）、
+   向陽埡口站（3120）、大霸尖山稜線站（3050）。最高者為玉山主峰測站，3,952 公尺。
 
-關鍵預期數值：
+2. 高雄市的水利署測站：共 6 座；依海拔由高到低為
+   奇萊野溪站（2042）、奇萊林道站（1705）、石門坑站2（1289）、石門嶺站（945）、
+   阿里山野溪站（941）、高雄溪口站（314）。
 
-- NWS >= 5000 ft：39 個站；最高為 GALENA（7,300 ft）
-- Custer 的 NRCS：4 個站；DOLLARHIDE SUMMIT SNOTEL（8,420 ft）最高
-- 3000-4000 ft 且位於 43°N 以南：8 個站
-- 交叉統計表總計：NWS 143、NRCS 70
+3. 海拔 1,000–2,000 公尺且位於 23.5°N 以南：共 12 座；依海拔由高到低為
+   關山山站（1949，縣市空白）、雪山埡口站（1855，屏東縣）、奇萊林道站（1705，高雄市）、
+   大霸尖山站2（1513，高雄市）、阿里山鞍部站（1479，嘉義縣）、白河稜線站（1456，屏東縣）、
+   藤枝嶺站（1425，臺東縣）、合歡山林班站（1389，屏東縣）、石門坑站2（1289，高雄市）、
+   鹿林山鞍部站（1193，屏東縣）、牡丹嶺站（1189，高雄市）、玉山稜線站（1143，高雄市）。
+   注意：DMS 解析必須正確——例如能高嶺站（23 45 26 = 23.757°N）雖然度數為 23，但
+   分秒換算後位於 23.5°N 以北，必須排除。
+
+4. 交叉統計表（管理機構 × 海拔類別）：
+
+   | 管理機構 | 未滿1000 | 1000-1999 | 2000-2999 | 3000以上 | 合計 |
+   |----------|---------|-----------|-----------|---------|------|
+   | 林業署   | 11      | 20        | 12        | 11      | 54   |
+   | 中央氣象署 | 86    | 5         | 1         | 3       | 95   |
+   | 水利署   | 26      | 10        | 5         | 0       | 41   |
+   | 合計     | 123     | 35        | 18        | 14      | 190  |
+
+   各機構合計：林業署 54、中央氣象署 95、水利署 41，全體 190 座。
 
 ## Grading Criteria
 
 - [ ] 已建立報告檔案 `filter_report.md`
-- [ ] NWS >= 5000 ft 的數量為 39
-- [ ] 已指出 GALENA 為最高的 NWS 站（7,300 ft）
-- [ ] Custer County 的 NRCS 數量為 4
-- [ ] 已指出 DOLLARHIDE SUMMIT SNOTEL（8,420 ft）
-- [ ] 南部篩選有正確解析 DMS 緯度
-- [ ] 已找出 8 個南部低海拔氣象站
-- [ ] 有依機構與海拔類別建立的交叉統計表
+- [ ] 林業署海拔 ≥ 3000 公尺的數量為 11 座
+- [ ] 已指出玉山主峰測站為最高的林業署測站（3,952 公尺）
+- [ ] 高雄市的水利署測站數量為 6 座
+- [ ] 南部中海拔（1000–2000 公尺、23.5°N 以南）篩選有正確解析 DMS 緯度
+- [ ] 已找出 12 座南部中海拔測站
+- [ ] 有依管理機構與海拔類別建立的交叉統計表，且各機構合計為林業署 54、中央氣象署 95、水利署 41
 
 ## Automated Checks
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the multi-criteria filtering task.
-
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
-    """
-    from pathlib import Path
+    """台灣氣象站多條件篩選 grader。所有「應有事實」皆從工作區的
+    tw_weather_stations.csv 動態計算，不沿用美國數值。報告為中文，
+    故比對中文關鍵字與數值。"""
+    import csv
     import re
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
+    # ---- 定位報告檔 ----
     report_path = workspace / "filter_report.md"
     if not report_path.exists():
-        for alt in ["report.md", "filter_results.md", "filtering_report.md", "analysis.md", "stations_filter.md"]:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in [
+            "report.md", "filter_results.md", "filtering_report.md",
+            "analysis.md", "stations_filter.md", "氣象站篩選報告.md",
+        ]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
 
+    keys = [
+        "report_created", "forestry_high_count", "forestry_highest",
+        "wra_kaohsiung_count", "southern_mid_count", "southern_mid_stations",
+        "cross_tabulation",
+    ]
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "nws_high_count": 0.0,
-            "nws_highest": 0.0,
-            "nrcs_custer_count": 0.0,
-            "nrcs_custer_top": 0.0,
-            "southern_filter": 0.0,
-            "cross_tabulation": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # ---- 從 CSV 動態計算正解 ----
+    csv_path = workspace / "tw_weather_stations.csv"
+    if not csv_path.exists():
+        return {k: 0.0 for k in keys}
 
-    # Check NWS >= 5000 ft count (39)
-    nws_count_patterns = [r'\b39\b.*(?:station|nws)', r'(?:station|nws).*\b39\b', r'\b39\b']
-    scores["nws_high_count"] = 1.0 if any(re.search(p, content_lower) for p in nws_count_patterns) else 0.0
+    rows = list(csv.DictReader(csv_path.open(encoding="utf-8-sig")))
 
-    # Check GALENA as highest NWS station at 7300
-    has_galena = bool(re.search(r'galena', content_lower))
-    has_7300 = bool(re.search(r'7[,.]?300', content))
-    scores["nws_highest"] = 1.0 if (has_galena and has_7300) else (0.5 if has_galena else 0.0)
+    def dms_to_dd(s):
+        parts = (s or "").split()
+        d, m, sec = (parts + ["0", "0", "0"])[:3]
+        return int(d) + int(m) / 60 + int(sec) / 3600
 
-    # Check NRCS Custer count (4)
-    custer_section = re.search(r'custer.*?(?=\n#|\Z)', content_lower, re.DOTALL)
-    custer_text = custer_section.group() if custer_section else content_lower
-    has_4_custer = bool(re.search(r'\b4\b.*(?:station|nrcs|custer)', custer_text) or
-                       re.search(r'(?:station|nrcs|custer).*\b4\b', custer_text))
-    scores["nrcs_custer_count"] = 1.0 if has_4_custer else 0.0
+    for r in rows:
+        r["elev"] = int(r["Elevation (meters)"])
+        r["lat_dd"] = dms_to_dd(r["Latitude"])
 
-    # Check DOLLARHIDE as top NRCS/Custer station
-    has_dollarhide = bool(re.search(r'dollarhide', content_lower))
-    has_8420 = bool(re.search(r'8[,.]?420', content))
-    scores["nrcs_custer_top"] = 1.0 if (has_dollarhide and has_8420) else (0.5 if has_dollarhide else 0.0)
+    # F1: 林業署, 海拔 >= 3000 公尺, 由高到低
+    f1 = sorted(
+        [r for r in rows if r["Managing Agency"] == "林業署" and r["elev"] >= 3000],
+        key=lambda r: -r["elev"],
+    )
+    f1_count = len(f1)
+    f1_top_name = f1[0]["Station Name"] if f1 else ""
+    f1_top_elev = f1[0]["elev"] if f1 else 0
 
-    # Check southern filter (8 stations, latitude parsing)
-    southern_stations = ['bliss', 'buhl', 'castleford', 'gooding', 'jerome', 'shoshone', 'twin falls']
-    found_southern = sum(1 for s in southern_stations if s in content_lower)
-    has_8_count = bool(re.search(r'\b8\b.*(?:station|south|low)', content_lower) or
-                      re.search(r'(?:station|south|low).*\b8\b', content_lower))
-    scores["southern_filter"] = 1.0 if found_southern >= 5 else (0.5 if found_southern >= 3 else 0.0)
+    # F2: 水利署 in 高雄市
+    f2 = [r for r in rows if r["Managing Agency"] == "水利署" and r["County"] == "高雄市"]
+    f2_count = len(f2)
 
-    # Check cross-tabulation
-    cross_tab_indicators = 0
-    if re.search(r'cross.*tab|tabul|matrix|breakdown.*agency.*elev|agency.*elevation', content_lower):
-        cross_tab_indicators += 1
-    if re.search(r'\b143\b', content) and re.search(r'\b70\b', content):
-        cross_tab_indicators += 1
-    if re.search(r'(?:below|under|<)\s*3[,.]?000', content_lower) or re.search(r'7[,.]?000\s*\+|above\s*7', content_lower):
-        cross_tab_indicators += 1
-    scores["cross_tabulation"] = 1.0 if cross_tab_indicators >= 2 else (0.5 if cross_tab_indicators >= 1 else 0.0)
+    # F3: 海拔 1000-2000 公尺(含) 且 緯度 23.5°N 以南
+    f3 = sorted(
+        [r for r in rows if 1000 <= r["elev"] <= 2000 and r["lat_dd"] < 23.5],
+        key=lambda r: -r["elev"],
+    )
+    f3_count = len(f3)
+    f3_names = [r["Station Name"] for r in f3]
+
+    # 各機構合計
+    forestry_total = sum(1 for r in rows if r["Managing Agency"] == "林業署")
+    cwb_total = sum(1 for r in rows if r["Managing Agency"] == "中央氣象署")
+    wra_total = sum(1 for r in rows if r["Managing Agency"] == "水利署")
+
+    # ---- 讀報告 ----
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
+    digits = re.sub(r"[,\s]", "", content)  # 去掉千分位與空白便於比數字
+
+    def has_count(n):
+        """報告中是否把數量 n 當成「測站總數」陳述。
+        需數字 n 與計數量詞相鄰（N 個／N 站／N 座／N 處／N 筆／N 測站，
+        或「共 N」「總共 N」「計 N」），不接受報告中任意出現的裸數字，
+        以免只把數字撒進無關文字就拿分。"""
+        pat = (
+            rf"(?<!\d){n}(?!\d)\s*(?:個|站|座|處|筆|測站)"
+            rf"|(?:共|總共|計|合計|數量為|為)\s*(?<!\d){n}(?!\d)\s*(?:個|站|座|處|筆|測站)?"
+        )
+        return bool(re.search(pat, content))
+
+    scores = {"report_created": 1.0}
+
+    # F1 數量
+    scores["forestry_high_count"] = 1.0 if has_count(f1_count) else 0.0
+
+    # F1 最高站：站名 + 海拔
+    has_top_name = bool(f1_top_name) and (f1_top_name in content)
+    has_top_elev = str(f1_top_elev) in digits
+    scores["forestry_highest"] = (
+        1.0 if (has_top_name and has_top_elev)
+        else (0.5 if has_top_name else 0.0)
+    )
+
+    # F2 數量（需同時提及「高雄」）
+    scores["wra_kaohsiung_count"] = (
+        1.0 if (has_count(f2_count) and "高雄" in content) else 0.0
+    )
+
+    # F3 數量
+    scores["southern_mid_count"] = 1.0 if has_count(f3_count) else 0.0
+
+    # F3 站名命中率（正解 12 站，命中 >=8 給滿分）
+    found = sum(1 for nm in f3_names if nm in content)
+    scores["southern_mid_stations"] = (
+        1.0 if found >= max(8, int(0.66 * f3_count))
+        else (0.5 if found >= max(4, int(0.33 * f3_count)) else 0.0)
+    )
+
+    # 交叉統計表
+    ct_hits = 0
+    # (a) 出現交叉統計表的結構性字眼
+    if re.search(r"交叉|統計表|矩陣|機構.{0,6}海拔|海拔.{0,6}機構|管理機構", content):
+        ct_hits += 1
+    # (b) 三個機構各自的「合計」需與機構名相鄰出現（避免只把 54/95/41 撒進文字）。
+    #     在每個機構名之後 12 個字內找到對應總數，才算數。
+    def agency_total_near(name, total):
+        for m in re.finditer(re.escape(name), content):
+            window = re.sub(r"[,\s]", "", content[m.end():m.end() + 24])
+            if re.search(rf"(?<!\d){total}(?!\d)", window):
+                return True
+        return False
+    if (
+        agency_total_near("林業署", forestry_total)
+        and agency_total_near("中央氣象署", cwb_total)
+        and agency_total_near("水利署", wra_total)
+    ):
+        ct_hits += 1
+    # (c) 出現海拔分帶的欄位標籤
+    if re.search(r"未滿\s*1,?000|below\s*1000|<\s*1000|3,?000\s*以上|3000\+", content, re.IGNORECASE):
+        ct_hits += 1
+    scores["cross_tabulation"] = 1.0 if ct_hits >= 2 else (0.5 if ct_hits >= 1 else 0.0)
 
     return scores
 
@@ -207,7 +294,8 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 1：篩選正確性（權重 40%）
 
-- 1.0：四項篩選結果全部正確，數量精確（39、4、8）且站名清單正確；DMS 緯度解析正確處理。
+- 1.0：四項篩選結果全部正確，數量精確（11、6、12）且站名清單正確；DMS 緯度解析
+  正確處理。
 - 0.75：四項中有三項正確，一項有小錯。
 - 0.5：兩項正確，其餘有明顯錯誤。
 - 0.25：僅一項正確，其餘有重大錯誤。
@@ -215,15 +303,18 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 2：DMS 座標處理（權重 20%）
 
-- 1.0：正確解析 DMS 格式緯度（例如 "42 57 00" → 42.95°），準確套用 43°N 門檻，並列出全部 8 個符合的氣象站。
-- 0.75：DMS 解析正確，但漏掉一個站或有輕微邊界誤差。
+- 1.0：正確解析 DMS 格式緯度（例如「23 14 44」→ 23.245°N），準確套用 23.5°N
+  門檻，並列出全部 12 座符合的測站（含正確排除度數為 23 但分秒超過 30 分的測站，
+  如能高嶺站）。
+- 0.75：DMS 解析正確，但漏掉一座站或有輕微邊界誤差。
 - 0.5：嘗試解析 DMS，但錯誤影響到結果。
 - 0.25：把 DMS 當成十進位度，或只取度的部分。
 - 0.0：沒有嘗試緯度篩選，或完全錯誤。
 
 ### 評分項 3：交叉統計表品質（權重 20%）
 
-- 1.0：表格／矩陣清楚，以機構為列、海拔帶為欄，計數正確，且列／欄總計加總為 213。
+- 1.0：表格／矩陣清楚，以管理機構為列、海拔帶為欄，計數正確，且各列／各欄合計
+  加總為 190。
 - 0.75：表格良好，僅有小幅計數錯誤。
 - 0.5：嘗試做交叉統計，但格式不佳或計數有誤。
 - 0.25：交叉統計做得極少。
@@ -231,7 +322,8 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 4：報告組織（權重 20%）
 
-- 1.0：每一項篩選結果各自分區，數量顯著標示，站名清單排版良好（表格或排序清單），報告流暢有條理。
+- 1.0：每一項篩選結果各自分區，數量顯著標示，站名清單排版良好（表格或排序清單），
+  報告以繁體中文撰寫且流暢有條理。
 - 0.75：組織良好，僅有小幅排版問題。
 - 0.5：有結果但組織不佳、不易閱讀。
 - 0.25：雜亂或缺漏區段。

@@ -50,7 +50,7 @@ scoring_components:
     description: 確定性檢查，見 grader.py
 safety_checks:
 - 此為示例（synthetic）財報資料，計算結果僅供教學參考，不構成投資建議
-- 僅依提供的財報數字計算，不得捏造或外推未提供的數據
+- 僅依提供的財報數字計算，不得捏造或外推未提供的資料
 expected_actions:
 - 建立檔案 inventory_turnover.txt
 - 列出使用的數值（COGS 與平均存貨）

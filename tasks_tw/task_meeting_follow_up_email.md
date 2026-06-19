@@ -1,7 +1,6 @@
 ---
 id: task_meeting_follow_up_email
-name: |
-  會議後續追蹤郵件
+name: 會議後續追蹤郵件（鼎峰科技產品週會）
 category: meeting_analysis
 grading_type: hybrid
 timeout_seconds: 180
@@ -15,162 +14,225 @@ localization: taiwan
 localization_strategy: context_replace
 claw_eval_tw_id: T127tw_meeting_follow_up_email
 workspace_files:
-- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+- source: tw/meetings/tw_tech_product_meeting.md
   dest: meeting_transcript.md
 grading_weights:
   automated: 0.5
   llm_judge: 0.5
 ---
 
-# 會議後續追蹤郵件
-
+# 會議後續追蹤郵件（鼎峰科技產品週會）
 
 ## Prompt
 
-我手上有一個檔案 `meeting_transcript.md`，內含 2021-06-28 舉行的 GitLab 產品行銷團隊會議逐字稿。請幫我草擬一封專業的後續追蹤郵件，可在會後寄給團隊。
+工作區裡有一份會議逐字稿 meeting_transcript.md，是虛構台灣軟體公司「鼎峰科技」
+的「產品暨行銷週會」紀錄（時區 Asia/Taipei，會議當天為星期二）。會議內容涵蓋
+幾個主題：企業活動／研討會贊助分工、自家「鼎峰匯流大會」的產品發布題材、競品
+比較資訊圖設計回饋、競品分析方法論與比較試算表，以及訊息架構（標語）練習。
 
-請以英文撰寫這封郵件，並寫入名為 `follow_up_email.md` 的檔案。郵件請包含：
+請閱讀整份逐字稿，幫我草擬一封專業的會後追蹤郵件，可在會後寄給產品行銷團隊。
 
-- **主旨（Subject line）**
+請以**繁體中文**撰寫這封郵件，並寫入名為 `follow_up_email.md` 的檔案。郵件請包含：
+
+- **主旨**
 - **稱呼語**：向產品行銷團隊致意
 - **簡短回顧**：摘述討論內容（最多 2-3 句）
 - **做成的決議**：清楚的編號清單
-- **行動項目**：可辨識時附上負責人與期限
-- **待解項目（Open items）**：仍需解決的事項
-- **結尾**：附上任何相關的下次會議資訊或期限
+- **行動項目**：可辨識時附上負責人姓名與期限
+- **待解項目**：仍需解決、尚無定論的事項
+- **結尾**：附上相關的下次會議資訊或期限，並以禮貌結語收尾
 
-郵件請保持專業，同時貼合團隊合作的語氣，並力求精簡——讓繁忙的團隊成員能在一分鐘內掃完。
+郵件請保持專業，同時貼合團隊合作的語氣，並力求精簡——讓繁忙的團隊成員能在
+一分鐘內掃完（約 600 字以內為佳）。
 
 ## Expected Behavior
 
-助手應該：
+助手應讀取 meeting_transcript.md，草擬一封以繁體中文撰寫、清楚易掃描的追蹤郵件，
+正確掌握下列內容（皆需從逐字稿推導，不可捏造承諾或錯置負責人）：
 
-1. 讀取會議逐字稿
-2. 草擬一封郵件，掌握：
-   - **決議：**
-     - 活動分工：Platform→re:Invent、CI/CD→Google Next、GitOps→KubeCon
-     - 訊息標語：選定「more speed, less risk」
-     - 競品資訊圖：維持僅用綠色的配色方案
-     - 最重要公告選擇：以 vulnerability management 作為安全領域的主打故事
-     - 集會（assembly）標語：「single source of truth, countless possibilities」
-   - **行動項目：**
-     - 全體：向 campaign managers 確認活動承諾、在 issue 上留言
-     - Cormac：補上 Plan stage 的前 5 大功能
-     - 團隊：完成產品公告試算表的填寫（週二 Tuesday 截止）
-     - Samia：調整競品表，使每個 stage 只採用相關的 tier 1 競爭對手
-     - 在競品比較中把 GitLab 也列為一個項目
-   - **待解項目：**
-     - 跨所有 stage 的最終前 5 大產品公告
-     - 是否將 UX 改善打包成一個突出類別
-     - 究竟要納入哪些 VS Code 整合功能
-3. 撰寫一封清楚、易於瀏覽的郵件（以英文撰寫）
+決議：
+- 活動分工：平台（Platform）→開源人年會 COSCUP、CI/CD→DevOpsDays Taipei、
+  GitOps→Kubernetes Day Taiwan。
+- 資訊圖配色：競品比較資訊圖維持只用綠色（不用紅色），保持「產業比較」而非
+  「攻擊對手」的調性。
+- 產品發布主打：把過去一年的多個小型 MVC 整合成主題敘事，以「漏洞管理」
+  （vulnerability management）作為資安領域的主打故事；挑選方式改為從所有 stage
+  中選出整體前 5 名（top 5 overall）。
+- 競品方法論：現階段只聚焦 tier 1 對手；每個 stage 只列出與該 stage 相關的對手；
+  並在比較表中加上「鼎峰」自己一列。
+- 訊息標語：主標語選定「更快交付，更低風險」；透明支柱「單一真相來源，無限可能」；
+  端到端支柱「端到端掌控你的軟體工廠」。
+
+行動項目（附負責人與期限）：
+- 全體：各自向自己的活動行銷經理確認三場研討會的贊助承諾，並在活動 issue 底下留言回報。
+- 戴立安：本週內整理三場活動分工，發出一份對內公告通知各部門。
+- 高敏哲：星期二前為 Plan（規劃）這個 stage 補上一份 top 5 候選清單（如史詩看板、
+  里程碑燃盡圖）。
+- 全體：把產品發布試算表欄位補完、各自檢視並投票選出整體前 5 名功能，星期二截止。
+- 蔡思敏：把競品試算表改成每個 stage 只列相關 tier 1 對手，並在比較表新增「鼎峰」一列。
+- 王志明：今天下班前把訊息架構定稿，以「更快交付，更低風險」當主標語。
+
+待解項目（仍無定論）：
+- 跨所有 stage 的最終整體前 5 名產品發布尚未拍板（待投票）。
+- 是否把 UX 改善獨立成一個突出類別。
+- 究竟要納入哪些 VS Code 整合功能。
+
+郵件結尾應提醒：產品發布試算表星期二截止，下次會議為下週二同一時間。
 
 ## Grading Criteria
 
 - [ ] 已建立 `follow_up_email.md` 檔案
-- [ ] 有主旨行
+- [ ] 有主旨（主旨行）
 - [ ] 包含決議或關鍵結論區段
-- [ ] 列出至少 3 項具體決議
-- [ ] 包含行動項目且至少有部分負責人姓名
+- [ ] 列出至少 3 項具體決議（如活動分工 COSCUP／DevOpsDays Taipei／Kubernetes Day Taiwan、漏洞管理、只用綠色、主標語「更快交付，更低風險」）
+- [ ] 包含行動項目且至少標出 2 位逐字稿中被指派工作的負責人姓名（戴立安／高敏哲／蔡思敏／王志明）
 - [ ] 列出至少 3 項行動項目
-- [ ] 提及週二（Tuesday）的期限
-- [ ] 語氣專業但平易近人
+- [ ] 提及星期二（Tuesday）的截止期限
+- [ ] 語氣專業但平易近人（含稱呼語與結語）
 - [ ] 精簡（約 600 字以內）
 
 ## Automated Checks
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting follow-up email task.
+    """鼎峰科技產品週會「會後追蹤郵件」grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    做法：先從台灣逐字稿 meeting_transcript.md「動態推導」出應有事實
+    （被指派的負責人、活動名稱、選定的主標語、星期幾的期限），再比對 agent
+    產出的中文追蹤郵件 follow_up_email.md。盡量不硬寫英文原版事實，提升可重現性。
+    僅用標準函式庫。
     """
-    from pathlib import Path
     import re
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if file exists
-    report_path = workspace / "follow_up_email.md"
-    if not report_path.exists():
-        alternatives = ["followup_email.md", "follow_up.md", "email.md", "meeting_followup.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+    # --- 找 agent 報告（郵件）---
+    report = workspace / "follow_up_email.md"
+    if not report.exists():
+        for alt in ["followup_email.md", "follow_up.md", "email.md",
+                    "meeting_followup.md", "後續追蹤郵件.md", "追蹤郵件.md"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
                 break
 
-    if not report_path.exists():
-        return {
-            "file_created": 0.0,
-            "has_subject": 0.0,
-            "decisions_section": 0.0,
-            "decisions_count": 0.0,
-            "action_items_with_owners": 0.0,
-            "action_items_count": 0.0,
-            "deadline_mentioned": 0.0,
-            "tone_appropriate": 0.0,
-            "concise": 0.0,
-        }
+    keys = ["file_created", "has_subject", "decisions_section",
+            "decisions_count", "action_items_with_owners", "action_items_count",
+            "deadline_mentioned", "tone_appropriate", "concise"]
+    if not report.exists():
+        return {k: 0.0 for k in keys}
 
-    scores["file_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    scores = {"file_created": 1.0}
+    c = report.read_text(encoding="utf-8", errors="ignore")
 
-    # Subject line
-    subject_patterns = [r'subject\s*:', r're\s*:', r'^#\s*.*(?:follow|recap|summary)', r'\*\*subject\*\*']
-    scores["has_subject"] = 1.0 if any(re.search(p, content_lower, re.MULTILINE) for p in subject_patterns) else 0.0
+    # --- 讀逐字稿，動態推導「應有事實」---
+    tpath = workspace / "meeting_transcript.md"
+    tx = ""
+    if tpath.exists():
+        tx = tpath.read_text(encoding="utf-8", errors="ignore")
 
-    # Decisions section
-    decision_section_patterns = [r'decision', r'key\s*outcome', r'(?:what\s*we\s*)?(?:agreed|decided)', r'outcome', r'conclusion']
-    scores["decisions_section"] = 1.0 if any(re.search(p, content_lower) for p in decision_section_patterns) else 0.0
+    han = re.compile(r"[一-鿿]{2,3}")
 
-    # Count specific decisions
+    # (a) 與會者姓名白名單（逐字稿「與會者」區塊：行首為 - 姓名（角色…）
+    attendees = set(re.findall(r"[-\s]([一-鿿]{2,3})（", tx)) if tx else set()
+
+    # (b) 真正在「**行動項目…**」句子裡被點名的負責人
+    assigned = []
+    for m in re.finditer(r"行動項目[（(]?[^）)]*[）)]?[：:]\s*([^\n*。]{0,40})", tx):
+        for nm in han.findall(m.group(1)):
+            if nm in attendees and nm not in assigned:
+                assigned.append(nm)
+    if not assigned and attendees:
+        assigned = list(attendees)
+    if not assigned:
+        assigned = ["戴立安", "高敏哲", "蔡思敏", "王志明", "陳柏宇", "林淑芬"]
+
+    # (c) 從逐字稿動態抓出三場活動名稱（查核決議用）
+    event_terms = [t for t in ["COSCUP", "DevOpsDays", "Kubernetes Day"]
+                   if (not tx or t in tx)]
+
+    # (d) 選定的主標語（會議結尾複習句／「…當主標語」）
+    tagline = ""
+    mt = re.search(r"主標語[，、\s]*「([^」]{2,20})」", tx) if tx else None
+    if not mt and tx:
+        mt = re.search(r"「([^」]{2,20})」\s*當主標語", tx)
+    tagline = mt.group(1) if mt else "更快交付，更低風險"
+
+    # --- 計分 ---
+
+    # 1) 主旨行
+    subject_patterns = [r"主旨", r"subject\s*[:：]", r"^#\s",
+                        r"\*\*主旨\*\*", r"re\s*[:：]"]
+    scores["has_subject"] = 1.0 if any(
+        re.search(p, c, re.MULTILINE | re.IGNORECASE)
+        for p in subject_patterns) else 0.0
+
+    # 2) 決議／關鍵結論區段
+    decision_section = [r"決議", r"決定", r"結論", r"關鍵結論", r"做成的決議",
+                        r"共識", r"decision"]
+    scores["decisions_section"] = 1.0 if any(
+        re.search(p, c, re.IGNORECASE) for p in decision_section) else 0.0
+
+    # 3) 具體決議計數（盡量以逐字稿動態詞彙比對）
     decision_count = 0
-    if re.search(r'(?:platform|re:?\s*invent)', content_lower):
+    # 活動分工：抓到任一動態活動名稱，或泛指「平台/CI/CD/GitOps + 活動」
+    if any(t in c for t in event_terms) or re.search(
+            r"(?:平台|Platform).{0,12}(?:COSCUP|開源人)", c, re.IGNORECASE):
         decision_count += 1
-    if re.search(r'(?:ci.*cd|google\s*next)', content_lower):
+    # 主標語
+    if (tagline in c) or re.search(r"更快交付|更低風險", c):
         decision_count += 1
-    if re.search(r'(?:gitops|kubecon)', content_lower):
+    # 資訊圖只用綠色
+    if re.search(r"只用綠色|僅用綠色|綠色.{0,6}配色|不用紅色|不放紅色|配色", c):
         decision_count += 1
-    if re.search(r'more\s*speed.*less\s*risk', content_lower):
+    # 漏洞管理（資安主打）
+    if re.search(r"漏洞管理|vulnerability\s*management", c, re.IGNORECASE):
         decision_count += 1
-    if re.search(r'(?:green|no\s*red|color\s*scheme)', content_lower):
+    # 競品方法論：只比 tier 1 ／新增鼎峰一列 ／每個 stage 只放相關對手
+    if re.search(r"tier\s*1|只.{0,4}相關.{0,4}對手|鼎峰一列|鼎峰.{0,4}列|"
+                 r"每個\s*stage|每個分頁", c, re.IGNORECASE):
         decision_count += 1
-    if re.search(r'vulnerability\s*management', content_lower):
-        decision_count += 1
-    scores["decisions_count"] = 1.0 if decision_count >= 3 else (0.5 if decision_count >= 2 else 0.0)
+    scores["decisions_count"] = 1.0 if decision_count >= 3 else (
+        0.5 if decision_count >= 2 else 0.0)
 
-    # Action items with owners (names from the meeting)
-    names = ['cormac', 'cindy', 'brian', 'samia', 'william', 'tai']
-    names_found = sum(1 for n in names if n in content_lower)
-    action_patterns = [r'action\s*item', r'to[\s-]*do', r'(?:will|should|needs?\s*to|please)\s+\w+']
-    has_actions = any(re.search(p, content_lower) for p in action_patterns)
-    scores["action_items_with_owners"] = 1.0 if (names_found >= 2 and has_actions) else (0.5 if names_found >= 1 or has_actions else 0.0)
+    # 4) 行動項目＋負責人（用逐字稿推導出的被指派負責人）
+    names_found = sum(1 for nm in assigned if nm in c)
+    action_patterns = [r"行動項目", r"待辦", r"to[\s-]*do", r"負責",
+                       r"(?:請|需|要|會|應|將)\s*\S"]
+    has_actions = any(re.search(p, c, re.IGNORECASE) for p in action_patterns)
+    scores["action_items_with_owners"] = 1.0 if (
+        names_found >= 2 and has_actions) else (
+        0.5 if (names_found >= 1 or has_actions) else 0.0)
 
-    # Count action items (look for list items in action section)
-    action_list_items = re.findall(r'(?:^|\n)\s*[-*•\d]+[.)]\s*.{10,}', content)
-    scores["action_items_count"] = 1.0 if len(action_list_items) >= 5 else (0.5 if len(action_list_items) >= 3 else 0.0)
+    # 5) 行動項目數量（條列／編號）
+    action_list_items = re.findall(
+        r"(?:^|\n)\s*(?:[-*+•]|\d+[.)、])\s*\S.{6,}", c)
+    n = len(action_list_items)
+    scores["action_items_count"] = 1.0 if n >= 5 else (0.5 if n >= 3 else 0.0)
 
-    # Tuesday deadline mentioned
-    deadline_patterns = [r'tuesday', r'due\s*(?:date|by|end\s*of)', r'deadline', r'end\s*of\s*(?:the\s*)?day']
-    scores["deadline_mentioned"] = 1.0 if any(re.search(p, content_lower) for p in deadline_patterns) else 0.0
+    # 6) 期限：星期二（Tuesday）／截止／期限
+    deadline_patterns = [r"星期二", r"週二", r"禮拜二", r"tuesday",
+                        r"截止", r"期限", r"下班前", r"本週", r"deadline",
+                        r"end\s*of\s*(?:the\s*)?day"]
+    scores["deadline_mentioned"] = 1.0 if any(
+        re.search(p, c, re.IGNORECASE) for p in deadline_patterns) else 0.0
 
-    # Tone (professional but approachable - look for greeting and closing)
-    has_greeting = bool(re.search(r'(?:hi|hey|hello|dear|team|everyone|all)', content_lower[:200]))
-    has_closing = bool(re.search(r'(?:thanks|thank\s*you|best|regards|cheers|talk\s*soon)', content_lower[-300:]))
-    scores["tone_appropriate"] = 1.0 if (has_greeting and has_closing) else (0.5 if (has_greeting or has_closing) else 0.0)
+    # 7) 語氣：開頭有稱呼語、結尾有結語
+    head = c[:200]
+    tail = c[-300:]
+    has_greeting = bool(re.search(
+        r"團隊|大家|各位|嗨|您好|你好|敬啟|親愛的|dear|hi|hello", head,
+        re.IGNORECASE))
+    has_closing = bool(re.search(
+        r"謝謝|感謝|辛苦了|敬上|祝|順頌|此致|best|regards|thanks", tail,
+        re.IGNORECASE))
+    scores["tone_appropriate"] = 1.0 if (has_greeting and has_closing) else (
+        0.5 if (has_greeting or has_closing) else 0.0)
 
-    # Conciseness
-    word_count = len(content.split())
-    scores["concise"] = 1.0 if word_count <= 600 else (0.5 if word_count <= 900 else 0.0)
+    # 8) 精簡度（中文以字元數估算，約 600 字 ≈ 600 個中文字）
+    han_chars = len(re.findall(r"[一-鿿]", c))
+    scores["concise"] = 1.0 if han_chars <= 700 else (
+        0.5 if han_chars <= 1100 else 0.0)
 
     return scores
 
@@ -229,37 +291,29 @@ def grade(transcript, workspace_path):  # noqa: F811
 ## LLM Judge Rubric
 
 ### 評分項 1：內容準確性（權重 35%）
-
-**1.0 分**：郵件準確掌握會議中的決議、行動項目與待解問題。沒有捏造的承諾或錯誤歸屬。活動分工、標語選擇與競品做法都正確呈現。
-
-**0.75 分**：多數內容準確，僅有一兩處小錯或遺漏。
-
-**0.5 分**：核心決議俱在，但數項內容不準確，或缺少關鍵項目。
-
-**0.25 分**：明顯的不準確或重大遺漏，損及實用性。
-
-**0.0 分**：郵件缺失、空白或根本不準確。
+- 1.0：郵件準確掌握會議中的決議、行動項目與待解問題，沒有捏造的承諾或錯誤歸屬。
+  活動分工（平台→COSCUP、CI/CD→DevOpsDays Taipei、GitOps→Kubernetes Day Taiwan）、
+  標語選擇（更快交付，更低風險）、競品做法（只用綠色、只比 tier 1、新增鼎峰一列）
+  都正確呈現。
+- 0.75：多數內容準確，僅有一兩處小錯或遺漏。
+- 0.5：核心決議俱在，但數項內容不準確，或缺少關鍵項目。
+- 0.25：明顯的不準確或重大遺漏，損及實用性。
+- 0.0：郵件缺失、空白或根本不準確。
 
 ### 評分項 2：郵件格式與專業度（權重 30%）
-
-**1.0 分**：讀起來像 PMM 主管會發出的真正後續郵件。有適當主旨、稱呼語、結構化且易掃描的內文區段（決議、行動項目、待解項目）以及專業結尾。內容以英文撰寫，貼合團隊「合作但直接」的語氣。
-
-**0.75 分**：郵件格式良好，僅有少許結構問題。
-
-**0.5 分**：包含正確資訊，但讀起來不像自然的郵件。
-
-**0.25 分**：格式不佳，語氣過於正式／過於隨意，或未以英文撰寫。
-
-**0.0 分**：無法辨識為一封郵件。
+- 1.0：讀起來像產品行銷主管會發出的真正會後追蹤郵件。有適當主旨、稱呼語、
+  結構化且易掃描的內文區段（決議、行動項目、待解項目）以及專業結語。以繁體中文
+  撰寫，貼合團隊「合作但直接」的語氣。
+- 0.75：郵件格式良好，僅有少許結構問題。
+- 0.5：包含正確資訊，但讀起來不像自然的郵件。
+- 0.25：格式不佳，語氣過於正式／過於隨意，或未以繁體中文撰寫。
+- 0.0：無法辨識為一封郵件。
 
 ### 評分項 3：可執行性與清晰度（權重 35%）
-
-**1.0 分**：收到此郵件的團隊成員能確切知道做了哪些決定、自己個人該做什麼、何時到期。行動項目具體且有歸屬。後續步驟毫無歧義。
-
-**0.75 分**：大致清楚且可執行，僅有少許歧義。
-
-**0.5 分**：有一些行動項目，但缺乏具體性或明確歸屬。
-
-**0.25 分**：對接下來該做什麼模糊或不清楚。
-
-**0.0 分**：沒有可執行內容。
+- 1.0：收到此郵件的團隊成員能確切知道做了哪些決定、自己個人該做什麼、何時到期。
+  行動項目具體且有歸屬（負責人姓名），期限（星期二／本週內／今天下班前）清楚。
+  後續步驟毫無歧義。
+- 0.75：大致清楚且可執行，僅有少許歧義。
+- 0.5：有一些行動項目，但缺乏具體性或明確歸屬。
+- 0.25：對接下來該做什麼模糊或不清楚。
+- 0.0：沒有可執行內容。

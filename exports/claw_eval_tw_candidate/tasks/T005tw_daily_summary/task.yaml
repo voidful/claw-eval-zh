@@ -1,8 +1,8 @@
 task_id: T005tw_daily_summary
-task_name: 每日研究摘要產製
+task_name: 每日研究簡報產製（鼎峰雲端科技營運情資彙整）
 version: 0.3.0
 category: productivity
-difficulty: hard
+difficulty: medium
 tags:
 - pinchbench-derived
 - claw-style
@@ -16,14 +16,44 @@ source:
   original_task_id: task_daily_summary
   original_file: tasks/task_daily_summary.md
 prompt:
-  text: '你是協助高階主管準備每日簡報的特助。請把 research/ 資料夾裡的所有檔案都看過，
+  text: '你是協助高階主管準備每日簡報的特助。工作區裡有一個 research/ 資料夾，內含五份
 
-    整理成一份完整的每日摘要，寫到 daily_briefing.md。這份摘要要簡潔扼要、把最需要
-
-    老闆關注的重點凸顯出來，並用清楚的段落分門別類。
+    繁體中文的市場與營運情資檔案（皆為虛構台灣 SaaS 公司「鼎峰雲端科技」的內部資料）：
 
 
-    備註：research/ 裡的資料是英文的市場與營運資訊，分析時請以原始數據為準。'
+    - research/market_analysis.txt（市場分析：台股盤勢、類股表現、公司動態）
+
+    - research/competitor_intelligence.txt（競爭對手情報）
+
+    - research/customer_feedback.txt（客戶回饋：客服工單、流失風險、加購機會）
+
+    - research/product_updates.txt（產品與工程更新）
+
+    - research/industry_news.txt（產業新聞與法規動態）
+
+
+    請把 research/ 資料夾裡的所有檔案都讀過，整理成一份完整的每日簡報，以繁體中文
+
+    寫到 daily_briefing.md。這份簡報要簡潔扼要、把最需要老闆關注的重點凸顯出來，
+
+    並用清楚的章節分門別類。
+
+
+    要求：
+
+    - 全程使用繁體中文（zh-TW），全形標點。
+
+    - 以一段簡短的執行摘要（3 至 5 項關鍵要點）開頭。
+
+    - 將資訊整理為邏輯清楚的章節（市場財務、競品情報、客戶風險、產品更新、產業法規）。
+
+    - 凸顯需要立即關注或做出決策的項目，並明確列出行動項目。
+
+    - 註明任何風險或機會（例如客戶流失風險、競品攻勢、法規期限、招攬機會）。
+
+    - 篇幅維持簡潔（目標約 500 至 800 字）。
+
+    - 金額沿用原始資料的新臺幣（NT$）單位，數字以原始資料為準。'
   language: zh
 tools: []
 tool_endpoints: []
@@ -42,64 +72,66 @@ safety_checks: []
 expected_actions:
 - 助手發現了 research/ 目錄中的檔案
 - 助手讀取了全部 5 份研究檔案
-- 已建立檔案 `daily_briefing.md`
-- 摘要包含執行摘要（executive summary）章節
-- 摘要涵蓋市場／財務資訊
-- 摘要涵蓋競爭對手情報
-- 摘要涵蓋客戶意見回饋／風險
-- 摘要涵蓋產品更新
-- 摘要涵蓋產業新聞／法規項目
-- 摘要指出需要採取的行動項目或需做出的決策
-- 文筆專業、適合高階主管閱讀
-- 摘要長度適中且簡潔（未過度冗長）
+- 已建立檔案 daily_briefing.md
+- 簡報包含執行摘要章節
+- 簡報涵蓋市場／財務資訊（台股、類股、公司動態）
+- 簡報涵蓋競爭對手情報（南港數位、晶橋資訊、速聯雲）
+- 簡報涵蓋客戶回饋／流失風險（鴻晟集團等）
+- 簡報涵蓋產品更新（已上線／進行中／受阻／即將發布）
+- 簡報涵蓋產業新聞／法規項目（人工智慧基本法、個資法）
+- 簡報指出需要採取的行動項目或需做出的決策
+- 全程使用繁體中文，文筆專業、適合高階主管閱讀
+- 簡報長度適中且簡潔（未過度冗長）
 user_agent:
   enabled: false
 judge_rubric: '### 評分項 1：資訊涵蓋度與正確性（權重 30%）
 
 
-  **1.0 分**：摘要精準擷取了「全部五份」來源文件中的關鍵資訊。包含市場走勢、競爭
+  **1.0 分**：簡報精準擷取「全部五份」來源文件中的關鍵資訊。包含市場走勢（台股加權
 
-  威脅（特別是 Nexus 的產品發布與 SwiftCloud 帶來的機會）、客戶風險（MegaCorp
+  指數上漲、半導體領漲、相關公司動態）、競爭威脅（特別是南港數位「南港智匯」的產品
 
-  的流失風險）、產品里程碑（已上線功能、即將發布項目）以及法規項目（EU AI Act）。
+  發布與速聯雲服務中斷帶來的招攬機會）、客戶風險（鴻晟集團 NT$1,350 萬 ARR 的流失
 
-  無重大遺漏或事實錯誤。
+  風險）、產品里程碑（已上線功能與即將發布項目）以及法規項目（《人工智慧基本法》
 
-
-  **0.75 分**：摘要涵蓋 4 至 5 個來源中多數重要資訊，僅有少量遺漏。關鍵項目皆在，
-
-  但部分次要細節缺漏。
+  3/1 施行）。無重大遺漏或事實錯誤（數字與原始資料一致、金額為新臺幣）。
 
 
-  **0.5 分**：摘要涵蓋 3 至 4 個來源，但遺漏了一份或多份文件中的重要項目。可能有
+  **0.75 分**：涵蓋 4 至 5 個來源中多數重要資訊，僅有少量遺漏。關鍵項目皆在，但部分
 
-  少量不準確之處。
-
-
-  **0.25 分**：摘要僅涵蓋 1 至 2 個來源，或有重大事實錯誤。關鍵資訊出現重大遺漏。
+  次要細節缺漏。
 
 
-  **0.0 分**：摘要缺失、不準確，或未能整合研究檔案內容。
+  **0.5 分**：涵蓋 3 至 4 個來源，但遺漏了一份或多份文件中的重要項目。可能有少量
+
+  不準確之處（例如金額單位或數字與原始資料不符）。
+
+
+  **0.25 分**：僅涵蓋 1 至 2 個來源，或有重大事實錯誤。關鍵資訊出現重大遺漏。
+
+
+  **0.0 分**：簡報缺失、不準確，或未能整合 research 檔案內容。
 
 
   ### 評分項 2：整合與優先排序（權重 25%）
 
 
-  **1.0 分**：跨來源整合出色。正確辨識出最高優先項目：競爭對手產品發布的威脅、
+  **1.0 分**：跨來源整合出色。正確辨識最高優先項目：競爭對手產品發布的威脅、鴻晟集團
 
-  MegaCorp 的流失風險、EU AI Act 的期限、SwiftCloud 的機會。能串連相關資訊
+  的流失風險、《人工智慧基本法》的施行期限、速聯雲的招攬機會。能串連相關資訊（例如
 
-  （例如競爭對手定價與我方留客之間的關係）。清楚區分緊急項目與純資訊性項目。
-
-
-  **0.75 分**：整合良好，多數優先項目都被辨識出來。在優先排序或串連相關資訊上有
-
-  少許瑕疵。
+  南港數位低價定價與我方客戶留任之間的關聯）。清楚區分緊急項目與純資訊性項目。
 
 
-  **0.5 分**：具備基本整合，但優先排序薄弱。重要項目可能被埋沒，或與次要項目被等
+  **0.75 分**：整合良好，多數優先項目都被辨識出來。在優先排序或串連相關資訊上有少許
 
-  同看待。
+  瑕疵。
+
+
+  **0.5 分**：具備基本整合，但優先排序薄弱。重要項目可能被埋沒，或與次要項目被等同
+
+  看待。
 
 
   **0.25 分**：整合不佳，多半只是列出各來源的資訊，缺乏有意義的整合或優先排序。
@@ -131,52 +163,60 @@ judge_rubric: '### 評分項 1：資訊涵蓋度與正確性（權重 30%）
   ### 評分項 4：文筆品質與語氣（權重 15%）
 
 
-  **1.0 分**：文筆專業、適合高階主管閱讀。語言簡潔、清楚、以行動為導向。使用專業
+  **1.0 分**：以自然、道地的繁體中文（zh-TW）撰寫，全形標點，無簡體字、無中國用語。
 
-  術語時皆有說明背景。詳略程度適合 C 級主管讀者。文法與用字完美無誤。
+  文筆專業、適合高階主管閱讀，語言簡潔、清楚、以行動為導向。使用專業術語時皆有交代
+
+  背景，詳略程度適合 C 級主管讀者，文法與用字無誤。
 
 
-  **0.75 分**：文筆專業良好，僅有少量瑕疵。語氣大致得宜，偶有冗長或措辭不清。
+  **0.75 分**：文筆專業良好，僅有少量瑕疵。語氣大致得宜，偶有冗長或措辭不清，或偶見
+
+  一兩處不夠道地的用語。
 
 
-  **0.5 分**：文筆尚可，但語氣可能不適合高階主管。可能過於隨意、過於瑣碎，或有明顯
+  **0.5 分**：文筆尚可，但語氣可能不適合高階主管，或出現明顯的簡體字／中國用語，或有
 
-  文法／用字問題。
+  明顯文法／用字問題。
 
 
   **0.25 分**：文筆品質不佳。語氣不專業、表達不清，或錯誤多處。
 
 
-  **0.0 分**：文字無法理解，或完全不得體。
+  **0.0 分**：文字無法理解、完全不得體，或非繁體中文。
 
 
   ### 評分項 5：簡潔度與篇幅（權重 10%）
 
 
-  **1.0 分**：摘要長度適中且簡潔（500 至 800 字），在不犧牲清晰度的前提下維持高
+  **1.0 分**：簡報長度適中且簡潔（約 500 至 800 字），在不犧牲清晰度的前提下維持高
 
   資訊密度。無冗贅或填充內容。
 
 
-  **0.75 分**：篇幅略超過或略低於目標（400 至 500 字或 800 至 1000 字），但仍然
+  **0.75 分**：篇幅略超過或略低於目標（約 400 至 500 字或 800 至 1000 字），但仍然
 
   有效。僅有少量冗贅。
 
 
-  **0.5 分**：明顯過長（1000 至 1500 字）或過短（200 至 400 字）。有部分灌水，或
+  **0.5 分**：明顯過長（約 1000 至 1500 字）或過短（約 200 至 400 字）。有部分灌水，
 
-  因過短而遺漏重要細節。
+  或因過短而遺漏重要細節。
 
 
   **0.25 分**：嚴重過長（超過 1500 字）或嚴重過短（少於 200 字），難以發揮作用。
 
 
   **0.0 分**：篇幅完全不得當，或內容缺失。'
-reference_solution: "助手應該：\n\n1. 探索並讀取 `research/` 目錄中的所有檔案\n2. 分析並整合來自多個來源的資訊：\n   - 市場分析資料\n   - 競爭對手情報\n\
-  \   - 客戶意見回饋\n   - 產品更新\n   - 產業新聞\n3. 製作一份組織良好的每日簡報，內容須：\n   - 以一段簡短的執行摘要（executive summary）開頭（3 至\
-  \ 5 項關鍵要點）\n   - 將資訊整理為邏輯清楚的章節\n   - 凸顯需要立即關注或做出決策的項目\n   - 註明任何風險或機會\n   - 保持摘要簡潔（目標約 500 至 800 字）\n\
-  4. 將簡報儲存到 `daily_briefing.md`\n\n這項任務測試助手是否能夠：\n\n- 探索並發現目錄中的檔案\n- 讀取並理解多份文件\n- 整合來自不同來源的資訊\n- 排定優先順序並凸顯關鍵資訊\n\
-  - 撰寫專業的高階主管溝通文件"
+reference_solution: "助手應該：\n\n1. 探索並讀取 research/ 目錄中的全部五份檔案。\n2. 分析並整合來自多個來源的資訊：\n   - 市場分析資料（台股加權指數收\
+  \ 23,418.62 點上漲 1.1%、半導體領漲、新臺幣升值、\n     鼎新半導體財報優於預期、裕順電動車召回 4,800 輛、雲訊資訊以 NT$68 億併購盾安科技）。\n   - 競爭對手情報（南港數位推出「南港智匯」並以每月\
+  \ NT$2,900 低於我方旗艦方案 15%、\n     晶橋資訊完成 D 輪 NT$58 億、速聯雲服務中斷頻傳帶來的招攬機會）。\n   - 客戶回饋（客服工單 238 張、緊急 11 張；鴻晟集團\
+  \ ARR NT$1,350 萬的流失風險；\n     富鼎金融、康澤醫療的加購機會）。\n   - 產品更新（即時協作 Beta、儀表板效能提升 40%、XSS 漏洞修補；AI 洞察功能 2/28\
+  \ 上線、\n     行動 App v3.0 於 2/21 上線；金流串接與 SSO 受阻）。\n   - 產業新聞（《人工智慧基本法》草案 3/1 施行、揭露 AI 生成內容、違規最高罰全球營收\
+  \ 6%；\n     《個資法》修正提案；資策會與工研院趨勢資料；研討會活動）。\n3. 製作一份組織良好的每日繁體中文簡報，內容須：\n   - 以一段簡短的執行摘要開頭（3 至 5 項關鍵要點）。\n\
+  \   - 將資訊整理為邏輯清楚的章節。\n   - 凸顯需要立即關注或做出決策的項目（競品產品攻勢、鴻晟集團流失風險、\n     《人工智慧基本法》期限、速聯雲招攬機會）。\n   - 註明風險與機會，並能串連相關資訊（例如競品低價定價與我方客戶留任之間的關聯）。\n\
+  \   - 維持約 500 至 800 字的簡潔篇幅。\n4. 將簡報儲存到 daily_briefing.md。\n\n這項任務測試助手是否能夠：探索並發現目錄檔案、讀取並理解多份文件、整合不同來源資訊、\n\
+  排定優先順序並凸顯關鍵資訊，以及撰寫專業且適合高階主管閱讀的繁體中文溝通文件。"
 primary_dimensions:
 - completion
 metadata:
@@ -187,229 +227,223 @@ metadata:
   grading_weights: {}
   workspace_files:
   - path: research/market_analysis.txt
-    content: 'Market Analysis Report - February 15, 2026
+    content: '市場分析報告 — 2026 年 2 月 16 日
 
-      Analyst: Sarah Chen, Senior Market Strategist
-
-
-      Key Market Movements:
-
-      - S&P 500 closed at 5,842.31, up 1.2% on strong tech earnings
-
-      - NASDAQ gained 1.8%, led by semiconductor stocks
-
-      - Dow Jones rose 0.7% to 42,156.88
-
-      - 10-year Treasury yield steady at 4.32%
+      分析師：林淑芬（資深市場策略師）
 
 
-      Sector Performance:
+      重點盤勢動向：
 
-      - Technology: +2.1% (best performer)
+      - 臺股加權指數收在 23,418.62 點，受權值科技股財報帶動上漲 1.1%
 
-      - Healthcare: +0.9%
+      - 櫃買指數上漲 1.6%，半導體與 IC 設計類股領漲
 
-      - Energy: -0.3% (only declining sector)
+      - 電子類股指數上漲 1.9%，為當日最強勢族群
 
-      - Financials: +0.6%
+      - 十年期公債殖利率持平於 1.62%
 
-
-      Notable Company News:
-
-      - TechCorp announced Q4 earnings beat, revenue up 23% YoY
-
-      - GlobalPharma received FDA approval for new cancer treatment
-
-      - AutoEV recalled 50,000 vehicles due to battery concerns
-
-      - CloudServices acquired DataSecure for $2.3B
+      - 新臺幣兌美元收在 31.85 元，微幅升值
 
 
-      Market Outlook:
+      類股表現：
 
-      Analysts remain cautiously optimistic heading into March. The Fed''s next meeting
+      - 半導體：＋2.0%（當日最強）
 
-      is expected to maintain current interest rates. Consumer spending data released
+      - 生技醫療：＋0.8%
 
-      today showed resilience despite inflation concerns.
+      - 傳產原物料：－0.4%（唯一收黑族群）
+
+      - 金融保險：＋0.5%
+
+
+      值得關注的公司動態：
+
+      - 鼎新半導體公布第四季財報，營收年增 22%，優於市場預期
+
+      - 全民生技取得衛福部食藥署新一代癌症用藥查驗登記核准
+
+      - 裕順電動車因電池疑慮召回 4,800 輛車
+
+      - 雲訊資訊以新臺幣 68 億元併購資安公司「盾安科技」
+
+
+      後市展望：
+
+      分析師對三月行情維持審慎樂觀。市場預期央行下次理監事會將維持利率不變。
+
+      今日公布的零售銷售資料顯示，儘管通膨壓力仍在，內需消費展現韌性。
 
       '
   - path: research/competitor_intelligence.txt
-    content: 'Competitor Intelligence Brief - Daily Update
+    content: '競爭對手情報摘要 — 每日更新
 
-      Prepared by: Intelligence Team
-
-
-      === COMPETITOR A (Nexus Technologies) ===
-
-      - Launched new AI assistant product "NexusAI" targeting enterprise customers
-
-      - Pricing: $99/user/month, undercutting our premium tier by 15%
-
-      - Early reviews mention strong integration capabilities but limited customization
-
-      - Hired 3 senior engineers from our ML team last month (ongoing retention concern)
+      彙整單位：市場情資小組
 
 
-      === COMPETITOR B (DataFlow Inc) ===
+      === 競品 A（南港數位） ===
 
-      - Announced Series D funding of $180M at $2.1B valuation
+      - 推出全新企業級 AI 助理產品「南港智匯」，主打中大型企業客戶
 
-      - Planning expansion into European markets Q2 2026
+      - 定價：每位使用者每月 NT$2,900，比我方旗艦方案低約 15%
 
-      - New partnership with Microsoft for Azure integration
+      - 早期評價提到整合能力強，但客製化彈性有限
 
-      - CEO quoted saying they aim to "dominate the mid-market segment"
-
-
-      === COMPETITOR C (SwiftCloud) ===
-
-      - Experiencing service outages (3rd incident this month)
-
-      - Customer complaints increasing on social media
-
-      - Opportunity: Their enterprise clients may be looking for alternatives
-
-      - Our sales team should prioritize outreach to SwiftCloud''s top 50 accounts
+      - 上個月從我方機器學習團隊挖角 3 名資深工程師（人才留任的隱憂持續存在）
 
 
-      === STRATEGIC RECOMMENDATIONS ===
+      === 競品 B（晶橋資訊） ===
 
-      1. Accelerate enterprise AI features to counter Nexus launch
+      - 宣布完成 D 輪募資新臺幣 58 億元，投後估值達 680 億元
 
-      2. Review pricing strategy for premium tier
+      - 規劃 2026 年第二季拓展東南亞市場
 
-      3. Strengthen employee retention programs
+      - 與微軟新簽合作，深化 Azure 雲端整合
 
-      4. Develop targeted campaign for SwiftCloud defectors
+      - 執行長公開表示要「拿下中型企業市場的主導地位」
+
+
+      === 競品 C（速聯雲） ===
+
+      - 近期服務中斷頻傳（本月第三次事故）
+
+      - 社群媒體上的客訴明顯增加
+
+      - 機會點：他們的企業客戶可能正在尋找替代方案
+
+      - 我方業務團隊應優先接觸速聯雲前 50 大客戶
+
+
+      === 策略建議 ===
+
+      1. 加速推出企業級 AI 功能，因應南港數位的新品攻勢
+
+      2. 重新檢視旗艦方案的定價策略
+
+      3. 強化員工留任與激勵制度
+
+      4. 針對速聯雲流失客戶，規劃專屬招攬方案
 
       '
   - path: research/customer_feedback.txt
-    content: 'Customer Feedback Summary - Daily Digest
+    content: '客戶回饋彙整 — 每日摘要
 
-      Date: February 15, 2026
+      日期：2026 年 2 月 16 日
 
-      Compiled by: Customer Success Team
-
-
-      SUPPORT TICKETS (Last 24 hours):
-
-      - Total: 247 tickets
-
-      - Critical: 12 (down from 18 yesterday)
-
-      - High Priority: 45
-
-      - Medium/Low: 190
+      彙整單位：客戶成功團隊
 
 
-      TOP ISSUES:
+      客服工單（近 24 小時）：
 
-      1. API rate limiting errors (34 tickets) - Engineering investigating
+      - 總計：238 張
 
-      2. Dashboard loading slowly (28 tickets) - Related to yesterday''s update
+      - 緊急：11 張（昨日為 17 張，已下降）
 
-      3. Export feature not working for large datasets (19 tickets) - Known issue, fix ETA Monday
+      - 高優先：43 張
 
-      4. Mobile app crashes on Android 14 (15 tickets) - New issue, escalated to mobile team
-
-
-      POSITIVE FEEDBACK HIGHLIGHTS:
-
-      - "The new reporting feature saved our team 10 hours this week" - Enterprise client
-
-      - "Best customer support I''ve experienced in SaaS" - NPS score 72 this month
-
-      - 3 case studies approved by customers for marketing use
-
-      - 15 new G2 reviews, average rating 4.6 stars
+      - 中／低優先：184 張
 
 
-      CHURN RISK ALERTS:
+      主要問題：
 
-      - MegaCorp (ARR $450K) - Evaluating competitors, exec meeting scheduled
+      1. API 流量限制錯誤（32 張）— 工程團隊調查中
 
-      - TechStart (ARR $85K) - Missed renewal call, follow-up required
+      2. 儀表板載入緩慢（27 張）— 與昨日的更新有關
 
-      - GlobalRetail (ARR $220K) - Budget cuts mentioned, may downgrade
+      3. 大型資料集匯出功能失效（18 張）— 已知問題，預計週一修復
+
+      4. 行動 App 在 Android 14 上閃退（14 張）— 新問題，已升級給行動團隊
 
 
-      UPSELL OPPORTUNITIES:
+      正面回饋亮點：
 
-      - FinanceHub (current ARR $120K) - Interested in enterprise tier
+      - 「新的報表功能這週幫我們團隊省下 10 個小時」— 某企業客戶
 
-      - HealthTech (current ARR $95K) - Expanding team, needs more seats
+      - 「這是我在 SaaS 產業遇過最好的客戶支援」— 本月 NPS 達 71 分
+
+      - 3 篇客戶案例已獲客戶同意用於行銷
+
+      - 新增 15 則第三方評論平台評價，平均 4.6 顆星
+
+
+      流失風險警示：
+
+      - 鴻晟集團（年度經常性收入 NT$1,350 萬）— 正在評估競品，已排定高層會議
+
+      - 翔威新創（年度經常性收入 NT$255 萬）— 錯過續約電話，需追蹤
+
+      - 全聯通路（年度經常性收入 NT$660 萬）— 提及預算縮減，可能降級方案
+
+
+      加購機會：
+
+      - 富鼎金融（目前年度經常性收入 NT$360 萬）— 對企業級方案有興趣
+
+      - 康澤醫療（目前年度經常性收入 NT$285 萬）— 團隊擴編，需要更多席次
 
       '
   - path: research/product_updates.txt
-    content: 'Product & Engineering Daily Standup Notes
+    content: '產品與工程每日站會紀錄
 
-      Date: February 15, 2026
+      日期：2026 年 2 月 16 日
 
-      Sprint: Phoenix-23 (Day 8 of 14)
-
-
-      SHIPPED TODAY:
-
-      ✓ Real-time collaboration feature (beta) - 500 users enrolled
-
-      ✓ Performance improvements to dashboard (40% faster load times)
-
-      ✓ Bug fix: CSV export encoding issues resolved
-
-      ✓ Security patch: XSS vulnerability in comments section
+      衝刺：鳳凰 23 號（第 8 天／共 14 天）
 
 
-      IN PROGRESS:
+      今日已上線：
 
-      → AI-powered insights feature (65% complete, on track for Feb 28)
+      ✓ 即時協作功能（Beta）— 已開放 500 位使用者試用
 
-      → Mobile app v3.0 redesign (80% complete, QA starting Monday)
+      ✓ 儀表板效能改善（載入速度提升 40%）
 
-      → API v2 migration tools (40% complete)
+      ✓ 修正錯誤：解決 CSV 匯出編碼問題
 
-      → SOC 2 Type II audit preparation (documentation phase)
-
-
-      BLOCKED:
-
-      ⚠ Third-party payment integration - waiting on vendor API access
-
-      ⚠ Enterprise SSO feature - Legal reviewing data processing agreement
+      ✓ 資安修補：修復留言區的 XSS 跨站腳本漏洞
 
 
-      UPCOMING RELEASES (Next 2 weeks):
+      進行中：
 
-      - Feb 18: AI insights beta launch to 1000 users
+      → AI 智慧洞察功能（完成 65%，可如期於 2 月 28 日上線）
 
-      - Feb 21: Mobile app v3.0 public release
+      → 行動 App v3.0 改版（完成 80%，品保測試週一開始）
 
-      - Feb 25: New pricing page and plan comparison tool
+      → API v2 移轉工具（完成 40%）
 
-      - Feb 28: API v2 general availability
+      → SOC 2 Type II 稽核準備（文件整理階段）
 
 
-      TECHNICAL DEBT:
+      受阻項目：
 
-      - Scheduled database migration this weekend (Saturday 2am-6am EST)
+      ⚠ 第三方金流串接 — 仍在等待廠商開放 API 權限
 
-      - Expected 30-minute downtime, customers notified
+      ⚠ 企業單一登入（SSO）功能 — 法務正在審查資料處理合約
+
+
+      未來兩週預定發布：
+
+      - 2 月 18 日：AI 洞察功能 Beta 擴大至 1,000 位使用者
+
+      - 2 月 21 日：行動 App v3.0 正式版上線
+
+      - 2 月 25 日：全新定價頁面與方案比較工具
+
+      - 2 月 28 日：API v2 正式對外開放
+
+
+      技術債：
+
+      - 本週末排定資料庫移轉（台灣時間週六凌晨 2 點至 6 點）
+
+      - 預計停機約 30 分鐘，已通知客戶
 
       '
   - path: research/industry_news.txt
-    content: "Industry News Roundup - February 15, 2026\n\nREGULATORY DEVELOPMENTS:\n- EU AI Act enforcement\
-      \ begins March 1, 2026\n  * Companies must disclose AI-generated content\n  * Fines up to 6% of\
-      \ global revenue for violations\n  * Our compliance team confirms we're ready\n\n- California Consumer\
-      \ Privacy Act amendment proposed\n  * Would require explicit consent for data sharing\n  * Tech\
-      \ industry lobbying against stricter requirements\n\nINDUSTRY TRENDS:\n- Gartner Report: Enterprise\
-      \ AI spending to reach $280B by 2027\n- McKinsey Study: 67% of companies plan to increase SaaS budgets\
-      \ in 2026\n- Remote work tools market growing 18% annually\n\nNOTABLE FUNDING ROUNDS THIS WEEK:\n\
-      - AIStartup raised $500M Series E (largest AI funding this year)\n- WorkflowTool raised $75M Series\
-      \ B\n- SecurityFirst raised $120M Series C\n\nPARTNERSHIPS & ACQUISITIONS:\n- Salesforce + Anthropic:\
-      \ Expanded AI partnership announced\n- Google acquired DocuAI for $1.8B\n- Microsoft investing $2B\
-      \ in OpenAI competitors\n\nCONFERENCES & EVENTS:\n- TechCrunch Disrupt (Feb 20-22, San Francisco)\
-      \ - Our CEO speaking\n- SaaStr Annual (March 10-12, Phoenix) - We're a Gold Sponsor\n- Enterprise\
-      \ Connect (March 25-28, Orlando) - Booth #342"
+    content: "產業新聞彙整 — 2026 年 2 月 16 日\n\n法規動態：\n- 國發會《人工智慧基本法》草案預計 3 月 1 日進入施行階段\n  * 業者須揭露由 AI 生成的內容\n\
+      \  * 違規最高可處全球營收 6% 罰鍰\n  * 我方法遵團隊確認已完成準備\n\n- 個人資料保護委員會提案修正《個人資料保護法》\n  * 擬要求資料共享須取得當事人明示同意\n  *\
+      \ 科技業者正遊說反對過於嚴格的規範\n\n產業趨勢：\n- 資策會報告：2027 年前企業 AI 投資將上看新臺幣 9,000 億元\n- 工研院研究：67% 企業計畫於 2026 年增加\
+      \ SaaS 軟體預算\n- 遠距協作工具市場以每年 18% 的速度成長\n\n本週重要募資輪：\n- 智初科技完成 E 輪募資新臺幣 160 億元（今年國內最大 AI 募資案）\n- 流程通完成\
+      \ B 輪募資新臺幣 24 億元\n- 安先資安完成 C 輪募資新臺幣 39 億元\n\n合作與併購：\n- 鼎峰雲端科技與台亞電信宣布擴大 AI 策略合作\n- 谷川集團以新臺幣 58 億元併購文件\
+      \ AI 公司「文曄智能」\n- 微鋒投資新臺幣 65 億元布局生成式 AI 新創\n\n研討會與活動：\n- 台灣科技創新展（2 月 20 日至 22 日，台北南港展覽館）— 我方執行長受邀演講\n\
+      - 雲端 SaaS 高峰會（3 月 10 日至 12 日，台中）— 我方為黃金級贊助商\n- 企業數位轉型大會（3 月 25 日至 28 日，高雄）— 我方設攤位 342 號"
   source_benchmark: pinchbench
   translation_status: complete
   conversion_stage: phase3_taiwan_localized

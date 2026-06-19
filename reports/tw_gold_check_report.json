@@ -333,13 +333,16 @@
             "report_created": 1.0,
             "budget_vote": 1.0,
             "recuse_item": 1.0,
+            "rollcall_item": 1.0,
             "unanimous_item": 1.0,
             "first_reading_item": 1.0,
-            "continued_item": 1.0
+            "continued_item": 1.0,
+            "item25_dissent": 1.0,
+            "summary_count": 1.0
           }
         },
         "partial": {
-          "mean": 0.5,
+          "mean": 0.5556,
           "bounds": {
             "min_mean": 0.2,
             "max_mean": 0.8
@@ -349,9 +352,12 @@
             "report_created": 1.0,
             "budget_vote": 1.0,
             "recuse_item": 0.0,
+            "rollcall_item": 0.0,
             "unanimous_item": 1.0,
-            "first_reading_item": 0.0,
-            "continued_item": 0.0
+            "first_reading_item": 1.0,
+            "continued_item": 1.0,
+            "item25_dissent": 0.0,
+            "summary_count": 0.0
           }
         },
         "fail": {
@@ -364,9 +370,12 @@
             "report_created": 0.0,
             "budget_vote": 0.0,
             "recuse_item": 0.0,
+            "rollcall_item": 0.0,
             "unanimous_item": 0.0,
             "first_reading_item": 0.0,
-            "continued_item": 0.0
+            "continued_item": 0.0,
+            "item25_dissent": 0.0,
+            "summary_count": 0.0
           }
         }
       }
@@ -386,11 +395,15 @@
             "min_action_items": 1.0,
             "owners_identified": 1.0,
             "events_actions": 1.0,
-            "announcement_actions": 1.0
+            "announcement_actions": 1.0,
+            "announcements_product": 1.0,
+            "competitive_actions": 1.0,
+            "messaging_actions": 1.0,
+            "deadlines_noted": 1.0
           }
         },
         "partial": {
-          "mean": 0.8,
+          "mean": 0.4444,
           "bounds": {
             "min_mean": 0.2,
             "max_mean": 0.8
@@ -398,10 +411,14 @@
           "passed": true,
           "breakdown": {
             "report_created": 1.0,
-            "min_action_items": 0.5,
+            "min_action_items": 1.0,
             "owners_identified": 0.5,
             "events_actions": 1.0,
-            "announcement_actions": 1.0
+            "announcement_actions": 0.0,
+            "announcements_product": 0.0,
+            "competitive_actions": 0.0,
+            "messaging_actions": 0.0,
+            "deadlines_noted": 0.5
           }
         },
         "fail": {
@@ -415,7 +432,11 @@
             "min_action_items": 0.0,
             "owners_identified": 0.0,
             "events_actions": 0.0,
-            "announcement_actions": 0.0
+            "announcement_actions": 0.0,
+            "announcements_product": 0.0,
+            "competitive_actions": 0.0,
+            "messaging_actions": 0.0,
+            "deadlines_noted": 0.0
           }
         }
       }

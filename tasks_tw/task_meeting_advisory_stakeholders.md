@@ -1,7 +1,6 @@
 ---
 id: task_meeting_advisory_stakeholders
-name: |
-  NTIA Advisory Board 利害關係人利益
+name: 數位治理委員會頻譜共用會議：利害關係人分析
 category: meeting_analysis
 grading_type: hybrid
 timeout_seconds: 180
@@ -15,27 +14,32 @@ localization: taiwan
 localization_strategy: context_replace
 claw_eval_tw_id: T121tw_meeting_advisory_stakeholders
 workspace_files:
-- source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+- source: tw/meetings/tw_advisory_meeting.md
   dest: meeting-transcript.md
 grading_weights:
   automated: 0.6
   llm_judge: 0.4
 ---
 
-# NTIA Advisory Board 利害關係人利益
-
+# 數位治理委員會頻譜共用會議：利害關係人分析
 
 ## Prompt
 
-我手邊有一份政府諮詢委員會會議的逐字稿，存放在 `meeting-transcript.md`。這是 Commerce Spectrum Management Advisory Committee（CSMAC）於 2012 年 5 月 30 日舉行的會議，聚焦於在政府與商用無線寬頻之間共享聯邦頻譜（1755-1850 MHz band）。
+工作區裡有一份政府諮詢委員會會議的逐字稿 meeting-transcript.md（虛構的「數位治理委員會
+智慧城市暨資安顧問委員會」DGC-SCAB 第 14 次會議，2025 年 5 月 30 日於台北南港召開）。
+會議的核心議題只有一個：在 1755-1850 MHz 這段聯邦級頻段，政府單位與商用行動寬頻要怎麼
+**共用（spectrum sharing）**，還是要把政府系統整批**遷移（relocation）**出去。文中的機關、
+公司、人名、議案與數字皆為杜撰。
 
-請幫我分析這份逐字稿，並在一個名為 `stakeholder_analysis.md` 的檔案中建立一份利害關係人分析。針對每個利害關係人群體或個人，請辨識：
+請閱讀這份逐字稿，並在一個名為 `stakeholder_analysis.md` 的繁體中文檔案中，建立一份
+利害關係人分析。針對每個利害關係人群體或個人，請辨識：
 
-- **利害關係人名稱/群體**（例如「Department of Defense」、「Commercial Wireless Carriers」、「NTIA」、立場鮮明的個別委員會成員）
-- **主要利益**（他們希望從此程序中得到什麼）
+- **利害關係人名稱／群體**（例如「國防部」「商用電信業者」「頻譜管理署（OSM）」，以及
+  立場鮮明的個別委員）
+- **主要利益**（他們希望從這個程序中得到什麼）
 - **提出的關切**（所表達的具體擔憂或反對）
-- **對共享（sharing）對比遷移（relocation）的立場**（他們在這個關鍵問題上的立場）
-- **影響力等級**（依其角色與參與程度判定為 high/medium/low）
+- **對共用對比遷移的立場**（他們在這個關鍵問題上站在哪一邊）
+- **影響力等級**（依其角色與參與程度判定為 high／medium／low）
 
 此外也請辨識：
 
@@ -45,56 +49,68 @@ grading_weights:
 
 ## Expected Behavior
 
-助手應該：
+助手應仔細閱讀 meeting-transcript.md，辨識主要利害關係人群體與其立場，並把個別委員對應到
+他們所代表的組織與利益。下列事實全部出自這份台灣逐字稿（機關、公司、人名皆為虛構）：
 
-1. 讀取並分析會議逐字稿
-2. 辨識主要利害關係人群體及其立場
-3. 將個別成員對應到他們所代表的利益
-4. 掌握共享對比遷移的細緻立場
+政府／官方利害關係人：
+- **頻譜管理署（OSM）／聶必亞副署長**：明確主張「**共用優先於遷移**（sharing 優先）」；
+  理由是整批遷出 1755-1850 MHz 的重置成本高達**新臺幣 180 億元**（18 billion），並說
+  「整批清空頻段的年代正在走入尾聲」。希望建立政府與產業合作的框架。
+- **行政院科技與政策辦公室（OSTP）／包柏特委員**：代表行政院全力支持 500 MHz 釋出目標，
+  並把**共用**視為達標的關鍵手段而非備案——「如果共用行得通，為什麼要花 180 億去搬？」
+- **經濟與數位發展部／史國良政務次長**：說明 2023 年六月備忘錄的十年釋出 500 MHz 目標、
+  2024 年 10 月 1 日的法定評估報告、各機關承諾十年過渡期全面遷出。
+- **數位治理委員會（DGC）頻率管理處／林淑芬委員**：彙整五個工作小組的技術盤點與時程。
+- **資安署／柯怡君委員**：負責 WG2 執法監察系統，提出三階段（三步驟）過渡計畫。
+- **國防部相關（玉山防務 DZX／吳孟儒委員、雷神台灣／雷瑞瑟委員、中央科大／史丹利委員）**：
+  需保護衛星控制上鏈、電子戰（EW）訓練、空中作業（UAV、無人機）等能力，這些「不能搬、
+  只能共用並保護」；史丹利指出空中作業（WG5）是整個案子**最大的挑戰**。
 
-關鍵利害關係人群體及其利益：
+商用／產業利害關係人：
+- **商用電信業者（遠傳／馮淑惠委員、中華電信／陳建宏委員、台灣大哥大）**：希望取得
+  3 GHz 以下的頻譜，最在意**確定性**——遷移時程要明確、180 億的成本估算要準確，商用
+  LTE 佈建不能等。
+- **鼎峰科技／鄭雅文委員**：務實派，主張標準正收斂到 LTE，建議直接以 LTE 商用部署當作
+  各工作小組的共同基準參數。
 
-- **NTIA/Karl Nebbia**：偏好共享勝過遷移，希望建立政府與業界合作的框架，關切 $18B 的遷移成本
-- **White House/OSTP（Tom Power）**：支持 Obama 政府的 500 MHz 目標，強調共享為關鍵途徑
-- **商用電信業者（AT&T/Carl Povelites、Verizon/Molly Feldman）**：希望取得 3 GHz 以下的頻譜，關注遷移時程與成本準確性
-- **國防/軍方利益（Jennifer Warren/Lockheed Martin、Rick Reaser/Raytheon）**：需保護訓練、UAV 操作、衛星上行鏈路、電子戰能力
-- **科技公司（Kevin Kahn/Intel）**：對標準收斂（LTE）務實，希望有實際可行的技術參數
-- **學界/獨立顧問（Charles Rush、Dale Hatfield、Dave Borth）**：力主嚴謹的技術分析、各 working group 之間採用共同參數
-- **公共利益（Michael Calabrese/New America Foundation）**：倡議 small cell/較低功率的途徑、有效率的頻譜使用
-- **公眾參與者（Mr. Snider）**：關切公眾意見機會的萎縮
+學界／獨立顧問與公共利益：
+- **南港大學／周明德委員、頻譜政策研究中心／何信宏委員、中央科大／史丹利委員**：力主各
+  工作小組要採用一套**共同的商用佈建參數（common deployment parameters）**當作共同輸入，
+  否則五個小組的干擾分析無法互相比較。
+- **台灣公共利益網路基金會（PINF）／黃國昌委員**：替**小型基地台（small cell）／低功率
+  方案**講話，認為共同參數不該預設成最壞情況，這樣頻譜使用效率更高、與政府系統共存空間更大。
 
-關鍵張力：
-- 共享對比完全遷移
-- 轉換成本（$18B 估計遭質疑）
-- 各 working group 之間需要共同的商用部署參數
-- 機密/敏感資訊的存取
-- 程序中的公眾參與
+公眾參與者：
+- **史耐德先生（一般民眾）**：在公眾意見時段表達疑慮，認為這幾年公眾陳述意見的機會一直
+  被壓縮，請委員會務必保留公眾參與管道。
+
+關鍵張力：共用對比完全遷移；轉換成本（180 億估計遭業者要求查核）；各工作小組是否採共同
+商用佈建參數；機密／敏感系統（執法監察、衛星測控）的保護與存取；程序中的公眾參與。
 
 ## Grading Criteria
 
 - [ ] 已建立檔案 stakeholder_analysis.md
-- [ ] 已辨識政府利害關係人（NTIA、DoD、DHS/Justice、White House/OSTP）
-- [ ] 已辨識商業界利害關係人（電信業者、設備製造商）
-- [ ] 已記下 NTIA 偏好共享勝過純遷移
-- [ ] 已提及 $18 billion 遷移成本為關鍵因素
-- [ ] 已描述共享與遷移途徑之間的張力
-- [ ] 已掌握共同技術參數的辯論（Rush/Warren/Kahn 的討論）
+- [ ] 已辨識政府利害關係人（數位治理委員會 DGC、頻譜管理署 OSM、資安署、國防部、OSTP、經濟與數位發展部）
+- [ ] 已辨識商業界利害關係人（電信業者中華電信／遠傳／台灣大哥大、鼎峰科技、有線電視業者協會）
+- [ ] 已記下頻譜管理署（OSM）偏好共用勝過純遷移
+- [ ] 已提及新臺幣 180 億元（18 billion）遷移成本為關鍵因素
+- [ ] 已描述共用與遷移途徑之間的張力
+- [ ] 已掌握共同佈建參數的辯論（周明德／鄭雅文／黃國昌／何信宏 的討論）
 - [ ] 已辨識至少 3 個共識或衝突領域
-- [ ] 個別成員立場連結到其組織利益
+- [ ] 個別委員立場連結到其組織利益（如鄭雅文／鼎峰科技、黃國昌／PINF、吳孟儒／玉山防務、馮淑惠／遠傳）
 
 ## Automated Checks
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the stakeholder analysis task.
+    """台灣化「頻譜共用會議利害關係人分析」grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
+    查核項對應原始英文 grader，但事實改自台灣逐字稿 meeting-transcript.md
+    （虛構的數位治理委員會 DGC-SCAB 會議；頻譜管理署 OSM 主張共用優先於遷移、
+    純遷移重置成本新臺幣 180 億元）。僅用標準函式庫。
 
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    注意：報告為中文，轉換器會在中文詞後自動接上英文正規化字串，故本 grader
+    以「中文關鍵字／數值」為主要比對對象（這些字串在正規化後仍原樣保留）。
     """
     from pathlib import Path
     import re
@@ -104,100 +120,136 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     report_path = workspace / "stakeholder_analysis.md"
     if not report_path.exists():
-        alternatives = ["stakeholders.md", "stakeholder_report.md", "analysis.md"]
-        for alt in alternatives:
+        for alt in ["stakeholders.md", "stakeholder_report.md", "analysis.md",
+                    "利害關係人分析.md", "利害關係人.md"]:
             alt_path = workspace / alt
             if alt_path.exists():
                 report_path = alt_path
                 break
 
+    keys = ["report_created", "gov_stakeholders", "commercial_stakeholders",
+            "sharing_preference", "relocation_cost", "sharing_vs_relocation",
+            "common_parameters", "conflicts_identified", "member_positions"]
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "gov_stakeholders": 0.0,
-            "commercial_stakeholders": 0.0,
-            "sharing_preference": 0.0,
-            "relocation_cost": 0.0,
-            "sharing_vs_relocation": 0.0,
-            "common_parameters": 0.0,
-            "conflicts_identified": 0.0,
-            "member_positions": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
     scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
+    low = content.lower()
 
-    # Government stakeholders identified
-    gov_entities = ["ntia", "dod", "department of defense", "defense",
-                    "dhs", "homeland security", "justice",
-                    "white house", "ostp", "science and technology policy"]
-    gov_found = sum(1 for g in gov_entities if g in content_lower)
-    scores["gov_stakeholders"] = 1.0 if gov_found >= 4 else (0.5 if gov_found >= 2 else 0.0)
+    # --- 從逐字稿動態讀出「應有事實」，盡量避免硬寫 ---
+    transcript_path = workspace / "meeting-transcript.md"
+    ttext = ""
+    if transcript_path.exists():
+        ttext = transcript_path.read_text(encoding="utf-8", errors="ignore")
 
-    # Commercial stakeholders identified
-    commercial = ["carrier", "wireless", "commercial", "industry",
-                   "at&t", "att", "verizon", "intel", "t-mobile",
-                   "equipment manufacturer", "service provider",
-                   "ctia", "broadband"]
-    comm_found = sum(1 for c in commercial if c in content_lower)
-    scores["commercial_stakeholders"] = 1.0 if comm_found >= 4 else (0.5 if comm_found >= 2 else 0.0)
+    # 純遷移重置成本：從逐字稿動態抓「XXX 億元」這個數字（後援為 180 億）
+    cost_amt = None
+    m = re.search(r'重置成本[^0-9]{0,12}?([0-9一二三四五六七八九十百千]+)\s*億', ttext)
+    if not m:
+        m = re.search(r'([0-9]+)\s*億元', ttext)
+    if m:
+        cost_amt = m.group(1)
+    if not cost_amt:
+        cost_amt = "180"
 
-    # NTIA sharing preference noted
+    # 1) 政府利害關係人（從逐字稿可得的政府機關／署）
+    gov_entities = ["數位治理委員會", "dgc", "頻譜管理署", "osm", "資安署",
+                    "國防部", "ostp", "科技與政策辦公室",
+                    "經濟與數位發展部", "經濟與數位"]
+    gov_found = sum(1 for g in gov_entities if g.lower() in low)
+    scores["gov_stakeholders"] = (
+        1.0 if gov_found >= 4 else (0.5 if gov_found >= 2 else 0.0)
+    )
+
+    # 2) 商業界利害關係人（電信業者、設備／科技公司、產業詞）
+    commercial = ["中華電信", "遠傳", "台灣大哥大", "電信業者", "業者",
+                  "鼎峰", "有線電視", "ctia", "電信業者公會",
+                  "lte", "寬頻", "商用"]
+    comm_found = sum(1 for c in commercial if c.lower() in low)
+    scores["commercial_stakeholders"] = (
+        1.0 if comm_found >= 4 else (0.5 if comm_found >= 2 else 0.0)
+    )
+
+    # 3) 頻譜管理署（OSM）偏好共用勝過純遷移
     sharing_patterns = [
-        r'ntia.*(?:prefer|favor|advocate|support).*shar',
-        r'shar.*(?:prefer|favor|better|alternative).*(?:relocat|vacat)',
-        r'(?:better way|minimize.*movement|keep.*cost)',
-        r'days of vacating.*coming to a close',
+        r'(?:osm|頻譜管理署|聶必亞)[^。\n]{0,40}?共用[^。\n]{0,12}?(?:優先|勝過|偏好|主張|傾向)',
+        r'共用[^。\n]{0,8}?(?:優先|勝過)[^。\n]{0,8}?遷移',
+        r'(?:偏好|主張|傾向|支持)[^。\n]{0,12}?共用[^。\n]{0,12}?(?:勝過|而非|不是|優先)?[^。\n]{0,6}?遷移',
+        r'整批清空頻段的年代[^。\n]{0,12}?(?:走入尾聲|尾聲|結束)',
+        r'共用優先',
     ]
-    scores["sharing_preference"] = 1.0 if any(re.search(p, content_lower) for p in sharing_patterns) else 0.0
+    scores["sharing_preference"] = (
+        1.0 if any(re.search(p, content) for p in sharing_patterns) else 0.0
+    )
 
-    # $18 billion relocation cost mentioned
-    cost_patterns = [r'\$?18\s*billion', r'18b', r'\$18b', r'18,000', r'eighteen billion']
-    scores["relocation_cost"] = 1.0 if any(re.search(p, content_lower) for p in cost_patterns) else 0.0
+    # 4) 新臺幣 180 億元（18 billion）遷移成本
+    cost_patterns = [
+        re.escape(cost_amt) + r'\s*億',
+        r'180\s*億',
+        r'18\s*billion',
+        r'18,?000,?000,?000',
+        r'一百八十\s*億',
+    ]
+    scores["relocation_cost"] = (
+        1.0 if any(re.search(p, content, re.IGNORECASE) for p in cost_patterns) else 0.0
+    )
 
-    # Sharing vs relocation tension described
+    # 5) 共用對比遷移的張力
     tension_patterns = [
-        r'shar.*(?:vs|versus|or|instead of|rather than).*relocat',
-        r'relocat.*(?:vs|versus|or|instead of|rather than).*shar',
-        r'(?:sharing|relocation).*(?:tension|debate|disagreement|question|trade-?off)',
-        r'(?:why.*spend.*money.*move|if.*sharing.*works)',
+        r'共用[^。\n]{0,10}?(?:對比|對上|相對於|還是|而非|而不是|或是|vs|versus)[^。\n]{0,10}?遷移',
+        r'遷移[^。\n]{0,10}?(?:對比|對上|相對於|還是|而非|而不是|或是|vs|versus)[^。\n]{0,10}?共用',
+        r'(?:共用|遷移)[^。\n]{0,20}?(?:張力|衝突|爭議|辯論|分歧|取捨|tension|trade-?off)',
+        r'(?:張力|衝突|爭議|辯論|分歧|取捨)[^。\n]{0,20}?(?:共用|遷移)',
+        r'為(?:什麼|甚麼)[^。\n]{0,12}?花[^。\n]{0,12}?搬',
     ]
-    scores["sharing_vs_relocation"] = 1.0 if any(re.search(p, content_lower) for p in tension_patterns) else 0.0
+    scores["sharing_vs_relocation"] = (
+        1.0 if any(re.search(p, content, re.IGNORECASE) for p in tension_patterns) else 0.0
+    )
 
-    # Common parameters debate captured
+    # 6) 共同（佈建）參數的辯論（周明德／鄭雅文／黃國昌／何信宏）
     param_patterns = [
-        r'(?:common|uniform|consistent).*(?:parameter|characteristic|assumption|input)',
-        r'(?:parameter|characteristic|assumption).*(?:common|uniform|consistent|agree)',
-        r'rush.*(?:parameter|standard|commercial)',
-        r'warren.*(?:common|input|working group)',
-        r'kahn.*(?:standard|lte)',
+        r'(?:共同|一致|統一|相同)[^。\n]{0,8}?(?:佈建|部署|商用|技術)?[^。\n]{0,4}?參數',
+        r'參數[^。\n]{0,8}?(?:共同|一致|統一|相同)',
+        r'common\s+(?:deployment\s+)?parameters',
+        r'周明德[^。\n]{0,30}?(?:共同|參數|工作小組)',
+        r'鄭雅文[^。\n]{0,30}?(?:lte|參數|標準)',
+        r'黃國昌[^。\n]{0,30}?(?:small\s*cell|小型基地台|低功率)',
     ]
-    scores["common_parameters"] = 1.0 if any(re.search(p, content_lower) for p in param_patterns) else 0.0
+    scores["common_parameters"] = (
+        1.0 if any(re.search(p, content, re.IGNORECASE) for p in param_patterns) else 0.0
+    )
 
-    # Conflicts/agreements identified (look for structural markers)
+    # 7) 衝突／共識／未解決問題的結構性指標
     conflict_indicators = 0
     conflict_terms = [
-        r'(?:tension|conflict|disagree|debate|challenge|concern|oppose)',
-        r'(?:agree|consensus|common ground|alignment|shared interest)',
-        r'(?:unresolved|open question|outstanding|remain)',
+        r'張力|衝突|分歧|辯論|爭議|挑戰|關切|擔憂|反對|質疑',
+        r'共識|一致|認同|同意|合作|共同立場|共同點|共同利益',
+        r'未(?:解決|解|決)|待解|開放(?:問題|議題)|懸而未決|尚未|有待',
     ]
     for ct in conflict_terms:
-        if re.search(ct, content_lower):
+        if re.search(ct, content):
             conflict_indicators += 1
-    scores["conflicts_identified"] = 1.0 if conflict_indicators >= 2 else (0.5 if conflict_indicators >= 1 else 0.0)
+    scores["conflicts_identified"] = (
+        1.0 if conflict_indicators >= 2 else (0.5 if conflict_indicators >= 1 else 0.0)
+    )
 
-    # Individual member positions linked to organizations
+    # 8) 個別委員立場連結到其組織／利益（中文姓名 + 組織或主張關鍵字）
     member_org_pairs = [
-        (r'rush', r'(?:consult|cmr|fcc|parameter)'),
-        (r'warren', r'(?:lockheed|defense|military|engineer)'),
-        (r'kahn', r'(?:intel|standard|lte)'),
-        (r'calabrese', r'(?:new america|small cell|unlicensed|public interest)'),
-        (r'povelites', r'(?:at.t|carrier|cost|relocation)'),
+        (r'周明德', r'南港大學|共同[^。\n]{0,4}?參數|工作小組|方法論'),
+        (r'鄭雅文', r'鼎峰|lte|標準|參數'),
+        (r'黃國昌', r'pinf|公共利益|小型基地台|small\s*cell|低功率'),
+        (r'馮淑惠', r'遠傳|確定性|成本|時程|電信'),
+        (r'吳孟儒', r'玉山防務|dzx|衛星|電子戰|空中|uav'),
+        (r'聶必亞', r'頻譜管理署|osm|180|共用|遷移'),
     ]
-    pair_found = sum(1 for name, org in member_org_pairs
-                     if re.search(name, content_lower) and re.search(org, content_lower))
-    scores["member_positions"] = 1.0 if pair_found >= 3 else (0.5 if pair_found >= 2 else 0.0)
+    pair_found = sum(
+        1 for name, org in member_org_pairs
+        if re.search(name, content) and re.search(org, content, re.IGNORECASE)
+    )
+    scores["member_positions"] = (
+        1.0 if pair_found >= 3 else (0.5 if pair_found >= 2 else 0.0)
+    )
 
     return scores
 
@@ -256,32 +308,35 @@ def grade(transcript, workspace_path):  # noqa: F811
 ## LLM Judge Rubric
 
 ### 評分項 1：利害關係人辨識完整度（權重 30%）
-
-**1.0 分**：辨識出所有主要利害關係人群體（政府機關、商用電信業者、設備製造商、國防承包商、學界、公共利益、公眾參與者），並在適用處附上具名代表。
+**1.0 分**：辨識出所有主要利害關係人群體（政府機關如頻譜管理署 OSM、資安署、DGC、OSTP、
+經濟與數位發展部；商用電信業者；設備／科技公司如鼎峰科技；國防相關的玉山防務／雷神台灣；
+學界與獨立顧問；公共利益基金會 PINF；公眾參與者），並在適用處附上具名委員。
 **0.75 分**：辨識出多數利害關係人群體，僅有少許遺漏。
 **0.5 分**：辨識出主要群體，但漏掉重要的次類別或代表。
 **0.25 分**：僅辨識出最明顯的利害關係人（政府對比業界）。
 **0.0 分**：利害關係人辨識不完整或不準確。
 
 ### 評分項 2：利益與立場分析（權重 30%）
-
-**1.0 分**：每個利害關係人的利益、關切，以及對共享對比遷移的立場皆清楚闡述，並有逐字稿佐證。細緻立場皆有掌握（例如 NTIA 從遷移轉向偏好共享、業界對確定性的渴望）。
+**1.0 分**：每個利害關係人的利益、關切，以及對共用對比遷移的立場皆清楚闡述，並有逐字稿
+佐證。細緻立場皆有掌握（例如頻譜管理署因 180 億成本而偏好共用、業界對確定性的渴望、
+國防系統「不能搬只能共用並保護」、PINF 力主小型基地台低功率）。
 **0.75 分**：對多數利害關係人立場分析良好，僅有少許缺口。
 **0.5 分**：記下基本立場，但缺乏細緻度或佐證。
 **0.25 分**：對利害關係人立場處理流於表面。
 **0.0 分**：立場錯誤或未分析。
 
 ### 評分項 3：衝突與共識對應（權重 25%）
-
-**1.0 分**：清楚對應出關鍵張力（共享對比遷移、共同參數辯論、機密資訊存取、公眾參與、成本爭議）。共識領域亦有記下（需要合作、頻譜稀缺的現實）。
+**1.0 分**：清楚對應出關鍵張力（共用對比遷移、共同佈建參數辯論、機密／敏感系統的保護與
+存取、公眾參與萎縮、180 億成本爭議）。共識領域亦有記下（需要政府與產業合作、頻譜稀缺的
+現實、十年過渡期的共識）。
 **0.75 分**：辨識出多數關鍵張力，僅有少許遺漏。
 **0.5 分**：記下部分張力，但分析淺薄。
 **0.25 分**：僅提及最明顯的衝突。
 **0.0 分**：無衝突或共識分析。
 
 ### 評分項 4：證據導向分析（權重 15%）
-
-**1.0 分**：論點皆有具體引文或對逐字稿對話的引用佐證。個別成員的發言皆正確歸屬。
+**1.0 分**：論點皆有具體引文或對逐字稿對話的引用佐證。個別委員的發言皆正確歸屬（例如
+聶必亞談 180 億、周明德主張共同參數、黃國昌講小型基地台、吳孟儒講衛星上鏈與電子戰）。
 **0.75 分**：多數論點皆有逐字稿證據佐證。
 **0.5 分**：提供部分證據，但許多論點無佐證。
 **0.25 分**：大致為斷言式而無逐字稿支撐。

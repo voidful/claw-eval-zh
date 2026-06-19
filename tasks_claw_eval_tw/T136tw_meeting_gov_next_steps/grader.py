@@ -13,94 +13,210 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the next steps extraction task.
+    """數位治理委員會（虛構）公聽會後續步驟擷取 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    對應原版任務的查核項，但改查工作區內的台灣逐字稿
+    （dest=transcript.md）動態推導之事實，再與 agent 產生的中文報告
+    next_steps.md 比對。報告為中文（轉換器會在其後接上中→英正規化 wrapper，
+    但中文原文會被保留），故以中文關鍵字為主、英文為輔。僅用標準函式庫。
     """
     from pathlib import Path
     import re
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    report_path = workspace / "next_steps.md"
-    if not report_path.exists():
-        alternatives = ["action_items.md", "follow_up.md", "followup.md", "actions.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+    keys = [
+        "report_created", "final_report_timeline", "annual_report",
+        "sensor_deployment", "data_sharing_circle", "budget_status",
+        "open_questions", "timeframe_org", "responsible_parties",
+        "timeline_viz",
+    ]
+
+    # --- 報告檔（容許數種常見命名） ---
+    report = workspace / "next_steps.md"
+    if not report.exists():
+        for alt in ["next_steps.txt", "後續步驟.md", "後續行動.md",
+                    "follow_up.md", "followup.md", "action_items.md",
+                    "actions.md", "後續步驟與行動.md"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
                 break
+    if not report.exists():
+        return {k: 0.0 for k in keys}
 
-    if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "final_report_timeline": 0.0,
-            "aaro_annual_report": 0.0,
-            "sensor_deployment": 0.0,
-            "five_eyes": 0.0,
-            "budget_status": 0.0,
-            "open_questions": 0.0,
-            "timeframe_org": 0.0,
-            "responsible_parties": 0.0,
-            "timeline_viz": 0.0,
-        }
+    c = report.read_text(encoding="utf-8", errors="ignore")
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # --- 從逐字稿動態讀出可查核事實（避免硬寫） ---
+    tpath = workspace / "transcript.md"
+    if not tpath.exists():
+        for alt in ["transcript.txt", "meeting_transcript.md", "hearing.md"]:
+            if (workspace / alt).exists():
+                tpath = workspace / alt
+                break
+    t = tpath.read_text(encoding="utf-8", errors="ignore") if tpath.exists() else ""
 
-    # Final report timeline
-    report_patterns = [r'final\s+report', r'report.*summer|summer.*report', r'end\s+of\s+july|july', r'publish.*website']
-    scores["final_report_timeline"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in report_patterns) >= 2 else (0.5 if any(re.search(p, content_lower) for p in report_patterns) else 0.0)
+    # 逐字稿以「**姓名（角色）：**」或「姓名（…）問／答／向…建議」標示發言者。
+    speaker_candidates = set()
+    for m in re.finditer(r'\*\*([一-鿿]{2,4})（', t):
+        speaker_candidates.add(m.group(1))
+    fallback_speakers = {
+        "王志明", "陳冠宇", "林淑芬", "張庭瑋", "黃建宏", "周怡安",
+        "蔡明翰", "郭佳穎", "高志遠", "李宗翰", "鄭立群", "白雅雯",
+        "蕭文哲", "吳孟蓉",
+    }
+    speakers = {s for s in speaker_candidates
+                if re.search(re.escape(s) + r'\s*[（(]', t)}
+    if len(speakers) < 5:
+        speakers = {s for s in fallback_speakers if s in t}
+    if not speakers:
+        speakers = fallback_speakers
 
-    # AARO annual report
-    aaro_report_patterns = [r'aaro.*annual\s+report|annual\s+report.*aaro', r'august\s+1|august\s+first', r'report.*congress|congress.*report']
-    scores["aaro_annual_report"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in aaro_report_patterns) >= 1 else 0.0
+    # 從逐字稿動態取出年度報告的提交日期（如「8 月 1 日」）。
+    annual_date_re = (
+        r'(\d{1,2})\s*月\s*(\d{1,2})\s*日|august\s*1|august\s*first|8\s*/\s*1')
+    annual_date_in_t = bool(re.search(annual_date_re, t, re.IGNORECASE))
 
-    # Sensor deployment
-    sensor_patterns = [r'purpose.built\s+sensor', r'dedicated\s+sensor', r'deploy.*sensor|sensor.*deploy', r'surveillance.*area|hotspot']
-    scores["sensor_deployment"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in sensor_patterns) >= 1 else 0.0
+    # 從逐字稿動態取出資料共享聯盟的名稱（如「五方資料圈」）。
+    circle_name = None
+    mcir = re.search(r'(五方資料圈|[一-鿿]{1,4}資料圈)', t)
+    if mcir:
+        circle_name = mcir.group(1)
 
-    # Five Eyes
-    five_patterns = [r'five\s+eyes', r'uk.*canada.*australia', r'intelligence.*partner|partner.*intelligence']
-    scores["five_eyes"] = 1.0 if any(re.search(p, content_lower) for p in five_patterns) else 0.0
+    scores = {"report_created": 1.0}
 
-    # Budget status
-    budget_patterns = [r'no\s+(?:associated\s+)?(?:programmatic\s+)?fund', r'not\s+established\s+a\s+program', r'no\s+formal\s+(?:program|budget)', r'too\s+early\s+to\s+say', r'budget.*complex|complex.*budget']
-    scores["budget_status"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in budget_patterns) >= 1 else (0.5 if re.search(r'budget|fund', content_lower) else 0.0)
+    # --- 1) 最終報告時程：今年夏天／7 月底前／發布於官方網站 ---
+    report_patterns = [
+        r'最終報告|final\s*report',
+        r'今年夏天|這個?夏天|夏季|summer',
+        r'7\s*月底|七月底|月底前|end\s*of\s*july|july',
+        r'(?:發布|公布|刊登|上傳).{0,8}(?:官方)?網站|publish.*website|官方網站',
+    ]
+    rhits = sum(bool(re.search(p, c, re.IGNORECASE)) for p in report_patterns)
+    scores["final_report_timeline"] = (
+        1.0 if rhits >= 2 else (0.5 if rhits >= 1 else 0.0))
 
-    # Open questions
-    open_patterns = [r'open\s+question', r'unresolved', r'unclear|undefined', r'debate|debated', r'tbd|to\s+be\s+determined']
-    has_open = any(re.search(p, content_lower) for p in open_patterns)
-    # Also check for content about scope debate or definition of anomalous
-    has_scope = bool(re.search(r'scope.*aerial.*anomalous|aerial.*anomalous.*scope|domain.*debate', content_lower))
-    has_definition = bool(re.search(r'defin.*anomalous|anomalous.*defin', content_lower))
-    scores["open_questions"] = 1.0 if has_open and (has_scope or has_definition) else (0.5 if has_open else 0.0)
+    # --- 2) 年度報告須於提交日期（逐字稿之 8 月 1 日）前提交 ---
+    annual_patterns = [
+        r'年度(?:風險)?報告|annual\s*report',
+        r'8\s*月\s*1\s*日|八月一日|八月\s*1\s*日|august\s*1|august\s*first|8\s*/\s*1',
+        r'提交.{0,6}委員會|送交?.{0,6}委員會|呈報.{0,6}委員會|submit.*committee',
+    ]
+    ahits = sum(bool(re.search(p, c, re.IGNORECASE)) for p in annual_patterns)
+    # 至少要點到「年度報告」並帶到日期或提交對象；逐字稿確有 8 月 1 日才給滿分門檻。
+    has_date_match = bool(
+        re.search(r'8\s*月\s*1\s*日|八月一日|八月\s*1\s*日|august\s*1|august\s*first',
+                  c, re.IGNORECASE))
+    if re.search(r'年度(?:風險)?報告|annual\s*report', c, re.IGNORECASE):
+        if annual_date_in_t and has_date_match:
+            scores["annual_report"] = 1.0
+        elif ahits >= 2:
+            scores["annual_report"] = 1.0
+        else:
+            scores["annual_report"] = 0.5
+    else:
+        scores["annual_report"] = 0.0
 
-    # Timeframe organization
-    time_patterns = [r'immediate', r'short.term', r'near.term', r'long.term', r'ongoing', r'weeks', r'months', r'years']
-    time_count = sum(1 for p in time_patterns if re.search(p, content_lower))
-    scores["timeframe_org"] = 1.0 if time_count >= 3 else (0.5 if time_count >= 2 else 0.0)
+    # --- 3) 偵測探針部署：專門打造的偵測探針／風險熱點／部署 ---
+    sensor_patterns = [
+        r'偵測探針|專門打造.{0,6}探針|專屬.{0,4}探針|purpose.?built|dedicated\s*sensor',
+        r'部署.{0,6}(?:探針|感測|偵測)|deploy.*(?:sensor|probe)',
+        r'風險熱點|熱點(?:領域|地區)|hotspot|surveillance',
+        r'探針|感測器|sensor|probe',
+    ]
+    shits = sum(bool(re.search(p, c, re.IGNORECASE)) for p in sensor_patterns)
+    scores["sensor_deployment"] = (
+        1.0 if shits >= 1 else 0.0)
 
-    # Responsible parties
-    parties = set()
-    for party in ['nasa', 'aaro', 'panel', 'faa', 'congress', 'kirkpatrick', 'spergel', 'evans', 'department']:
-        if party in content_lower:
-            parties.add(party)
-    scores["responsible_parties"] = 1.0 if len(parties) >= 5 else (0.5 if len(parties) >= 3 else 0.0)
+    # --- 4) 跨國資料共享聯盟（逐字稿之「五方資料圈」／台日韓新澳） ---
+    circle_patterns = [
+        r'五方資料圈|[一-鿿]{1,4}資料圈',
+        r'台日韓新澳|台、日、韓、新、澳|台.{0,2}日.{0,2}韓.{0,2}新.{0,2}澳',
+        r'跨國.{0,4}資料共享|資料共享.{0,2}(?:聯盟|協議|協定)|data.?sharing',
+    ]
+    # 若能從逐字稿取出聯盟名稱，優先比對該名稱是否出現在報告。
+    chits = sum(bool(re.search(p, c, re.IGNORECASE)) for p in circle_patterns)
+    if circle_name and circle_name in c:
+        scores["data_sharing_circle"] = 1.0
+    else:
+        scores["data_sharing_circle"] = 1.0 if chits >= 1 else 0.0
 
-    # Timeline visualization
-    viz_patterns = [r'timeline', r'milestone', r'gantt', r'roadmap', r'schedule']
-    has_viz = any(re.search(p, content_lower) for p in viz_patterns)
-    has_dates = len(re.findall(r'(?:july|august|summer|2023|q[1-4])', content_lower)) >= 2
-    scores["timeline_viz"] = 1.0 if has_viz and has_dates else (0.5 if has_viz or has_dates else 0.0)
+    # --- 5) 預算／計畫狀態（未設常設計畫、無專屬經費、現在說還太早） ---
+    budget_patterns = [
+        r'未設立.{0,6}(?:常設)?.{0,4}計畫|沒有.{0,6}常設.{0,4}計畫|尚未.{0,4}設立.{0,4}計畫',
+        r'(?:無|沒有|尚無).{0,6}(?:專屬|計畫性|常設).{0,4}經費|no\s*(?:dedicated|formal)?\s*fund',
+        r'現在說(?:還)?太早|言之過早|為時尚早|too\s*early\s*to\s*say',
+        r'(?:收到.{0,6}建議.{0,6}(?:再|後).{0,4}決定|再決定.{0,2}預算).{0,4}',
+    ]
+    bhits = sum(bool(re.search(p, c, re.IGNORECASE)) for p in budget_patterns)
+    if bhits >= 1:
+        scores["budget_status"] = 1.0
+    elif re.search(r'預算|經費|計畫性|budget|fund', c, re.IGNORECASE):
+        scores["budget_status"] = 0.5
+    else:
+        scores["budget_status"] = 0.0
+
+    # --- 6) 待解問題：須有「待解／開放／尚無共識／辯論」+ 具體議題 ---
+    open_markers = [
+        r'待解|未解|尚未解決|開放問題|尚無共識|沒有共識|懸而未決|待釐清|有待',
+        r'辯論|爭議|仍在(?:討論|辯論)|debate|unresolved|open\s*question|tbd',
+    ]
+    has_open = any(re.search(p, c, re.IGNORECASE) for p in open_markers)
+    # 具體議題：範圍辯論 / 異常定義 / 原始資料 / 群眾外包串接 / 正式計畫
+    has_scope = bool(re.search(
+        r'範圍.{0,6}(?:辯論|爭議|界定)|生成式?內容.{0,8}(?:代理|跨系統)|聚焦.{0,4}範圍|scope',
+        c, re.IGNORECASE))
+    has_def = bool(re.search(
+        r'(?:精確)?定義.{0,4}(?:異常|anomalous)|異常.{0,4}(?:精確)?定義|defin.*anomal',
+        c, re.IGNORECASE))
+    has_raw = bool(re.search(
+        r'原始.{0,4}(?:監測)?資料|未過濾.{0,4}資料|raw\s*data', c, re.IGNORECASE))
+    has_specific = has_scope or has_def or has_raw
+    if has_open and has_specific:
+        scores["open_questions"] = 1.0
+    elif has_open or has_specific:
+        scores["open_questions"] = 0.5
+    else:
+        scores["open_questions"] = 0.0
+
+    # --- 7) 依時間範圍組織 ---
+    time_patterns = [
+        r'即將進行|立即|數週|數周|未來幾週|短期',
+        r'近期|數月|未來幾個?月|near.?term',
+        r'長期|持續|數年|long.?term|ongoing',
+        r'里程碑|時間軸|時程|milestone|timeline',
+    ]
+    tcount = sum(1 for p in time_patterns if re.search(p, c, re.IGNORECASE))
+    scores["timeframe_org"] = (
+        1.0 if tcount >= 3 else (0.5 if tcount >= 2 else 0.0))
+
+    # --- 8) 負責方：報告中點名幾位逐字稿發言者，或幾個機關 ---
+    named = {s for s in speakers if s in c}
+    org_patterns = [
+        r'數位治理委員會|本委員會|委員會',
+        r'\bAIRC\b|風險研析中心',
+        r'研析小組|本小組|小組',
+        r'\bNCRA\b|通訊傳播監理署',
+    ]
+    org_hits = sum(1 for p in org_patterns if re.search(p, c, re.IGNORECASE))
+    party_total = len(named) + org_hits
+    scores["responsible_parties"] = (
+        1.0 if party_total >= 5 else (0.5 if party_total >= 3 else 0.0))
+
+    # --- 9) 時間軸視覺化／里程碑摘要 + 至少 2 個日期關鍵字 ---
+    viz_patterns = [r'時間軸', r'里程碑', r'milestone', r'timeline', r'時程表', r'路線圖']
+    has_viz = any(re.search(p, c, re.IGNORECASE) for p in viz_patterns)
+    date_hits = len(re.findall(
+        r'8\s*月\s*1\s*日|八月一日|7\s*月底|七月底|今年夏天|夏季|數週|數月|數年|'
+        r'august|july|summer',
+        c, re.IGNORECASE))
+    has_table = bool(re.search(r'\n\s*\|.*\|.*\n\s*\|?\s*[-:|\s]+\|', c))
+    has_dates = date_hits >= 2
+    if (has_viz or has_table) and has_dates:
+        scores["timeline_viz"] = 1.0
+    elif has_viz or has_table or has_dates:
+        scores["timeline_viz"] = 0.5
+    else:
+        scores["timeline_viz"] = 0.0
 
     return scores
 

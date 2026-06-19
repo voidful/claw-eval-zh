@@ -13,118 +13,152 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the acronym glossary task.
+    """頻譜共用顧問委員會（虛構）縮寫詞彙表 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    以工作區內的台灣逐字稿（dest=meeting-transcript.md）動態推導「應有的縮寫
+    與中文全稱」，再比對 agent 產出的中文報告 acronym_glossary.md。
+    縮寫本身為拉丁字母，逐字稿與報告皆原樣保留，故以「縮寫 + 中文全稱關鍵詞」
+    雙重比對。僅用標準函式庫。
     """
     from pathlib import Path
     import re
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    report_path = workspace / "acronym_glossary.md"
-    if not report_path.exists():
-        alternatives = ["glossary.md", "acronyms.md", "acronym_list.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+    keys = [
+        "report_created", "dgc_expanded", "osm_expanded",
+        "min_15_acronyms", "min_20_acronyms", "technical_acronyms",
+        "gov_agencies", "categories_applied", "alphabetical_sort",
+    ]
+
+    # --- 報告檔（容許數種常見命名） ---
+    report = workspace / "acronym_glossary.md"
+    if not report.exists():
+        for alt in ["glossary.md", "acronyms.md", "acronym_list.md",
+                    "acronym_glossary.txt", "縮寫詞彙表.md", "詞彙表.md"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
                 break
+    if not report.exists():
+        return {k: 0.0 for k in keys}
 
-    if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "csmac_expanded": 0.0,
-            "ntia_expanded": 0.0,
-            "min_15_acronyms": 0.0,
-            "min_20_acronyms": 0.0,
-            "technical_acronyms": 0.0,
-            "gov_agencies": 0.0,
-            "categories_applied": 0.0,
-            "alphabetical_sort": 0.0,
-        }
+    c = report.read_text(encoding="utf-8", errors="ignore")
+    c_lower = c.lower()
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # --- 從逐字稿動態讀出「應有的縮寫對照」（避免硬寫） ---
+    tpath = workspace / "meeting-transcript.md"
+    if not tpath.exists():
+        for alt in ["meeting_transcript.md", "transcript.md",
+                    "meeting-transcript.txt"]:
+            if (workspace / alt).exists():
+                tpath = workspace / alt
+                break
+    t = tpath.read_text(encoding="utf-8", errors="ignore") if tpath.exists() else ""
 
-    # CSMAC correctly expanded
-    csmac_patterns = [
-        r'commerce spectrum management advisory committee',
-    ]
-    scores["csmac_expanded"] = 1.0 if any(re.search(p, content_lower) for p in csmac_patterns) else 0.0
+    # 逐字稿中所有「縮寫 → 中文全稱」候選：
+    #   先用對照表段落（| 縮寫 | 全稱… |）抓出明確映射，
+    #   再用全文出現過的拉丁縮寫補齊。
+    tw_acr_full = {}  # 縮寫(大寫) -> 中文全稱字串（取第一個中文片段）
+    for line in t.split("\n"):
+        m = re.match(r"\s*\|\s*([A-Za-z][A-Za-z0-9\-]{1,7})\s*\|\s*([^|]+)\|", line)
+        if m:
+            acr = m.group(1).upper()
+            full = m.group(2).strip()
+            if acr not in tw_acr_full:
+                tw_acr_full[acr] = full
 
-    # NTIA correctly expanded
-    ntia_patterns = [
-        r'national telecommunications and information administration',
-        r'national telecommunications & information administration',
-    ]
-    scores["ntia_expanded"] = 1.0 if any(re.search(p, content_lower) for p in ntia_patterns) else 0.0
+    # 全文出現過的拉丁縮寫（2~6 字，含連字號如 ITU-R）。
+    transcript_acrs = set()
+    for mm in re.finditer(r"\b([A-Z]{2,6}(?:-[A-Z])?)\b", t):
+        transcript_acrs.add(mm.group(1).upper())
+    # WG1~WG5 之類帶數字者另計
+    for mm in re.finditer(r"\bWG[1-9]\b", t):
+        transcript_acrs.add(mm.group(0).upper())
 
-    # Count unique acronyms found (look for patterns like "ACRONYM" followed by expansion or in a list)
-    # Count uppercase sequences of 2+ chars that appear as standalone entries
-    acronym_candidates = set()
-    known_acronyms = [
-        "csmac", "ntia", "fcc", "noaa", "dod", "dhs", "omb", "ostp",
-        "its", "isart", "mhz", "ghz", "uav", "lte", "pcs", "aws",
-        "cmrs", "sta", "csea", "pcast", "ctia", "tia", "tsb",
-        "itu", "wrc", "nfl", "ip", "tmi", "int"
-    ]
-    for acr in known_acronyms:
-        if acr in content_lower:
-            acronym_candidates.add(acr)
+    def acr_in_report(acr):
+        # 縮寫在報告中出現（大小寫不敏感，作為獨立詞）
+        return re.search(r"\b" + re.escape(acr) + r"\b", c, re.IGNORECASE) is not None
 
-    # Also look for capitalized abbreviations in the content
-    for match in re.finditer(r'\b[A-Z]{2,6}\b', content):
-        acronym_candidates.add(match.group().lower())
+    def chinese_full_in_report(acr):
+        """逐字稿對照表給出的中文全稱，其關鍵詞是否也出現在報告中。"""
+        full = tw_acr_full.get(acr, "")
+        # 取中文片段（連續 2 字以上的 CJK），任一片段命中即可
+        frags = re.findall(r"[一-鿿]{2,}", full)
+        for f in frags:
+            if f and f in c:
+                return True
+        return False
 
-    count = len(acronym_candidates)
+    scores = {"report_created": 1.0}
+
+    # --- DGC：須出現縮寫 DGC 且報告含「數位治理委員會」（從逐字稿動態取） ---
+    dgc_full = tw_acr_full.get("DGC", "數位治理委員會")
+    dgc_frag = (re.findall(r"[一-鿿]{4,}", dgc_full) or ["數位治理委員會"])[0]
+    scores["dgc_expanded"] = 1.0 if (
+        acr_in_report("DGC") and (dgc_frag in c or "數位治理委員會" in c)
+    ) else 0.0
+
+    # --- OSM：須出現縮寫 OSM 且報告含「頻譜管理署」 ---
+    osm_full = tw_acr_full.get("OSM", "頻譜管理署")
+    osm_frag = (re.findall(r"[一-鿿]{3,}", osm_full) or ["頻譜管理署"])[0]
+    scores["osm_expanded"] = 1.0 if (
+        acr_in_report("OSM") and ("頻譜管理署" in c or osm_frag in c)
+    ) else 0.0
+
+    # --- 不重複縮寫計數：報告中出現、且確實是逐字稿中存在的縮寫 ---
+    # 以逐字稿縮寫集合為基準，避免把報告裡隨意大寫詞（如英文段落）灌水。
+    found_acrs = set()
+    for acr in transcript_acrs:
+        if acr_in_report(acr):
+            found_acrs.add(acr)
+    # 報告自身額外出現、且為已知頻譜縮寫者亦可計入（容錯）
+    known = {"DGC", "SCAB", "NCC", "MODA", "OSM", "OSTP", "OMB", "ITS",
+             "NOAA", "DOD", "ISART", "MHZ", "GHZ", "LTE", "UAV", "PCS",
+             "AWS", "CMRS", "STA", "CSEA", "PCAST", "CTIA", "TIA", "TSB",
+             "ITU", "ITU-R", "WRC", "EW", "DGO", "DZX", "NESA", "PINF",
+             "IP", "TMI", "NFL", "WG1", "WG2", "WG3", "WG4", "WG5", "NC"}
+    for acr in known:
+        if acr_in_report(acr):
+            found_acrs.add(acr)
+    count = len(found_acrs)
     scores["min_15_acronyms"] = 1.0 if count >= 15 else (0.5 if count >= 10 else 0.0)
     scores["min_20_acronyms"] = 1.0 if count >= 20 else (0.5 if count >= 15 else 0.0)
 
-    # Technical acronyms
-    tech_acrs = ["mhz", "ghz", "lte", "uav", "sta", "pcs"]
-    tech_found = sum(1 for t in tech_acrs if t in content_lower)
+    # --- 技術類縮寫（MHz、GHz、LTE、UAV、STA、PCS） ---
+    tech_acrs = ["MHZ", "GHZ", "LTE", "UAV", "STA", "PCS"]
+    tech_found = sum(1 for a in tech_acrs if acr_in_report(a))
     scores["technical_acronyms"] = 1.0 if tech_found >= 4 else (0.5 if tech_found >= 2 else 0.0)
 
-    # Government agencies
-    gov_acrs = ["fcc", "dod", "dhs", "omb", "ostp", "noaa"]
-    gov_found = sum(1 for g in gov_acrs if g in content_lower)
+    # --- 政府機關縮寫（OSM、OSTP、OMB、ITS、SCAB、DGC） ---
+    gov_acrs = ["OSM", "OSTP", "OMB", "ITS", "SCAB", "DGC"]
+    gov_found = sum(1 for a in gov_acrs if acr_in_report(a))
     scores["gov_agencies"] = 1.0 if gov_found >= 4 else (0.5 if gov_found >= 2 else 0.0)
 
-    # Categories applied
+    # --- 類別／分組：報告須出現數種類別關鍵詞（中英皆可） ---
     category_patterns = [
-        r'(?:government|agency|agencies)',
-        r'(?:technical|spectrum)',
-        r'(?:regulatory|regulation)',
-        r'(?:industry|commercial)',
-        r'(?:military|defense)',
-        r'(?:categor|type|group|classification)',
+        r"政府|機關|agency|agencies|government",
+        r"頻譜|技術|technical|spectrum",
+        r"法規|法令|regulator|regulation",
+        r"業界|產業|industry|commercial",
+        r"軍事|國防|military|defense",
+        r"類別|分類|categor|group|分組",
     ]
-    cat_found = sum(1 for cp in category_patterns if re.search(cp, content_lower))
+    cat_found = sum(1 for p in category_patterns if re.search(p, c, re.IGNORECASE))
     scores["categories_applied"] = 1.0 if cat_found >= 3 else (0.5 if cat_found >= 2 else 0.0)
 
-    # Alphabetical sorting check
-    # Extract lines that start with acronyms and check if they're sorted
+    # --- 字母排序：抽出各行開頭的縮寫，檢查是否大致依字母排序 ---
     acr_lines = []
-    for line in content.split('\n'):
-        stripped = line.strip()
-        if stripped and re.match(r'[\*\-\|#]*\s*\**[A-Z]{2,}', stripped):
-            # Extract the acronym
-            match = re.search(r'[A-Z]{2,}', stripped)
-            if match:
-                acr_lines.append(match.group())
+    for line in c.split("\n"):
+        s = line.strip()
+        if not s:
+            continue
+        # 列表／表格／標題列開頭抓第一個拉丁縮寫
+        m = re.match(r"[\*\-\|#>\s]*\**\s*([A-Z]{2,}(?:-[A-Z])?|WG[1-9])\b", s)
+        if m:
+            acr_lines.append(m.group(1).upper())
 
     if len(acr_lines) >= 5:
         sorted_lines = sorted(acr_lines)
-        # Check if the order roughly matches alphabetical
         matches = sum(1 for a, b in zip(acr_lines, sorted_lines) if a == b)
         ratio = matches / len(acr_lines)
         scores["alphabetical_sort"] = 1.0 if ratio >= 0.7 else (0.5 if ratio >= 0.4 else 0.0)

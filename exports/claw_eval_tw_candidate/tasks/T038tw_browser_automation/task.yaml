@@ -20,7 +20,7 @@ prompt:
     2. 撰寫一支 **Playwright 端對端測試腳本**，使用 `playwright.sync_api`（Python\n   同步 API），並儲存為 `test_shop.py`。\n\
     3. 該腳本應自動化下列多步驟工作流程：\n   - 開啟頁面\n   - 確認「Webcam HD 1080p」（缺貨）的「Add to Cart」按鈕為 disabled\n   - 將「Wireless\
     \ Mouse」加入購物車\n   - 將「Mechanical Keyboard」加入購物車\n   - 再加入第二個「Wireless Mouse」（使數量變為 2）\n   - 確認購物車顯示正確的總額（$149.97\
-    \ = 29.99×2 + 89.99）\n   - 從購物車移除「Mechanical Keyboard」\n   - 確認更新後的總額（$59.98 = 29.99×2）\n   - 點擊「Checkout」\n\
+    \ = 29.99×2 + 89.99）\n   - 從購物車移除「Mechanical Keyboard」\n   - 確認更新後的總額（$59.98 = 29.99×2）\n   - 點選「Checkout」\n\
     \   - 確認出現訂單確認，且訂單 ID 符合 `ORD-` 前綴\n4. 請盡可能使用正確的 Playwright 斷言（`expect`）。\n5. 測試應針對本機檔案 URL 執行：`file://{workspace}/shop.html`"
   language: zh
 tools: []

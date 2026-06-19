@@ -151,7 +151,7 @@ workspace_files:
    - 確認購物車顯示正確的總額（$149.97 = 29.99×2 + 89.99）
    - 從購物車移除「Mechanical Keyboard」
    - 確認更新後的總額（$59.98 = 29.99×2）
-   - 點擊「Checkout」
+   - 點選「Checkout」
    - 確認出現訂單確認，且訂單 ID 符合 `ORD-` 前綴
 4. 請盡可能使用正確的 Playwright 斷言（`expect`）。
 5. 測試應針對本機檔案 URL 執行：`file://{workspace}/shop.html`

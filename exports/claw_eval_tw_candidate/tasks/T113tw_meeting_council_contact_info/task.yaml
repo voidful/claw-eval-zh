@@ -1,7 +1,5 @@
 task_id: T113tw_meeting_council_contact_info
-task_name: '市議會逐字稿 — 擷取聯絡資訊
-
-  '
+task_name: 南港市議會逐字稿 — 擷取人物與聯絡資訊
 version: 0.3.0
 category: meeting_analysis
 difficulty: medium
@@ -18,15 +16,36 @@ source:
   original_task_id: task_meeting_council_contact_info
   original_file: tasks/task_meeting_council_contact_info.md
 prompt:
-  text: 我手邊有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。請幫我產生 `contacts_report.md`，列出所有具名提及的人物，並附上職稱/角色、所屬組織與背景脈絡。整理時請分類為：**Council
-    Members**、**City Staff**、**Presenters and Experts**、**Community Members / Public Speakers**、**Other
-    People Mentioned**。
+  text: '工作區裡有一份議會逐字稿 transcript.md（虛構的台灣地方議會「南港市議會」第 12 屆
+
+    第 3 次定期會，日期 2026 年 4 月 2 日，時區 Asia/Taipei）。請閱讀逐字稿，整理出
+
+    所有「具名提及」的人物，產出一份中文報告 contacts_report.md。
+
+
+    每位人物請附上：職稱／角色、所屬機關或單位、以及一句背景脈絡（為何被提及）。
+
+    請依下列區段分類整理：
+
+
+    - **議會議員**（含議長、副議長與各選區議員）
+
+    - **市府職員**（各局處首長、議事與幕僚人員）
+
+    - **簡報者與外部顧問**（受邀說明或提供專業評估者）
+
+    - **市民與公眾發言人**（公眾意見時間登記發言的市民）
+
+    - **其他被提及的人物**（如獲獎員警、致贈紀念品的社區代表等）
+
+
+    報告請以繁體中文撰寫，分區段條列清楚，方便後續查找與洽詢。'
   language: zh
 tools: []
 tool_endpoints: []
 services: []
 fixtures:
-- source: meetings/2026-04-02-tampa-city-council-transcript.md
+- source: tw/meetings/tw_council_meeting.md
   dest: transcript.md
 environment:
   timeout_seconds: 180
@@ -45,38 +64,27 @@ scoring_components:
 safety_checks: []
 expected_actions:
 - 已建立報告檔案 contacts_report.md
-- 已列出全部 7 位議會議員
-- Shelby 列為 Council Attorney
-- Hamilton 列為 Raftelis 顧問
-- Bercaw 列為 Police Chief
-- McNeil 列為 Officer of the Month
-- 已辨識 12 位以上公眾發言者
-- TPD 晉升人員（DeFelice、Messmer、Purcell、McCormick）
-- 已分類整理為各區段
-- Milo 列為 Related Urban president
+- 已列出全部 7 位議會議員（周明德、陳秀蓮、高文彬、林淑芬、楊乃文、韋立群、卡爾森／蔡明憲）
+- 謝佩玲 列為議會法律顧問（法制顧問）
+- 韓明翰 列為瑞富緯顧問（外部顧問）
+- 包柯偉 列為南港市警察局局長
+- 麥尼爾 列為本月模範員警（Officer of the Month）
+- 已辨識 12 位以上市民公眾發言人
+- 已標出本季升任警務正的四位巡佐（戴飛理、梅斯莫、普瑟爾、馬可銘）
+- 已依議員／職員／簡報顧問／公眾發言等區段分類整理
+- 米羅先生 列為鼎峰都更開發 董事長／總裁
 user_agent:
   enabled: false
-judge_rubric: '### 評分項 1：人物辨識（權重 35%）
-
-  **1.0 分**：40 位以上人物。**0.75 分**：30-39 位。**0.5 分**：20-29 位。**0.0 分**：少於 10 位。
-
-
-  ### 評分項 2：角色準確度（權重 30%）
-
-  **1.0 分**：職稱/隸屬正確。**0.5 分**：部分缺漏。**0.0 分**：錯誤。
-
-
-  ### 評分項 3：分類（權重 20%）
-
-  **1.0 分**：區段清楚。**0.5 分**：部分。**0.0 分**：完全沒有。
-
-
-  ### 評分項 4：背景脈絡（權重 15%）
-
-  **1.0 分**：每位人物皆有簡要背景脈絡。**0.5 分**：部分。**0.0 分**：完全沒有。'
-reference_solution: 60 位以上的具名人物，包含 7 位議會議員、市府職員（Shelby、Perry、Baird、Johns、Brody、DeManche、Kopesky）、簡報者（Hamilton/Raftelis、Guyette/Colliers、Chief
-  Bercaw、晉升的 TPD 人員：DeFelice、Messmer、Purcell、McCormick）、16 位以上的公眾發言者，以及其他人（Officer McNeil、Milo/Related
-  Urban、社區致贈禮物者）。
+judge_rubric: "### 評分項 1：人物辨識（權重 35%）\n- 1.0：辨識 30 位以上具名人物。\n- 0.75：辨識 22-29 位。\n- 0.5：辨識 14-21 位。\n-\
+  \ 0.0：少於 8 位。\n### 評分項 2：角色準確度（權重 30%）\n- 1.0：職稱、所屬機關與角色標註正確（議員選區、各局處首長、顧問所屬公司、警察局長、\n  本月模範員警、升遷巡佐等皆對應正確）。\n\
+  - 0.5：多數正確但部分缺漏或誤置。\n- 0.0：角色標註多有錯誤。\n### 評分項 3：分類（權重 20%）\n- 1.0：議員／市府職員／簡報顧問／市民發言人／其他等區段清楚分明。\n- 0.5：有分類但區段混雜或不完整。\n\
+  - 0.0：完全沒有分類。\n### 評分項 4：背景脈絡（權重 15%）\n- 1.0：每位人物皆附一句被提及的背景脈絡（議案、陳情主題、獲獎事由等）。\n- 0.5：僅部分人物有背景脈絡。\n-\
+  \ 0.0：完全沒有背景脈絡。"
+reference_solution: "助手應讀取 transcript.md，整理出 30 位以上具名人物（皆為虛構），並正確歸類：\n\n- 7 位議會議員：周明德（議長）、陳秀蓮（副議長）、高文彬、林淑芬、楊乃文、韋立群、\n\
+  \  卡爾森（蔡明憲，第 7 選區）。\n- 市府職員：秘書長 沈柏宇、財政局長 白偉誠、工務局長 江志鴻、社會局長 莊雅婷、\n  都市發展局長 鄧明哲、環保局長 柯沛錡、研考室主任 裴俊豪、議事組長\
+  \ 蔡淑娟。\n- 議會法律顧問 謝佩玲。\n- 警政與表揚：南港市警察局局長 包柯偉；本月模範員警 麥尼爾巡佐；本季升任警務正的\n  四位巡佐 戴飛理、梅斯莫、普瑟爾、馬可銘。\n- 外部顧問：韓明翰（瑞富緯顧問，協助容量費精算）、顧明哲（高緯顧問，協助市場與估價）。\n\
+  - 致贈紀念品的社區代表 米羅先生（鼎峰都更開發 董事長／總裁）。\n- 16 位市民公眾發言人：詹明慧、任薇、海曉光、簡珮如、高德森、紀志中、莫雅淳、班奈特、\n  蒲怡婷、米其里尼、賈明德、駱明潔、卜雅玲、潘思妤、任明哲、羅志安。\n\
+  \n並將上述人物分區段整理成清楚的 contacts_report.md，每位附職稱、單位與背景脈絡。"
 primary_dimensions:
 - completion
 metadata:
@@ -88,7 +96,7 @@ metadata:
     automated: 0.5
     llm_judge: 0.5
   workspace_files:
-  - source: meetings/2026-04-02-tampa-city-council-transcript.md
+  - source: tw/meetings/tw_council_meeting.md
     dest: transcript.md
   source_benchmark: pinchbench
   translation_status: complete

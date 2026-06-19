@@ -53,11 +53,11 @@ expected_actions:
 - 助手在同一輪對話中正確回想出語言與專案（第 2 輪）
 - 助手在全新對話中嘗試回想記憶（第 3 輪）
 - 正確回想最喜歡的程式語言（Rust）
-- 正確回想開始學習的日期（January 15, 2024）
-- 正確回想導師姓名與所屬單位（Dr. Elena Vasquez，Stanford）
+- 正確回想開始學習的日期（2024 年 1 月 15 日）
+- 正確回想導師姓名與所屬單位（林淑芬 教授，國立臺灣大學）
 - 正確回想專案名稱（NeonDB）
 - 正確回想專案描述（分散式鍵值儲存系統）
-- 正確回想暗號（purple elephant sunrise）
+- 正確回想暗號（紫色大象日出）
 user_agent:
   enabled: true
   mode: scripted
@@ -66,10 +66,9 @@ user_agent:
       我希望你幫我記住這項重要資訊。請把它存到一個名為 `memory/MEMORY.md` 的檔案，
       讓你（或未來的某一輪對話）日後可以取回：
 
-      我最喜歡的程式語言是 Rust。我從 January 15, 2024 開始學習它。我的導師名叫
-      Dr. Elena Vasquez，來自 Stanford。我正在進行的專案叫做「NeonDB」——它是一個
-      分散式鍵值儲存系統（distributed key-value store）。我們團隊的暗號是
-      「purple elephant sunrise」。
+      我最喜歡的程式語言是 Rust。我從 2024 年 1 月 15 日開始學習它。我的導師名叫
+      林淑芬 教授，來自國立臺灣大學。我正在進行的專案叫做「NeonDB」——它是一個
+      分散式鍵值儲存系統。我們團隊的暗號是「紫色大象日出」。
 
       請把這些資訊存到 `memory/MEMORY.md`，並跟我確認你已經存好了。
     new_session: false
@@ -118,10 +117,10 @@ judge_rubric: |-
   分數 1.0：5 項事實全部正確回想：
 
   - Rust 為最喜歡的程式語言
-  - January 15, 2024 為開始學習的日期
-  - Dr. Elena Vasquez（來自 Stanford）為導師
+  - 2024 年 1 月 15 日 為開始學習的日期
+  - 林淑芬 教授（來自國立臺灣大學）為導師
   - NeonDB 為專案名稱（分散式鍵值儲存系統）
-  - 「purple elephant sunrise」為暗號
+  - 「紫色大象日出」為暗號
 
   分數 0.8：5 項中有 4 項正確，且沒有捏造。
   分數 0.6：5 項中有 3 項正確，且沒有捏造。
@@ -156,10 +155,10 @@ reference_solution: |-
      - 讀取第 1 輪所建立的 memory/MEMORY.md 檔案
      - 準確回想全部 5 項資訊：
        - 最喜歡的程式語言：Rust
-       - 開始學習的日期：January 15, 2024
-       - 導師：Dr. Elena Vasquez，來自 Stanford
-       - 專案：NeonDB，一個分散式鍵值儲存系統（distributed key-value store）
-       - 暗號：「purple elephant sunrise」
+       - 開始學習的日期：2024 年 1 月 15 日
+       - 導師：林淑芬 教授，來自國立臺灣大學
+       - 專案：NeonDB，一個分散式鍵值儲存系統
+       - 暗號：「紫色大象日出」
 
   本任務測試助手透過檔案儲存來持久化知識、並在全新對話中將其取回的能力。
 primary_dimensions:
@@ -172,7 +171,21 @@ metadata:
   timezone: Asia/Taipei
   grading_type: hybrid
   grading_weights: {}
-  workspace_files: []
+  workspace_files:
+  - path: facts/REFERENCE.md
+    content: |
+      # 第二大腦・應有事實參考卡（grader 用）
+
+      本檔由評分程式讀取，列出使用者在第 1 輪口述、應被寫入
+      `memory/MEMORY.md` 的標準事實。每列格式為「欄位：值」。
+
+      最愛語言：Rust
+      開始日期：2024 年 1 月 15 日
+      導師姓名：林淑芬 教授
+      導師單位：國立臺灣大學
+      專案名稱：NeonDB
+      專案描述：分散式鍵值儲存系統
+      團隊暗號：紫色大象日出
   source_benchmark: pinchbench
   translation_status: complete
   conversion_stage: phase3_taiwan_localized

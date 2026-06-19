@@ -1,7 +1,5 @@
 task_id: T118tw_meeting_tech_messaging
-task_name: '會議訊息架構擷取
-
-  '
+task_name: 會議訊息架構擷取（鼎峰科技標語與支柱）
 version: 0.3.0
 category: meeting_analysis
 difficulty: medium
@@ -18,28 +16,17 @@ source:
   original_task_id: task_meeting_tech_messaging
   original_file: tasks/task_meeting_tech_messaging.md
 prompt:
-  text: '我手上有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議接近尾聲時，團隊進行一場協作式的訊息練習，為
-    GitLab 發展標語（taglines）與訊息支柱（messaging pillars）。
-
-
-    請幫我擷取並整理會議中討論到的所有訊息架構選項，並寫入一個名為 `messaging_framework.md` 的檔案。你的輸出應包含：
-
-
-    1. **所有候選標語/語句**：所有被提出的標語/語句，依其所對應的訊息支柱分組
-
-    2. **評估準則（evaluation criteria）**：團隊所使用的準則（例如語句之間調性的對等性、是否朗朗上口、名詞片語對比動詞片語）
-
-    3. **每個選項所討論的優缺點**
-
-    4. **最終選定（final selections）**（團隊決定採用的）
-
-    5. **被否決的替代方案（rejected alternatives）及其被否決的原因**'
+  text: "工作區裡有一份會議逐字稿 meeting_transcript.md（虛構台灣軟體公司「鼎峰科技」的\n產品暨行銷週會）。會議接近尾聲時（逐字稿「五、訊息架構練習：標語與支柱」一節），\n\
+    團隊做了一場協作式的訊息（messaging）練習，為旗下「鼎峰雲平台」發展標語（tagline）\n與三個訊息支柱（pillar）。\n\n請閱讀逐字稿，擷取並整理會議中討論到的所有訊息架構選項，寫入一個名為\n\
+    messaging_framework.md 的檔案。你的輸出應包含：\n\n1. **所有候選標語／語句**：所有被提出的標語／語句，依其所對應的訊息支柱分組\n2. **評估準則（evaluation\
+    \ criteria）**：團隊所使用的準則（例如調性的對等性、是否\n   朗朗上口、名詞片語對比動詞片語、技術準確性、能否套進平行句構）\n3. **每個選項所討論的優缺點**\n4. **最終選定（final\
+    \ selections）**：團隊決定採用的標語\n5. **被否決的替代方案（rejected alternatives）**及其被否決的原因\n\n請以繁體中文撰寫，並清楚區分「最終選定」與「被否決／其他候選」。"
   language: zh
 tools: []
 tool_endpoints: []
 services: []
 fixtures:
-- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+- source: tw/meetings/tw_tech_product_meeting.md
   dest: meeting_transcript.md
 environment:
   timeout_seconds: 180
@@ -57,139 +44,95 @@ scoring_components:
     description: 語意評分，依 judge_rubric
 safety_checks: []
 expected_actions:
-- 已建立檔案 messaging_framework.md
-- 已辨識全部三個訊息支柱
+- 建立報告檔案 messaging_framework.md
+- 辨識出全部三個訊息支柱（透明／單一平台、端到端掌控、速度／資安）
 - 每個支柱列出多個候選語句
-- 「More speed less risk」被辨識為 speed/security 選定的標語
-- 「A single source of truth, countless possibilities」被辨識為 transparency 支柱選定的標語
-- 列出被否決的替代方案及原因（例如「test up」被否決、「no trade-offs」被否決）
-- 已掌握評估準則（對等性/調性、朗朗上口、準確性）
-- 已掌握「Secure the factory and its deliverables」作為資安子標語
+- 「更快交付，更低風險」被辨識為速度／資安支柱的選定標語
+- 「單一真相來源，無限可能」被辨識為透明支柱的選定標語
+- 「端到端掌控你的軟體工廠」被辨識為端到端支柱的選定標語
+- 列出被否決的替代方案及原因（如「測試拉滿」超蠢被否決、「零取捨」因永遠有取捨被否決）
+- 掌握評估準則（對等性／調性、朗朗上口、技術準確性、平行句構）
+- 掌握「守護工廠與每一次交付」作為資安子標語
 - 最終選定與替代方案清楚區分
 user_agent:
   enabled: false
-judge_rubric: '### 評分項 1：選項掌握的完整度（權重 30%）
+judge_rubric: "### 評分項 1：選項掌握的完整度（權重 30%）\n- 1.0：列出橫跨三個支柱的所有提議標語／語句，含原始版與替代版；至少掌握 8–10 個\n  不同語句並正確歸入支柱。\n\
+  - 0.75：掌握多數語句並正確分組，僅漏一兩個。\n- 0.5：掌握數個語句，但漏掉整批替代方案或某一支柱。\n- 0.25：僅掌握最終選定而無替代方案。\n- 0.0：未掌握有意義的選項。\n\n\
+  ### 評分項 2：評估準則與推理（權重 25%）\n- 1.0：準確掌握評估架構（調性對等性、朗朗上口、技術準確性、平行句構），並含否決的\n  具體理由（如「測試拉滿」聽起來蠢、「零取捨」違背工程師心態、「自信地快速前進」是\n\
+  \  動詞片語缺乏名詞片語對等性）。\n- 0.75：掌握多數準則並有良好推理。\n- 0.5：提及部分準則但推理不完整。\n- 0.25：推理極少。\n- 0.0：無評估準則或推理。\n\n###\
+  \ 評分項 3：最終與否決的區分（權重 25%）\n- 1.0：清楚區分最終選定與被否決的替代方案，容易辨識何者被選用、何者被捨棄。\n- 0.75：區分良好，僅有少許模糊。\n- 0.5：有部分區分，但讀者需自行推斷何者為最終。\n\
+  - 0.25：所有選項混在一起且無明確結果。\n- 0.0：未做區分。\n\n### 評分項 4：細微之處與歸屬（權重 20%）\n- 1.0：掌握誰提出了什麼，含「守護工廠與每一次交付」出自林淑芬部落格文章的歸功、\n\
+  \  記下 Ash Withers 的啟發，並反映此練習的協作動態。\n- 0.75：歸屬良好，僅有少許缺口。\n- 0.5：有部分歸屬，但漏掉關鍵貢獻。\n- 0.25：未將想法歸屬到個人。\n-\
+  \ 0.0：無細微之處或歸屬。"
+reference_solution: '助手應解析 meeting_transcript.md 第五段「訊息架構練習」，辨識出三個訊息支柱與
 
+  所有候選語句，並產出 messaging_framework.md。
 
-  **1.0 分**：列出橫跨三個支柱的所有提議標語/語句，包含原始版與替代版。至少掌握 8-10 個不同語句並正確歸入支柱。
 
-  **0.75 分**：掌握多數語句並正確分組，漏掉一兩個。
+  關鍵訊息內容（皆為逐字稿原文，主持人為王志明，靈感參考 Ash Withers 架構）：
 
-  **0.5 分**：掌握數個語句，但漏掉整批替代方案或某一支柱。
 
-  **0.25 分**：僅掌握最終選定而無替代方案。
+  支柱一 — 透明／單一平台（Transparency / Single Platform）：
 
-  **0.0 分**：未掌握有意義的選項。
+  - 「從路線圖到公司願景，我們都透明」（原始版）
 
+  - 「單一真相來源，無限可能」（提議版，王志明很喜歡、大家評價也很好）
 
-  ### 評分項 2：評估準則與推理（權重 25%）
+  - 「人人都能用的一體式平台」（提議版，王志明喜歡但承認不是每個人都會買單）
 
 
-  **1.0 分**：準確掌握評估架構：調性對等性、朗朗上口、技術準確性、可用於平行句構。並包含否決的具體理由（例如「test up」聽起來蠢、「no trade-offs」違背工程師心態、「move
-  fast with confidence」缺乏名詞片語對等性）。
+  支柱二 — 端到端掌控（End-to-end control）：
 
-  **0.75 分**：掌握多數評估準則並有良好推理。
+  - 「幾乎什麼都能自動化，凡事都能協作」（原始版）
 
-  **0.5 分**：提及部分準則但推理不完整。
+  - 「端到端掌控你的軟體工廠」（提議版，較不朗朗上口但很有描述性）
 
-  **0.25 分**：提供的推理極少。
 
-  **0.0 分**：無評估準則或推理。
+  支柱三 — 速度／資安（Speed / Security）：
 
+  - 「規模拉大、速度拉快、測試拉滿」（原始版——王志明超討厭，尤其「測試拉滿」聽起來超蠢）
 
-  ### 評分項 3：最終與否決的區分（權重 25%）
+  - 「自信地快速前進」（提議版——意涵喜歡，但是動詞片語，與其他名詞片語的調性對不齊、缺乏對等性）
 
+  - 「更快交付，更低風險」（提議版——團隊共識最愛）
 
-  **1.0 分**：清楚區分最終選定與被否決的替代方案。容易辨識何者被選用、何者被捨棄。
+  - 「加速並維持在軌道上」（提議版——大家不愛）
 
-  **0.75 分**：區分良好，僅有少許模糊。
+  - 「帶著自信的速度」（當作一個概念提及）
 
-  **0.5 分**：有部分區分，但讀者需自行推斷何者為最終。
+  - 「零取捨（no trade-offs）」（短暫考慮後被否決——工程師心態認為永遠都有取捨，講絕對話不準確）
 
-  **0.25 分**：所有選項混在一起且無明確結果。
+  - 「更快交付、更低風險，帶著自信」（提議的組合版）
 
-  **0.0 分**：未做區分。
 
+  評估準則（王志明列出四項）：
 
-  ### 評分項 4：細微之處與歸屬（權重 20%）
+  1. 調性的對等性（parity）——名詞片語要配名詞片語
 
+  2. 是否朗朗上口、精煉有力（catchy／pithy）
 
-  **1.0 分**：掌握誰提出了什麼，包含「secure the factory and its deliverables」出自 Cindy 部落格文章的歸功、記下 Ash Withers 的啟發，並反映此練習的協作動態。
+  3. 技術準確性——不做絕對化主張（如「零取捨」或「100% 安全」）
 
-  **0.75 分**：歸屬良好，僅有少許缺口。
+  4. 能否套進平行句構——例如「使用鼎峰，你就能得到 X」
 
-  **0.5 分**：有部分歸屬，但漏掉關鍵貢獻。
 
-  **0.25 分**：未將想法歸屬到個人。
+  最終選定（final）：
 
-  **0.0 分**：無細微之處或歸屬。'
-reference_solution: '助手應該：
+  - 透明支柱：「單一真相來源，無限可能」
 
+  - 端到端支柱：「端到端掌控你的軟體工廠」
 
-  1. 解析逐字稿以找出訊息架構的討論
+  - 速度／資安支柱：「更快交付，更低風險」（主標語）
 
-  2. 辨識出三個訊息支柱與所有候選語句
 
+  資安子標語：
 
-  關鍵訊息內容：
+  - 「守護工廠與每一次交付」（出自林淑芬的部落格文章）
 
 
-  **支柱 1 — Transparency/Single Platform：**
+  助手應清楚區分最終選定與被否決的替代方案，並盡可能標出貢獻者（王志明、林淑芬、
 
-  - 「From roadmap to company vision, we are transparent」（原始版）
-
-  - 「A single source of truth, countless possibilities」（提議版，廣受好評）
-
-  - 「All-in-one for everyone」（提議版，William 喜歡但也承認並非人人都愛）
-
-
-  **支柱 2 — End-to-end control：**
-
-  - 「Automate nearly anything, collaborate on everything」（原始版）
-
-  - 「End to end control over your software factory」（提議版，被形容為較不朗朗上口但具描述性）
-
-
-  **支柱 3 — Speed/Security：**
-
-  - 「Scale up, speed up, test up」（原始版——William 很討厭，尤其是「test up」）
-
-  - 「Move fast with confidence」（提議版——喜歡其意涵，但與其他名詞片語的對等性不佳）
-
-  - 「More speed less risk」（提議版——團隊共識最愛）
-
-  - 「Increase speed and stay on track」（提議版——不受青睞）
-
-  - 「Velocity with confidence」（被當作一個概念提及）
-
-  - 「No trade-offs」（曾短暫考慮，因工程師心態認為總是有 trade-offs 而被否決）
-
-  - 「More speed less risk with confidence」（提議的組合版）
-
-
-  **討論到的評估準則：**
-
-  - 調性的對等性（名詞片語應與名詞片語相配）
-
-  - 朗朗上口/精煉有力
-
-  - 技術準確性（不做絕對化主張，如「no trade-offs」或「100% secure」）
-
-  - 可用於平行句構的能力（「With GitLab you get X」）
-
-
-  **最終選定：**
-
-  - 「A single source of truth, countless possibilities」
-
-  - 「End to end control over your software factory」
-
-  - 「More speed less risk」
-
-
-  **資安子標語：**
-
-  - 「Secure the factory and its deliverables」（出自 Cindy 的部落格文章）'
+  以及 Ash Withers 的啟發）。'
 primary_dimensions:
 - completion
 metadata:
@@ -201,7 +144,7 @@ metadata:
     automated: 0.6
     llm_judge: 0.4
   workspace_files:
-  - source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+  - source: tw/meetings/tw_tech_product_meeting.md
     dest: meeting_transcript.md
   source_benchmark: pinchbench
   translation_status: complete

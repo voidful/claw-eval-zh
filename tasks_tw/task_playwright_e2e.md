@@ -53,11 +53,11 @@ workspace_files:
 3. 啟動 Chromium 瀏覽器（headless 模式）
 4. 以 `file://` URL 開啟本機的 `form.html` 檔案
 5. 以有效的測試資料填寫步驟 1 的欄位（fullname、email、phone）
-6. 點擊「Next」，確認步驟 2 為 active 且步驟 1 已隱藏
+6. 點選「Next」，確認步驟 2 為 active 且步驟 1 已隱藏
 7. 以有效資料填寫步驟 2 的欄位（street、city、state 下拉選單、zip）
-8. 點擊「Next」，確認步驟 3 顯示 review 摘要
+8. 點選「Next」，確認步驟 3 顯示 review 摘要
 9. 斷言（assert）review 中的值與輸入的內容相符
-10. 點擊「Submit Registration」
+10. 點選「Submit Registration」
 11. 確認成功面板可見且包含一組 submission ID
 12. 擷取螢幕截圖並儲存為 `success.png`
 13. 加入重試／等待邏輯，避免不穩定（flaky）的選擇器使測試立即失敗
@@ -307,7 +307,7 @@ def grade(transcript, workspace_path):  # noqa: F811
 ### 評分項 1：多步驟導覽（權重 30%）
 
 **1.0 分**：腳本正確地依序走過全部 3 個表單步驟。每次步驟轉換都很明確——填寫
-欄位、點擊 Next，並在繼續前確認新步驟為 active。以 `select_option` 處理 state
+欄位、點選 Next，並在繼續前確認新步驟為 active。以 `select_option` 處理 state
 下拉選單。有測試返回（back）導覽，或至少未使其失效。
 
 **0.75 分**：全部 3 個步驟皆正確導覽，但有些微問題（例如轉換之間沒有明確的等待，

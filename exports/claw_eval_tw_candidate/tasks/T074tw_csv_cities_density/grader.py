@@ -13,78 +13,166 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the US cities population concentration task.
+    """台灣各縣市鄉鎮人口集中度 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    正解一律從工作區內的 tw_townships_density.csv 動態實算，再比對 agent 的中文
+    報告 cities_density_report.md。fixture 無 Region 欄，五大區域由縣市名以對照表
+    推導。僅用標準函式庫。報告為中文，故以中文關鍵字／數值比對；轉換器會在其後
+    接上中→英正規化 wrapper。
     """
-    from pathlib import Path
+    import csv
     import re
+    from collections import defaultdict
+    from pathlib import Path
 
-    scores = {}
+    # 縣市 -> 五大區域（與題目一致）
+    REGION = {
+        "臺北市": "北部", "新北市": "北部", "桃園市": "北部", "基隆市": "北部",
+        "新竹市": "北部", "新竹縣": "北部", "宜蘭縣": "北部",
+        "臺中市": "中部", "苗栗縣": "中部", "彰化縣": "中部",
+        "南投縣": "中部", "雲林縣": "中部",
+        "高雄市": "南部", "臺南市": "南部", "嘉義市": "南部",
+        "嘉義縣": "南部", "屏東縣": "南部",
+        "花蓮縣": "東部", "臺東縣": "東部",
+        "澎湖縣": "外島", "金門縣": "外島", "連江縣": "外島",
+    }
+
     workspace = Path(workspace_path)
 
+    # --- 找報告 ---
     report_path = workspace / "cities_density_report.md"
     if not report_path.exists():
-        for alt in ["density_report.md", "report.md", "concentration_report.md", "cities_report.md"]:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in [
+            "density_report.md", "report.md",
+            "concentration_report.md", "cities_report.md",
+        ]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
 
-    if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "avg_pop_ranking": 0.0,
-            "nyc_dominance": 0.0,
-            "state_count": 0.0,
-            "single_city_states": 0.0,
-            "inequality_ratios": 0.0,
-            "regional_summary": 0.0,
-        }
-
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
-
-    # Average population per city ranking — New York state should be near top
-    ny_patterns = [
-        r'new\s*york.*584',
-        r'new\s*york.*highest.*average',
-        r'new\s*york.*(?:concentration|dominat)',
+    keys = [
+        "report_created", "avg_pop_ranking", "township_dominance",
+        "county_count", "fewest_counties", "inequality_ratios",
+        "regional_summary",
     ]
-    scores["avg_pop_ranking"] = 1.0 if any(re.search(p, content_lower) for p in ny_patterns) else 0.0
+    if not report_path.exists():
+        return {k: 0.0 for k in keys}
 
-    # NYC dominance — ~84-85% of NY state's dataset population
-    nyc_dom_patterns = [r'8[45][\.\d]*\s*%', r'84\.6', r'84\.5', r'8[45]\s*percent']
-    has_nyc_dom = any(re.search(p, content_lower) for p in nyc_dom_patterns)
-    has_nyc_mention = "new york" in content_lower and ("dominan" in content_lower or "concentrat" in content_lower or "largest" in content_lower)
-    scores["nyc_dominance"] = 1.0 if has_nyc_dom else (0.5 if has_nyc_mention else 0.0)
+    c = report_path.read_text(encoding="utf-8", errors="ignore")
 
-    # State count (~48)
-    state_count_patterns = [r'4[78]\s*(?:state|distinct|unique|territor|entri)', r'(?:state|distinct|unique|territor|entri)\w*\s*.*4[78]', r'4[78]\s+state']
-    scores["state_count"] = 1.0 if any(re.search(p, content_lower) for p in state_count_patterns) else 0.0
+    # --- 從 fixture 實算正解 ---
+    csv_path = workspace / "tw_townships_density.csv"
+    if not csv_path.exists():
+        # 容錯：接受其他可能 dest 名
+        for alt in ["tw_townships.csv", "townships.csv"]:
+            if (workspace / alt).exists():
+                csv_path = workspace / alt
+                break
+    if not csv_path.exists():
+        return {k: (1.0 if k == "report_created" else 0.0) for k in keys}
 
-    # Single-city states
-    single_states = ["vermont", "maine", "alaska", "hawaii"]
-    found_single = sum(1 for s in single_states if s in content_lower)
-    scores["single_city_states"] = 1.0 if found_single >= 3 else (0.5 if found_single >= 2 else 0.0)
+    rows = []
+    with csv_path.open(encoding="utf-8", errors="ignore") as f:
+        for r in csv.DictReader(f):
+            try:
+                r["Population"] = int(r["Population"])
+            except (TypeError, ValueError, KeyError):
+                continue
+            if not r.get("County"):
+                continue
+            rows.append(r)
 
-    # Inequality ratios (largest/smallest within state)
-    ratio_patterns = [r'ratio', r'inequalit', r'largest.*smallest', r'most.*least.*equal']
-    scores["inequality_ratios"] = 1.0 if any(re.search(p, content_lower) for p in ratio_patterns) else 0.0
+    if not rows:
+        return {k: (1.0 if k == "report_created" else 0.0) for k in keys}
 
-    # Regional summary
-    regions = ["northeast", "southeast", "midwest", "west"]
-    alt_regions = ["south", "east", "pacific", "mountain", "atlantic", "central"]
-    region_count = sum(1 for r in regions if r in content_lower)
-    alt_count = sum(1 for r in alt_regions if r in content_lower)
-    scores["regional_summary"] = 1.0 if region_count >= 3 else (0.5 if (region_count >= 2 or alt_count >= 3) else 0.0)
+    by_county = defaultdict(list)
+    for r in rows:
+        by_county[r["County"]].append(r)
+
+    county_count = len(by_county)
+
+    # [1] 各縣市每鄉鎮平均人口排名
+    avg = []
+    for county, v in by_county.items():
+        tot = sum(x["Population"] for x in v)
+        avg.append((county, tot / len(v)))
+    avg.sort(key=lambda x: -x[1])
+    top_avg_county = avg[0][0]      # 臺北市
+    bottom_avg_county = avg[-1][0]  # 連江縣
+
+    # [2] 單一鄉鎮主導（鄉鎮數>=5）
+    dom = []
+    for county, v in by_county.items():
+        if len(v) >= 5:
+            tot = sum(x["Population"] for x in v)
+            mx = max(v, key=lambda x: x["Population"])
+            dom.append((county, mx["Population"] / tot * 100))
+    dom.sort(key=lambda x: -x[1])
+    top_dom_county = dom[0][0] if dom else ""  # 臺東縣
+
+    # [3] 代表性
+    counts = sorted(
+        ((county, len(v)) for county, v in by_county.items()),
+        key=lambda x: -x[1],
+    )
+    most_county = counts[0][0]     # 新北市
+    fewest_county = counts[-1][0]  # 嘉義市
+
+    # [4] 不均比值（鄉鎮數>=10）
+    ineq = []
+    for county, v in by_county.items():
+        if len(v) >= 10:
+            mx = max(x["Population"] for x in v)
+            mn = min(x["Population"] for x in v)
+            if mn > 0:
+                ineq.append((county, mx / mn))
+    ineq.sort(key=lambda x: -x[1])
+    most_unequal = ineq[0][0] if ineq else ""  # 高雄市
+    most_equal = ineq[-1][0] if ineq else ""    # 臺北市
+
+    scores = {"report_created": 1.0}
+
+    # avg_pop_ranking：點出每鄉鎮平均最高的縣市（臺北市），且涉及「平均」概念
+    has_avg_word = ("平均" in c) or ("每鄉鎮" in c) or ("每個鄉鎮" in c)
+    scores["avg_pop_ranking"] = 1.0 if (top_avg_county in c and has_avg_word) else 0.0
+
+    # township_dominance：指出主導度最高的縣市（臺東縣），並有主導／集中相關語彙
+    dom_word = any(w in c for w in ["主導", "集中", "占", "佔", "比例", "百分比"])
+    scores["township_dominance"] = (
+        1.0 if (top_dom_county and top_dom_county in c and dom_word)
+        else (0.5 if dom_word else 0.0)
+    )
+
+    # county_count：報告需出現正確縣市數（22）
+    cc = str(county_count)
+    cc_hit = bool(
+        re.search(cc + r"\s*(?:個|個縣市|縣市)", c)
+        or re.search(r"(?:縣市|不同).{0,8}" + cc, c)
+    )
+    scores["county_count"] = 1.0 if cc_hit else 0.0
+
+    # fewest_counties：指出鄉鎮最多（新北）與最少（嘉義市）的縣市
+    found_most = most_county in c
+    found_few = fewest_county in c
+    scores["fewest_counties"] = (
+        1.0 if (found_most and found_few)
+        else (0.5 if (found_most or found_few) else 0.0)
+    )
+
+    # inequality_ratios：有比值／不均語彙，且點出最不均(高雄市)或最均(臺北市)
+    ratio_word = any(w in c for w in ["比值", "倍", "不均", "差距", "ratio"])
+    named = (most_unequal and most_unequal in c) or (most_equal and most_equal in c)
+    scores["inequality_ratios"] = (
+        1.0 if (ratio_word and named)
+        else (0.5 if ratio_word else 0.0)
+    )
+
+    # regional_summary：至少出現 3 個區域名稱
+    found_regions = sum(1 for rg in ["北部", "中部", "南部", "東部", "外島"] if rg in c)
+    scores["regional_summary"] = (
+        1.0 if found_regions >= 3
+        else (0.5 if found_regions >= 2 else 0.0)
+    )
 
     return scores
 

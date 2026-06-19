@@ -13,30 +13,118 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
+    """南港市議會預算報告 grader。
+
+    應有事實「從 transcript.md（佈署的台灣逐字稿）動態推導」，再比對 agent 產生
+    的中文報告 budget_report.md。僅用標準函式庫。
+    """
     from pathlib import Path
     import re
-    scores = {}
+
+    keys = [
+        "report_created", "capacity_fee_amounts", "three_billion",
+        "annual_revenue_increase", "rome_yard_94m", "annex_34m",
+        "phase1_7m", "gas_settlement_650k", "zion_8m", "financial_summary",
+    ]
     workspace = Path(workspace_path)
+
+    # --- 找報告檔 ---
     report_path = workspace / "budget_report.md"
     if not report_path.exists():
-        for alt in ["budget.md", "financial_report.md", "finances.md"]:
+        for alt in ["budget.md", "financial_report.md", "finances.md",
+                    "預算報告.md", "財務報告.md"]:
             if (workspace / alt).exists():
                 report_path = workspace / alt
                 break
     if not report_path.exists():
-        return {k: 0.0 for k in ["report_created", "capacity_fee_amounts", "three_billion", "annual_revenue_increase", "rome_yard_94m", "annex_34m", "phase1_7m", "gas_settlement_650k", "zion_8m", "financial_summary"]}
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    cl = content.lower()
-    scores["capacity_fee_amounts"] = 1.0 if (re.search(r'1[,.]?0[12]0', content) and re.search(r'1[,.]?[58][34]\d', content)) else 0.0
-    scores["three_billion"] = 1.0 if re.search(r'(?:\$?3\s*billion|3B)', cl) else 0.0
-    scores["annual_revenue_increase"] = 1.0 if (re.search(r'(?:1\.5|two)\s*(?:million|m\b)', cl) and re.search(r'(?:revenue|additional|year)', cl)) else 0.0
-    scores["rome_yard_94m"] = 1.0 if re.search(r'(?:\$?94\s*million|94M)', cl) else 0.0
-    scores["annex_34m"] = 1.0 if re.search(r'(?:\$?34\.?2?\s*million)', cl) else 0.0
-    scores["phase1_7m"] = 1.0 if (re.search(r'(?:\$?7\s*million)', cl) and re.search(r'(?:spent|phase|already)', cl)) else 0.0
-    scores["gas_settlement_650k"] = 1.0 if re.search(r'(?:650[,.]?000|\$650)', cl) else 0.0
-    scores["zion_8m"] = 1.0 if (re.search(r'zion', cl) and re.search(r'(?:\$?8\s*million)', cl)) else 0.0
-    scores["financial_summary"] = 1.0 if re.search(r'(?:financial|fiscal|budget)\s*(?:summary|overview|total)', cl) else 0.0
+        return {k: 0.0 for k in keys}
+
+    # --- 讀逐字稿，動態推導應有金額 ---
+    tpath = workspace / "transcript.md"
+    tx = tpath.read_text(encoding="utf-8", errors="ignore") if tpath.exists() else ""
+
+    def digits(s):
+        """只保留數字，方便比對 1,020 / 1020 / NT$1,020 等寫法。"""
+        return re.sub(r"\D", "", s)
+
+    # 從逐字稿抓出關鍵金額（抓不到時退回已知預設值，避免逐字稿格式變動就壞掉）
+    def find_amount(pattern, default):
+        m = re.search(pattern, tx)
+        return digits(m.group(1)) if m else default
+
+    water_now = find_amount(r"自來水\s*\*{0,2}NT\$?([\d,]+)", "1020")    # 1020
+    sewer_now = find_amount(r"污水\s*\*{0,2}NT\$?([\d,]+)", "1237")      # 1237
+    water_new = find_amount(r"調整為\s*自來水\s*\*{0,2}NT\$?([\d,]+)", "1530")  # 1530
+    sewer_new = "1847"  # 提議之污水費率（逐字稿第二筆污水數字）
+    three_b = find_amount(r"NT\$?([\d,]+)，3 billion", "3000000000")    # 30 億
+    rome = find_amount(r"羅馬倉庫園區.{0,40}?NT\$?([\d,]+)，94 million", "94000000")
+    annex = find_amount(r"行政園區增建案.{0,20}?NT\$?([\d,]+)，34", "34200000")
+    phase1 = find_amount(r"第一期已支用約\s*\*{0,2}NT\$?([\d,]+)", "7000000")
+    gas = find_amount(r"和解金\s*新臺幣[^（]*（NT\$?([\d,]+)", "650000")  # 650000
+    zion = find_amount(r"請求編列\s*\*{0,2}NT\$?([\d,]+)\s*萬", "8000")   # 8000(萬)
+
+    # --- 讀報告並去除空白，便於數字比對 ---
+    raw = report_path.read_text(encoding="utf-8", errors="ignore")
+    c = raw  # 原文（保留漢字）
+    nospace = re.sub(r"[\s,]", "", raw)  # 去空白與千分位逗號
+
+    def has_num(*nums):
+        return all(n and n in nospace for n in nums)
+
+    scores = {"report_created": 1.0}
+
+    # 容量費：現行(自來水/污水) 與 提議(自來水/污水) 至少各出現一組
+    now_ok = has_num(water_now) and has_num(sewer_now)
+    new_ok = has_num(water_new) and has_num(sewer_new)
+    scores["capacity_fee_amounts"] = 1.0 if (now_ok and new_ok) else 0.0
+
+    # 30 億資本投資：接受「30億」「3,000,000,000」「3 billion」等寫法
+    scores["three_billion"] = 1.0 if (
+        re.search(r"30\s*億", c) or has_num(three_b) or re.search(r"3\s*billion", c.lower())
+    ) else 0.0
+
+    # 每年增加約 1,500 萬至 2,000 萬元收入
+    rev_amt = (re.search(r"1[,，]?500\s*萬", c) or re.search(r"1500萬", nospace)
+               or "15000000" in nospace)
+    rev_ctx = re.search(r"(收入|增加|每年|額外|挹注)", c)
+    scores["annual_revenue_increase"] = 1.0 if (rev_amt and rev_ctx) else 0.0
+
+    # 羅馬倉庫園區 9,400 萬元（NT$94,000,000）
+    rome_amt = (re.search(r"9[,，]?400\s*萬", c) or has_num(rome)
+                or re.search(r"94\s*million", c.lower()))
+    rome_ctx = re.search(r"羅馬倉庫", c)
+    scores["rome_yard_94m"] = 1.0 if (rome_amt and rome_ctx) else 0.0
+
+    # 行政園區增建 3,420 萬元（NT$34,200,000）
+    annex_amt = (re.search(r"3[,，]?420\s*萬", c) or has_num(annex)
+                 or re.search(r"34\.?2?\s*million", c.lower()))
+    annex_ctx = re.search(r"(行政園區增建|南港大道.{0,6}增建|Howard)", c)
+    scores["annex_34m"] = 1.0 if (annex_amt and annex_ctx) else 0.0
+
+    # 第一期已支出 NT$700 萬元（NT$7,000,000）
+    phase_amt = (re.search(r"700\s*萬", c) or has_num(phase1)
+                 or re.search(r"7\s*million", c.lower()))
+    phase_ctx = re.search(r"(第一期|已支用|已支出|Phase\s*1)", c)
+    scores["phase1_7m"] = 1.0 if (phase_amt and phase_ctx) else 0.0
+
+    # 天然氣和解金 NT$65 萬元（NT$650,000）
+    gas_amt = (re.search(r"65\s*萬", c) or has_num(gas)
+               or re.search(r"650[,.]?000", c))
+    gas_ctx = re.search(r"(和解金|天然氣|管線損鄰)", c)
+    scores["gas_settlement_650k"] = 1.0 if (gas_amt and gas_ctx) else 0.0
+
+    # 義塚紀念館請求 NT$8,000 萬元（NT$80,000,000）；zion 為逐字稿推導之「萬元」數字
+    # （例 "8000"）；接受 8,000 萬 / 80,000,000 / 8 million 等寫法
+    zion_amount = ((zion + "萬") in nospace or (zion + "0000") in nospace
+                   or "80000000" in nospace or re.search(r"8\s*million", c.lower()))
+    zion_ctx = re.search(r"(義塚|紀念館)", c)
+    scores["zion_8m"] = 1.0 if (zion_amount and zion_ctx) else 0.0
+
+    # 財務彙總（財務摘要）
+    scores["financial_summary"] = 1.0 if re.search(
+        r"(財務|預算)\s*(彙總|摘要|概要|總覽|總結)|財務概要", c
+    ) else 0.0
+
     return scores
 
 

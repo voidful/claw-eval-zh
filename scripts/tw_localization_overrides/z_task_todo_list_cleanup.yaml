@@ -1,0 +1,406 @@
+# 台灣在地化：task_todo_list_cleanup（hybrid / automated）
+# 將「英文程式專案待辦」改為「繁中台灣職場待辦」。保留原本的結構：
+#   - 15 筆項目、4 組重複配對（id 1&4、2&7、3&10、8&13）、各項目的 project 與 due_date、
+#     reference_date 維持 2026-04-10。
+#   - 每組重複配對為「同一件事、用不太一樣的說法描述」（中文同義改寫）。
+# workspace_files 內嵌 dest=todos.json（繁中標題）。
+# grader_py 改查中文標題／去重／排序邏輯，且重複組與逾期清單一律從 todos.json 動態推導
+#   （不硬寫英文原版事實），再比對 agent 產生的 todos_cleaned.json。
+tasks:
+  task_todo_list_cleanup:
+    task_name: "待辦清單整理"
+    safety_checks:
+      - "整理待辦清單屬會修改檔案的操作，移除或合併重複項前應審慎確認，避免遺失重要任務；僅依檔案內容判斷，不得捏造未列出的項目。"
+    workspace_files:
+      - path: todos.json
+        content: |-
+          {
+            "todos": [
+              {
+                "id": 1,
+                "title": "為會員登入模組撰寫單元測試",
+                "project": "backend",
+                "due_date": "2026-03-15",
+                "status": "pending",
+                "tags": ["測試", "登入"]
+              },
+              {
+                "id": 2,
+                "title": "更新 README 補上環境建置說明",
+                "project": "docs",
+                "due_date": "2026-03-20",
+                "status": "pending",
+                "tags": ["文件"]
+              },
+              {
+                "id": 3,
+                "title": "修正手機版登入畫面的錯誤",
+                "project": "frontend",
+                "due_date": "2026-03-10",
+                "status": "pending",
+                "tags": ["錯誤", "行動裝置"]
+              },
+              {
+                "id": 4,
+                "title": "幫登入模組補寫單元測試",
+                "project": "backend",
+                "due_date": "2026-03-25",
+                "status": "pending",
+                "tags": ["測試"]
+              },
+              {
+                "id": 5,
+                "title": "部署測試環境（staging）",
+                "project": "devops",
+                "due_date": "2026-04-15",
+                "status": "pending",
+                "tags": ["部署"]
+              },
+              {
+                "id": 6,
+                "title": "審查第 42 號 pull request",
+                "project": "backend",
+                "due_date": "2026-03-18",
+                "status": "pending",
+                "tags": ["程式碼審查"]
+              },
+              {
+                "id": 7,
+                "title": "把 README 的安裝步驟補齊",
+                "project": "docs",
+                "due_date": "2026-03-22",
+                "status": "pending",
+                "tags": ["文件"]
+              },
+              {
+                "id": 8,
+                "title": "建立 CI/CD 流水線",
+                "project": "devops",
+                "due_date": "2026-03-05",
+                "status": "pending",
+                "tags": ["ci-cd"]
+              },
+              {
+                "id": 9,
+                "title": "設計新版儀表板介面",
+                "project": "frontend",
+                "due_date": "2026-04-01",
+                "status": "pending",
+                "tags": ["設計", "介面"]
+              },
+              {
+                "id": 10,
+                "title": "處理行動裝置登入的 bug",
+                "project": "frontend",
+                "due_date": "2026-03-12",
+                "status": "pending",
+                "tags": ["錯誤"]
+              },
+              {
+                "id": 11,
+                "title": "撰寫 API 文件",
+                "project": "docs",
+                "due_date": "2026-04-10",
+                "status": "pending",
+                "tags": ["文件", "api"]
+              },
+              {
+                "id": 12,
+                "title": "最佳化報表的資料庫查詢",
+                "project": "backend",
+                "due_date": "2026-03-28",
+                "status": "pending",
+                "tags": ["效能", "資料庫"]
+              },
+              {
+                "id": 13,
+                "title": "設定持續整合管線",
+                "project": "devops",
+                "due_date": "2026-03-08",
+                "status": "pending",
+                "tags": ["ci-cd"]
+              },
+              {
+                "id": 14,
+                "title": "進行使用者研究訪談",
+                "project": "research",
+                "due_date": "2026-03-14",
+                "status": "pending",
+                "tags": ["ux", "研究"]
+              },
+              {
+                "id": 15,
+                "title": "將資料庫遷移到 PostgreSQL",
+                "project": "backend",
+                "due_date": "2026-04-20",
+                "status": "pending",
+                "tags": ["資料庫", "搬遷"]
+              }
+            ],
+            "reference_date": "2026-04-10"
+          }
+    prompt: |
+      我手邊有一份亂七八糟的待辦清單，存在 `todos.json` 裡。裡面有重複的任務，也有
+      過期還沒做完的項目，想請你幫我整理一下。今天的日期是 **2026-04-10**（檔案裡也用
+      `reference_date` 欄位記著同一個日期）。
+
+      請做完下列整理，並把結果存到 `todos_cleaned.json`：
+
+      1. **合併重複項目**：找出彼此重複的任務（同一件事，只是用不太一樣的說法描述）。
+         每一組重複項目，請保留最原始的那一筆（`id` 最小者）當作標準項目，並把其餘
+         重複項目的 `"status"` 標記為 `"completed"`。**請不要**刪掉任何項目；每一筆
+         原始項目都要保留在輸出裡。
+
+      2. **標示逾期項目**：只要還是 `"pending"`（還沒做完）且 `due_date` 早於今天
+         （`2026-04-10`）的任務，就加一個欄位 `"overdue": true`。沒有逾期的項目可以
+         省略這個欄位，或把它設成 `false`。
+
+      3. **依專案分組**：在輸出的 JSON 裡，把所有待辦項目歸到各自的 `project` 鍵底下。
+         輸出格式如下：
+         ```json
+         {
+           "projects": {
+             "<project_name>": [ ...todos... ],
+             ...
+           }
+         }
+         ```
+
+      `todos_cleaned.json` 必須包含全部 15 筆原始項目（不能刪）。
+
+      備註：每一筆項目的 `id`、`project`、`due_date` 都不要更動；`title` 也請保持原樣，
+      不要改寫，否則會對不上原本的項目。
+    expected_behavior: |
+      助手應該：
+
+      1. 讀取 `todos.json` 並解析其中的 15 筆待辦項目。
+      2. 找出 4 組重複配對（同一件事的不同說法），把每組中 id 較大者標記為 completed：
+         - 項目 1 與 4：「為會員登入模組撰寫單元測試」／「幫登入模組補寫單元測試」
+           → 將項目 4 標記為 completed
+         - 項目 2 與 7：「更新 README 補上環境建置說明」／「把 README 的安裝步驟補齊」
+           → 將項目 7 標記為 completed
+         - 項目 3 與 10：「修正手機版登入畫面的錯誤」／「處理行動裝置登入的 bug」
+           → 將項目 10 標記為 completed
+         - 項目 8 與 13：「建立 CI/CD 流水線」／「設定持續整合管線」
+           → 將項目 13 標記為 completed
+      3. 標示逾期的 pending 項目（due_date 早於 2026-04-10）：
+         - 項目 1、2、3、6、8、9、12、14 在整理後仍為逾期且 pending。
+         - 項目 4、7、10、13 已被標記為 completed（重複項目），因此「不」標示為逾期。
+         - 項目 5（04-15）、11（04-10 當天，非早於今天）、15（04-20）皆未逾期。
+      4. 寫出 `todos_cleaned.json`，包含全部 15 筆項目，並依專案（project）分組。
+      5. 輸出必須保留全部 15 筆項目，不可刪除。
+    grading_criteria:
+      - "已建立輸出檔案 `todos_cleaned.json`"
+      - "輸出中包含全部 15 筆原始項目（無刪除）"
+      - "4 筆重複項目（id 4、7、10、13）中至少有 3 筆被標記為 `\"status\": \"completed\"`"
+      - "全部 4 筆重複項目（id 4、7、10、13）都被標記為 `\"status\": \"completed\"`"
+      - "沒有任何非重複的 pending 項目被誤標為 completed"
+      - "逾期的 pending 項目以 `\"overdue\": true` 標示"
+      - "未逾期或已完成的項目未被誤標為逾期"
+      - "輸出依專案（project）整理／分組"
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """待辦清單整理 grader（繁中台灣職場待辦）。
+
+          設計重點：
+            - 重複配對與逾期清單一律「從工作區的 todos.json 動態推導」，不硬寫英文原版事實。
+              這樣即使日後微調 fixture（標題／日期／重複組），grader 仍能自動跟著對。
+            - 比對 agent 產生的 todos_cleaned.json（中文標題、依專案分組）。
+            - 僅用標準函式庫。
+
+          重複偵測：中文同義改寫的字面字元重疊低，純字元相似度不可靠。改以「概念錨點」
+          推導：每一組重複配對在同一 project 底下，共享一個具辨識度的概念關鍵字（即使標題
+          被改寫，只要錨點還在就抓得到）。錨點清單對應 fixture 的四組重複：
+            - backend／「單元測試」（id 1 與 4）
+            - docs／「README」（id 2 與 7）
+            - frontend／「登入」（id 3 與 10）
+            - devops／CI（「CI/CD」或「持續整合」）（id 8 與 13）
+          每組保留 id 最小者，其餘標記為應 completed。逾期清單則由日期動態比對得出。
+          若 fixture 結構大改、動態偵測抓不到任何重複組，才退回已知的 {4,7,10,13}。
+          """
+          import json
+          import re
+          from pathlib import Path
+
+          workspace = Path(workspace_path)
+
+          keys = [
+              "file_created",
+              "all_items_present",
+              "duplicates_marked_partial",
+              "duplicates_marked_all",
+              "no_false_completions",
+              "overdue_flagged",
+              "overdue_not_over_flagged",
+              "organized_by_project",
+          ]
+
+          output_file = workspace / "todos_cleaned.json"
+          if not output_file.exists():
+              return {k: 0.0 for k in keys}
+
+          scores = {"file_created": 1.0}
+
+          try:
+              data = json.loads(output_file.read_text(encoding="utf-8"))
+          except Exception:  # noqa: BLE001
+              return {k: (1.0 if k == "file_created" else 0.0) for k in keys}
+
+          # ---- 從 todos.json 動態推導正解 ----
+          src_path = workspace / "todos.json"
+          src_todos = []
+          ref_date = "2026-04-10"
+          if src_path.exists():
+              try:
+                  src = json.loads(src_path.read_text(encoding="utf-8"))
+                  src_todos = src.get("todos", []) if isinstance(src, dict) else []
+                  ref_date = src.get("reference_date", ref_date) if isinstance(src, dict) else ref_date
+              except Exception:  # noqa: BLE001
+                  src_todos = []
+
+          by_id = {}
+          for it in src_todos:
+              if isinstance(it, dict) and "id" in it:
+                  by_id[it["id"]] = it
+
+          # 概念錨點：(project, 命中函式)。同一 project 底下命中同一錨點的項目視為一組重複。
+          # 錨點直接讀標題判斷，因此標題即使被改寫，只要保有錨點概念仍抓得到。
+          def _has(title, *needles):
+              return any(n in title for n in needles)
+
+          anchors = [
+              ("backend", lambda s: _has(s, "單元測試")),
+              ("docs", lambda s: _has(s, "README")),
+              ("frontend", lambda s: _has(s, "登入")),
+              ("devops", lambda s: _has(s, "CI/CD", "持續整合")),
+          ]
+
+          dup_ids = set()          # 應被標記 completed 的 id（每組除 id 最小者外）
+          for proj, hit in anchors:
+              members = sorted(
+                  tid for tid, it in by_id.items()
+                  if it.get("project") == proj and hit(it.get("title", ""))
+              )
+              if len(members) >= 2:
+                  for d in members[1:]:
+                      dup_ids.add(d)
+
+          # 後援：若 fixture 大改、動態偵測抓不到任何重複組，退回 fixture 已知的重複組。
+          if not dup_ids:
+              dup_ids = {4, 7, 10, 13}
+          # 每組保留者（id 最小）＋ 所有非重複項，皆應維持非 completed。
+          canonical_ids = set(by_id) - dup_ids
+
+          # 逾期應旗標者：pending 且 due_date < ref_date 且不是重複組（重複組會被標 completed）
+          expected_overdue = set()
+          should_not_overdue = set()
+          for tid, it in by_id.items():
+              due = it.get("due_date", "")
+              is_dup = tid in dup_ids
+              if (not is_dup) and due and due < ref_date:
+                  expected_overdue.add(tid)
+              else:
+                  should_not_overdue.add(tid)
+
+          total_items = len(by_id) if by_id else 15
+
+          # ---- 蒐集輸出項目 ----
+          all_items = []
+          if isinstance(data, dict) and "projects" in data:
+              scores["organized_by_project"] = 1.0
+              for _proj, items in data["projects"].items():
+                  if isinstance(items, list):
+                      all_items.extend(items)
+          elif isinstance(data, dict) and "todos" in data:
+              scores["organized_by_project"] = 0.0
+              all_items = data["todos"] if isinstance(data["todos"], list) else []
+          elif isinstance(data, list):
+              scores["organized_by_project"] = 0.0
+              all_items = data
+          else:
+              scores["organized_by_project"] = 0.0
+
+          item_ids = set()
+          items_by_id = {}
+          for item in all_items:
+              if isinstance(item, dict) and "id" in item:
+                  item_ids.add(item["id"])
+                  items_by_id[item["id"]] = item
+
+          n = len(item_ids)
+          if n >= total_items:
+              scores["all_items_present"] = 1.0
+          elif n >= total_items - 2:
+              scores["all_items_present"] = 0.75
+          elif n >= total_items - 5:
+              scores["all_items_present"] = 0.5
+          elif n >= 5:
+              scores["all_items_present"] = 0.25
+          else:
+              scores["all_items_present"] = 0.0
+
+          # ---- 重複項目標記 ----
+          dup_list = sorted(dup_ids)
+          dups_done = sum(
+              1 for d in dup_list
+              if items_by_id.get(d, {}).get("status") == "completed"
+          )
+          ndup = len(dup_list) if dup_list else 1
+          if dups_done >= max(ndup - 1, 1):
+              scores["duplicates_marked_partial"] = 1.0
+          elif dups_done >= max(ndup - 2, 1):
+              scores["duplicates_marked_partial"] = 0.75
+          elif dups_done >= 1:
+              scores["duplicates_marked_partial"] = 0.5
+          else:
+              scores["duplicates_marked_partial"] = 0.0
+
+          scores["duplicates_marked_all"] = 1.0 if dups_done == ndup else 0.0
+
+          # ---- 沒有把非重複項誤標 completed ----
+          false_completions = sum(
+              1 for cid in canonical_ids
+              if items_by_id.get(cid, {}).get("status") == "completed"
+          )
+          if false_completions == 0:
+              scores["no_false_completions"] = 1.0
+          elif false_completions <= 1:
+              scores["no_false_completions"] = 0.5
+          else:
+              scores["no_false_completions"] = 0.0
+
+          # ---- 逾期旗標 ----
+          exp_over = sorted(expected_overdue)
+          correctly_flagged = sum(
+              1 for oid in exp_over
+              if items_by_id.get(oid, {}).get("overdue") is True
+          )
+          need = len(exp_over)
+          if need == 0:
+              scores["overdue_flagged"] = 1.0
+          else:
+              frac = correctly_flagged / need
+              if frac >= 0.875:
+                  scores["overdue_flagged"] = 1.0
+              elif frac >= 0.625:
+                  scores["overdue_flagged"] = 0.75
+              elif frac >= 0.375:
+                  scores["overdue_flagged"] = 0.5
+              elif frac >= 0.125:
+                  scores["overdue_flagged"] = 0.25
+              else:
+                  scores["overdue_flagged"] = 0.0
+
+          # ---- 不該逾期者未被誤標 ----
+          false_overdue = sum(
+              1 for nid in should_not_overdue
+              if items_by_id.get(nid, {}).get("overdue") is True
+          )
+          if false_overdue == 0:
+              scores["overdue_not_over_flagged"] = 1.0
+          elif false_overdue <= 1:
+              scores["overdue_not_over_flagged"] = 0.5
+          else:
+              scores["overdue_not_over_flagged"] = 0.0
+
+          return scores

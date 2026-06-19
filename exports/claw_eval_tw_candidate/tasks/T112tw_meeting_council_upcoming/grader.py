@@ -13,30 +13,98 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
+    """TW (fictional) council upcoming-events grader.
+
+    查核項對應原 grader，但事實改由台灣逐字稿（dest=transcript.md）推導，
+    再比對 agent 產生的中文報告 upcoming_events.md。僅用標準函式庫。
+    """
     from pathlib import Path
     import re
-    scores = {}
+
     workspace = Path(workspace_path)
-    report_path = workspace / "upcoming_events.md"
-    if not report_path.exists():
-        for alt in ["events.md", "deadlines.md", "upcoming.md", "timeline.md"]:
+
+    # --- 找出 agent 報告檔 ---
+    report = workspace / "upcoming_events.md"
+    if not report.exists():
+        for alt in ["events.md", "deadlines.md", "upcoming.md", "timeline.md",
+                    "後續事件.md", "後續議程.md", "重要日期.md"]:
             if (workspace / alt).exists():
-                report_path = workspace / alt
+                report = workspace / alt
                 break
-    if not report_path.exists():
-        return {k: 0.0 for k in ["report_created", "april_16_items", "april_20_townhall", "may_7_ethics", "fire_station_gmp", "budget_workshops", "march_2027_fees", "rome_yard_sept2028", "chronological", "highlights_section"]}
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    cl = content.lower()
-    scores["april_16_items"] = 1.0 if (re.search(r'april\s*16', cl) and re.search(r'(?:veteran|26|27|28|annex)', cl)) else 0.0
-    scores["april_20_townhall"] = 1.0 if (re.search(r'april\s*20', cl) and re.search(r'(?:east\s*tampa|town\s*hall|fair\s*oaks)', cl)) else 0.0
-    scores["may_7_ethics"] = 1.0 if (re.search(r'may\s*7', cl) and re.search(r'(?:ethic|conflict|ldc)', cl)) else 0.0
-    scores["fire_station_gmp"] = 1.0 if (re.search(r'(?:may\s*15|gmp)', cl) and re.search(r'(?:fire\s*station|station\s*24)', cl)) else 0.0
-    scores["budget_workshops"] = 1.0 if (re.search(r'august\s*(?:3|10|17)', cl) and re.search(r'(?:budget|workshop)', cl)) else 0.0
-    scores["march_2027_fees"] = 1.0 if (re.search(r'march.*2027', cl) and re.search(r'(?:capacity|fee|water)', cl)) else 0.0
-    scores["rome_yard_sept2028"] = 1.0 if (re.search(r'(?:september|sept).*28', cl) and re.search(r'(?:rome|phase\s*4|completion)', cl)) else 0.0
-    scores["chronological"] = 1.0 if len(re.findall(r'(april|may|june|august|september|march)\s*\d{0,4}', cl)) >= 4 else 0.0
-    scores["highlights_section"] = 1.0 if re.search(r'(?:watch|highlight|key|significant|important)', cl) else 0.0
+
+    keys = ["report_created", "april_16_items", "april_20_townhall",
+            "may_7_ethics", "fire_station_gmp", "budget_workshops",
+            "march_2027_fees", "rome_yard_sept2028", "chronological",
+            "highlights_section"]
+    if not report.exists():
+        return {k: 0.0 for k in keys}
+
+    scores = {"report_created": 1.0}
+    c = report.read_text(encoding="utf-8", errors="ignore")
+
+    # --- 從逐字稿動態確認「應有事實」確實存在於 transcript（避免硬寫）---
+    tx = ""
+    tpath = workspace / "transcript.md"
+    if tpath.exists():
+        tx = tpath.read_text(encoding="utf-8", errors="ignore")
+
+    def tx_has(*pats):
+        # 逐字稿須含全部 pattern，才視為該事實可查核
+        return all(re.search(p, tx) for p in pats) if tx else True
+
+    # 1) 4 月 16 日次會：退輔委員會／第 26-28 案／NT$65 萬和解金
+    fact = tx_has(r"4\s*月\s*16\s*日")
+    ok = bool(re.search(r"4\s*月\s*16\s*日|0?4[/-]16|April\s*16", c)) and bool(
+        re.search(r"退輔|退伍軍人|二十[六七八]|26|27|28|65\s*萬|和解金|重新分配", c))
+    scores["april_16_items"] = 1.0 if (fact and ok) else 0.0
+
+    # 2) 4 月 20 日：東港里里民座談會／福橡活動中心
+    fact = tx_has(r"4\s*月\s*20\s*日", r"東港里", r"福橡")
+    ok = bool(re.search(r"4\s*月\s*20\s*日|0?4[/-]20|April\s*20", c)) and bool(
+        re.search(r"東港里|里民座談|座談會|Town\s*Hall|福橡", c))
+    scores["april_20_townhall"] = 1.0 if (fact and ok) else 0.0
+
+    # 3) 5 月 7 日：倫理自律報告／土管自治條例
+    fact = tx_has(r"5\s*月\s*7\s*日", r"倫理")
+    ok = bool(re.search(r"5\s*月\s*7\s*日|0?5[/-]7|May\s*7", c)) and bool(
+        re.search(r"倫理|利益衝突|自律報告|土管|土地使用管理|LDC", c))
+    scores["may_7_ethics"] = 1.0 if (fact and ok) else 0.0
+
+    # 4) 5 月 15 日：第 24 號消防分隊 GMP
+    fact = tx_has(r"5\s*月\s*15\s*日", r"24\s*號\s*消防")
+    ok = bool(re.search(r"5\s*月\s*15\s*日|0?5[/-]15|May\s*15|GMP|工程上限價", c)) and bool(
+        re.search(r"消防分隊|24\s*號消防|第\s*24\s*號|Fire\s*Station|Station\s*24", c))
+    scores["fire_station_gmp"] = 1.0 if (fact and ok) else 0.0
+
+    # 5) 8 月三場預算編列工作坊
+    fact = tx_has(r"8\s*月\s*3\s*日")
+    ok = bool(re.search(r"8\s*月\s*(?:3|10|17)\s*日|0?8[/-](?:3|10|17)|August\s*(?:3|10|17)", c)) and bool(
+        re.search(r"預算|工作坊|workshop", c, re.IGNORECASE))
+    scores["budget_workshops"] = 1.0 if (fact and ok) else 0.0
+
+    # 6) 2027 年 3 月 1 日：容量費新費率上路
+    fact = tx_has(r"2027\s*年\s*3\s*月")
+    ok = bool(re.search(r"2027\s*年\s*3\s*月|2027[/-]0?3|March.*2027", c)) and bool(
+        re.search(r"容量費|容量接管費|費率|自來水|污水|capacity|fee", c, re.IGNORECASE))
+    scores["march_2027_fees"] = 1.0 if (fact and ok) else 0.0
+
+    # 7) 2028 年 9 月：羅馬倉庫園區第四期完工
+    fact = tx_has(r"2028\s*年\s*9\s*月", r"羅馬倉庫")
+    ok = bool(re.search(r"2028\s*年\s*9\s*月|2028[/-]0?9|(?:September|Sept).*28", c)) and bool(
+        re.search(r"羅馬倉庫|園區|第四期|Phase\s*4|完工|completion", c, re.IGNORECASE))
+    scores["rome_yard_sept2028"] = 1.0 if (fact and ok) else 0.0
+
+    # 8) 依時間先後（至少出現 4 個不同月份／日期錨點）
+    anchors = re.findall(
+        r"(?:4\s*月\s*16|4\s*月\s*20|5\s*月\s*7|5\s*月\s*15|8\s*月\s*3|8\s*月\s*10|8\s*月\s*17|2027|2028|2030)",
+        c)
+    scores["chronological"] = 1.0 if len(set(anchors)) >= 4 else 0.0
+
+    # 9) 重點／值得關注區段
+    scores["highlights_section"] = 1.0 if re.search(
+        r"值得關注|重點|關注重點|What\s*to\s*watch|提醒|留意|focus|watch|highlight",
+        c, re.IGNORECASE) else 0.0
+
     return scores
 
 

@@ -1,6 +1,6 @@
 ---
 id: task_csv_cities_ranking
-name: 美國城市人口排名
+name: 台灣鄉鎮市區人口排名分析
 category: csv_analysis
 grading_type: hybrid
 timeout_seconds: 180
@@ -14,63 +14,75 @@ localization: taiwan
 localization_strategy: copy
 claw_eval_tw_id: T072tw_csv_cities_ranking
 workspace_files:
-- source: csvs/us_cities_top1000.csv
-  dest: us_cities_top1000.csv
+- source: tw/csvs/tw_townships.csv
+  dest: tw_townships.csv
 grading_weights:
   automated: 0.6
   llm_judge: 0.4
 ---
 
-# 美國城市人口排名
+# 台灣鄉鎮市區人口排名分析
 
 ## Prompt
 
-我的工作區裡有一個 CSV 檔案 `us_cities_top1000.csv`，內含美國人口最多的 1,000 個城市的資料。檔案欄位有：`City`、`State`、`Population`、`lat`、`lon`。
+我的工作區裡有一個 CSV 檔案 `tw_townships.csv`，內含台灣各縣市轄下 204 個鄉鎮市區的
+人口資料。檔案欄位有：`Township`（鄉鎮市區名）、`County`（所屬縣市）、`Population`（人口）、
+`lat`（緯度）、`lon`（經度）。
 
-請分析人口排名，並把你的發現寫到名為 `cities_ranking_report.md` 的檔案。你的報告應包含：
+請分析人口排名，並把你的發現寫到名為 `cities_ranking_report.md` 的檔案。你的報告
+應包含：
 
-- **人口前 10 大城市（top 10 cities）**：附上所屬州別與確切人口
-- **資料集中人口最少的 10 個城市（bottom 10 cities）**（即前 1,000 大中最小的）
-- 全部 1,000 個城市的**總人口（total population）**
+- **人口前 10 大鄉鎮市區（top 10）**：附上所屬縣市與確切人口
+- **人口最少的 10 個鄉鎮市區（bottom 10）**（即全部 204 個中最小的）
+- 全部鄉鎮市區的**總人口（total population）**
 - 人口的**平均值與中位數（mean and median）**
-- 依該州在資料集中各城市人口加總排名的**人口前 10 大州（top 10 states）**，包含各州的城市數
-- **人口分布（population distribution）**：有多少城市落在下列各區間：<50k、50k-100k、100k-250k、250k-500k、500k-1M、>1M
+- 依該縣市轄下各鄉鎮市區人口加總排名的**人口前 10 大縣市（top 10 counties）**，
+  包含各縣市的鄉鎮市區數
+- **人口分布（population distribution）**：有多少鄉鎮市區落在下列各區間：
+  <5 萬、5 萬–10 萬、10 萬–25 萬、25 萬–50 萬、50 萬–100 萬、>100 萬
+
+注意：CSV 檔名、欄名與報告檔名 `cities_ranking_report.md` 不可更改；人口請以 CSV 內的
+實際數值為準，不要捏造未出現在檔案中的數字。
 
 ## Expected Behavior
 
 助手應該：
 
-1. 讀取並解析 CSV 檔案（1,000 列資料、5 個欄位）
-2. 依人口排序城市以找出排名
+1. 讀取並解析 CSV 檔案（204 列資料、5 個欄位）
+2. 依人口排序鄉鎮市區以找出排名
 3. 計算彙總統計
-4. 依州分組以進行州級排名
+4. 依縣市分組以進行縣市級排名
 5. 建立人口分布區間
 6. 撰寫一份結構清晰的 markdown 報告
 
-關鍵預期數值：
+關鍵預期數值（已由程式從 `tw_townships.csv` 實際資料驗算）：
 
-- 第 1 名城市：New York, New York — 8,405,837
-- 第 2 名：Los Angeles, California — 3,884,307
-- 第 3 名：Chicago, Illinois — 2,718,782
-- 第 4 名：Houston, Texas — 2,195,914
-- 第 5 名：Philadelphia, Pennsylvania — 1,553,165
-- 資料集中最小的城市：Panama City, Florida — 36,877
-- 總人口：131,132,443
-- 平均人口：~131,132
-- 中位數人口：~68,224
-- 人口加總最高的州：California（212 個城市，27,910,620）
-- 人口 > 1M 的城市：10 個
-- 人口 >= 500k 的城市：34 個
+- 第 1 名鄉鎮市區：板橋區（新北市）— 552,000
+- 第 2 名：桃園區（桃園市）— 461,000
+- 第 3 名：新莊區（新北市）— 421,000
+- 第 4 名：中壢區（桃園市）— 421,000
+- 第 5 名：中和區（新北市）— 411,000
+- 資料集中最小的鄉鎮市區：烏坵鄉（金門縣）— 700
+- 第 2 小：莒光鄉（連江縣）— 1,300
+- 總人口：19,275,800
+- 平均人口：約 94,489
+- 中位數人口：55,500（第 102、103 名分別為 53,000 與 58,000，取平均）
+- 人口加總最高的縣市：新北市（20 個鄉鎮市區，3,726,100）
+- 第 2 高的縣市：臺北市（12 個鄉鎮市區，2,574,000）
+- 第 3 高的縣市：桃園市（13 個鄉鎮市區，2,271,000）
+- 人口分布：<5 萬 有 95 個、5 萬–10 萬 有 42 個、10 萬–25 萬 有 53 個、
+  25 萬–50 萬 有 13 個、50 萬–100 萬 有 1 個、>100 萬 有 0 個
+- 全部 204 個鄉鎮市區、分屬 22 個縣市
 
 ## Grading Criteria
 
 - [ ] 已建立報告檔案 `cities_ranking_report.md`
-- [ ] 正確列出人口前 10 大城市，且 New York 為第 1 名
-- [ ] 列出人口最少的 10 個城市，且 Panama City, FL 為最小者
-- [ ] 正確回報總人口（~131,132,443）
-- [ ] 正確計算平均人口（~131,132）
-- [ ] 正確計算中位數人口（~68,224）
-- [ ] 列出人口加總最高的州，且 California 為第 1 名
+- [ ] 正確列出人口前 10 大鄉鎮市區，且板橋區為第 1 名
+- [ ] 列出人口最少的 10 個鄉鎮市區，且烏坵鄉（金門縣）為最小者
+- [ ] 正確回報總人口（約 19,275,800）
+- [ ] 正確計算平均人口（約 94,489）
+- [ ] 正確計算中位數人口（約 55,500）
+- [ ] 列出人口加總最高的縣市，且新北市為第 1 名
 - [ ] 已包含人口分布區間
 - [ ] 報告結構清晰、分區明確
 
@@ -78,81 +90,179 @@ grading_weights:
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the US cities population ranking task.
+    """台灣鄉鎮市區人口排名 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    正解一律從工作區內的 tw_townships.csv 動態計算，再比對 agent 產生的
+    中文報告 cities_ranking_report.md，不沿用任何美國數值。
+    僅用標準函式庫。
     """
-    from pathlib import Path
+    import csv
     import re
+    import statistics
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
     report_path = workspace / "cities_ranking_report.md"
     if not report_path.exists():
-        for alt in ["ranking_report.md", "report.md", "cities_report.md", "population_ranking.md"]:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in ["ranking_report.md", "report.md", "cities_report.md",
+                    "townships_ranking_report.md", "population_ranking.md"]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
 
+    keys = ["report_created", "top_10_townships", "bottom_10_townships",
+            "total_population", "mean_population", "median_population",
+            "county_rankings", "distribution_brackets"]
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "top_10_cities": 0.0,
-            "bottom_10_cities": 0.0,
-            "total_population": 0.0,
-            "mean_population": 0.0,
-            "median_population": 0.0,
-            "state_rankings": 0.0,
-            "distribution_brackets": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    scores = {"report_created": 1.0}
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
 
-    # Top 10 cities — check for the top 5 at minimum
-    top_cities = ["new york", "los angeles", "chicago", "houston", "philadelphia"]
-    found_top = sum(1 for c in top_cities if c in content_lower)
-    scores["top_10_cities"] = 1.0 if found_top >= 5 else (0.5 if found_top >= 3 else 0.0)
+    # --- 從 CSV 動態計算正解 ---
+    csv_path = workspace / "tw_townships.csv"
+    if not csv_path.exists():
+        for f in workspace.rglob("*.csv"):
+            if "township" in f.name.lower():
+                csv_path = f
+                break
+    if not csv_path.exists():
+        # 無 CSV 可比對：只能確認報告存在
+        for k in keys[1:]:
+            scores[k] = 0.0
+        return scores
 
-    # Bottom 10 — check for Panama City as smallest
-    scores["bottom_10_cities"] = 1.0 if "panama city" in content_lower else 0.0
+    rows = []
+    with csv_path.open(encoding="utf-8") as f:
+        for d in csv.DictReader(f):
+            try:
+                rows.append((d["Township"].strip(), d["County"].strip(),
+                             int(float(d["Population"]))))
+            except (KeyError, ValueError):
+                continue
 
-    # Total population (~131,132,443)
-    total_patterns = [r'131[,.]?132[,.]?443', r'131[,.]?132[,.]?4', r'131\.1\s*million']
-    scores["total_population"] = 1.0 if any(re.search(p, content) for p in total_patterns) else 0.0
+    n = len(rows)
+    pops = [p for _, _, p in rows]
+    total = sum(pops)
+    mean = total / n if n else 0
+    median = statistics.median(pops) if pops else 0
 
-    # Mean population (~131,132)
-    mean_patterns = [r'131[,.]?132(?!\d{3})', r'131[,.]?1\d{2}(?!\d{3})']
-    scores["mean_population"] = 1.0 if any(re.search(p, content) for p in mean_patterns) else 0.0
+    srt_desc = sorted(rows, key=lambda x: x[2], reverse=True)
+    srt_asc = sorted(rows, key=lambda x: x[2])
+    top10 = srt_desc[:10]
+    bottom10 = srt_asc[:10]
 
-    # Median population (~68,224)
-    median_patterns = [r'68[,.]?2[12]\d', r'68[,.]?224', r'68[,.]?225', r'68[,.]?223']
-    scores["median_population"] = 1.0 if any(re.search(p, content) for p in median_patterns) else 0.0
+    county_agg = {}
+    for _, c, p in rows:
+        tp, cnt = county_agg.get(c, (0, 0))
+        county_agg[c] = (tp + p, cnt + 1)
+    county_srt = sorted(county_agg.items(), key=lambda x: x[1][0], reverse=True)
+    top_counties = county_srt[:10]
 
-    # State rankings — California should be #1
-    california_patterns = [
-        r'california.*(?:1st|#1|first|top|highest|most)',
-        r'(?:1st|#1|first|top|highest).*california',
-        r'california.*212.*cit',
-        r'california.*27[,.]?910',
+    def in_report(s):
+        return s in content
+
+    def num_present(value, tol=0):
+        """數字以千分位或無千分位形式出現於報告（允許 +/- tol 容差）。"""
+        candidates = set()
+        for v in range(value - tol, value + tol + 1):
+            candidates.add(str(v))
+            candidates.add(f"{v:,}")
+        return any(c in content for c in candidates)
+
+    # --- 前 10 大鄉鎮市區：至少前 5 名出現，且第 1 名須出現 ---
+    top5_names = [t for t, _, _ in top10[:5]]
+    found_top = sum(1 for name in top5_names if in_report(name))
+    first_name = top10[0][0]
+    if in_report(first_name) and found_top >= 5:
+        scores["top_10_townships"] = 1.0
+    elif found_top >= 3:
+        scores["top_10_townships"] = 0.5
+    else:
+        scores["top_10_townships"] = 0.0
+
+    # --- 後 10 小：最小者須出現 ---
+    smallest_name = bottom10[0][0]
+    found_bottom = sum(1 for t, _, _ in bottom10[:5] if in_report(t))
+    if in_report(smallest_name) and found_bottom >= 3:
+        scores["bottom_10_townships"] = 1.0
+    elif in_report(smallest_name):
+        scores["bottom_10_townships"] = 0.5
+    else:
+        scores["bottom_10_townships"] = 0.0
+
+    # --- 總人口（容差 +/- 1，並接受「約 X 萬」表述）---
+    total_ok = num_present(total, tol=2)
+    wan_total = round(total / 10000)  # 約 1928 萬
+    if not total_ok:
+        total_ok = bool(re.search(rf'{wan_total}\s*萬', content)) or \
+            bool(re.search(rf'{round(total/10000, 1)}'.replace('.', r'\.') + r'\s*萬', content))
+    scores["total_population"] = 1.0 if total_ok else 0.0
+
+    # --- 平均人口（四捨五入，容差 +/- 50）---
+    mean_int = round(mean)
+    mean_ok = any(num_present(mean_int + d) for d in range(-50, 51))
+    # 接受千位四捨五入（例如 94,000 / 9.4 萬 / 9.45 萬）
+    if not mean_ok:
+        mean_ok = bool(re.search(r'9[.,]?4\d?\s*萬', content)) or \
+            num_present(round(mean / 100) * 100, tol=0)
+    scores["mean_population"] = 1.0 if mean_ok else 0.0
+
+    # --- 中位數（55,500；接受 53,000~58,000 區間任一值或「約 5.5 萬」）---
+    median_int = int(round(median))
+    median_ok = any(num_present(v) for v in range(median_int - 50, median_int + 51))
+    if not median_ok:
+        lo = min(p for p in pops if p >= median) if pops else median_int
+        hi = max(p for p in pops if p <= median) if pops else median_int
+        median_ok = num_present(lo) or num_present(hi)
+    if not median_ok:
+        median_ok = bool(re.search(r'5[.,]?5\s*萬', content))
+    scores["median_population"] = 1.0 if median_ok else 0.0
+
+    # --- 縣市排名：加總最高縣市須為第 1 名 ---
+    top_county = top_counties[0][0]
+    top_county_pop = top_counties[0][1][0]
+    top_county_cnt = top_counties[0][1][1]
+    patterns = [
+        rf'{top_county}.{{0,20}}(?:第\s*1|第一|#1|最高|最多|榜首|居首|冠軍)',
+        rf'(?:第\s*1|第一|#1|最高|最多|排名第一).{{0,20}}{top_county}',
+        rf'{top_county}.{{0,30}}{top_county_cnt}\s*個',
     ]
-    scores["state_rankings"] = 1.0 if any(re.search(p, content_lower) for p in california_patterns) else 0.0
+    county_ok = any(re.search(p, content) for p in patterns)
+    if not county_ok:
+        county_ok = in_report(top_county) and num_present(top_county_pop, tol=2)
+    scores["county_rankings"] = 1.0 if county_ok else 0.0
 
-    # Distribution brackets
-    bracket_keywords = ["50k", "100k", "250k", "500k", "1m", "million",
-                        "50,000", "100,000", "250,000", "500,000", "1,000,000",
-                        "bracket", "distribution", "range", "bin"]
-    bracket_count = sum(1 for k in bracket_keywords if k in content_lower)
-    scores["distribution_brackets"] = 1.0 if bracket_count >= 3 else (0.5 if bracket_count >= 1 else 0.0)
+    # --- 分布區間 ---
+    bracket_kw = ["萬", "5 萬", "10 萬", "25 萬", "50 萬", "100 萬",
+                  "50k", "100k", "250k", "500k", "1m", "分布", "區間",
+                  "<5", "5萬", "10萬", "25萬", "50萬", "100萬"]
+    bracket_count = sum(1 for k in bracket_kw if k in content)
+    # 也可比對實際區間計數（95 / 42 / 53 / 13 / 1）
+    br = {"<5萬": 0, "5-10萬": 0, "10-25萬": 0, "25-50萬": 0, "50-100萬": 0, ">100萬": 0}
+    for p in pops:
+        if p < 50000:
+            br["<5萬"] += 1
+        elif p < 100000:
+            br["5-10萬"] += 1
+        elif p < 250000:
+            br["10-25萬"] += 1
+        elif p < 500000:
+            br["25-50萬"] += 1
+        elif p < 1000000:
+            br["50-100萬"] += 1
+        else:
+            br[">100萬"] += 1
+    # 只有「真的呈現分布區間」（出現萬/區間/分布等關鍵詞）才給分；
+    # 單純出現某個小數字（如 1、13）不算，避免美國報告誤判得分。
+    matched_counts = sum(1 for v in br.values() if str(v) in content)
+    if bracket_count >= 3 and matched_counts >= 2:
+        scores["distribution_brackets"] = 1.0
+    elif bracket_count >= 3:
+        scores["distribution_brackets"] = 0.5
+    else:
+        scores["distribution_brackets"] = 0.0
 
     return scores
 
@@ -212,7 +322,8 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 1：資料正確性（權重 35%）
 
-- 1.0：所有排名、總計、平均值、中位數與州級彙總皆數值正確。
+- 1.0：所有排名、總計、平均值、中位數與縣市級彙總皆數值正確（板橋區為人口最多、
+  烏坵鄉為最少、總人口約 1,927 萬、新北市為加總最高縣市）。
 - 0.75：多數數值正確，僅有一兩處小幅數值錯誤。
 - 0.5：部分數值正確，但有多項關鍵數字錯誤。
 - 0.25：多項指標有重大計算錯誤。
@@ -220,7 +331,7 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 2：完整性（權重 30%）
 
-- 1.0：所有要求的元素皆具備：前 10、後 10、總計／平均／中位數、州級排名、分布區間。
+- 1.0：所有要求的元素皆具備：前 10、後 10、總計／平均／中位數、縣市級排名、分布區間。
 - 0.75：多數元素具備，僅有一處小幅缺漏。
 - 0.5：有多項要求的元素缺漏。
 - 0.25：只有少數元素。
@@ -236,7 +347,8 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 4：洞見品質（權重 15%）
 
-- 1.0：超越原始數字，指出模式——例如 California 的主導地位、第 1 名與第 2 名之間的巨大差距、小型城市的長尾現象。
+- 1.0：超越原始數字，指出模式——例如雙北與桃園都會區在前段的主導地位、第 1 名與
+  第 2 名之間的差距、外島鄉（烏坵、莒光、東引）的小型聚落長尾現象。
 - 0.75：對資料中的模式有一些觀察。
 - 0.5：大多是原始數字，詮釋極少。
 - 0.25：純數字、無評論。

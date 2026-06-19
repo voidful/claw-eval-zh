@@ -13,82 +13,142 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the multi-criteria filtering task.
-
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
-    """
-    from pathlib import Path
+    """台灣氣象站多條件篩選 grader。所有「應有事實」皆從工作區的
+    tw_weather_stations.csv 動態計算，不沿用美國數值。報告為中文，
+    故比對中文關鍵字與數值。"""
+    import csv
     import re
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
+    # ---- 定位報告檔 ----
     report_path = workspace / "filter_report.md"
     if not report_path.exists():
-        for alt in ["report.md", "filter_results.md", "filtering_report.md", "analysis.md", "stations_filter.md"]:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in [
+            "report.md", "filter_results.md", "filtering_report.md",
+            "analysis.md", "stations_filter.md", "氣象站篩選報告.md",
+        ]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
 
+    keys = [
+        "report_created", "forestry_high_count", "forestry_highest",
+        "wra_kaohsiung_count", "southern_mid_count", "southern_mid_stations",
+        "cross_tabulation",
+    ]
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "nws_high_count": 0.0,
-            "nws_highest": 0.0,
-            "nrcs_custer_count": 0.0,
-            "nrcs_custer_top": 0.0,
-            "southern_filter": 0.0,
-            "cross_tabulation": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # ---- 從 CSV 動態計算正解 ----
+    csv_path = workspace / "tw_weather_stations.csv"
+    if not csv_path.exists():
+        return {k: 0.0 for k in keys}
 
-    # Check NWS >= 5000 ft count (39)
-    nws_count_patterns = [r'\b39\b.*(?:station|nws)', r'(?:station|nws).*\b39\b', r'\b39\b']
-    scores["nws_high_count"] = 1.0 if any(re.search(p, content_lower) for p in nws_count_patterns) else 0.0
+    rows = list(csv.DictReader(csv_path.open(encoding="utf-8-sig")))
 
-    # Check GALENA as highest NWS station at 7300
-    has_galena = bool(re.search(r'galena', content_lower))
-    has_7300 = bool(re.search(r'7[,.]?300', content))
-    scores["nws_highest"] = 1.0 if (has_galena and has_7300) else (0.5 if has_galena else 0.0)
+    def dms_to_dd(s):
+        parts = (s or "").split()
+        d, m, sec = (parts + ["0", "0", "0"])[:3]
+        return int(d) + int(m) / 60 + int(sec) / 3600
 
-    # Check NRCS Custer count (4)
-    custer_section = re.search(r'custer.*?(?=\n#|\Z)', content_lower, re.DOTALL)
-    custer_text = custer_section.group() if custer_section else content_lower
-    has_4_custer = bool(re.search(r'\b4\b.*(?:station|nrcs|custer)', custer_text) or
-                       re.search(r'(?:station|nrcs|custer).*\b4\b', custer_text))
-    scores["nrcs_custer_count"] = 1.0 if has_4_custer else 0.0
+    for r in rows:
+        r["elev"] = int(r["Elevation (meters)"])
+        r["lat_dd"] = dms_to_dd(r["Latitude"])
 
-    # Check DOLLARHIDE as top NRCS/Custer station
-    has_dollarhide = bool(re.search(r'dollarhide', content_lower))
-    has_8420 = bool(re.search(r'8[,.]?420', content))
-    scores["nrcs_custer_top"] = 1.0 if (has_dollarhide and has_8420) else (0.5 if has_dollarhide else 0.0)
+    # F1: 林業署, 海拔 >= 3000 公尺, 由高到低
+    f1 = sorted(
+        [r for r in rows if r["Managing Agency"] == "林業署" and r["elev"] >= 3000],
+        key=lambda r: -r["elev"],
+    )
+    f1_count = len(f1)
+    f1_top_name = f1[0]["Station Name"] if f1 else ""
+    f1_top_elev = f1[0]["elev"] if f1 else 0
 
-    # Check southern filter (8 stations, latitude parsing)
-    southern_stations = ['bliss', 'buhl', 'castleford', 'gooding', 'jerome', 'shoshone', 'twin falls']
-    found_southern = sum(1 for s in southern_stations if s in content_lower)
-    has_8_count = bool(re.search(r'\b8\b.*(?:station|south|low)', content_lower) or
-                      re.search(r'(?:station|south|low).*\b8\b', content_lower))
-    scores["southern_filter"] = 1.0 if found_southern >= 5 else (0.5 if found_southern >= 3 else 0.0)
+    # F2: 水利署 in 高雄市
+    f2 = [r for r in rows if r["Managing Agency"] == "水利署" and r["County"] == "高雄市"]
+    f2_count = len(f2)
 
-    # Check cross-tabulation
-    cross_tab_indicators = 0
-    if re.search(r'cross.*tab|tabul|matrix|breakdown.*agency.*elev|agency.*elevation', content_lower):
-        cross_tab_indicators += 1
-    if re.search(r'\b143\b', content) and re.search(r'\b70\b', content):
-        cross_tab_indicators += 1
-    if re.search(r'(?:below|under|<)\s*3[,.]?000', content_lower) or re.search(r'7[,.]?000\s*\+|above\s*7', content_lower):
-        cross_tab_indicators += 1
-    scores["cross_tabulation"] = 1.0 if cross_tab_indicators >= 2 else (0.5 if cross_tab_indicators >= 1 else 0.0)
+    # F3: 海拔 1000-2000 公尺(含) 且 緯度 23.5°N 以南
+    f3 = sorted(
+        [r for r in rows if 1000 <= r["elev"] <= 2000 and r["lat_dd"] < 23.5],
+        key=lambda r: -r["elev"],
+    )
+    f3_count = len(f3)
+    f3_names = [r["Station Name"] for r in f3]
+
+    # 各機構合計
+    forestry_total = sum(1 for r in rows if r["Managing Agency"] == "林業署")
+    cwb_total = sum(1 for r in rows if r["Managing Agency"] == "中央氣象署")
+    wra_total = sum(1 for r in rows if r["Managing Agency"] == "水利署")
+
+    # ---- 讀報告 ----
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
+    digits = re.sub(r"[,\s]", "", content)  # 去掉千分位與空白便於比數字
+
+    def has_count(n):
+        """報告中是否把數量 n 當成「測站總數」陳述。
+        需數字 n 與計數量詞相鄰（N 個／N 站／N 座／N 處／N 筆／N 測站，
+        或「共 N」「總共 N」「計 N」），不接受報告中任意出現的裸數字，
+        以免只把數字撒進無關文字就拿分。"""
+        pat = (
+            rf"(?<!\d){n}(?!\d)\s*(?:個|站|座|處|筆|測站)"
+            rf"|(?:共|總共|計|合計|數量為|為)\s*(?<!\d){n}(?!\d)\s*(?:個|站|座|處|筆|測站)?"
+        )
+        return bool(re.search(pat, content))
+
+    scores = {"report_created": 1.0}
+
+    # F1 數量
+    scores["forestry_high_count"] = 1.0 if has_count(f1_count) else 0.0
+
+    # F1 最高站：站名 + 海拔
+    has_top_name = bool(f1_top_name) and (f1_top_name in content)
+    has_top_elev = str(f1_top_elev) in digits
+    scores["forestry_highest"] = (
+        1.0 if (has_top_name and has_top_elev)
+        else (0.5 if has_top_name else 0.0)
+    )
+
+    # F2 數量（需同時提及「高雄」）
+    scores["wra_kaohsiung_count"] = (
+        1.0 if (has_count(f2_count) and "高雄" in content) else 0.0
+    )
+
+    # F3 數量
+    scores["southern_mid_count"] = 1.0 if has_count(f3_count) else 0.0
+
+    # F3 站名命中率（正解 12 站，命中 >=8 給滿分）
+    found = sum(1 for nm in f3_names if nm in content)
+    scores["southern_mid_stations"] = (
+        1.0 if found >= max(8, int(0.66 * f3_count))
+        else (0.5 if found >= max(4, int(0.33 * f3_count)) else 0.0)
+    )
+
+    # 交叉統計表
+    ct_hits = 0
+    # (a) 出現交叉統計表的結構性字眼
+    if re.search(r"交叉|統計表|矩陣|機構.{0,6}海拔|海拔.{0,6}機構|管理機構", content):
+        ct_hits += 1
+    # (b) 三個機構各自的「合計」需與機構名相鄰出現（避免只把 54/95/41 撒進文字）。
+    #     在每個機構名之後 12 個字內找到對應總數，才算數。
+    def agency_total_near(name, total):
+        for m in re.finditer(re.escape(name), content):
+            window = re.sub(r"[,\s]", "", content[m.end():m.end() + 24])
+            if re.search(rf"(?<!\d){total}(?!\d)", window):
+                return True
+        return False
+    if (
+        agency_total_near("林業署", forestry_total)
+        and agency_total_near("中央氣象署", cwb_total)
+        and agency_total_near("水利署", wra_total)
+    ):
+        ct_hits += 1
+    # (c) 出現海拔分帶的欄位標籤
+    if re.search(r"未滿\s*1,?000|below\s*1000|<\s*1000|3,?000\s*以上|3000\+", content, re.IGNORECASE):
+        ct_hits += 1
+    scores["cross_tabulation"] = 1.0 if ct_hits >= 2 else (0.5 if ct_hits >= 1 else 0.0)
 
     return scores
 

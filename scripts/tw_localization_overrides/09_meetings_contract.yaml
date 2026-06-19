@@ -17,17 +17,18 @@ tasks:
       「活動／發表會」及「對內公告」相關的行動項目。
     expected_behavior: |
       助手應從逐字稿擷取至少 6 個行動項目與其負責人：
-      - 林佳蓉：6/30 前完成新版 API 文件
-      - 王志明：下週五前與通路夥伴確認新版報價
-      - 陳怡君：7/10 前確認產品發表會（活動）場地與議程
-      - 張家豪：6 月底前改版官網 messaging 與產品頁
-      - 黃淑芬：本週內整理客戶回饋並發出內部公告（announcement）
-      - 李俊賢：7/15 前完成資安稽核與滲透測試
+      - 全體：向各自的活動行銷經理確認對應活動（COSCUP／DevOpsDays Taipei／Kubernetes Day Taiwan）的贊助承諾，並在 issue 留言回報
+      - 戴立安：本週內整理三場活動分工，發出對內公告（announcement）通知各部門
+      - 高敏哲：星期二前為 Plan（規劃）stage 補上 top 5 候選清單（含史詩看板、里程碑燃盡圖）
+      - 全體：星期二前補完產品發布試算表欄位、投票選出整體前 5 名功能
+      - 蔡思敏：把競品試算表改成每個 stage 只列相關的 tier 1 對手
+      - 蔡思敏：在競品比較表新增「鼎峰」一列
+      - 王志明：今天下班前把訊息架構定稿，主標語「更快交付，更低風險」
       並把結果整理成清楚的 action_items.md。
     grading_criteria:
       - "建立報告檔案 action_items.md"
       - "至少擷取 5 個行動項目"
-      - "至少正確標出 3 位負責人（林佳蓉/王志明/陳怡君/張家豪/黃淑芬/李俊賢）"
+      - "至少正確標出 3 位負責人（王志明/戴立安/高敏哲/蔡思敏/陳柏宇/林淑芬）"
       - "標出與活動／發表會相關的行動項目"
       - "標出與對內公告相關的行動項目"
     llm_judge_rubric: |
@@ -61,11 +62,11 @@ tasks:
           c = report.read_text(encoding="utf-8", errors="ignore")
           markers = re.findall(r'(?:行動項目|待辦|action item|^\s*[-*]\s|^\s*\d+[.)]\s)', c, re.MULTILINE | re.IGNORECASE)
           scores["min_action_items"] = 1.0 if len(markers) >= 5 else (0.5 if len(markers) >= 3 else 0.0)
-          owners = ["林佳蓉", "王志明", "陳怡君", "張家豪", "黃淑芬", "李俊賢"]
+          owners = ["王志明", "戴立安", "高敏哲", "蔡思敏", "陳柏宇", "林淑芬"]
           oc = sum(1 for o in owners if o in c)
           scores["owners_identified"] = 1.0 if oc >= 3 else (0.5 if oc >= 2 else 0.0)
-          scores["events_actions"] = 1.0 if re.search(r'發表會|活動|展會', c) else 0.0
-          scores["announcement_actions"] = 1.0 if re.search(r'公告|announcement|通知各部門|對內通知', c) else 0.0
+          scores["events_actions"] = 1.0 if re.search(r'發表會|活動|展會|研討會|贊助|COSCUP|DevOpsDays|Kubernetes Day', c) else 0.0
+          scores["announcement_actions"] = 1.0 if re.search(r'公告|announcement|通知各部門|對內通知|內部公告', c) else 0.0
           return scores
 
   task_meeting_council_votes:

@@ -1,6 +1,6 @@
 ---
 id: task_csv_pension_risk
-name: 美國退休金風險評估
+name: 退休金給付風險評估（台灣縣市）
 category: csv_analysis
 grading_type: hybrid
 timeout_seconds: 180
@@ -14,194 +14,328 @@ localization: taiwan
 localization_strategy: copy
 claw_eval_tw_id: T078tw_csv_pension_risk
 workspace_files:
-- source: csvs/us_pension_by_state.csv
-  dest: us_pension_by_state.csv
+- source: tw/csvs/tw_pension.csv
+  dest: tw_pension.csv
 grading_weights:
   automated: 0.6
   llm_judge: 0.4
 ---
 
-# 美國退休金風險評估
+# 退休金給付風險評估（台灣縣市）
 
 ## Prompt
 
-我的工作區裡有一個 CSV 檔案 `us_pension_by_state.csv`，內含按州與國會選區細分的美國聯邦退休金給付資料。欄位如下：
+我的工作區裡有一個 CSV 檔 `tw_pension.csv`，內含依縣市與選區細分的公務人員
+退休金給付資料（金額以新臺幣 NT$ 計）。欄位如下：
 
-- `STATE_ABBREV_NAME` — 州縮寫與名稱（例如州總計列為 "OH-OHIO Total"）
-- `DISTRICT` — 國會選區號碼、"At Large" 或年份
-- `PAYEE_AMOUNT` — 給付給目前退休人員的總金額（以 $ 與逗號格式化）
+- `STATE_ABBREV_NAME` — 縣市代碼與名稱（例如縣市總計列為「TXG-臺中市 Total」；
+  另有一類特殊類別「CTRL-中央直轄機關」，代表中央直轄、銓敘調度與派駐外館等
+  非地方型單位，並非真正的縣市）
+- `DISTRICT` — 選區號碼，或縣市總計列留空
+- `PAYEE_AMOUNT` — 給付給目前已退休人員的總金額（以 $ 與逗號格式化，單位新臺幣）
 - `PAYEE_COUNT` — 目前領取給付者人數
-- `DEFERRED_COUNT` — 遞延領取者人數（已具請領資格但尚未開始請領的員工）
+- `DEFERRED_COUNT` — 遞延領取者人數（已具請領資格但尚未開始請領的人員）
 
-以 "Total" 結尾的列為州級彙總。第一列是 Grand Total。
+以「Total」結尾的列為縣市級彙總。第一列「Grand Total」為全國總計。
 
-請對退休金的給付義務進行風險評估，並把你的發現寫到 `pension_risk_report.md`。你的分析應包含：
+請對退休金的給付義務進行風險評估，並把你的發現寫到 `pension_risk_report.md`
+（請用繁體中文撰寫，金額以新臺幣 NT$ 表示）。你的分析應包含：
 
-- 每個州的**遞延對領取者比值（deferred-to-payee ratio）**：計算 DEFERRED_COUNT / PAYEE_COUNT。此比值代表每一位目前領取者背後有多少未來領取者在等待——比值愈高，代表相對於目前的未來義務愈多。依此比值將前 10 大州排名（排除領取者少於 100 人的項目）。
-- **集中度風險（concentration risk）**：前 5 大州占總給付金額的百分比為何？前 10 大州呢？
-- **選區級熱點（district-level hotspots）**：找出給付金額最高的 5 個個別國會選區（非州總計）。這些代表退休金義務的地理集中。
-- **風險等級分類（risk tier classification）**：依遞延對領取者比值將所有州分成三個等級：
+- 每個縣市的**遞延對領取者比值（deferred-to-payee ratio）**：計算
+  DEFERRED_COUNT / PAYEE_COUNT。此比值代表每一位目前領取者背後有多少未來領取者
+  在等待——比值愈高，代表相對於目前的未來義務愈多。依此比值將前 10 大縣市排名
+  （排除領取者少於 100 人的項目）。
+- **集中度風險（concentration risk）**：前 5 大縣市占總給付金額的百分比為何？
+  前 10 大縣市呢？
+- **選區級熱點（district-level hotspots）**：找出給付金額最高的 5 個個別選區
+  （非縣市總計）。這些代表退休金義務的地理集中。
+- **風險等級分類（risk tier classification）**：依遞延對領取者比值將所有縣市
+  分成三個等級：
   - **高風險（high risk）**（比值 > 0.75）：相對於目前領取者有顯著的未來義務
   - **中風險（medium risk）**（比值 0.50–0.75）：中等的未來義務
   - **低風險（low risk）**（比值 < 0.50）：可控的未來義務
 
-  列出各等級的州數，並點名高風險等級中的各州。
+  列出各等級的縣市數，並點名高風險等級中的各縣市。
 - 一段整體風險樣貌的**摘要（summary）**與建議
+
+備註：請以 CSV 內的實際數值為準，不要捏造未出現在檔案中的數字。
 
 ## Expected Behavior
 
 助手應該：
 
-1. 解析 CSV、清理格式，並計算每州的遞延對領取者比值
-2. 依比值排名：DC（~5.69）、NJ（~1.07）、AK（~0.99）、ND（~0.99）、UT（~0.88）居前
-3. 計算集中度：前 5 大州（OH、PA、FL、MI、CA）占總額 ~38%；前 10 大州 ~55%
-4. 找出選區熱點：IN-1（$99.2M）、MI-5（$97.8M）、OH-13（$111.2M）、PA-7（$72.0M）、WV-1（$67.4M）
-5. 依比值門檻將各州分入風險等級
-6. DC 是重大離群值，比值 ~5.69（544 名領取者、3,093 遞延）
-7. 高風險等級包含：DC、NJ、AK、ND、UT、CA、NY、CO、CT、HI（比值 > 0.75）
+1. 解析 CSV、清理 $ 與逗號格式，並計算每個縣市的遞延對領取者比值
+2. 依比值排名：中央直轄機關（約 5.69）遠居第一，其後為連江縣（約 0.89）、
+   臺北市（約 0.88）、金門縣（約 0.88）、澎湖縣（約 0.86）、新竹市（約 0.82）、
+   新竹縣（約 0.75）
+3. 計算集中度：前 5 大縣市（臺中市、新北市、高雄市、臺北市、桃園市）占總額
+   約 61.6%；前 10 大縣市約 84.6%
+4. 找出選區熱點（依金額）：臺中市第 13 選區（約 NT$113.3M，最高）、臺南市第 3
+   選區（約 NT$55.7M）、高雄市第 10 選區（約 NT$54.0M）、高雄市第 9 選區
+   （約 NT$52.8M）、新北市第 3 選區（約 NT$52.6M）
+5. 依比值門檻將各縣市分入風險等級
+6. 中央直轄機關是重大離群值，比值約 5.69（540 名領取者、3,073 名遞延），原因是
+   它屬於中央直轄／派駐外館等非地方單位，許多人員已具資格但尚未請領
+7. 高風險等級（比值 > 0.75）共 6 個：中央直轄機關、連江縣、臺北市、金門縣、
+   澎湖縣、新竹市
 
-關鍵預期數值：
+關鍵預期數值（以 `tw_pension.csv` 實際資料計）：
 
-- DC 遞延對領取者比值：~5.69（遠高於其他）
-- NJ 比值：~1.07（除 DC 外唯一 > 1.0 的州）
-- 金額最高的選區：OH-13（~$111.2M）
-- 前 5 大集中度：占總額 $5.71B 的 ~38%
-- 全國平均比值：~0.55
-- 高風險州（比值 > 0.75）：約 10 個州
+- 中央直轄機關遞延對領取者比值：約 5.69（遠高於其他，唯一 > 1.0）
+- 連江縣比值：約 0.89（地方縣市中最高）
+- 金額最高的選區：臺中市第 13 選區（約 NT$113.3M）
+- 前 5 大集中度：約 61.6%；前 10 大：約 84.6%
+- 全國平均比值（總遞延 332,084 ÷ 總領取 545,862）：約 0.61
+- 高風險縣市（比值 > 0.75）：6 個
+- 中風險（0.50–0.75）：12 個；低風險（< 0.50）：5 個（苗栗縣、南投縣、屏東縣、
+  嘉義縣、雲林縣）
+- 退休金給付總額：約 NT$3,522,337,308（約新臺幣 35.2 億元）
 
 ## Grading Criteria
 
 - [ ] 已建立報告檔案 `pension_risk_report.md`
-- [ ] 已計算遞延對領取者比值並將前 10 大州排名
-- [ ] 已指出 DC 為比值最高（~5.69）
-- [ ] 已指出 NJ 為比值第二高（~1.07）
-- [ ] 已計算集中度風險（前 5 與前 10 的百分比）
+- [ ] 已計算遞延對領取者比值並將前 10 大縣市排名
+- [ ] 已指出中央直轄機關為比值最高（約 5.69）的離群值
+- [ ] 已指出連江縣／臺北市等為地方縣市中比值最高者（約 0.88–0.89）
+- [ ] 已計算集中度風險（前 5 約 61.6%、前 10 約 84.6%）
 - [ ] 已找出選區級熱點
-- [ ] 已指出 OH-13 為金額最高的選區之一（~$111M）
-- [ ] 風險等級分類含各等級州數
-- [ ] 已列出高風險等級的各州
-- [ ] 有摘要，含風險評估與建議
+- [ ] 已指出臺中市第 13 選區為金額最高的選區（約 NT$113M）
+- [ ] 風險等級分類含各等級縣市數（高 6、中 12、低 5）
+- [ ] 已列出高風險等級的各縣市
+- [ ] 有摘要，含風險評估與建議，金額以新臺幣（NT$）表示
 
 ## Automated Checks
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the pension risk assessment task.
+    """對台灣退休金 CSV 動態實算正解，再比對 agent 的中文報告。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    報告為中文（轉換器會在其後接上中→英關鍵字 wrapper），故本 grader 以
+    中文關鍵字與數值為主進行比對；縣市名稱／代碼不在英譯字典內，必須直接
+    比對中文。所有「應有事實」皆從工作區的 tw_pension.csv 即時推導。
     """
-    from pathlib import Path
+    import csv
     import re
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if report exists
+    # --- 找出報告檔 ---
     report_path = workspace / "pension_risk_report.md"
     if not report_path.exists():
-        alternatives = ["risk_report.md", "report.md", "pension_report.md", "pension_risk.md", "risk_assessment.md"]
+        alternatives = [
+            "risk_report.md", "report.md", "pension_report.md",
+            "pension_risk.md", "risk_assessment.md", "退休金風險報告.md",
+            "退休金風險評估.md", "風險評估報告.md",
+        ]
         for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+            p = workspace / alt
+            if p.exists():
+                report_path = p
+                break
+    # 退而求其次：任何含關鍵字的 .md
+    if not report_path.exists():
+        for p in workspace.rglob("*.md"):
+            try:
+                t = p.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                continue
+            if ("遞延" in t or "比值" in t) and ("風險" in t or "risk" in t.lower()):
+                report_path = p
                 break
 
+    keys = [
+        "report_created", "ratio_ranking", "outlier_highest_ratio",
+        "second_ratio", "concentration_risk", "district_hotspots",
+        "top_district", "risk_tiers", "high_risk_states",
+        "summary_recommendations",
+    ]
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "ratio_ranking": 0.0,
-            "dc_highest_ratio": 0.0,
-            "nj_second_ratio": 0.0,
-            "concentration_risk": 0.0,
-            "district_hotspots": 0.0,
-            "oh13_top_district": 0.0,
-            "risk_tiers": 0.0,
-            "high_risk_states": 0.0,
-            "summary_recommendations": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    scores = {"report_created": 1.0}
+    content = report_path.read_text(encoding="utf-8")
+    low = content.lower()
 
-    # Deferred-to-payee ratio ranking
-    ratio_context = bool(re.search(r'(?:deferred|ratio|defer.*payee)', content_lower))
-    ratio_states = ["washington dc", "dc", "new jersey", "alaska", "north dakota", "utah"]
-    ratio_mentioned = sum(1 for s in ratio_states if s in content_lower)
-    scores["ratio_ranking"] = 1.0 if ratio_mentioned >= 4 and ratio_context else (0.5 if ratio_mentioned >= 2 else 0.0)
+    # --- 從 CSV 動態實算正解 ---
+    csv_path = workspace / "tw_pension.csv"
+    if not csv_path.exists():
+        for p in workspace.rglob("*.csv"):
+            csv_path = p
+            break
 
-    # DC highest ratio
-    dc_patterns = [
-        r'(?:dc|washington\s*dc|district\s*of\s*columbia).*(?:5\.69|5\.7|highest|outlier|extreme)',
-        r'(?:highest|outlier|extreme).*(?:ratio).*(?:dc|washington\s*dc)',
-        r'(?:dc|washington\s*dc).*ratio.*(?:5\.[67])',
-    ]
-    scores["dc_highest_ratio"] = 1.0 if any(re.search(p, content_lower) for p in dc_patterns) else 0.0
+    def to_num(s):
+        s = re.sub(r"[^0-9.]", "", s or "")
+        return float(s) if s else 0.0
 
-    # NJ second ratio
-    nj_patterns = [
-        r'new\s*jersey.*(?:1\.0[67]|second|#2|only.*(?:above|over|exceed).*1)',
-        r'(?:second|#2).*(?:ratio).*new\s*jersey',
-        r'new\s*jersey.*1\.0\d',
-    ]
-    scores["nj_second_ratio"] = 1.0 if any(re.search(p, content_lower) for p in nj_patterns) else 0.0
+    totals = []        # 縣市總計（含特殊類別）
+    districts = []     # 選區列
+    grand = None
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            name = (row.get("STATE_ABBREV_NAME") or "").strip()
+            dist = (row.get("DISTRICT") or "").strip()
+            amt = to_num(row.get("PAYEE_AMOUNT"))
+            pc = to_num(row.get("PAYEE_COUNT"))
+            dc = to_num(row.get("DEFERRED_COUNT"))
+            if name == "Grand Total":
+                grand = {"amt": amt, "pc": pc, "dc": dc}
+                continue
+            if name.endswith("Total"):
+                short = name.replace("Total", "").strip()
+                totals.append({"name": short, "amt": amt, "pc": pc, "dc": dc})
+            elif name:
+                districts.append({"name": name, "dist": dist, "amt": amt,
+                                  "pc": pc, "dc": dc})
 
-    # Concentration risk
-    conc_patterns = [
-        r'(?:3[5-9]|4[0-2])\s*%.*(?:top\s*5|five)',
-        r'(?:top\s*5|five).*(?:3[5-9]|4[0-2])\s*%',
-        r'(?:5[2-8]|concentration).*(?:top\s*10|ten)',
-        r'(?:top\s*10|ten).*(?:5[2-8])\s*%',
-        r'concentration.*risk',
-    ]
-    scores["concentration_risk"] = 1.0 if any(re.search(p, content_lower) for p in conc_patterns) else 0.0
+    # 純中文縣市名（去掉代碼前綴 "TXG-" 等）
+    def zh_name(full):
+        return full.split("-", 1)[1].strip() if "-" in full else full.strip()
 
-    # District hotspots
-    district_terms = ["district", "congressional", "hotspot"]
-    has_district_context = any(t in content_lower for t in district_terms)
-    hotspot_patterns = [r'in-?1', r'mi-?5', r'oh-?13', r'pa-?7', r'wv-?1', r'oh-?6']
-    hotspot_count = sum(1 for p in hotspot_patterns if re.search(p, content_lower))
-    scores["district_hotspots"] = 1.0 if hotspot_count >= 3 and has_district_context else (0.5 if hotspot_count >= 2 else 0.0)
+    # 比值排名（PC>=100）
+    ratios = []
+    for t in totals:
+        if t["pc"] >= 100:
+            ratios.append((zh_name(t["name"]), t["dc"] / t["pc"] if t["pc"] else 0.0))
+    ratios.sort(key=lambda x: -x[1])
+    top10_names = [n for n, _ in ratios[:10]]
+    outlier_name, outlier_ratio = ratios[0]          # 中央直轄機關, ~5.69
+    second_name, second_ratio = ratios[1]            # 連江縣, ~0.89
 
-    # OH-13 as top district
-    oh13_patterns = [
-        r'oh(?:io)?[- ]?13.*(?:111|highest|top|largest|first)',
-        r'(?:highest|top|largest|first).*(?:district).*oh(?:io)?[- ]?13',
-        r'oh(?:io)?[- ]?13.*\$?111',
-    ]
-    scores["oh13_top_district"] = 1.0 if any(re.search(p, content_lower) for p in oh13_patterns) else 0.0
+    # 集中度（依金額）
+    total_amt = sum(t["amt"] for t in totals) or 1.0
+    by_amt = sorted(totals, key=lambda x: -x["amt"])
+    top5_pct = sum(t["amt"] for t in by_amt[:5]) / total_amt * 100
+    top10_pct = sum(t["amt"] for t in by_amt[:10]) / total_amt * 100
+    top5_names = [zh_name(t["name"]) for t in by_amt[:5]]
 
-    # Risk tiers
-    tier_patterns = [
-        r'(?:high|medium|low)\s*risk',
-        r'(?:tier|category|classification)',
-        r'(?:0\.75|0\.50|0\.5)',
-    ]
-    tier_count = sum(1 for p in tier_patterns if re.search(p, content_lower))
-    scores["risk_tiers"] = 1.0 if tier_count >= 2 else (0.5 if tier_count >= 1 else 0.0)
+    # 選區熱點（依金額）
+    by_d = sorted(districts, key=lambda x: -x["amt"])
+    top_districts = by_d[:5]
+    top_d = top_districts[0]                          # 臺中市-13
+    top_d_zh = zh_name(top_d["name"])
+    top_d_dist = top_d["dist"]
+    top_d_amt_m = top_d["amt"] / 1_000_000            # ~113.3
 
-    # High-risk states listed
-    high_risk_names = ["dc", "washington dc", "new jersey", "alaska", "north dakota",
-                       "utah", "california", "new york", "colorado", "connecticut", "hawaii"]
-    hr_mentioned = sum(1 for s in high_risk_names if s in content_lower)
-    has_high_risk_context = bool(re.search(r'high.*risk', content_lower))
-    scores["high_risk_states"] = 1.0 if hr_mentioned >= 6 and has_high_risk_context else (0.5 if hr_mentioned >= 3 else 0.0)
+    # 風險等級
+    high_tier = [n for n, r in ratios if r > 0.75]
+    med_tier = [n for n, r in ratios if 0.50 <= r <= 0.75]
+    low_tier = [n for n, r in ratios if r < 0.50]
 
-    # Summary and recommendations
+    nat_avg = (grand["dc"] / grand["pc"]) if grand and grand["pc"] else 0.0
+
+    # ---------- 1) 比值排名：前 10 大縣市有被提到 ----------
+    ratio_ctx = bool(re.search(r"遞延|比值|ratio", low))
+    named = sum(1 for n in top10_names if n in content)
+    scores["ratio_ranking"] = (
+        1.0 if (named >= 5 and ratio_ctx)
+        else 0.5 if named >= 2
+        else 0.0
+    )
+
+    # ---------- 2) 最高比值離群值（中央直轄機關 ~5.69）----------
+    outlier_num = f"{outlier_ratio:.1f}"            # "5.7"
+    outlier_num2 = f"{outlier_ratio:.2f}"           # "5.69"
+    outlier_present = (outlier_name in content)
+    outlier_val = bool(re.search(re.escape(outlier_num2), content)
+                       or re.search(r"5\.[67]", content))
+    outlier_ctx = bool(re.search(r"離群|最高|極端|outlier|highest", low))
+    scores["outlier_highest_ratio"] = (
+        1.0 if (outlier_present and (outlier_val or outlier_ctx))
+        else 0.5 if outlier_present
+        else 0.0
+    )
+
+    # ---------- 3) 第二高（地方縣市中最高，連江縣 ~0.89 / 臺北市 ~0.88）----------
+    # 因 #2~#4 比值極接近（0.886/0.880/0.876，四捨五入皆 0.88~0.89），
+    # 接受其中任一個被點名為地方縣市中比值最高者。
+    near_top = [n for n, r in ratios[1:5]]
+    second_present = sum(1 for n in near_top if n in content)
+    second_val = bool(re.search(r"0\.8[5-9]", content))
+    scores["second_ratio"] = (
+        1.0 if (second_present >= 1 and second_val)
+        else 0.5 if second_present >= 1
+        else 0.0
+    )
+
+    # ---------- 4) 集中度風險 ----------
+    # 從報告中抽出所有百分比數值，以 ±2 百分點容差比對實算值
+    # （容許整數或一位小數，例如 61.6% / 62%）。
+    conc_ctx = bool(re.search(r"集中度|concentration", low))
+    report_pcts = [float(m) for m in re.findall(r"(\d+(?:\.\d+)?)\s*%", content)]
+
+    def pct_hit(target):
+        return any(target - 2 <= v <= target + 2 for v in report_pcts)
+
+    top5_hit = pct_hit(top5_pct)
+    top10_hit = pct_hit(top10_pct)
+    scores["concentration_risk"] = (
+        1.0 if (top5_hit and top10_hit)
+        else 0.5 if (conc_ctx and (top5_hit or top10_hit))
+        else 0.5 if conc_ctx
+        else 0.0
+    )
+
+    # ---------- 5) 選區級熱點 ----------
+    dist_ctx = bool(re.search(r"選區|熱點|district|hotspot", low))
+    hot_hit = 0
+    for d in top_districts:
+        zn = zh_name(d["name"])
+        # 例如「臺中市第 13 選區」「臺中市-13」「臺中市 13」
+        pat = rf"{re.escape(zn)}[^0-9]{{0,6}}{re.escape(str(d['dist']))}\b"
+        if re.search(pat, content):
+            hot_hit += 1
+    scores["district_hotspots"] = (
+        1.0 if (hot_hit >= 3 and dist_ctx)
+        else 0.5 if hot_hit >= 2
+        else 0.0
+    )
+
+    # ---------- 6) 金額最高的選區（臺中市第 13）----------
+    amt_m = round(top_d_amt_m)                       # 113
+    top_d_pat = rf"{re.escape(top_d_zh)}[^0-9]{{0,6}}{re.escape(str(top_d_dist))}\b"
+    top_d_named = bool(re.search(top_d_pat, content))
+    top_d_amt_hit = bool(re.search(rf"{amt_m}", content)
+                         or re.search(r"113", content))
+    top_d_ctx = bool(re.search(r"最高|最大|first|top|highest|金額最", low))
+    scores["top_district"] = (
+        1.0 if (top_d_named and (top_d_amt_hit or top_d_ctx))
+        else 0.5 if top_d_named
+        else 0.0
+    )
+
+    # ---------- 7) 風險等級分類 ----------
+    tier_terms = sum(bool(re.search(p, content)) for p in
+                     [r"高風險", r"中風險", r"低風險"])
+    tier_thresh = bool(re.search(r"0\.75", content) and re.search(r"0\.5", content))
+    tier_counts = bool(re.search(rf"{len(high_tier)}", content)
+                       and re.search(rf"{len(low_tier)}", content))
+    tcount = (1 if tier_terms >= 2 else 0) + (1 if tier_thresh else 0) \
+        + (1 if tier_counts else 0)
+    scores["risk_tiers"] = (
+        1.0 if tcount >= 2 else 0.5 if tcount >= 1 else 0.0
+    )
+
+    # ---------- 8) 高風險縣市清單 ----------
+    hr_named = sum(1 for n in high_tier if n in content)
+    hr_ctx = bool(re.search(r"高風險", content))
+    scores["high_risk_states"] = (
+        1.0 if (hr_named >= max(3, len(high_tier) - 1) and hr_ctx)
+        else 0.5 if hr_named >= 2
+        else 0.0
+    )
+
+    # ---------- 9) 摘要與建議 ----------
     rec_patterns = [
-        r'recommend',
-        r'(?:monitor|watch|attention|concern)',
-        r'(?:mitigat|manag|address|plan)',
-        r'(?:risk|exposure).*(?:profile|assessment|overall)',
+        r"建議|recommend",
+        r"監測|監控|關注|留意|注意|monitor",
+        r"管理|因應|處理|規劃|mitigat|manag",
+        r"摘要|總體|整體|風險樣貌|summary",
     ]
-    rec_count = sum(1 for p in rec_patterns if re.search(p, content_lower))
-    scores["summary_recommendations"] = 1.0 if rec_count >= 2 else (0.5 if rec_count >= 1 else 0.0)
+    rec = sum(1 for p in rec_patterns if re.search(p, low))
+    scores["summary_recommendations"] = (
+        1.0 if rec >= 2 else 0.5 if rec >= 1 else 0.0
+    )
 
     return scores
 
@@ -261,7 +395,9 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 1：風險指標正確性（權重 30%）
 
-- 1.0：遞延對領取者比值正確計算，指出 DC 為極端離群值（~5.69）、NJ 第二（~1.07），並指出全國平均（~0.55）。集中度百分比準確。
+- 1.0：遞延對領取者比值正確計算，指出中央直轄機關為極端離群值（約 5.69）、
+  連江縣／臺北市為地方縣市中最高（約 0.88–0.89），並指出全國平均（約 0.61）。
+  集中度百分比準確（前 5 約 61.6%、前 10 約 84.6%）。
 - 0.75：多數比值正確，僅有小錯；關鍵離群值有指出。
 - 0.5：理解比值概念，但有多項數值錯誤或漏掉關鍵離群值。
 - 0.25：重大計算錯誤或對比值概念理解有誤。
@@ -269,7 +405,8 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 2：多層次分析（權重 25%）
 
-- 1.0：分析在三個層次運作——州級比值、整體組合的集中度風險，以及選區級的細緻度。每個層次都提供不同洞見。選區熱點正確找出。
+- 1.0：分析在三個層次運作——縣市級比值、整體組合的集中度風險，以及選區級的
+  細緻度。每個層次都提供不同洞見。選區熱點正確找出（臺中市第 13 選區為最高）。
 - 0.75：三個層次皆具備，但其中一項淺薄或不完整。
 - 0.5：只有三個分析層次中的兩個。
 - 0.25：只有一個分析層次。
@@ -277,15 +414,19 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 3：風險框架品質（權重 25%）
 
-- 1.0：等級分類清楚，門檻定義明確，各州正確歸類，且框架產出可執行的分組。指出 DC 為特殊個案。承認單以比值作為風險指標的限制。
-- 0.75：等級系統良好，多數州正確歸類。
+- 1.0：等級分類清楚，門檻定義明確，各縣市正確歸類，且框架產出可執行的分組。
+  指出中央直轄機關為特殊個案（非真正縣市，故比值極端）。承認單以比值作為風險
+  指標的限制。
+- 0.75：等級系統良好，多數縣市正確歸類。
 - 0.5：有等級概念，但門檻不清或歸類有誤。
 - 0.25：風險分類模糊，缺乏明確準則。
 - 0.0：未嘗試風險分類。
 
 ### 評分項 4：建議與洞見（權重 20%）
 
-- 1.0：提出緊扣具體發現的可執行建議。指出單憑高比值並不代表高金額風險（ND 比值高但金額極小）。區分比值風險與絕對金額風險。提及監測策略。
+- 1.0：提出緊扣具體發現的可執行建議。指出單憑高比值並不代表高金額風險（例如
+  連江縣、金門縣比值高但給付金額極小），並區分「比值風險」與「絕對金額風險」
+  （臺中市、新北市金額大但比值僅中等）。提及監測策略。
 - 0.75：建議良好，具一定細膩度。
 - 0.5：建議籠統，未緊扣具體資料發現。
 - 0.25：建議極少或流於表面。

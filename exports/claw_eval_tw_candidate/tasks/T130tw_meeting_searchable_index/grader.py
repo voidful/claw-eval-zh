@@ -13,138 +13,210 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting searchable index task.
+    """鼎峰科技產品週會「可檢索索引」grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
+    做法：先從台灣逐字稿 meeting_transcript.md「動態推導」應有事實
+    （日期、與會者姓名、各主題／競品關鍵字、決議與行動項目線索），再比對
+    agent 產出的中文索引 meeting_index.md。盡量不硬寫英文原版（GitLab）事實，
+    提升可重現性。僅用標準函式庫。
 
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    對應原 grader 的八項查核：
+      file_created / metadata_present / topic_index / people_index /
+      keyword_index / decisions_log / action_items_log / organized
     """
-    from pathlib import Path
     import re
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if file exists
-    report_path = workspace / "meeting_index.md"
-    if not report_path.exists():
-        alternatives = ["index.md", "searchable_index.md", "meeting_searchable_index.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+    # --- 找 agent 的索引報告 ---
+    report = workspace / "meeting_index.md"
+    if not report.exists():
+        for alt in ["index.md", "searchable_index.md",
+                    "meeting_searchable_index.md", "會議索引.md", "索引.md"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
                 break
 
-    if not report_path.exists():
-        return {
-            "file_created": 0.0,
-            "metadata_present": 0.0,
-            "topic_index": 0.0,
-            "people_index": 0.0,
-            "keyword_index": 0.0,
-            "decisions_log": 0.0,
-            "action_items_log": 0.0,
-            "organized": 0.0,
-        }
+    keys = ["file_created", "metadata_present", "topic_index",
+            "people_index", "keyword_index", "decisions_log",
+            "action_items_log", "organized"]
+    if not report.exists():
+        return {k: 0.0 for k in keys}
 
-    scores["file_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    scores = {"file_created": 1.0}
+    c = report.read_text(encoding="utf-8", errors="ignore")
+    c_low = c.lower()
 
-    # Metadata section (date + participant names)
-    date_patterns = [r'2021-06-28', r'june\s*28', r'6/28/2021']
-    has_date = any(re.search(p, content_lower) for p in date_patterns)
-    names = ['william', 'cindy', 'cormac', 'brian', 'samia', 'tai']
-    names_found = sum(1 for n in names if n in content_lower)
-    scores["metadata_present"] = 1.0 if (has_date and names_found >= 3) else (
-        0.5 if (has_date or names_found >= 2) else 0.0)
+    # --- 讀逐字稿，動態推導「應有事實」---
+    tpath = workspace / "meeting_transcript.md"
+    tx = ""
+    if tpath.exists():
+        tx = tpath.read_text(encoding="utf-8", errors="ignore")
 
-    # Topic index (at least 5 distinct topics)
-    topic_section = re.search(r'(?:topic|agenda|discussion)\s*(?:index|list|items|overview)(.*?)(?=\n#{1,3}\s|\Z)',
-                              content_lower, re.DOTALL)
-    if topic_section:
-        topic_bullets = re.findall(r'(?:^|\n)\s*[-*•\d]+[.)]\s+.+', topic_section.group(1))
-        topic_count = len(topic_bullets)
+    # (a) 日期：從逐字稿動態抓 YYYY-MM-DD（會議的「日期：…」那行）
+    date_str = ""
+    md = re.search(r"日期[：:]\s*([0-9]{4}-[0-9]{2}-[0-9]{2})", tx) if tx else None
+    if not md and tx:
+        md = re.search(r"(20[0-9]{2}-[0-9]{2}-[0-9]{2})", tx)
+    if md:
+        date_str = md.group(1)
+    if not date_str:
+        date_str = "2025-03-18"
+
+    # (b) 與會者姓名：從逐字稿「與會者」清單抓中文姓名（2–3 字，後接全形括號）。
+    #     例：「- 王志明（產品行銷負責人…」
+    names = []
+    for nm in re.findall(r"[-*]\s*([一-鿿]{2,3})（", tx):
+        if nm not in names:
+            names.append(nm)
+    # 後備：抓「行動項目：<姓名>…」裡的人名與全文常見人名
+    if len(names) < 3 and tx:
+        for nm in re.findall(r"行動項目[：:]\s*([一-鿿]{2,3})", tx):
+            if nm not in names:
+                names.append(nm)
+    # 再後備：最小已知集合（理論上不會用到）
+    if len(names) < 3:
+        names = ["王志明", "林淑芬", "高敏哲", "陳柏宇", "蔡思敏", "戴立安"]
+
+    # (c) 競品名稱：從逐字稿 tier 1 清單動態抓（編號 1.–6. 的 **粗體** 名稱）。
+    competitors = []
+    for nm in re.findall(r"\d+\.\s*\*\*([^*]{2,12})\*\*", tx):
+        nm = nm.strip()
+        if nm and nm not in competitors:
+            competitors.append(nm)
+    # 過濾掉太長或明顯非競品的字串，僅保留合理競品名稱
+    competitors = [x for x in competitors if len(x) <= 8]
+
+    # (d) 主標語：會議結尾複習句「…訊息主標語『更快交付，更低風險』」。
+    tagline = ""
+    mt = re.search(r"主標語[，、\s]*[「『]([^」』]{2,20})[」』]", tx) if tx else None
+    if not mt and tx:
+        mt = re.search(r"[「『]([^」』]{2,20})[」』]\s*當主標語", tx)
+    if mt:
+        tagline = mt.group(1)
+    if not tagline:
+        tagline = "更快交付，更低風險"
+
+    # === 1) metadata_present：日期 + 至少 3 位與會者姓名 ===
+    has_date = bool(date_str and date_str in c)
+    names_found = sum(1 for n in names if n in c)
+    if has_date and names_found >= 3:
+        scores["metadata_present"] = 1.0
+    elif has_date or names_found >= 2:
+        scores["metadata_present"] = 0.5
     else:
-        # Fall back to counting numbered items in any section mentioning topics
-        topic_count = len(re.findall(r'\n\s*\d+[.)]\s+.{15,}', content))
+        scores["metadata_present"] = 0.0
 
+    # === 2) topic_index：至少 5 個主題 ===
+    # 優先在「主題索引／議程／討論主題」段落底下數編號或條列項目。
+    topic_count = 0
+    ts = re.search(
+        r"#+\s*[^\n]*(?:主題索引|議程|討論主題|topic\s*index)[^\n]*\n(.*?)"
+        r"(?=\n#{1,6}\s|\Z)", c, re.DOTALL | re.IGNORECASE)
+    if ts:
+        body = ts.group(1)
+        topic_count = len(re.findall(
+            r"(?:^|\n)\s*(?:\d+[.)、]|[-*+•])\s+\S", body))
     if topic_count == 0:
-        # Try counting bullet points under topic-related headings
-        topic_count = len(re.findall(r'(?:^|\n)\s*[-*•]\s+.{15,}', content))
-        topic_count = min(topic_count // 2, 10)  # Rough estimate since bullets could be from any section
+        # 後備：全文找編號清單（看起來像主題敘述，≥4 字）
+        topic_count = len(re.findall(
+            r"\n\s*\d+[.)、]\s+\S{4,}", c))
+    scores["topic_index"] = (
+        1.0 if topic_count >= 5 else (0.5 if topic_count >= 3 else 0.0))
 
-    scores["topic_index"] = 1.0 if topic_count >= 5 else (0.5 if topic_count >= 3 else 0.0)
+    # === 3) people_index：至少 3 位具名人士且有貢獻描述 ===
+    # 條件：姓名後接冒號/破折號再接內容，或姓名出現在條列項目開頭。
+    people_hit = []
+    for nm in names:
+        if re.search(rf"{re.escape(nm)}\s*[：:、\-—–]\s*\S{{4,}}", c):
+            people_hit.append(nm)
+        elif re.search(rf"(?:^|\n)\s*[-*+•]\s*\**{re.escape(nm)}\**", c):
+            people_hit.append(nm)
+    people_hit = list(dict.fromkeys(people_hit))
+    scores["people_index"] = (
+        1.0 if len(people_hit) >= 3 else (0.5 if len(people_hit) >= 2 else 0.0))
 
-    # People index (at least 3 people with contributions)
-    people_patterns = []
-    for name in names:
-        pattern = rf'{name}\s*[:\-—]\s*.{{10,}}'
-        if re.search(pattern, content_lower):
-            people_patterns.append(name)
-        elif re.search(rf'(?:^|\n)\s*[-*•]\s*\**{name}\**', content_lower):
-            people_patterns.append(name)
-    scores["people_index"] = 1.0 if len(people_patterns) >= 3 else (
-        0.5 if len(people_patterns) >= 2 else 0.0)
+    # === 4) keyword_index：至少 10 個術語 ===
+    # 先在關鍵字段落數條列項目。
+    kw_count = 0
+    ks = re.search(
+        r"#+\s*[^\n]*(?:關鍵字|關鍵詞|術語|詞彙|名詞|keyword)[^\n]*\n(.*?)"
+        r"(?=\n#{1,6}\s|\Z)", c, re.DOTALL | re.IGNORECASE)
+    if ks:
+        kw_count = len(re.findall(
+            r"(?:^|\n)\s*(?:[-*+•]|\d+[.)、])\s+\S", ks.group(1)))
+    # 再用「逐字稿推導的關鍵術語是否出現在報告」交叉查核並取較大值。
+    key_terms = ["COSCUP", "DevOpsDays", "Kubernetes Day", "匯流大會",
+                 "漏洞管理", "GitOps", "流水線編輯器", "史詩看板",
+                 "里程碑燃盡圖", "資訊圖", "tier 1", "VS Code",
+                 "Terraform", "模糊測試", "價值流", "事件管理"]
+    # 動態補入逐字稿抓到的競品名稱與主標語
+    key_terms = key_terms + competitors + [tagline]
+    terms_found = 0
+    seen_t = set()
+    for t in key_terms:
+        tl = t.lower()
+        if tl in seen_t:
+            continue
+        seen_t.add(tl)
+        if tl in c_low:
+            terms_found += 1
+    kw_count = max(kw_count, terms_found)
+    scores["keyword_index"] = (
+        1.0 if kw_count >= 10 else (0.5 if kw_count >= 5 else 0.0))
 
-    # Keyword index (at least 10 terms)
-    keyword_section = re.search(r'(?:keyword|term|glossary|concept)\s*(?:index|list)?(.*?)(?=\n#{1,3}\s|\Z)',
-                                content_lower, re.DOTALL)
-    if keyword_section:
-        keyword_entries = re.findall(r'(?:^|\n)\s*[-*•]\s*\**\w+', keyword_section.group(1))
-        keyword_count = len(keyword_entries)
-    else:
-        keyword_count = 0
-        # Look for any alphabetical list of terms
-        term_entries = re.findall(r'(?:^|\n)\s*[-*•]\s*\**[A-Z][a-zA-Z\s/]+\**\s*[:\-—]', content)
-        keyword_count = len(term_entries)
+    # === 5) decisions_log：至少 3 項決議 ===
+    dec_count = 0
+    ds = re.search(
+        r"#+\s*[^\n]*(?:決議|決定|decision)[^\n]*\n(.*?)"
+        r"(?=\n#{1,6}\s|\Z)", c, re.DOTALL | re.IGNORECASE)
+    if ds:
+        dec_count = len(re.findall(
+            r"(?:^|\n)\s*(?:\d+[.)、]|[-*+•])\s+\S", ds.group(1)))
+    # 後備：即使沒有正式段落，也用逐字稿中明確的決議線索查核報告。
+    specific = 0
+    if re.search(r"只用綠色|綠色.{0,4}(?:不|別).{0,2}(?:用)?\s*紅色|不(?:用|放)\s*紅色", c):
+        specific += 1
+    if re.search(r"tier\s*1|tier\s*one|只.{0,4}(?:比|聚焦|做)\s*tier", c, re.IGNORECASE):
+        specific += 1
+    if re.search(r"鼎峰一列|新增.{0,6}列|加上.{0,4}列|line\s*item", c, re.IGNORECASE):
+        specific += 1
+    if re.search(r"COSCUP|DevOpsDays|Kubernetes Day|活動.{0,4}分工|主線.{0,4}分工", c):
+        specific += 1
+    if (tagline in c) or re.search(r"更快交付|更低風險|主標語", c):
+        specific += 1
+    if re.search(r"stage.{0,4}命名|命名.{0,4}(?:維持|現狀)|每個\s*stage", c, re.IGNORECASE):
+        specific += 1
+    dec_count = max(dec_count, specific)
+    scores["decisions_log"] = (
+        1.0 if dec_count >= 3 else (0.5 if dec_count >= 2 else 0.0))
 
-    # Also check for specific key terms present in the document
-    key_terms = ['kubecon', 'commit', 're:invent', 'google next', 'vulnerability management',
-                 'kubernetes', 'vs code', 'terraform', 'azure devops', 'jira',
-                 'atlassian', 'github', 'jenkins', 'semgrep', 'infographic']
-    terms_found = sum(1 for t in key_terms if t in content_lower)
-    keyword_count = max(keyword_count, terms_found)
-    scores["keyword_index"] = 1.0 if keyword_count >= 10 else (0.5 if keyword_count >= 5 else 0.0)
+    # === 6) action_items_log：至少 2 項 ===
+    act_count = 0
+    ascn = re.search(
+        r"#+\s*[^\n]*(?:行動項目|待辦|action\s*item)[^\n]*\n(.*?)"
+        r"(?=\n#{1,6}\s|\Z)", c, re.DOTALL | re.IGNORECASE)
+    if ascn:
+        act_count = len(re.findall(
+            r"(?:^|\n)\s*(?:\d+[.)、]|[-*+•])\s+\S", ascn.group(1)))
+    if act_count == 0:
+        # 後備：全文找像行動項目的標記／動詞片語
+        markers = re.findall(
+            r"(?:行動項目|負責|指派|期限|截止|本週內|星期二|下班前|"
+            r"will|should|assigned|owner|deadline)",
+            c, re.IGNORECASE)
+        act_count = min(len(markers), 5)
+    scores["action_items_log"] = (
+        1.0 if act_count >= 2 else (0.5 if act_count >= 1 else 0.0))
 
-    # Decisions log (at least 3 decisions)
-    decision_section = re.search(r'decision(.*?)(?=\n#{1,3}\s|\Z)', content_lower, re.DOTALL)
-    if decision_section:
-        decision_items = re.findall(r'(?:^|\n)\s*[-*•\d]+[.)]\s+.+', decision_section.group(1))
-        decision_count = len(decision_items)
-    else:
-        decision_count = 0
-    # Check for specific decisions even outside a formal section
-    specific_decisions = 0
-    if re.search(r'more\s*speed.*less\s*risk', content_lower):
-        specific_decisions += 1
-    if re.search(r'vulnerability\s*management', content_lower):
-        specific_decisions += 1
-    if re.search(r'(?:green|no\s*red)', content_lower):
-        specific_decisions += 1
-    if re.search(r'(?:platform.*re:?\s*invent|event\s*assign)', content_lower):
-        specific_decisions += 1
-    decision_count = max(decision_count, specific_decisions)
-    scores["decisions_log"] = 1.0 if decision_count >= 3 else (0.5 if decision_count >= 2 else 0.0)
-
-    # Action items log (at least 2 items)
-    action_section = re.search(r'action\s*item(.*?)(?=\n#{1,3}\s|\Z)', content_lower, re.DOTALL)
-    if action_section:
-        action_items = re.findall(r'(?:^|\n)\s*[-*•\d]+[.)]\s+.+', action_section.group(1))
-        action_count = len(action_items)
-    else:
-        # Look for action-like items anywhere
-        action_patterns = re.findall(r'(?:will|should|needs?\s*to|assigned|responsible|owner)', content_lower)
-        action_count = min(len(action_patterns), 5)
-    scores["action_items_log"] = 1.0 if action_count >= 2 else (0.5 if action_count >= 1 else 0.0)
-
-    # Organization (has clear section headings)
-    headings = re.findall(r'^#{1,3}\s+.+', content, re.MULTILINE)
-    scores["organized"] = 1.0 if len(headings) >= 5 else (0.5 if len(headings) >= 3 else 0.0)
+    # === 7) organized：清楚的區段標題 ===
+    headings = re.findall(r"(?m)^#{1,4}\s+\S", c)
+    # 也接受粗體當小標（例如 **後設資料**）作為次要組織訊號
+    bold_heads = re.findall(r"(?m)^\s*\*\*[^*\n]{2,20}\*\*\s*$", c)
+    h = len(headings) + (len(bold_heads) if len(headings) < 5 else 0)
+    scores["organized"] = (
+        1.0 if h >= 5 else (0.5 if h >= 3 else 0.0))
 
     return scores
 

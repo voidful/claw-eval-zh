@@ -13,123 +13,154 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the speaker summary task.
+    """數位治理委員會（虛構）公聽會 發言者摘要 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    對應原版 grader 的查核項，但改查台灣逐字稿（dest=transcript.md）
+    推導之事實 + agent 的中文報告 speaker_summary.md。僅用標準函式庫。
+    報告為繁體中文，故以中文關鍵字／數值比對；可查核的數值（800、2-5%、
+    每月 3-5 件、14000、4500 萬）優先從逐字稿動態讀出再比對。
     """
     from pathlib import Path
     import re
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    report_path = workspace / "speaker_summary.md"
-    if not report_path.exists():
-        alternatives = ["speakers.md", "summary.md", "speaker_summaries.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+    keys = [
+        "report_created", "wang_zhiming", "lin_shufen", "chen_guanyu",
+        "zhang_tingwei", "ncra_speaker", "additional_panelists",
+        "quotes_included", "speaker_order",
+    ]
+
+    # --- 報告檔（容許數種常見命名） ---
+    report = workspace / "speaker_summary.md"
+    if not report.exists():
+        for alt in ["speakers.md", "summary.md", "speaker_summaries.md",
+                    "發言者摘要.md", "speaker_summary.txt"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
                 break
+    if not report.exists():
+        return {k: 0.0 for k in keys}
 
-    if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "dan_evans": 0.0,
-            "nicola_fox": 0.0,
-            "david_spergel": 0.0,
-            "sean_kirkpatrick": 0.0,
-            "faa_speaker": 0.0,
-            "additional_panelists": 0.0,
-            "quotes_included": 0.0,
-            "speaker_order": 0.0,
-        }
+    c = report.read_text(encoding="utf-8", errors="ignore")
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # --- 從逐字稿動態讀出可查核的數值（避免硬寫；逐字稿缺漏時退回其載明之事實） ---
+    tpath = workspace / "transcript.md"
+    if not tpath.exists():
+        for alt in ["transcript.txt", "tw_gov_hearing.md", "meeting_transcript.md"]:
+            if (workspace / alt).exists():
+                tpath = workspace / alt
+                break
+    t = tpath.read_text(encoding="utf-8", errors="ignore") if tpath.exists() else ""
 
-    # Check Dan Evans
-    dan_patterns = [r'dan\s+evans', r'designated\s+federal\s+official']
-    has_dan = any(re.search(p, content_lower) for p in dan_patterns)
-    dan_points = sum([
-        bool(re.search(r'harass', content_lower)),
-        bool(re.search(r'faca|federal\s+advisory', content_lower)),
-        bool(re.search(r'stigma', content_lower)),
+    def first(pattern, text, default=None, group=1):
+        m = re.search(pattern, text)
+        return m.group(group) if m else default
+
+    # AIRC 案例件數（逐字稿：「超過 800 件」）
+    case_count = first(r'超過\s*(\d{3,})\s*件', t) or first(r'(\d{3,})\s*多?\s*件', t) or "800"
+    # 真正異常比例（逐字稿：「2% 到 5%」「約 2%–5%」）
+    anom_lo = first(r'(\d+)\s*%\s*(?:到|–|-|~|～)\s*\d+\s*%', t) or "2"
+    anom_hi = first(r'\d+\s*%\s*(?:到|–|-|~|～)\s*(\d+)\s*%', t) or "5"
+    # NCRA 每月通報件數（逐字稿：「每月只回報 3 到 5 件」「每月只有 3–5 件」）
+    rep_lo = first(r'每月[^。]{0,12}?(\d+)\s*(?:到|–|-|~|～)\s*\d+\s*件', t) or "3"
+    rep_hi = first(r'每月[^。]{0,12}?\d+\s*(?:到|–|-|~|～)\s*(\d+)\s*件', t) or "5"
+    # NCRA 第一線人力（逐字稿：「約 14,000 名」）
+    staff = first(r'約\s*([\d,]{4,})\s*名', t)
+    staff = staff.replace(",", "") if staff else "14000"
+
+    def has(*pats):
+        return any(re.search(p, c, re.IGNORECASE) for p in pats)
+
+    scores = {"report_created": 1.0}
+
+    # --- 王志明（指定主辦官員）：開場、騷擾、無常設計畫／無計畫性經費 ---
+    has_wang = has(r'王志明', r'執行秘書', r'指定主辦官員')
+    wang_pts = sum([
+        bool(has(r'騷擾', r'恐嚇', r'威脅', r'harass')),
+        bool(has(r'公聽會', r'行政程序法', r'指定主辦官員')),
+        bool(has(r'沒有.{0,6}(?:計畫性)?經費', r'並未設立.{0,8}計畫', r'常設.{0,6}計畫',
+                 r'無.{0,6}經費', r'去污名|污名')),
     ])
-    scores["dan_evans"] = 1.0 if has_dan and dan_points >= 2 else (0.5 if has_dan else 0.0)
+    scores["wang_zhiming"] = 1.0 if (has_wang and wang_pts >= 2) else (0.5 if has_wang else 0.0)
 
-    # Check Nicola Fox
-    fox_patterns = [r'nicola?\s+fox', r'nicky?\s+fox', r'dr\.?\s+fox']
-    has_fox = any(re.search(p, content_lower) for p in fox_patterns)
-    fox_points = sum([
-        bool(re.search(r'classif', content_lower)),
-        bool(re.search(r'calibrat', content_lower)),
-        bool(re.search(r'open\s+data|data\.nasa', content_lower)),
+    # --- 林淑芬（副主任委員）：資料品質、機敏分級、開放資料 ---
+    has_lin = has(r'林淑芬', r'副主任委員', r'副主委')
+    lin_pts = sum([
+        bool(has(r'機敏', r'機密', r'分級', r'classif')),
+        bool(has(r'校準', r'可重現', r'資料品質', r'calibrat')),
+        bool(has(r'開放資料', r'data\.gov\.tw', r'open\s*data', r'去識別化')),
     ])
-    scores["nicola_fox"] = 1.0 if has_fox and fox_points >= 2 else (0.5 if has_fox else 0.0)
+    scores["lin_shufen"] = 1.0 if (has_lin and lin_pts >= 2) else (0.5 if has_lin else 0.0)
 
-    # Check David Spergel
-    spergel_patterns = [r'sperg[eo]l', r'panel\s+chair']
-    has_spergel = any(re.search(p, content_lower) for p in spergel_patterns)
-    spergel_points = sum([
-        bool(re.search(r'fast\s+radio\s+burst|frb', content_lower)),
-        bool(re.search(r'calibrat', content_lower)),
-        bool(re.search(r'high.quality\s+data', content_lower)),
-        bool(re.search(r'citizen\s+science', content_lower)),
+    # --- 陳冠宇（召集人）：FRB 比喻、校準、公民科學、異常是發現的引擎 ---
+    has_chen = has(r'陳冠宇', r'召集人')
+    chen_pts = sum([
+        bool(has(r'快速電波爆發', r'電波爆發', r'\bFRB\b')),
+        bool(has(r'校準', r'高品質.{0,4}資料', r'可重現', r'calibrat')),
+        bool(has(r'公民科學', r'群眾參與', r'citizen\s*science')),
+        bool(has(r'異常.{0,8}引擎', r'發現的引擎', r'先把.{0,4}正常')),
     ])
-    scores["david_spergel"] = 1.0 if has_spergel and spergel_points >= 2 else (0.5 if has_spergel else 0.0)
+    scores["chen_guanyu"] = 1.0 if (has_chen and chen_pts >= 2) else (0.5 if has_chen else 0.0)
 
-    # Check Sean Kirkpatrick
-    kirk_patterns = [r'kirkpatrick', r'aaro']
-    has_kirk = any(re.search(p, content_lower) for p in kirk_patterns)
-    kirk_points = sum([
-        bool(re.search(r'800', content_lower)),
-        bool(re.search(r'2.{0,5}5\s*%|single.digit\s*percent', content_lower)),
-        bool(re.search(r'declassif|footage|video', content_lower)),
-        bool(re.search(r'five\s+eyes', content_lower)),
+    # --- 張庭瑋／AIRC：800+ 件、2-5% 異常、解密影像 ---
+    has_zhang = has(r'張庭瑋', r'AIRC', r'風險研析中心')
+    cc = re.escape(case_count)
+    lo = re.escape(anom_lo)
+    hi = re.escape(anom_hi)
+    # 比例需出現「lo…hi%」對應（如 2% 到 5%、2-5%、2–5%）
+    anom_num = re.search(r'%s\s*%%?\s*(?:到|–|-|~|～|至)\s*%s\s*%%' % (lo, hi), c) \
+        or re.search(r'%s\s*(?:到|–|-|~|～|至)\s*%s\s*%%' % (lo, hi), c)
+    zhang_pts = sum([
+        bool(re.search(r'(?:超過\s*)?%s\s*多?\s*件' % cc, c) or re.search(r'\b%s\b' % cc, c)),
+        bool(anom_num),
+        bool(has(r'解密', r'解密.{0,4}影像', r'案例影像', r'誤判', r'測試流量')),
+        bool(has(r'五方資料圈', r'群眾外包', r'非監督式', r'監督式', r'同儕審查', r'假影')),
     ])
-    scores["sean_kirkpatrick"] = 1.0 if has_kirk and kirk_points >= 2 else (0.5 if has_kirk else 0.0)
+    scores["zhang_tingwei"] = 1.0 if (has_zhang and zhang_pts >= 2) else (0.5 if has_zhang else 0.0)
 
-    # Check FAA speaker
-    faa_patterns = [r'freie|faa']
-    has_faa = any(re.search(p, content_lower) for p in faa_patterns)
-    faa_points = sum([
-        bool(re.search(r'radar', content_lower)),
-        bool(re.search(r'14.?000\s*controller|controller', content_lower)),
-        bool(re.search(r'3.{0,5}5\s*report|per\s+month', content_lower)),
-        bool(re.search(r'surveillance', content_lower)),
+    # --- 黃建宏／NCRA：監測、每月 3-5 件、人力、過濾／保存限制 ---
+    has_ncra = has(r'黃建宏', r'NCRA', r'通訊傳播監理署', r'監理組')
+    rl = re.escape(rep_lo)
+    rh = re.escape(rep_hi)
+    rep_num = re.search(r'每月[^。\n]{0,12}?%s\s*(?:到|–|-|~|～|至)\s*%s\s*件' % (rl, rh), c) \
+        or re.search(r'%s\s*(?:到|–|-|~|～|至)\s*%s\s*件' % (rl, rh), c)
+    st = re.escape(staff)
+    ncra_pts = sum([
+        bool(has(r'監測', r'監看', r'監理', r'稽核探針', r'surveillance')),
+        bool(rep_num),
+        bool(re.search(r'%s' % st, c.replace(",", "")) or has(r'14[,，]?000', r'14000')),
+        bool(has(r'過濾', r'濾掉', r'輪替刪除', r'保存.{0,4}數個月', r'骨幹', r'終端側', r'ADS-B', r'自願標示')),
     ])
-    scores["faa_speaker"] = 1.0 if has_faa and faa_points >= 2 else (0.5 if has_faa else 0.0)
+    scores["ncra_speaker"] = 1.0 if (has_ncra and ncra_pts >= 2) else (0.5 if has_ncra else 0.0)
 
-    # Check additional panelists (need at least 3 of: Drake, Bontempi, Bianco, Grinspoon, Gold, Wright, Kelly)
+    # --- 其餘小組成員（至少 3 位：周怡安、蔡明翰、郭佳穎、高志遠、蕭文哲、白雅雯、鄭立群、吳孟蓉、李宗翰） ---
     additional = 0
-    if re.search(r'drake', content_lower): additional += 1
-    if re.search(r'bontempi', content_lower): additional += 1
-    if re.search(r'bianco|federica', content_lower): additional += 1
-    if re.search(r'grinspoon', content_lower): additional += 1
-    if re.search(r'mike\s+gold|gold', content_lower): additional += 1
-    if re.search(r'shelley\s+wright|wright', content_lower): additional += 1
+    for name in [r'周怡安', r'蔡明翰', r'郭佳穎', r'高志遠', r'蕭文哲',
+                 r'白雅雯', r'鄭立群', r'吳孟蓉', r'李宗翰']:
+        if re.search(name, c):
+            additional += 1
     scores["additional_panelists"] = 1.0 if additional >= 4 else (0.5 if additional >= 2 else 0.0)
 
-    # Check for quotes (look for quotation marks with substantial text)
-    quote_patterns = re.findall(r'["\u201c].{20,}?["\u201d]', content)
+    # --- 直接引言：尋找成對引號（「…」或 "…"）且含實質內容 ---
+    quote_patterns = re.findall(r'[「『“"].{8,}?[」』”"]', c)
     scores["quotes_included"] = 1.0 if len(quote_patterns) >= 3 else (0.5 if len(quote_patterns) >= 1 else 0.0)
 
-    # Check speaker order (Evans/Fox before Kirkpatrick before FAA)
-    evans_pos = content_lower.find('evans')
-    kirk_pos = content_lower.find('kirkpatrick')
-    faa_pos = content_lower.find('freie') if 'freie' in content_lower else content_lower.find('faa')
-    if evans_pos >= 0 and kirk_pos >= 0 and faa_pos >= 0:
-        scores["speaker_order"] = 1.0 if evans_pos < kirk_pos < faa_pos else 0.5
-    elif evans_pos >= 0 and kirk_pos >= 0:
-        scores["speaker_order"] = 1.0 if evans_pos < kirk_pos else 0.5
+    # --- 出場順序：王志明／林淑芬／陳冠宇在前 -> 張庭瑋居中 -> 黃建宏／NCRA 在後 ---
+    def pos(*pats):
+        best = -1
+        for p in pats:
+            m = re.search(p, c)
+            if m and (best < 0 or m.start() < best):
+                best = m.start()
+        return best
+    early = pos(r'王志明', r'林淑芬', r'陳冠宇')
+    mid = pos(r'張庭瑋')
+    late = pos(r'黃建宏', r'NCRA', r'通訊傳播監理署')
+    if early >= 0 and mid >= 0 and late >= 0:
+        scores["speaker_order"] = 1.0 if early < mid < late else 0.5
+    elif early >= 0 and mid >= 0:
+        scores["speaker_order"] = 1.0 if early < mid else 0.5
     else:
         scores["speaker_order"] = 0.0
 

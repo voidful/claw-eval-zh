@@ -13,80 +13,157 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the controversy identification task.
+    """數位治理委員會公聽會（虛構）爭議性發言分析 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    以工作區內的台灣逐字稿（dest=transcript.md）動態推導「應有事實」
+    （異常比例、每月通報件數、案例庫規模、具名發言者等），再比對 agent 產生的
+    中文報告 controversy_analysis.md。對應原英文 grader 的九個查核項，但改查
+    台灣逐字稿推導之事實。僅用標準函式庫。
     """
     from pathlib import Path
     import re
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    report_path = workspace / "controversy_analysis.md"
-    if not report_path.exists():
-        alternatives = ["controversies.md", "notable_statements.md", "controversy.md", "controversial.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+    keys = [
+        "report_created", "harassment", "anomalous_pct", "no_autonomy_evidence",
+        "classified_tension", "non_scientific_sensors", "debunked_case",
+        "audience_perspectives", "tone_analysis",
+    ]
+
+    # --- 報告檔（容許數種常見命名） ---
+    report = workspace / "controversy_analysis.md"
+    if not report.exists():
+        for alt in ["controversies.md", "notable_statements.md", "controversy.md",
+                    "controversial.md", "爭議分析.md", "爭議性發言.md",
+                    "controversy_analysis.txt"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
                 break
+    if not report.exists():
+        return {k: 0.0 for k in keys}
 
-    if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "harassment": 0.0,
-            "anomalous_pct": 0.0,
-            "no_et_evidence": 0.0,
-            "classified_tension": 0.0,
-            "dod_sensors": 0.0,
-            "debunked_case": 0.0,
-            "audience_perspectives": 0.0,
-            "tone_analysis": 0.0,
-        }
+    c = report.read_text(encoding="utf-8", errors="ignore")
+    c_low = c.lower()
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # --- 從逐字稿動態讀出可查核事實（避免硬寫英文原版） ---
+    tpath = workspace / "transcript.md"
+    if not tpath.exists():
+        for alt in ["transcript.txt", "meeting_transcript.md", "逐字稿.md"]:
+            if (workspace / alt).exists():
+                tpath = workspace / alt
+                break
+    t = tpath.read_text(encoding="utf-8", errors="ignore") if tpath.exists() else ""
 
-    # Harassment
-    harass_patterns = [r'harass', r'online\s+abuse', r'threat', r'intimidat']
-    scores["harassment"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in harass_patterns) >= 2 else (0.5 if any(re.search(p, content_lower) for p in harass_patterns) else 0.0)
+    def first(pattern, text, default=None, group=1):
+        m = re.search(pattern, text)
+        return m.group(group) if m else default
 
-    # 2-5% anomalous
-    pct_patterns = [r'2.{0,5}5\s*%', r'single.digit\s*percent', r'small\s+percent', r'few.*anomalous']
-    scores["anomalous_pct"] = 1.0 if any(re.search(p, content_lower) for p in pct_patterns) else 0.0
+    # 真正異常比例：逐字稿「2% 到 5%」/「2%–5%」/「2%-5%」
+    pct_lo = first(r'(\d+)\s*%\s*(?:到|–|-|~|至)\s*\d+\s*%', t) or "2"
+    pct_hi = first(r'\d+\s*%\s*(?:到|–|-|~|至)\s*(\d+)\s*%', t) or "5"
 
-    # No ET evidence
-    et_patterns = [r'no\s+(?:conclusive\s+)?evidence.*extraterrestrial', r'not\s+(?:seen|found).*extraordinary\s+evidence', r'no.*evidence.*non.?human', r'extraordinary\s+claims.*extraordinary\s+evidence']
-    scores["no_et_evidence"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in et_patterns) >= 1 else 0.0
+    scores = {"report_created": 1.0}
 
-    # Classified data tension
-    class_patterns = [r'classif.*sensor|sensor.*classif', r'classif.*not.*(?:sighting|uap|event)', r'fighter\s+jet.*statue|statue.*liberty', r'f.?35.*classif', r'unclassif.*limit']
-    scores["classified_tension"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in class_patterns) >= 1 else (0.5 if re.search(r'classif', content_lower) else 0.0)
+    # --- 1) 網路騷擾／恐嚇／威脅（對應原 harassment） ---
+    harass_patterns = [r'騷擾', r'恐嚇', r'威脅', r'霸凌']
+    n_harass = sum(bool(re.search(p, c)) for p in harass_patterns)
+    scores["harassment"] = (
+        1.0 if n_harass >= 2
+        else 0.5 if n_harass >= 1
+        else 0.0)
 
-    # DOD sensors not scientific
-    dod_patterns = [r'not\s+scientific\s+sensor', r'weapon', r'put\s+a\s+weapon', r'dod\s+sensor.*not.*scien', r'military.*not.*calibrat']
-    scores["dod_sensors"] = 1.0 if any(re.search(p, content_lower) for p in dod_patterns) else (0.5 if re.search(r'dod.*sensor|military.*sensor', content_lower) else 0.0)
+    # --- 2) 2%–5% 真正異常比例（對應原 anomalous_pct） ---
+    pct_pat = r'%s\s*[%%％]?\s*(?:到|–|-|~|至|—)\s*%s\s*[%%％]' % (
+        re.escape(pct_lo), re.escape(pct_hi))
+    has_pct_range = bool(re.search(pct_pat, c)) or (
+        bool(re.search(r'%s\s*[%%％]' % re.escape(pct_lo), c))
+        and bool(re.search(r'%s\s*[%%％]' % re.escape(pct_hi), c)))
+    has_anomaly_word = bool(re.search(r'異常|難以.*解釋|未知', c))
+    scores["anomalous_pct"] = (
+        1.0 if (has_pct_range and has_anomaly_word)
+        else 0.5 if has_pct_range
+        else 0.0)
 
-    # Debunked / resolved case
-    debunk_patterns = [r'commercial\s+(?:aircraft|plane|airliner)', r'flight\s+corridor', r'sensor\s+anomal', r'going\s+into.*water.*debunk', r'resolved|explained|misidentif', r'turned\s+out\s+to\s+be']
-    scores["debunked_case"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in debunk_patterns) >= 2 else (0.5 if any(re.search(p, content_lower) for p in debunk_patterns) else 0.0)
+    # --- 3) 並無自主意圖／非人類智慧的決定性證據（對應原 no_et_evidence） ---
+    ev_patterns = [
+        r'(?:沒有|並無|無)(?:任何)?決定性(?:的)?證據',
+        r'非凡的?(?:主張|證據)',
+        r'(?:沒有|並無|無).*(?:自主意圖|非人類(?:的)?(?:智慧|智能))',
+        r'尚未.*(?:非凡|決定性).*證據',
+    ]
+    n_ev = sum(bool(re.search(p, c)) for p in ev_patterns)
+    scores["no_autonomy_evidence"] = (
+        1.0 if n_ev >= 1
+        else 0.0)
 
-    # Multiple audience perspectives
-    audience_patterns = [r'scientist|scientific\s+community', r'public|general\s+audience', r'media', r'ufo\s+community|uap\s+(?:community|enthusiast)|believer', r'skeptic']
-    aud_count = sum(1 for p in audience_patterns if re.search(p, content_lower))
-    scores["audience_perspectives"] = 1.0 if aud_count >= 3 else (0.5 if aud_count >= 2 else 0.0)
+    # --- 4) 機敏分級造成的資料侷限（對應原 classified_tension） ---
+    class_patterns = [
+        r'機敏.*(?:系統|平台|分級|資料)|(?:系統|平台|感測).*機敏',
+        r'(?:事故|描述).*非機敏|非機敏.*(?:事故|描述)',
+        r'自由女神|戰機.*感測|感測.*戰機',
+        r'無法取得.*機敏|機敏.*無法取得',
+    ]
+    n_class = sum(bool(re.search(p, c)) for p in class_patterns)
+    scores["classified_tension"] = (
+        1.0 if n_class >= 1
+        else 0.5 if re.search(r'機敏|機密|機密分級', c)
+        else 0.0)
 
-    # Tone/framing analysis
-    tone_patterns = [r'tone|framing|emphasis|chose\s+to|avoided|language|messaging|narrative|careful|diplomatic']
-    scores["tone_analysis"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in tone_patterns) >= 2 else (0.5 if any(re.search(p, content_lower) for p in tone_patterns) else 0.0)
+    # --- 5) 監測系統「並非為科學分析設計」（對應原 dod_sensors） ---
+    sensor_patterns = [
+        r'(?:不是|並非|並不是).*(?:為了)?.*科學(?:分析)?.*設計',
+        r'(?:辨識|阻斷|反制).*威脅|威脅.*(?:辨識|阻斷|反制)',
+        r'(?:資安|情資|軍用|監測).*(?:系統|感測).*(?:不是|並非).*科學',
+        r'(?:不是|並非).*(?:精確量測|可重現)',
+    ]
+    n_sensor = sum(bool(re.search(p, c)) for p in sensor_patterns)
+    scores["non_scientific_sensors"] = (
+        1.0 if n_sensor >= 1
+        else 0.5 if re.search(r'(?:資安|情資|軍用|監測)(?:系統|感測)', c)
+        else 0.0)
+
+    # --- 6) 被誤判／被破解的案例（對應原 debunked_case） ---
+    debunk_patterns = [
+        r'(?:自動化)?測試流量',
+        r'誤判',
+        r'(?:記錄|紀錄)系統假影|假影',
+        r'排程',
+        r'(?:對話)?(?:紀錄|記錄).*(?:刪除|刪光|湮滅)',
+        r'並(?:不|非).*自主行為|實際上是|其實是',
+    ]
+    n_debunk = sum(bool(re.search(p, c)) for p in debunk_patterns)
+    scores["debunked_case"] = (
+        1.0 if n_debunk >= 2
+        else 0.5 if n_debunk >= 1
+        else 0.0)
+
+    # --- 7) 多受眾視角（對應原 audience_perspectives） ---
+    audience_patterns = [
+        r'科學(?:家|界|社群)|研究(?:者|員|界)|學界',
+        r'(?:一般)?(?:公眾|民眾|大眾)',
+        r'媒體|記者|新聞',
+        r'(?:ai|人工智慧|科技|陰謀論|ufo|uap)\s*(?:社群|圈|愛好者|支持者)|相信者',
+        r'業者|產業|廠商|企業',
+        r'(?:懷疑|質疑)(?:者|論)',
+    ]
+    aud_count = sum(1 for p in audience_patterns if re.search(p, c_low))
+    scores["audience_perspectives"] = (
+        1.0 if aud_count >= 3
+        else 0.5 if aud_count >= 2
+        else 0.0)
+
+    # --- 8) 語氣／框架分析（對應原 tone_analysis） ---
+    tone_patterns = [
+        r'語氣', r'框架|框定', r'(?:選擇|刻意).*(?:強調|迴避|淡化|保留|不(?:談|說))',
+        r'(?:謹慎|小心|委婉|外交)(?:的)?(?:平衡|措辭|態度|語言)?',
+        r'去污名|污名', r'敘事|訊息(?:傳遞|策略)|定調', r'強調.*(?:資料品質|可重現)',
+    ]
+    n_tone = sum(bool(re.search(p, c)) for p in tone_patterns)
+    scores["tone_analysis"] = (
+        1.0 if n_tone >= 2
+        else 0.5 if n_tone >= 1
+        else 0.0)
 
     return scores
 

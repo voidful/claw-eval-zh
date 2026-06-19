@@ -43,13 +43,20 @@ meeting_analysis、memory、skills。（原 integrations 類因移除 GWS 任務
 - **不得**作為金融、法律、醫療之專業建議來源；相關任務僅為資訊性分析評測。
 
 ## 9. 資料來源與 fixtures
-共 6 個台灣 fixtures（見 [reports/tw_fixture_manifest.json](reports/tw_fixture_manifest.json)）：
+共 12 個台灣 fixtures（見 [reports/tw_fixture_manifest.json](reports/tw_fixture_manifest.json)）：
 - `assets/tw/csvs/tw_stock_2330_2024.csv`：**TWSE 官方公開資料**（台積電 2330 2024 日收盤價，
   242 交易日），由 `scripts/fetch_twse_stock.py` 一次性擷取後寫死、測試不連網。
-- `assets/tw/csvs/tw_cities.csv`：台灣 22 縣市（人口為公開概數）。
+  亦供 `task_csv_finance_report` 使用（原 Apple 股票）。
+- `assets/tw/csvs/tw_cities.csv`（22 縣市）、`tw_townships.csv`／`tw_townships_density.csv`
+  （**鄉鎮市區**層級，取代美國大城市）、`tw_weather_stations.csv`（台灣氣象站，取代 Idaho）、
+  `tw_pension.csv`（台灣退休金示例，取代美國聯邦退休金）。
+- `assets/tw/meetings/`：**虛構**會議逐字稿 `tw_tech_product_meeting.md`、`tw_council_meeting.md`、
+  `tw_advisory_meeting.md`（顧問委員會）、`tw_gov_hearing.md`（政府 AI 治理公聽會，取代 NASA UAP）。
 - `assets/tw/docs/tw_company_fy2024_financials.md`：**虛構示例**財報。
-- `assets/tw/meetings/tw_tech_product_meeting.md`、`tw_council_meeting.md`：**虛構**會議逐字稿。
 - `assets/tw/contracts/tw_service_contract.md`：**虛構**繁中合約範本。
+
+> 會議（T109–136）與 CSV（氣象站／鄉鎮市區／退休金）類任務皆已深度在地化：每個 hybrid grader
+> 改為**對台灣 fixture 動態推導正解**再比對中文報告，不沿用美國原始事實／數值（可重現）。
 
 ## 10. 台灣資料處理
 - 內文用「台灣」；正式機關名稱保留原名（如「臺灣證券交易所」）。

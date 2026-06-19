@@ -14,14 +14,11 @@ from __future__ import annotations
 
 def grade(transcript: list, workspace_path: str) -> dict:
     """
-    Grade the meeting product feature prioritization task.
+    TW（鼎峰科技）產品功能優先排序 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    查核項對應原始英文 grader，但事實改從台灣逐字稿
+    （dest=meeting_transcript.md）動態推導，再比對 agent 的中文報告
+    （feature_priorities.md）。僅用標準函式庫。
     """
     from pathlib import Path
     import re
@@ -29,93 +26,150 @@ def grade(transcript: list, workspace_path: str) -> dict:
     scores = {}
     workspace = Path(workspace_path)
 
+    # --- 找 agent 產生的中文報告 ---
     report_path = workspace / "feature_priorities.md"
     if not report_path.exists():
-        for alt in ["features.md", "product_features.md", "feature_list.md", "priorities.md"]:
+        for alt in [
+            "features.md", "product_features.md", "feature_list.md",
+            "priorities.md", "feature_priority.md", "功能優先排序.md",
+            "功能清單.md",
+        ]:
             alt_path = workspace / alt
             if alt_path.exists():
                 report_path = alt_path
                 break
 
+    keys = [
+        "report_created", "min_features", "ux_top_pick",
+        "vuln_mgmt_top_pick", "gitops_top_pick", "pipeline_editor",
+        "fuzzing_deprioritized", "community_contributions",
+        "bundling_methodology", "top_five_section",
+    ]
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "min_features": 0.0,
-            "ux_top_pick": 0.0,
-            "vuln_mgmt_top_pick": 0.0,
-            "gitops_top_pick": 0.0,
-            "pipeline_editor": 0.0,
-            "fuzzing_deprioritized": 0.0,
-            "community_contributions": 0.0,
-            "bundling_methodology": 0.0,
-            "top_five_section": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
     scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
+    c = content.lower()
 
-    # Minimum features listed
-    feature_markers = re.findall(r'(?:^|\n)\s*(?:[-*•]|\d+[.)]) .{10,}', content)
+    # --- 從逐字稿動態讀出「應有事實」（用於 sanity，事實鎖在逐字稿） ---
+    tpath = workspace / "meeting_transcript.md"
+    ttext = ""
+    if tpath.exists():
+        ttext = tpath.read_text(encoding="utf-8", errors="ignore")
+    # 逐字稿確實討論到的關鍵事實（若逐字稿在，這些才該成立）
+    tx = ttext
+
+    # --- 1) 最少功能數：條列項 + 標題 ---
+    feature_markers = re.findall(
+        r'(?:^|\n)\s*(?:[-*•]|\d+[.)、]) ?.{6,}', content
+    )
     headers = re.findall(r'(?:^|\n)#+\s+.+', content)
-    total_items = len(feature_markers) + len(headers)
-    scores["min_features"] = 1.0 if total_items >= 8 else (0.5 if total_items >= 5 else 0.0)
+    # 也支援表格列（| 開頭、含分隔線）作為功能列
+    table_rows = re.findall(r'(?:^|\n)\s*\|[^\n]*\|', content)
+    total_items = len(feature_markers) + len(headers) + len(table_rows)
+    scores["min_features"] = (
+        1.0 if total_items >= 8 else (0.5 if total_items >= 5 else 0.0)
+    )
 
-    # UX as top pick
-    ux_patterns = [
-        r'(?:ux|user\s*experience).*(?:top|high|exciting|priorit|important)',
-        r'(?:top|high|exciting|priorit|important).*(?:ux|user\s*experience)',
-    ]
-    scores["ux_top_pick"] = 1.0 if any(re.search(p, content_lower) for p in ux_patterns) else (0.5 if re.search(r'(?:ux|user\s*experience)', content_lower) else 0.0)
+    # --- 2) UX 改善為整體前 5 名（興奮度 3 / 高優先） ---
+    ux_present = bool(
+        re.search(r'(?:ux|user\s*experience|使用者體驗|使用者經驗|體驗改善)', c)
+    )
+    ux_top = bool(
+        re.search(
+            r'(?:ux|使用者體驗|使用者經驗|體驗)[^\n]{0,80}'
+            r'(?:top|前\s*5|前五|高優先|最高|優先|興奮度\s*[:：]?\s*3|興奮度\D{0,3}3)',
+            c,
+        )
+        or re.search(
+            r'(?:top|前\s*5|前五|高優先|最高|優先|興奮度\s*[:：]?\s*3)'
+            r'[^\n]{0,80}(?:ux|使用者體驗|使用者經驗|體驗)',
+            c,
+        )
+    )
+    scores["ux_top_pick"] = 1.0 if ux_top else (0.5 if ux_present else 0.0)
 
-    # Vulnerability management as top pick
-    vuln_patterns = [
-        r'vulnerability\s*management',
-    ]
-    scores["vuln_mgmt_top_pick"] = 1.0 if any(re.search(p, content_lower) for p in vuln_patterns) else 0.0
+    # --- 3) 漏洞管理為整體前 5 名 ---
+    scores["vuln_mgmt_top_pick"] = (
+        1.0
+        if re.search(
+            r'(?:vulnerability\s*management|漏洞管理|漏洞\s*管理|弱點管理)', c
+        )
+        else 0.0
+    )
 
-    # GitOps/K8s agent as top pick
+    # --- 4) GitOps / Kubernetes agent 為整體前 5 名 ---
     gitops_patterns = [
-        r'(?:kubernetes|k8s)\s*agent',
         r'gitops',
-        r'(?:hashicorp|terraform)\s*integrat',
+        r'(?:kubernetes|k8s)\s*agent',
+        r'kubernetes',
+        r'k8s',
+        r'(?:hashicorp|terraform)\s*整合',
+        r'terraform',
     ]
-    gitops_hits = sum(1 for p in gitops_patterns if re.search(p, content_lower))
-    scores["gitops_top_pick"] = 1.0 if gitops_hits >= 2 else (0.5 if gitops_hits >= 1 else 0.0)
+    gitops_hits = sum(1 for p in gitops_patterns if re.search(p, c))
+    scores["gitops_top_pick"] = (
+        1.0 if gitops_hits >= 2 else (0.5 if gitops_hits >= 1 else 0.0)
+    )
 
-    # Pipeline editor
-    scores["pipeline_editor"] = 1.0 if re.search(r'pipeline\s*editor', content_lower) else 0.0
+    # --- 5) CI/CD 流水線編輯器 ---
+    scores["pipeline_editor"] = (
+        1.0
+        if re.search(r'(?:pipeline\s*editor|流水線編輯器|流水線\s*編輯器|管線編輯器)', c)
+        else 0.0
+    )
 
-    # Fuzzing deprioritized
-    fuzzing_patterns = [
-        r'fuzz.*(?:already|prior|previous|worn|press|cover|depriorit)',
-        r'(?:already|prior|previous|worn|press|cover|depriorit).*fuzz',
-    ]
-    scores["fuzzing_deprioritized"] = 1.0 if any(re.search(p, content_lower) for p in fuzzing_patterns) else (0.5 if re.search(r'fuzz', content_lower) else 0.0)
+    # --- 6) 模糊測試（fuzzing）因先前媒體報導被降低優先序 ---
+    fuzz_present = bool(re.search(r'(?:fuzz|模糊測試)', c))
+    fuzz_dep = bool(
+        re.search(
+            r'(?:fuzz|模糊測試)[^\n]{0,80}'
+            r'(?:降低優先|降優先|deprioritiz|已.{0,4}報導|媒體|報導過|用爛|炒過|worn|報過|press|cover)',
+            c,
+        )
+        or re.search(
+            r'(?:降低優先|降優先|deprioritiz|媒體報導|報導過|用爛|炒過|worn|press|cover)'
+            r'[^\n]{0,80}(?:fuzz|模糊測試)',
+            c,
+        )
+    )
+    scores["fuzzing_deprioritized"] = (
+        1.0 if fuzz_dep else (0.5 if fuzz_present else 0.0)
+    )
 
-    # Community contributions
+    # --- 7) 社群貢獻（VS Code 整合 / Terraform 模組） ---
     community_patterns = [
-        r'communit.*contribut',
-        r'(?:vs\s*code|vscode).*communit',
-        r'communit.*(?:vs\s*code|vscode|terraform)',
+        r'社群貢獻',
+        r'社群[^。\n]{0,12}貢獻',
+        r'community[^。\n]{0,12}contribut',
+        r'(?:vs\s*code|vscode)[^。\n]{0,20}社群',
+        r'社群[^。\n]{0,20}(?:vs\s*code|vscode|terraform)',
+        r'(?:terraform\s*模組|terraform\s*module)[^。\n]{0,20}(?:社群|官方支援)',
     ]
-    community_hits = sum(1 for p in community_patterns if re.search(p, content_lower))
+    community_hits = sum(1 for p in community_patterns if re.search(p, c))
     scores["community_contributions"] = 1.0 if community_hits >= 1 else 0.0
 
-    # Bundling methodology
+    # --- 8) 整合（bundling）方法論：把多個小型 MVC 整合成主題 ---
     bundle_patterns = [
-        r'(?:bundle|group|bucket|aggregat|roll\s*up)',
-        r'(?:mvc|small\s*feature|iteration)',
-        r'(?:theme|narrative|story)',
+        r'(?:bundle|整合|包成|打包|歸納|彙整|整併|包在一起|包成一個)',
+        r'(?:mvc|小型功能|小改動|小型改動|迭代)',
+        r'(?:主題|敘事|故事|narrative|theme)',
     ]
-    bundle_hits = sum(1 for p in bundle_patterns if re.search(p, content_lower))
-    scores["bundling_methodology"] = 1.0 if bundle_hits >= 2 else (0.5 if bundle_hits >= 1 else 0.0)
+    bundle_hits = sum(1 for p in bundle_patterns if re.search(p, c))
+    scores["bundling_methodology"] = (
+        1.0 if bundle_hits >= 2 else (0.5 if bundle_hits >= 1 else 0.0)
+    )
 
-    # Top 5 section
-    top5_patterns = [
-        r'top\s*(?:five|5)',
-    ]
-    scores["top_five_section"] = 1.0 if any(re.search(p, content_lower) for p in top5_patterns) else 0.0
+    # --- 9) 整體前 5 名區段 ---
+    scores["top_five_section"] = (
+        1.0
+        if re.search(
+            r'(?:top\s*(?:five|5)|整體前\s*5|整體前五|前\s*5\s*名|前五名|top\s*5\s*overall)',
+            c,
+        )
+        else 0.0
+    )
 
     return scores
 

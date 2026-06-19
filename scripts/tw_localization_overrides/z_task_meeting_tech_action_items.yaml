@@ -1,0 +1,204 @@
+# 台灣在地化整題取代：task_meeting_tech_action_items（hybrid）
+# 此檔以 z_ 開頭，於目錄合併時最後生效，覆寫 09_meetings_contract.yaml 內同 task 的設定。
+# grader 改為「從台灣逐字稿 meeting_transcript.md 動態推導應有事實」再比對 agent 的中文報告，
+# 避免硬寫英文原版事實，提升可重現性。
+tasks:
+
+  task_meeting_tech_action_items:
+    task_name: "鼎峰科技產品週會：擷取行動項目"
+    difficulty: medium
+    workspace_files:
+      - source: tw/meetings/tw_tech_product_meeting.md
+        dest: meeting_transcript.md
+    prompt: |
+      工作區裡有一份會議逐字稿 meeting_transcript.md，是虛構台灣軟體公司「鼎峰科技」
+      的「產品暨行銷週會」紀錄（時區 Asia/Taipei）。會議內容涵蓋幾個主題：企業活動／
+      研討會贊助分工、自家「鼎峰匯流大會」的產品發布題材、競品比較資訊圖設計回饋、
+      競品分析方法論與比較試算表，以及訊息架構（標語）練習。
+
+      請閱讀整份逐字稿，擷取所有**行動項目（action items）**，並寫入 action_items.md。
+
+      每個行動項目請包含：
+      - **負責人**（由逐字稿中明確指派的人，請寫出姓名）
+      - **要做的事**（具體事項）
+      - **期限**（若逐字稿有提到，例如「星期二」「本週內」「今天下班前」）
+      - **脈絡**（屬於哪一個討論主題）
+
+      請依「主題」分組整理，並在報告開頭附上行動項目的**總數**。也請特別標出與
+      「活動／研討會（發表會）」以及「對內公告（announcement）」相關的行動項目。
+    expected_behavior: |
+      助手應讀取 meeting_transcript.md，至少擷取下列行動項目並正確指派負責人與期限：
+      - 全體：各自向自己的活動行銷經理確認三場研討會（平台→COSCUP、CI/CD→DevOpsDays
+        Taipei、GitOps→Kubernetes Day Taiwan）的贊助承諾，並在活動 issue 底下留言回報。
+      - 戴立安：本週內整理三場活動分工，發出一份對內公告（announcement）通知各部門。
+      - 高敏哲：星期二前為 Plan（規劃）這個 stage 補上一份 top 5 候選清單（如史詩看板、
+        里程碑燃盡圖）。
+      - 全體：把產品發布試算表欄位補完、各自檢視並投票選出整體前 5 名功能，星期二截止。
+      - 蔡思敏：把競品試算表改成每個 stage 只列出與該 stage 相關的 tier 1 對手。
+      - 蔡思敏：在競品比較表新增「鼎峰」自己一列。
+      - 王志明：今天下班前把訊息架構定稿，以「更快交付，更低風險」當主標語。
+
+      並把結果整理成清楚、依主題分組、含負責人與期限的 action_items.md，開頭附上總數。
+    grading_criteria:
+      - "建立報告檔案 action_items.md"
+      - "至少擷取 5 個行動項目（條列或編號）"
+      - "至少正確標出 3 位逐字稿中被指派工作的負責人（戴立安／高敏哲／蔡思敏／王志明）"
+      - "標出與活動／研討會（COSCUP／DevOpsDays Taipei／Kubernetes Day Taiwan／贊助）相關的行動項目"
+      - "標出與對內公告（announcement／通知各部門）相關的行動項目"
+      - "標出產品發布相關行動項目（整體前 5 名／top 5／Plan 候選清單）"
+      - "標出競品分析相關行動項目（tier 1 對手／在比較表新增鼎峰一列）"
+      - "標出訊息架構行動項目（定稿、主標語「更快交付，更低風險」）"
+      - "依主題分組，並標註期限（星期二／本週內／今天下班前）"
+    llm_judge_rubric: |
+      ### 評分項 1：行動項目完整度（權重 35%）
+      - 1.0：擷取涵蓋全部五大主題（活動贊助、產品發布、資訊圖／競品方法論、競品試算表、
+        訊息架構）的行動項目，明示與隱含的承諾皆有抓到。
+      - 0.75：抓到多數，僅漏一兩個次要項目。
+      - 0.5：僅涵蓋部分主題，整個主題區塊被遺漏。
+      - 0.25：只抓到少數明顯項目。
+      - 0.0：嚴重遺漏或無有意義內容。
+      ### 評分項 2：負責人歸屬正確度（權重 30%）
+      - 1.0：各行動項目的負責人皆正確（戴立安、高敏哲、蔡思敏、王志明，全體事項標為「全體」），
+        姓名依逐字脈絡正確指派。
+      - 0.75：多數正確，僅一兩處輕微錯置。
+      - 0.5：部分正確，數處錯誤或缺漏。
+      - 0.0：未做負責人歸屬或大量錯誤。
+      ### 評分項 3：分類、結構與期限（權重 25%）
+      - 1.0：依主題清楚分組、格式一致、開頭含總數；期限（星期二／本週內／今天下班前）
+        正確標註；特別標出活動／研討會與對內公告兩類。
+      - 0.5：有分組或期限其一，但不完整。
+      - 0.0：雜亂、無分組、無期限。
+      ### 評分項 4：可讀性（權重 10%）
+      - 1.0：條列清楚、易於當作後續追蹤清單。
+      - 0.0：難以閱讀。
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """鼎峰科技產品週會行動項目 grader。
+
+          做法：先從台灣逐字稿 meeting_transcript.md「動態推導」出應有事實
+          （被指派的負責人、各主題關鍵字、期限），再比對 agent 產出的中文報告
+          action_items.md。盡量不硬寫英文原版事實，提升可重現性。僅用標準函式庫。
+          """
+          import re
+          from pathlib import Path
+
+          workspace = Path(workspace_path)
+
+          # --- 找 agent 報告 ---
+          report = workspace / "action_items.md"
+          if not report.exists():
+              for alt in ["actions.md", "action-items.md", "meeting_actions.md",
+                          "action_item.md", "行動項目.md"]:
+                  if (workspace / alt).exists():
+                      report = workspace / alt
+                      break
+
+          keys = ["report_created", "min_action_items", "owners_identified",
+                  "events_actions", "announcement_actions", "announcements_product",
+                  "competitive_actions", "messaging_actions", "deadlines_noted"]
+          if not report.exists():
+              return {k: 0.0 for k in keys}
+
+          scores = {"report_created": 1.0}
+          c = report.read_text(encoding="utf-8", errors="ignore")
+
+          # --- 讀逐字稿，動態推導「應有事實」---
+          tpath = workspace / "meeting_transcript.md"
+          tx = ""
+          if tpath.exists():
+              tx = tpath.read_text(encoding="utf-8", errors="ignore")
+
+          # (a) 從逐字稿中「**行動項目…**」段落抓出被指派工作的負責人姓名。
+          #     逐字稿格式如：**行動項目：戴立安在本週內整理…** / **行動項目：高敏哲…**
+          name_re = re.compile(r"[一-鿿]{2,3}")
+          # 已知的與會者姓名清單（從逐字稿「與會者」區塊取，作為過濾白名單）
+          attendees = set(re.findall(
+              r"[-\s]([一-鿿]{2,3})（", tx)) if tx else set()
+          # 收斂出真正在行動項目句子裡被點名的負責人
+          assigned = []
+          for m in re.finditer(r"行動項目[：:]\s*([^\n*。]{0,40})", tx):
+              seg = m.group(1)
+              for nm in name_re.findall(seg):
+                  if nm in attendees and nm not in assigned:
+                      assigned.append(nm)
+          # 後備：逐字稿解析不到時，採用會議與會者姓名
+          if not assigned and attendees:
+              assigned = list(attendees)
+          # 再後備：連與會者都抓不到（理論上不會），用最小已知集合
+          if not assigned:
+              assigned = ["戴立安", "高敏哲", "蔡思敏", "王志明", "陳柏宇", "林淑芬"]
+
+          # (b) 從逐字稿動態抓出活動／研討會名稱（用來查核 events 主題）
+          event_terms = []
+          for term in ["COSCUP", "DevOpsDays", "Kubernetes Day", "研討會", "贊助"]:
+              if not tx or term in tx:
+                  event_terms.append(term)
+          if not event_terms:
+              event_terms = ["研討會", "贊助"]
+
+          # (c) 主標語：從逐字稿動態抓出選定的主標語。會議結尾的複習句寫成
+          #     「…訊息主標語『更快交付，更低風險』」，引號緊接在「主標語」之後，
+          #     可避免誤抓中段玩笑句裡的引號內容。
+          tagline = ""
+          mt = re.search(r"主標語[，、\s]*「([^」]{2,20})」", tx) if tx else None
+          if not mt and tx:
+              # 後備：抓「…『X』當主標語」形式（引號在前）
+              mt = re.search(r"「([^」]{2,20})」\s*當主標語", tx)
+          if mt:
+              tagline = mt.group(1)
+          if not tagline:
+              tagline = "更快交付，更低風險"
+
+          # --- 計分 ---
+
+          # 1) 行動項目數量（條列／編號／關鍵詞）
+          markers = re.findall(
+              r"(?:行動項目|待辦|action\s*item|^\s*[-*+]\s|^\s*\d+[.)]\s)",
+              c, re.MULTILINE | re.IGNORECASE)
+          n = len(markers)
+          scores["min_action_items"] = 1.0 if n >= 5 else (0.5 if n >= 3 else 0.0)
+
+          # 2) 負責人：報告中出現幾位逐字稿推導出的被指派負責人
+          oc = sum(1 for nm in assigned if nm in c)
+          scores["owners_identified"] = 1.0 if oc >= 3 else (0.5 if oc >= 2 else 0.0)
+
+          # 3) 活動／研討會（發表會）主題
+          ev_hits = sum(1 for t in event_terms if t in c)
+          generic_ev = bool(re.search(r"活動|研討會|展會|發表會|贊助", c))
+          scores["events_actions"] = 1.0 if (ev_hits >= 1 and generic_ev) else (
+              0.5 if (ev_hits >= 1 or generic_ev) else 0.0)
+
+          # 4) 對內公告（announcement）
+          scores["announcement_actions"] = 1.0 if re.search(
+              r"公告|announcement|通知各部門|對內通知|內部通知", c, re.IGNORECASE) else 0.0
+
+          # 5) 產品發布：整體前 5 名 / top 5 / Plan 候選清單
+          prod_a = bool(re.search(r"top\s*5|前\s*5|前五|整體前", c, re.IGNORECASE))
+          prod_b = bool(re.search(r"產品發布|發布|keynote|匯流大會|Plan|規劃|試算表",
+                                  c, re.IGNORECASE))
+          scores["announcements_product"] = 1.0 if (prod_a and prod_b) else (
+              0.5 if (prod_a or prod_b) else 0.0)
+
+          # 6) 競品分析：tier 1 對手 + 在比較表新增鼎峰一列
+          comp_a = bool(re.search(r"tier\s*1|tier\s*one|分層|競品|競爭對手",
+                                  c, re.IGNORECASE))
+          comp_b = bool(re.search(r"鼎峰一列|鼎峰.{0,4}列|新增.{0,6}列|line\s*item|加上.{0,4}列",
+                                  c, re.IGNORECASE))
+          scores["competitive_actions"] = 1.0 if (comp_a and comp_b) else (
+              0.5 if (comp_a or comp_b) else 0.0)
+
+          # 7) 訊息架構：定稿 + 主標語（動態取得的 tagline）
+          msg_a = bool(re.search(r"訊息架構|標語|messaging|tagline|定稿",
+                                 c, re.IGNORECASE))
+          msg_b = (tagline in c) or bool(
+              re.search(r"更快交付|更低風險", c))
+          scores["messaging_actions"] = 1.0 if (msg_a and msg_b) else (
+              0.5 if (msg_a or msg_b) else 0.0)
+
+          # 8) 期限：星期二 / 本週(內) / 今天下班前 等
+          deadline_terms = [r"星期二", r"週二", r"本週", r"這週", r"下班前",
+                            r"今天.*下班", r"end\s*of\s*(?:the\s*)?day", r"期限", r"截止"]
+          d_hits = sum(1 for p in deadline_terms if re.search(p, c, re.IGNORECASE))
+          scores["deadlines_noted"] = 1.0 if d_hits >= 2 else (0.5 if d_hits >= 1 else 0.0)
+
+          return scores

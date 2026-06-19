@@ -1,7 +1,6 @@
 ---
 id: task_meeting_executive_summary
-name: |
-  會議高階主管摘要
+name: 會議高階主管摘要（鼎峰科技產品行銷週會）
 category: meeting_analysis
 grading_type: hybrid
 timeout_seconds: 180
@@ -15,170 +14,213 @@ localization: taiwan
 localization_strategy: context_replace
 claw_eval_tw_id: T125tw_meeting_executive_summary
 workspace_files:
-- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+- source: tw/meetings/tw_tech_product_meeting.md
   dest: meeting_transcript.md
 grading_weights:
   automated: 0.5
   llm_judge: 0.5
 ---
 
-# 會議高階主管摘要
-
+# 會議高階主管摘要（鼎峰科技產品行銷週會）
 
 ## Prompt
 
-我手上有一個檔案 `meeting_transcript.md`，內含 2021-06-28 舉行的 GitLab 產品行銷團隊會議逐字稿。請幫我讀過逐字稿，產出一份精簡的高階主管摘要（executive summary）。
+工作區裡有一個檔案 `meeting_transcript.md`，內含虛構台灣軟體公司「鼎峰科技」一場
+產品暨行銷週會的逐字稿（會議在 Asia/Taipei 時區舉行）。請先讀過整份逐字稿，再產出
+一份精簡的高階主管摘要（executive summary）。
 
-請把摘要寫入名為 `executive_summary.md` 的檔案，內容涵蓋：
+請把摘要寫入名為 `executive_summary.md` 的檔案，內容須涵蓋下列區段：
 
-- **會議標題與日期**
+- **會議標題與日期**（日期請照逐字稿所載）
 - **與會者**（逐字稿中提到的姓名）
 - **討論的關鍵主題**（3-5 個重點，摘述主要討論面向）
 - **做成的決議**（團隊達成的具體決定或結論）
 - **行動項目（action items）**（指派給特定人員的任務，可辨識時附上負責人）
 - **後續步驟**（下次會議前需要完成的事項）
 
-摘要長度請控制在約 500 字以內，並以一位未出席會議的繁忙高階主管為對象來撰寫。
+摘要長度請控制在約 500 字以內，並以一位未出席會議的繁忙高階主管為對象來撰寫，
+語氣專業、可快速瀏覽。請以繁體中文（zh-TW）撰寫。
 
 ## Expected Behavior
 
 助手應該：
 
-1. 讀取會議逐字稿
+1. 讀取會議逐字稿 meeting_transcript.md。
 2. 辨識主要討論主題：
-   - 企業活動贊助分工（platform 對應 re:Invent、CI/CD 對應 Google Next、GitOps 對應 KubeCon）
-   - Commit 大會的產品公告（橫跨各 stage 的前 5 大功能）
-   - 競品比較資訊圖（design 團隊的新設計、配色決定）
-   - 訊息框架（如「more speed, less risk」與「single source of truth, countless possibilities」等標語）
-   - 競品試算表方法論（tier 1 競爭對手、按 stage 對應的比較）
+   - 企業活動贊助分工（平台 Platform 對應「開源人年會 COSCUP」、CI/CD 對應
+     「DevOpsDays Taipei」、GitOps 對應「Kubernetes Day Taiwan」）。
+   - 鼎峰匯流大會（DingFeng Connect）的產品發布題材（把多個小型 MVC 整合成主題敘事、
+     從所有 stage 挑出整體前 5 名功能、以「漏洞管理」當資安主打）。
+   - 競品比較資訊圖（infographic）配色（只用綠色、不用紅色）與 stage 命名沿用現狀。
+   - 訊息架構練習（標語與三個支柱：主標語「更快交付，更低風險」、
+     「單一真相來源，無限可能」、「端到端掌控你的軟體工廠」）。
+   - 競品分析方法論與比較試算表（只聚焦 tier 1、每個 stage 只放相關對手、新增鼎峰一列）。
 3. 辨識關鍵決議：
-   - 活動分工：Platform→re:Invent、CI/CD→Google Next、GitOps→KubeCon
-   - 訊息：選定「more speed, less risk」為最終標語
-   - 競品資訊圖：維持僅用綠色配色（不用紅色）
-   - 以 vulnerability management 作為最重要的安全公告
-4. 擷取行動項目（Cormac 負責補上 Plan stage 的前 5 大功能、團隊向 campaign managers 確認等）
-5. 撰寫一份結構良好的高階主管摘要
+   - 活動分工：平台→COSCUP、CI/CD→DevOpsDays Taipei、GitOps→Kubernetes Day Taiwan。
+   - 訊息：選定「更快交付，更低風險」為最終主標語。
+   - 競品資訊圖：維持僅用綠色配色（不用紅色），以保持比較的調性。
+   - 以「漏洞管理（vulnerability management）」作為最重要的資安發布題材。
+   - 競品試算表：每個 stage 只列與該 stage 相關的 tier 1 對手，並新增鼎峰一列。
+4. 擷取行動項目與負責人（例如：高敏哲在星期二前補上 Plan stage 的 top 5 候選清單、
+   蔡思敏修改競品試算表、王志明今天下班前把訊息架構定稿、全體向各自的活動行銷經理
+   確認贊助承諾等）。
+5. 撰寫一份結構良好、精簡的繁體中文高階主管摘要。
 
 ## Grading Criteria
 
 - [ ] 已建立 `executive_summary.md` 檔案
-- [ ] 提及會議日期（2021-06-28 或 June 28, 2021）
+- [ ] 提及逐字稿所載的會議日期（2025-03-18）
 - [ ] 辨識出至少 3 個關鍵主題
-- [ ] 涵蓋企業活動／活動贊助主題
-- [ ] 涵蓋產品公告／Commit 大會主題
-- [ ] 記載至少 2 項具體決議
+- [ ] 涵蓋企業活動／活動贊助分工主題（COSCUP／DevOpsDays Taipei／Kubernetes Day Taiwan）
+- [ ] 涵蓋鼎峰匯流大會的產品發布題材（整體前 5 名／漏洞管理）
+- [ ] 記載至少 2 項具體決議（如綠色配色、主標語『更快交付，更低風險』等）
+- [ ] 至少標出 2 位與會者姓名
 - [ ] 包含行動項目或後續步驟區段
-- [ ] 摘要精簡（約 800 字以內）
+- [ ] 摘要精簡（中文約 1200 字以內）
 
 ## Automated Checks
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting executive summary task.
+    """高階主管摘要 grader（台灣虛構逐字稿：鼎峰科技產品行銷週會）。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    應有事實盡量從 meeting_transcript.md 動態推導，再比對 agent 的中文報告
+    executive_summary.md。僅用標準函式庫。
     """
     from pathlib import Path
     import re
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if report exists
+    # --- 讀取 agent 報告 ---
     report_path = workspace / "executive_summary.md"
     if not report_path.exists():
-        alternatives = ["exec_summary.md", "summary.md", "meeting_summary.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in ["exec_summary.md", "summary.md", "meeting_summary.md", "摘要.md"]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
 
+    keys = [
+        "file_created", "meeting_date", "topics_identified", "events_covered",
+        "announcements_covered", "decisions_documented", "attendees_named",
+        "action_items_present", "concise",
+    ]
     if not report_path.exists():
-        return {
-            "file_created": 0.0,
-            "meeting_date": 0.0,
-            "topics_identified": 0.0,
-            "events_covered": 0.0,
-            "announcements_covered": 0.0,
-            "decisions_documented": 0.0,
-            "action_items_present": 0.0,
-            "concise": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
-    scores["file_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
 
-    # Check meeting date
-    date_patterns = [r'2021-06-28', r'june\s*28', r'6/28/2021', r'28\s*june\s*2021']
-    scores["meeting_date"] = 1.0 if any(re.search(p, content_lower) for p in date_patterns) else 0.0
+    # --- 從逐字稿動態推導應有事實 ---
+    src = workspace / "meeting_transcript.md"
+    src_text = src.read_text(encoding="utf-8", errors="ignore") if src.exists() else ""
 
-    # Count key topics identified
+    # 日期：抓逐字稿裡的 YYYY-MM-DD（取第一個）
+    m = re.search(r"(20\d{2})-(\d{2})-(\d{2})", src_text)
+    if m:
+        y, mo, d = m.group(1), m.group(2), m.group(3)
+        date_variants = [
+            rf"{y}-{mo}-{d}",
+            rf"{y}\s*年\s*{int(mo)}\s*月\s*{int(d)}\s*日",
+            rf"{y}/{int(mo)}/{int(d)}",
+            rf"{y}/{mo}/{d}",
+        ]
+    else:
+        date_variants = [r"2025-03-18"]
+
+    # 與會者：抓逐字稿裡反覆出現的三字中文人名
+    known_owners = ["王志明", "林淑芬", "高敏哲", "陳柏宇", "蔡思敏", "戴立安"]
+    attendees = [n for n in known_owners if n in src_text]
+    if not attendees:
+        attendees = known_owners
+
+    scores = {"file_created": 1.0}
+
+    # --- 會議日期 ---
+    scores["meeting_date"] = (
+        1.0 if any(re.search(p, content) for p in date_variants) else 0.0
+    )
+
+    # --- 關鍵主題數 ---
     topic_count = 0
-    if re.search(r'(?:corporate\s*event|event\s*sponsor|re:?\s*invent|kubecon|google\s*next)', content_lower):
+    if re.search(r"(?:企業活動|活動贊助|贊助分工|研討會|COSCUP|DevOpsDays|Kubernetes\s*Day)",
+                 content, re.IGNORECASE):
         topic_count += 1
-    if re.search(r'(?:product\s*announce|commit\s*(?:conference|event)|top\s*(?:5|five)\s*feature)', content_lower):
+    if re.search(r"(?:鼎峰匯流|DingFeng\s*Connect|產品發布|前\s*5\s*名|前五名|top\s*5|漏洞管理)",
+                 content, re.IGNORECASE):
         topic_count += 1
-    if re.search(r'(?:competitive|infographic|comparison)', content_lower):
+    if re.search(r"(?:競品|比較|資訊圖|infographic)", content, re.IGNORECASE):
         topic_count += 1
-    if re.search(r'(?:messaging\s*framework|tagline|more\s*speed|single\s*source\s*of\s*truth)', content_lower):
+    if re.search(r"(?:訊息架構|標語|支柱|更快交付|單一真相來源)", content):
         topic_count += 1
-    if re.search(r'(?:vulnerability\s*management|security\s*announce)', content_lower):
+    if re.search(r"(?:tier\s*1|分層|試算表|每個\s*stage)", content, re.IGNORECASE):
         topic_count += 1
-    scores["topics_identified"] = 1.0 if topic_count >= 3 else (0.5 if topic_count >= 2 else 0.0)
+    scores["topics_identified"] = (
+        1.0 if topic_count >= 3 else (0.5 if topic_count >= 2 else 0.0)
+    )
 
-    # Events coverage
-    events_patterns = [
-        r're:?\s*invent',
-        r'google\s*next',
-        r'kubecon',
-        r'event\s*(?:sponsor|support|assign)',
+    # --- 企業活動分工涵蓋 ---
+    event_patterns = [
+        r"COSCUP|開源人年會",
+        r"DevOpsDays\s*Taipei|DevOpsDays",
+        r"Kubernetes\s*Day\s*Taiwan|Kubernetes\s*Day",
+        r"活動\s*(?:贊助|分工|主線)|研討會",
     ]
-    scores["events_covered"] = 1.0 if sum(1 for p in events_patterns if re.search(p, content_lower)) >= 2 else 0.0
+    ev = sum(1 for p in event_patterns if re.search(p, content, re.IGNORECASE))
+    scores["events_covered"] = 1.0 if ev >= 2 else (0.5 if ev >= 1 else 0.0)
 
-    # Product announcements coverage
+    # --- 產品發布題材涵蓋 ---
     announce_patterns = [
-        r'commit',
-        r'product\s*announce',
-        r'top\s*(?:5|five)',
-        r'vulnerability\s*management',
-        r'kubernetes\s*agent',
+        r"鼎峰匯流|DingFeng\s*Connect",
+        r"產品發布|keynote|發布題材",
+        r"前\s*5\s*名|前五名|top\s*5",
+        r"漏洞管理|vulnerability\s*management",
+        r"MVC|主題敘事|整合\s*(?:成|為)?\s*主題",
     ]
-    scores["announcements_covered"] = 1.0 if sum(1 for p in announce_patterns if re.search(p, content_lower)) >= 2 else 0.0
+    an = sum(1 for p in announce_patterns if re.search(p, content, re.IGNORECASE))
+    scores["announcements_covered"] = 1.0 if an >= 2 else (0.5 if an >= 1 else 0.0)
 
-    # Decisions documented
+    # --- 決議記載 ---
     decision_count = 0
-    if re.search(r'more\s*speed.*less\s*risk', content_lower):
+    if re.search(r"更快交付[，,、\s]*更低風險", content):
         decision_count += 1
-    if re.search(r'(?:green|no\s*red|color)', content_lower):
+    if re.search(r"(?:只用綠色|綠色|不用紅色|不放紅色|綠色配色)", content):
         decision_count += 1
-    if re.search(r'vulnerability\s*management', content_lower):
+    if re.search(r"漏洞管理", content):
         decision_count += 1
-    if re.search(r'(?:platform.*re:?\s*invent|ci.*cd.*google|gitops.*kubecon)', content_lower):
+    if re.search(r"(?:平台.*COSCUP|CI/?CD.*DevOpsDays|GitOps.*Kubernetes\s*Day)",
+                 content, re.IGNORECASE | re.DOTALL):
         decision_count += 1
-    scores["decisions_documented"] = 1.0 if decision_count >= 2 else (0.5 if decision_count >= 1 else 0.0)
+    if re.search(r"(?:每個\s*stage\s*只|相關.*對手|新增鼎峰|鼎峰一列|加上鼎峰)",
+                 content, re.IGNORECASE):
+        decision_count += 1
+    scores["decisions_documented"] = (
+        1.0 if decision_count >= 2 else (0.5 if decision_count >= 1 else 0.0)
+    )
 
-    # Action items present
+    # --- 與會者姓名 ---
+    named = sum(1 for n in attendees if n in content)
+    scores["attendees_named"] = (
+        1.0 if named >= 2 else (0.5 if named >= 1 else 0.0)
+    )
+
+    # --- 行動項目／後續步驟 ---
     action_patterns = [
-        r'action\s*item',
-        r'next\s*step',
-        r'follow[\s-]*up',
-        r'(?:need|should|will|to)\s*(?:do|complete|confirm|add|update|review)',
-        r'assign(?:ed|ment)',
-        r'(?:cormac|cindy|brian|samia|william).*(?:will|to|should)',
+        r"行動項目|action\s*item",
+        r"後續步驟|後續|next\s*step",
+        r"待辦|follow[\s-]*up|追蹤",
+        r"星期二|截止|下次會議",
+        r"負責人|指派|負責",
+        r"(?:王志明|戴立安|高敏哲|蔡思敏|陳柏宇|林淑芬).{0,12}(?:負責|要|將|需|補|確認|定稿|修改)",
     ]
-    scores["action_items_present"] = 1.0 if sum(1 for p in action_patterns if re.search(p, content_lower)) >= 2 else 0.0
+    ac = sum(1 for p in action_patterns if re.search(p, content, re.IGNORECASE))
+    scores["action_items_present"] = 1.0 if ac >= 2 else (0.5 if ac >= 1 else 0.0)
 
-    # Conciseness check (under ~800 words)
-    word_count = len(content.split())
-    scores["concise"] = 1.0 if word_count <= 800 else (0.5 if word_count <= 1200 else 0.0)
+    # --- 精簡度（中文以字元數估算，約 1200 字以內）---
+    cjk = len(re.findall(r"[一-鿿]", content))
+    length = cjk if cjk > 0 else len(content.split())
+    scores["concise"] = (
+        1.0 if length <= 1200 else (0.5 if length <= 1800 else 0.0)
+    )
 
     return scores
 
@@ -238,31 +280,36 @@ def grade(transcript, workspace_path):  # noqa: F811
 
 ### 評分項 1：準確性與完整性（權重 40%）
 
-**1.0 分**：摘要準確掌握所有主要討論主題（企業活動、產品公告、競品資訊圖、訊息框架）、關鍵決議與行動項目，且未引入錯誤資訊。
+**1.0 分**：摘要準確掌握所有主要討論主題（企業活動贊助分工、鼎峰匯流大會產品發布、
+競品比較資訊圖、訊息架構、競品試算表方法論）、關鍵決議與行動項目，且未引入錯誤資訊
+（例如沒有把活動配錯、沒有把主標語寫錯）。
 
 **0.75 分**：多數主題與決議準確掌握，僅有一兩處小遺漏。
 
 **0.5 分**：核心主題俱在，但缺少或誤記了數項重要細節。
 
-**0.25 分**：僅涵蓋少數主題，或存在重大不準確。
+**0.25 分**：僅涵蓋少數主題，或存在重大不準確（如活動分工錯置、標語張冠李戴）。
 
 **0.0 分**：摘要缺失、空白或根本不準確。
 
 ### 評分項 2：高階主管可讀性（權重 30%）
 
-**1.0 分**：摘要精簡，結構良好且分區清楚，用語專業，繁忙的高階主管能在 2 分鐘內掌握重點。沒有從閒聊語氣中混入不必要的細節。
+**1.0 分**：摘要精簡，結構良好且分區清楚，用語專業，繁忙的高階主管能在 2 分鐘內掌握
+重點。沒有從閒聊語氣（如《頭文字 D》玩笑、回家作業）中混入不必要的細節。
 
 **0.75 分**：摘要可讀且組織良好，僅略嫌冗長。
 
 **0.5 分**：有摘要，但過於瑣碎、組織不佳，或難以快速瀏覽。
 
-**0.25 分**：摘要雜亂，或讀起來更像原始筆記而非主管簡報。
+**0.25 分**：摘要雜亂，或讀起來更像原始逐字稿筆記而非主管簡報。
 
 **0.0 分**：沒有摘要，或格式完全無法使用。
 
 ### 評分項 3：可執行性（權重 30%）
 
-**1.0 分**：決議陳述清楚，行動項目在可辨識時附有負責人，後續步驟具體到足以執行。讀者能確切知道做了哪些決定、接下來會發生什麼。
+**1.0 分**：決議陳述清楚，行動項目在可辨識時附有負責人（如高敏哲、蔡思敏、王志明、
+戴立安），後續步驟具體到足以執行（如「產品發布試算表星期二截止」）。讀者能確切知道
+做了哪些決定、接下來會發生什麼。
 
 **0.75 分**：多數決議與行動項目清楚，僅在負責人或具體性上有少許缺漏。
 

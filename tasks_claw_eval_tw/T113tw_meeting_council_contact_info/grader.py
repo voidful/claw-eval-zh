@@ -13,34 +13,126 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
+    """南港市議會（虛構）人物與聯絡資訊 grader。
+
+    事實全部由台灣逐字稿 transcript.md 動態推導後，再比對 agent 產出的中文報告
+    contacts_report.md。僅用標準函式庫。
+    """
     from pathlib import Path
     import re
-    scores = {}
+
     workspace = Path(workspace_path)
+
+    # --- 1. 從台灣逐字稿動態讀出「應有事實」（避免硬寫） ---
+    transcript_path = workspace / "transcript.md"
+    tcontent = ""
+    if transcript_path.exists():
+        tcontent = transcript_path.read_text(encoding="utf-8", errors="ignore")
+
+    # 議會議員：從「出席議員名單」區塊的條列推導；推導失敗則回退到已知名單。
+    council_fallback = ["周明德", "陳秀蓮", "高文彬", "林淑芬",
+                        "楊乃文", "韋立群", "卡爾森"]
+    council = []
+    for name in council_fallback:
+        if name in tcontent:
+            council.append(name)
+    if not council:
+        council = council_fallback
+    # 卡爾森的本名 蔡明憲 任一出現即視為涵蓋第 7 選區議員。
+    carlson_aliases = [a for a in ("卡爾森", "蔡明憲") if a in tcontent] or ["卡爾森"]
+
+    # 市民公眾發言人：從「市民公眾意見發言」各小節標題（### N. 姓名（…））推導。
+    # 名字須以中文字開頭，藉此排除像「5.1 自來水…」這種小數編號的子標題。
+    speakers = re.findall(
+        r'^###\s*\d+\.\s*([一-鿿][^\s（(]*)', tcontent, re.MULTILINE)
+    speakers = [s.strip() for s in speakers if s.strip()]
+    if len(speakers) < 8:  # 推導不足時回退到已知名單
+        speakers = ["詹明慧", "任薇", "海曉光", "簡珮如", "高德森", "紀志中",
+                    "莫雅淳", "班奈特", "蒲怡婷", "米其里尼", "賈明德",
+                    "駱明潔", "卜雅玲", "潘思妤", "任明哲", "羅志安"]
+
+    # 升任警務正的四位巡佐（從逐字稿推導，回退用已知名單）。
+    promoted = [n for n in ("戴飛理", "梅斯莫", "普瑟爾", "馬可銘") if n in tcontent]
+    if len(promoted) < 4:
+        promoted = ["戴飛理", "梅斯莫", "普瑟爾", "馬可銘"]
+
+    checks = ["report_created", "council_members", "shelby_attorney",
+              "hamilton_raftelis", "bercaw_chief", "mcneil_officer",
+              "public_speakers", "tpd_promotions", "organized_sections",
+              "milo_related"]
+
+    # --- 2. 找出 agent 的報告檔 ---
     report_path = workspace / "contacts_report.md"
     if not report_path.exists():
-        for alt in ["contacts.md", "people.md", "directory.md"]:
+        for alt in ["contacts.md", "people.md", "directory.md",
+                    "人物清單.md", "聯絡資訊.md", "報告.md"]:
             if (workspace / alt).exists():
                 report_path = workspace / alt
                 break
     if not report_path.exists():
-        return {k: 0.0 for k in ["report_created", "council_members", "shelby_attorney", "hamilton_raftelis", "bercaw_chief", "mcneil_officer", "public_speakers", "tpd_promotions", "organized_sections", "milo_related"]}
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    cl = content.lower()
-    council = ['clendenin', 'miranda', 'maniscalco', 'hurtak', 'young', 'viera', 'carlson']
-    scores["council_members"] = 1.0 if sum(1 for c in council if c in cl) == 7 else 0.5
-    scores["shelby_attorney"] = 1.0 if (re.search(r'shelby', cl) and re.search(r'(?:attorney|legal|counsel)', cl)) else 0.0
-    scores["hamilton_raftelis"] = 1.0 if (re.search(r'(?:murray|hamilton)', cl) and re.search(r'raftelis', cl)) else 0.0
-    scores["bercaw_chief"] = 1.0 if (re.search(r'bercaw', cl) and re.search(r'(?:chief|police|tpd)', cl)) else 0.0
-    scores["mcneil_officer"] = 1.0 if (re.search(r'mcneil', cl) and re.search(r'(?:officer.*month|award|honor)', cl)) else 0.0
-    speakers = [r'jeraldine', r'iman', r'hych', r'cannella', r'cornell', r'citro', r'morrow', r'bennett', r'poole', r'michelini', r'adair', r'lockett', r'bullock', r'poynor', r'randolph', r'rodriguez']
-    scores["public_speakers"] = 1.0 if sum(1 for s in speakers if re.search(s, cl)) >= 12 else 0.5
-    promoted = ['defelice', 'messmer', 'purcell', 'mccormick']
-    scores["tpd_promotions"] = 1.0 if sum(1 for p in promoted if p in cl) >= 3 else 0.5
-    section_patterns = [r'council\s*member', r'(?:city\s*)?staff', r'(?:public|community|speaker)', r'(?:presenter|expert|consult)']
-    scores["organized_sections"] = 1.0 if sum(1 for s in section_patterns if re.search(s, cl)) >= 3 else 0.5
-    scores["milo_related"] = 1.0 if (re.search(r'milo', cl) and re.search(r'related\s*urban', cl)) else 0.0
+        return {k: 0.0 for k in checks}
+
+    scores = {"report_created": 1.0}
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
+
+    # --- 3. 逐項比對中文關鍵字／人物 ---
+    # 議員：7 位全到才滿分（卡爾森以別名任一計入）。
+    council_hit = sum(1 for c in council if c != "卡爾森" and c in content)
+    if any(a in content for a in carlson_aliases):
+        council_hit += 1
+    scores["council_members"] = 1.0 if council_hit >= 7 else (
+        0.5 if council_hit >= 4 else 0.0)
+
+    # 議會法律顧問 謝佩玲（對應原版 Shelby/Council Attorney）。
+    scores["shelby_attorney"] = 1.0 if (
+        "謝佩玲" in content
+        and re.search(r'法律顧問|法制顧問|法律|法務|顧問', content)
+    ) else 0.0
+
+    # 外部顧問 韓明翰／瑞富緯（對應原版 Hamilton/Raftelis）。
+    scores["hamilton_raftelis"] = 1.0 if (
+        "韓明翰" in content and re.search(r'瑞富緯|顧問', content)
+    ) else 0.0
+
+    # 警察局長 包柯偉（對應原版 Bercaw/Police Chief）。
+    scores["bercaw_chief"] = 1.0 if (
+        "包柯偉" in content and re.search(r'警察局長|警察局|局長|警政', content)
+    ) else 0.0
+
+    # 本月模範員警 麥尼爾（對應原版 McNeil/Officer of the Month）。
+    scores["mcneil_officer"] = 1.0 if (
+        "麥尼爾" in content
+        and re.search(r'本月模範員警|模範員警|本月最佳員警|Officer of the Month|表揚|頒獎|獲獎',
+                      content)
+    ) else 0.0
+
+    # 市民公眾發言人：命中 12 位以上滿分。
+    spk_hit = sum(1 for s in speakers if s and s in content)
+    scores["public_speakers"] = 1.0 if spk_hit >= 12 else (
+        0.5 if spk_hit >= 6 else 0.0)
+
+    # 升任警務正四位巡佐：命中 3 位以上滿分。
+    promo_hit = sum(1 for p in promoted if p in content)
+    scores["tpd_promotions"] = 1.0 if promo_hit >= 3 else (
+        0.5 if promo_hit >= 1 else 0.0)
+
+    # 分區段整理：至少命中 3 類區段標題。
+    section_patterns = [
+        r'議員',
+        r'市府職員|局處|幕僚|職員|首長',
+        r'市民|公眾|發言|陳情',
+        r'簡報|顧問|專家|外部',
+    ]
+    sec_hit = sum(1 for p in section_patterns if re.search(p, content))
+    scores["organized_sections"] = 1.0 if sec_hit >= 3 else (
+        0.5 if sec_hit >= 2 else 0.0)
+
+    # 米羅／鼎峰都更開發（對應原版 Milo/Related Urban president）。
+    scores["milo_related"] = 1.0 if (
+        "米羅" in content
+        and re.search(r'鼎峰都更開發|鼎峰都更|鼎峰|董事長|總裁', content)
+    ) else 0.0
+
     return scores
 
 

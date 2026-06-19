@@ -107,7 +107,7 @@ tasks:
       - "找出最長連跌（約 4 個連續交易日，5 月底）"
       - "描述全年最高／最低或關鍵走勢"
     llm_judge_rubric: |
-      ### 評分項 1：數據分析準確度（權重 35%）
+      ### 評分項 1：資料分析準確度（權重 35%）
       - 1.0：起始/結束價、漲跌幅、連漲連跌、最高最低等數值正確且清楚呈現
       - 0.5：部分正確，若干關鍵數字錯誤或缺失
       - 0.0：未正確計算或未嘗試
@@ -333,7 +333,7 @@ tasks:
     difficulty: medium
     safety_checks:
       - "此為示例（synthetic）財報資料，計算結果僅供教學參考，不構成投資建議"
-      - "僅依提供的財報數字計算，不得捏造或外推未提供的數據"
+      - "僅依提供的財報數字計算，不得捏造或外推未提供的資料"
     workspace_files:
       - source: tw/docs/tw_company_fy2024_financials.md
         dest: tw_company_fy2024_financials.md

@@ -1,5 +1,5 @@
 task_id: T066tw_csv_stations_by_elevation
-task_name: Idaho 氣象站海拔排名
+task_name: 台灣氣象站海拔排名
 version: 0.3.0
 category: data_analysis
 difficulty: medium
@@ -16,19 +16,20 @@ source:
   original_task_id: task_csv_stations_by_elevation
   original_file: tasks/task_csv_stations_by_elevation.md
 prompt:
-  text: "我的工作區中有一個 CSV 檔 `idaho_weather_stations.csv`，內含 Idaho 各地 213 個\n氣象站的資料。該檔有下列欄位：`OBJECTID`、`Station\
-    \ Name`、`Station Code`、\n`Managing Agency`、`County`、`Longitude`、`Latitude`、`Elevation (feet)`、\n`x`、`y`。\n\
-    \n請依海拔（elevation）分析這些測站，並將你的發現寫入 `elevation_report.md`。你的\n報告應包含：\n\n- **海拔最高的前 10 個測站**，由高至低排名，包含測站名稱、海拔、所在郡（county）\n\
-    \  與管理機構（managing agency）\n- **海拔最低的後 10 個測站**，由低至高排名，包含測站名稱、海拔、所在郡與管理機構\n- **摘要統計**：所有測站的最小、最大、平均與中位數海拔\n\
-    - **依管理機構的海拔分布**：比較 NWS 測站與 NRCS 測站的平均海拔，並解釋其差異\n- **平均海拔最高的郡**（僅限有 3 個以上測站的郡）與平均海拔最低的郡（同樣僅限\n  有\
-    \ 3 個以上測站的郡）\n- 一段簡短的**總結段落**，解讀海拔型態"
+  text: "我的工作區中有一個 CSV 檔 `tw_weather_stations.csv`，內含台灣各地 190 個（虛構的）\n氣象與水文觀測站資料。該檔為 UTF-8（含 BOM）編碼，有下列欄位：`OBJECTID`、\n\
+    `Station Name`（測站名稱）、`Station Code`（測站代碼）、`Managing Agency`\n（管理機構）、`County`（所在縣市）、`Longitude`（經度）、`Latitude`（緯度）、\n\
+    `Elevation (meters)`（海拔，單位為公尺）、`x`、`y`。\n\n請依海拔（elevation）分析這些測站，並將你的發現寫入 `elevation_report.md`。報告\n\
+    請以繁體中文（zh-TW）撰寫，並包含下列內容：\n\n- **海拔最高的前 10 個測站**，由高至低排名，包含測站名稱、海拔（公尺）、所在縣市\n  與管理機構\n- **海拔最低的後 10\
+    \ 個測站**，由低至高排名，包含測站名稱、海拔（公尺）、所在縣市\n  與管理機構\n- **摘要統計**：所有測站的最小、最大、平均與中位數海拔（單位公尺）\n- **依管理機構的海拔分布**：比較各管理機構（中央氣象署、林業署、水利署）的平均\n\
+    \  海拔，並解釋為何林業署測站普遍較高、中央氣象署測站普遍較低\n- **平均海拔最高的縣市**（僅限有 3 個以上測站的縣市）與平均海拔最低的縣市\n  （同樣僅限有 3 個以上測站的縣市）\n\
+    - 一段簡短的**總結段落**，解讀海拔型態\n\n備註：海拔一律以公尺（meters）為單位，並請以 CSV 內的實際數值為準，不要捏造未\n出現在檔案中的數字。"
   language: zh
 tools: []
 tool_endpoints: []
 services: []
 fixtures:
-- source: csvs/idaho_weather_stations.csv
-  dest: idaho_weather_stations.csv
+- source: tw/csvs/tw_weather_stations.csv
+  dest: tw_weather_stations.csv
 environment:
   timeout_seconds: 180
   max_turns: 1
@@ -46,22 +47,22 @@ scoring_components:
 safety_checks: []
 expected_actions:
 - 已建立報告檔 `elevation_report.md`
-- 列出海拔最高的前 10 站，第 1 正確（MEADOW LAKE SNOTEL，9150 ft）
-- 列出海拔最低的後 10 站，第 1 正確（DWORSHAK FISH HATCHERY，995 ft）
-- 摘要統計包含最小、最大、平均與中位數
-- 包含 NWS 與 NRCS 海拔比較並附正確平均
-- 含最高／最低平均海拔的郡層級分析
-- 含解讀型態的總結段落
+- 列出海拔最高的前 10 站，第 1 正確（玉山主峰測站，3,952 公尺）
+- 列出海拔最低的後 10 站，第 1 正確（安平海濱潮位站，2 公尺）
+- 摘要統計包含最小、最大、平均與中位數（單位公尺）
+- 包含各管理機構（林業署 對比 中央氣象署）海拔比較並附正確平均
+- 含最高／最低平均海拔的縣市層級分析（南投縣最高、澎湖縣最低）
+- 含解讀海拔型態的總結段落
 user_agent:
   enabled: false
 judge_rubric: '### 評分項 1：資料正確性（權重 35%）
 
 
-  **1.0 分**：所有排名皆正確，統計準確（平均約 4859、中位數約 4920、前／後 10 正確），
+  **1.0 分**：所有排名皆正確，統計準確（平均約 961、中位數 575、前／後 10 正確），
 
-  且各機構平均符合預期值。
+  且各管理機構平均符合預期值（林業署約 1,890、中央氣象署約 432、水利署約 963）。
 
-  **0.75 分**：排名與統計大致正確，僅有小幅落差（例如平均差幾英尺）。
+  **0.75 分**：排名與統計大致正確，僅有小幅落差（例如平均差幾公尺）。
 
   **0.5 分**：最高與最低測站正確，但中間排名或統計有錯誤。
 
@@ -73,9 +74,11 @@ judge_rubric: '### 評分項 1：資料正確性（權重 35%）
   ### 評分項 2：分析深度（權重 30%）
 
 
-  **1.0 分**：對 NWS 與 NRCS 差異提供具意義的解讀（NRCS/SNOTEL 測站為高海拔積雪
+  **1.0 分**：對各機構差異提供具意義的解讀（林業署測站多為高山林班、稜線、野溪等
 
-  監測站，NWS 測站位於有人口的河谷）、郡型態，以及海拔分布洞見。
+  高海拔監測點，中央氣象署測站多位於有人口的平原、市區與海濱）、縣市型態，以及
+
+  海拔分布洞見。
 
   **0.75 分**：解讀良好，僅在說明機構差異上有小缺漏。
 
@@ -89,7 +92,7 @@ judge_rubric: '### 評分項 1：資料正確性（權重 35%）
   ### 評分項 3：報告完整性（權重 20%）
 
 
-  **1.0 分**：所有要求章節皆齊備：前 10、後 10、摘要統計、機構比較、郡分析、
+  **1.0 分**：所有要求章節皆齊備：前 10、後 10、摘要統計、機構比較、縣市分析、
 
   總結段落。
 
@@ -114,13 +117,14 @@ judge_rubric: '### 評分項 1：資料正確性（權重 35%）
   **0.25 分**：不易閱讀。
 
   **0.0 分**：無報告或無法閱讀。'
-reference_solution: "助手應該：\n\n1. 讀取並解析 CSV 檔（213 列，UTF-8 含 BOM）\n2. 依 `Elevation (feet)` 欄位排序測站\n3. 找出最高測站：MEADOW\
-  \ LAKE SNOTEL，9,150 ft（LEMHI 郡，NRCS）\n4. 找出最低測站：DWORSHAK FISH HATCHERY，995 ft（CLEARWATER 郡，NWS）\n5.\
-  \ 計算摘要統計：最小 995、最大 9150、平均約 4859、中位數約 4920\n6. 比較機構：NWS 平均約 3,993 ft（143 站）vs NRCS 平均約 6,628 ft（70 站）\n\
-  7. 找出郡層級的海拔型態（以 3 站以上為篩選）\n8. 撰寫一份結構良好的 markdown 報告\n\n預期關鍵數值：\n\n- 最高：MEADOW LAKE SNOTEL，9,150 ft\n\
-  - 最低：DWORSHAK FISH HATCHERY，995 ft\n- 平均海拔：約 4,859 ft\n- 中位數海拔：約 4,920 ft\n- NWS 平均：約 3,993 ft（143 站）\n\
-  - NRCS 平均：約 6,628 ft（70 站）\n- 前 10 包含：MEADOW LAKE SNOTEL (9150)、VIENNA MINE PILLOW (8960)、\n  MILL CREEK\
-  \ SUMMIT SNOTEL (8800)、GALENA SUMMIT SNOTEL (8780)、\n  DOLLARHIDE SUMMIT SNOTEL (8420)"
+reference_solution: "助手應該：\n\n1. 讀取並解析 CSV 檔（190 列，UTF-8 含 BOM）\n2. 依 `Elevation (meters)` 欄位排序測站\n3.\
+  \ 找出最高測站：玉山主峰測站，3,952 公尺（南投縣，林業署）\n4. 找出最低測站：安平海濱潮位站，2 公尺（臺南市，中央氣象署）\n5. 計算摘要統計：最小 2、最大 3,952、平均約 961、中位數\
+  \ 575\n6. 比較管理機構平均海拔，並解讀林業署（高山林班／野溪測站）普遍高於中央氣象署\n   （多位於人口稠密之平原、市區與海濱）的型態\n7. 找出縣市層級的海拔型態（以 3 站以上為篩選）\n\
+  8. 撰寫一份結構良好的 markdown 報告\n\n預期關鍵數值（以 `tw_weather_stations.csv` 實際資料計）：\n\n- 測站總數：190 站（中央氣象署 95 站、林業署\
+  \ 54 站、水利署 41 站）\n- 最高：玉山主峰測站，3,952 公尺（南投縣，林業署）\n- 第 2~5 高：雪山圈谷站（3,886）、玉山北峰氣象站（3,845）、南湖大山山屋站（3,742）、\n\
+  \  奇萊北峰站（3,607）\n- 最低：安平海濱潮位站，2 公尺（臺南市，中央氣象署）\n- 海拔範圍：2 公尺 至 3,952 公尺\n- 平均海拔：約 961 公尺\n- 中位數海拔：575\
+  \ 公尺\n- 林業署平均：約 1,890 公尺（54 站）\n- 中央氣象署平均：約 432 公尺（95 站）\n- 水利署平均：約 963 公尺（41 站）\n- 平均海拔最高的縣市（3 站以上）：南投縣，約\
+  \ 1,971 公尺（17 站）\n- 平均海拔最低的縣市（3 站以上）：澎湖縣，約 38 公尺（4 站）\n- 有 5 列的縣市（County）欄位為空白"
 primary_dimensions:
 - completion
 metadata:
@@ -132,8 +136,8 @@ metadata:
     automated: 0.6
     llm_judge: 0.4
   workspace_files:
-  - source: csvs/idaho_weather_stations.csv
-    dest: idaho_weather_stations.csv
+  - source: tw/csvs/tw_weather_stations.csv
+    dest: tw_weather_stations.csv
   source_benchmark: pinchbench
   translation_status: complete
   conversion_stage: phase3_taiwan_localized

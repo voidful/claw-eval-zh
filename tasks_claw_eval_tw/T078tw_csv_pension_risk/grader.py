@@ -13,122 +13,234 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the pension risk assessment task.
+    """對台灣退休金 CSV 動態實算正解，再比對 agent 的中文報告。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    報告為中文（轉換器會在其後接上中→英關鍵字 wrapper），故本 grader 以
+    中文關鍵字與數值為主進行比對；縣市名稱／代碼不在英譯字典內，必須直接
+    比對中文。所有「應有事實」皆從工作區的 tw_pension.csv 即時推導。
     """
-    from pathlib import Path
+    import csv
     import re
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if report exists
+    # --- 找出報告檔 ---
     report_path = workspace / "pension_risk_report.md"
     if not report_path.exists():
-        alternatives = ["risk_report.md", "report.md", "pension_report.md", "pension_risk.md", "risk_assessment.md"]
+        alternatives = [
+            "risk_report.md", "report.md", "pension_report.md",
+            "pension_risk.md", "risk_assessment.md", "退休金風險報告.md",
+            "退休金風險評估.md", "風險評估報告.md",
+        ]
         for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+            p = workspace / alt
+            if p.exists():
+                report_path = p
+                break
+    # 退而求其次：任何含關鍵字的 .md
+    if not report_path.exists():
+        for p in workspace.rglob("*.md"):
+            try:
+                t = p.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                continue
+            if ("遞延" in t or "比值" in t) and ("風險" in t or "risk" in t.lower()):
+                report_path = p
                 break
 
+    keys = [
+        "report_created", "ratio_ranking", "outlier_highest_ratio",
+        "second_ratio", "concentration_risk", "district_hotspots",
+        "top_district", "risk_tiers", "high_risk_states",
+        "summary_recommendations",
+    ]
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "ratio_ranking": 0.0,
-            "dc_highest_ratio": 0.0,
-            "nj_second_ratio": 0.0,
-            "concentration_risk": 0.0,
-            "district_hotspots": 0.0,
-            "oh13_top_district": 0.0,
-            "risk_tiers": 0.0,
-            "high_risk_states": 0.0,
-            "summary_recommendations": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    scores = {"report_created": 1.0}
+    content = report_path.read_text(encoding="utf-8")
+    low = content.lower()
 
-    # Deferred-to-payee ratio ranking
-    ratio_context = bool(re.search(r'(?:deferred|ratio|defer.*payee)', content_lower))
-    ratio_states = ["washington dc", "dc", "new jersey", "alaska", "north dakota", "utah"]
-    ratio_mentioned = sum(1 for s in ratio_states if s in content_lower)
-    scores["ratio_ranking"] = 1.0 if ratio_mentioned >= 4 and ratio_context else (0.5 if ratio_mentioned >= 2 else 0.0)
+    # --- 從 CSV 動態實算正解 ---
+    csv_path = workspace / "tw_pension.csv"
+    if not csv_path.exists():
+        for p in workspace.rglob("*.csv"):
+            csv_path = p
+            break
 
-    # DC highest ratio
-    dc_patterns = [
-        r'(?:dc|washington\s*dc|district\s*of\s*columbia).*(?:5\.69|5\.7|highest|outlier|extreme)',
-        r'(?:highest|outlier|extreme).*(?:ratio).*(?:dc|washington\s*dc)',
-        r'(?:dc|washington\s*dc).*ratio.*(?:5\.[67])',
-    ]
-    scores["dc_highest_ratio"] = 1.0 if any(re.search(p, content_lower) for p in dc_patterns) else 0.0
+    def to_num(s):
+        s = re.sub(r"[^0-9.]", "", s or "")
+        return float(s) if s else 0.0
 
-    # NJ second ratio
-    nj_patterns = [
-        r'new\s*jersey.*(?:1\.0[67]|second|#2|only.*(?:above|over|exceed).*1)',
-        r'(?:second|#2).*(?:ratio).*new\s*jersey',
-        r'new\s*jersey.*1\.0\d',
-    ]
-    scores["nj_second_ratio"] = 1.0 if any(re.search(p, content_lower) for p in nj_patterns) else 0.0
+    totals = []        # 縣市總計（含特殊類別）
+    districts = []     # 選區列
+    grand = None
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            name = (row.get("STATE_ABBREV_NAME") or "").strip()
+            dist = (row.get("DISTRICT") or "").strip()
+            amt = to_num(row.get("PAYEE_AMOUNT"))
+            pc = to_num(row.get("PAYEE_COUNT"))
+            dc = to_num(row.get("DEFERRED_COUNT"))
+            if name == "Grand Total":
+                grand = {"amt": amt, "pc": pc, "dc": dc}
+                continue
+            if name.endswith("Total"):
+                short = name.replace("Total", "").strip()
+                totals.append({"name": short, "amt": amt, "pc": pc, "dc": dc})
+            elif name:
+                districts.append({"name": name, "dist": dist, "amt": amt,
+                                  "pc": pc, "dc": dc})
 
-    # Concentration risk
-    conc_patterns = [
-        r'(?:3[5-9]|4[0-2])\s*%.*(?:top\s*5|five)',
-        r'(?:top\s*5|five).*(?:3[5-9]|4[0-2])\s*%',
-        r'(?:5[2-8]|concentration).*(?:top\s*10|ten)',
-        r'(?:top\s*10|ten).*(?:5[2-8])\s*%',
-        r'concentration.*risk',
-    ]
-    scores["concentration_risk"] = 1.0 if any(re.search(p, content_lower) for p in conc_patterns) else 0.0
+    # 純中文縣市名（去掉代碼前綴 "TXG-" 等）
+    def zh_name(full):
+        return full.split("-", 1)[1].strip() if "-" in full else full.strip()
 
-    # District hotspots
-    district_terms = ["district", "congressional", "hotspot"]
-    has_district_context = any(t in content_lower for t in district_terms)
-    hotspot_patterns = [r'in-?1', r'mi-?5', r'oh-?13', r'pa-?7', r'wv-?1', r'oh-?6']
-    hotspot_count = sum(1 for p in hotspot_patterns if re.search(p, content_lower))
-    scores["district_hotspots"] = 1.0 if hotspot_count >= 3 and has_district_context else (0.5 if hotspot_count >= 2 else 0.0)
+    # 比值排名（PC>=100）
+    ratios = []
+    for t in totals:
+        if t["pc"] >= 100:
+            ratios.append((zh_name(t["name"]), t["dc"] / t["pc"] if t["pc"] else 0.0))
+    ratios.sort(key=lambda x: -x[1])
+    top10_names = [n for n, _ in ratios[:10]]
+    outlier_name, outlier_ratio = ratios[0]          # 中央直轄機關, ~5.69
+    second_name, second_ratio = ratios[1]            # 連江縣, ~0.89
 
-    # OH-13 as top district
-    oh13_patterns = [
-        r'oh(?:io)?[- ]?13.*(?:111|highest|top|largest|first)',
-        r'(?:highest|top|largest|first).*(?:district).*oh(?:io)?[- ]?13',
-        r'oh(?:io)?[- ]?13.*\$?111',
-    ]
-    scores["oh13_top_district"] = 1.0 if any(re.search(p, content_lower) for p in oh13_patterns) else 0.0
+    # 集中度（依金額）
+    total_amt = sum(t["amt"] for t in totals) or 1.0
+    by_amt = sorted(totals, key=lambda x: -x["amt"])
+    top5_pct = sum(t["amt"] for t in by_amt[:5]) / total_amt * 100
+    top10_pct = sum(t["amt"] for t in by_amt[:10]) / total_amt * 100
+    top5_names = [zh_name(t["name"]) for t in by_amt[:5]]
 
-    # Risk tiers
-    tier_patterns = [
-        r'(?:high|medium|low)\s*risk',
-        r'(?:tier|category|classification)',
-        r'(?:0\.75|0\.50|0\.5)',
-    ]
-    tier_count = sum(1 for p in tier_patterns if re.search(p, content_lower))
-    scores["risk_tiers"] = 1.0 if tier_count >= 2 else (0.5 if tier_count >= 1 else 0.0)
+    # 選區熱點（依金額）
+    by_d = sorted(districts, key=lambda x: -x["amt"])
+    top_districts = by_d[:5]
+    top_d = top_districts[0]                          # 臺中市-13
+    top_d_zh = zh_name(top_d["name"])
+    top_d_dist = top_d["dist"]
+    top_d_amt_m = top_d["amt"] / 1_000_000            # ~113.3
 
-    # High-risk states listed
-    high_risk_names = ["dc", "washington dc", "new jersey", "alaska", "north dakota",
-                       "utah", "california", "new york", "colorado", "connecticut", "hawaii"]
-    hr_mentioned = sum(1 for s in high_risk_names if s in content_lower)
-    has_high_risk_context = bool(re.search(r'high.*risk', content_lower))
-    scores["high_risk_states"] = 1.0 if hr_mentioned >= 6 and has_high_risk_context else (0.5 if hr_mentioned >= 3 else 0.0)
+    # 風險等級
+    high_tier = [n for n, r in ratios if r > 0.75]
+    med_tier = [n for n, r in ratios if 0.50 <= r <= 0.75]
+    low_tier = [n for n, r in ratios if r < 0.50]
 
-    # Summary and recommendations
+    nat_avg = (grand["dc"] / grand["pc"]) if grand and grand["pc"] else 0.0
+
+    # ---------- 1) 比值排名：前 10 大縣市有被提到 ----------
+    ratio_ctx = bool(re.search(r"遞延|比值|ratio", low))
+    named = sum(1 for n in top10_names if n in content)
+    scores["ratio_ranking"] = (
+        1.0 if (named >= 5 and ratio_ctx)
+        else 0.5 if named >= 2
+        else 0.0
+    )
+
+    # ---------- 2) 最高比值離群值（中央直轄機關 ~5.69）----------
+    outlier_num = f"{outlier_ratio:.1f}"            # "5.7"
+    outlier_num2 = f"{outlier_ratio:.2f}"           # "5.69"
+    outlier_present = (outlier_name in content)
+    outlier_val = bool(re.search(re.escape(outlier_num2), content)
+                       or re.search(r"5\.[67]", content))
+    outlier_ctx = bool(re.search(r"離群|最高|極端|outlier|highest", low))
+    scores["outlier_highest_ratio"] = (
+        1.0 if (outlier_present and (outlier_val or outlier_ctx))
+        else 0.5 if outlier_present
+        else 0.0
+    )
+
+    # ---------- 3) 第二高（地方縣市中最高，連江縣 ~0.89 / 臺北市 ~0.88）----------
+    # 因 #2~#4 比值極接近（0.886/0.880/0.876，四捨五入皆 0.88~0.89），
+    # 接受其中任一個被點名為地方縣市中比值最高者。
+    near_top = [n for n, r in ratios[1:5]]
+    second_present = sum(1 for n in near_top if n in content)
+    second_val = bool(re.search(r"0\.8[5-9]", content))
+    scores["second_ratio"] = (
+        1.0 if (second_present >= 1 and second_val)
+        else 0.5 if second_present >= 1
+        else 0.0
+    )
+
+    # ---------- 4) 集中度風險 ----------
+    # 從報告中抽出所有百分比數值，以 ±2 百分點容差比對實算值
+    # （容許整數或一位小數，例如 61.6% / 62%）。
+    conc_ctx = bool(re.search(r"集中度|concentration", low))
+    report_pcts = [float(m) for m in re.findall(r"(\d+(?:\.\d+)?)\s*%", content)]
+
+    def pct_hit(target):
+        return any(target - 2 <= v <= target + 2 for v in report_pcts)
+
+    top5_hit = pct_hit(top5_pct)
+    top10_hit = pct_hit(top10_pct)
+    scores["concentration_risk"] = (
+        1.0 if (top5_hit and top10_hit)
+        else 0.5 if (conc_ctx and (top5_hit or top10_hit))
+        else 0.5 if conc_ctx
+        else 0.0
+    )
+
+    # ---------- 5) 選區級熱點 ----------
+    dist_ctx = bool(re.search(r"選區|熱點|district|hotspot", low))
+    hot_hit = 0
+    for d in top_districts:
+        zn = zh_name(d["name"])
+        # 例如「臺中市第 13 選區」「臺中市-13」「臺中市 13」
+        pat = rf"{re.escape(zn)}[^0-9]{{0,6}}{re.escape(str(d['dist']))}\b"
+        if re.search(pat, content):
+            hot_hit += 1
+    scores["district_hotspots"] = (
+        1.0 if (hot_hit >= 3 and dist_ctx)
+        else 0.5 if hot_hit >= 2
+        else 0.0
+    )
+
+    # ---------- 6) 金額最高的選區（臺中市第 13）----------
+    amt_m = round(top_d_amt_m)                       # 113
+    top_d_pat = rf"{re.escape(top_d_zh)}[^0-9]{{0,6}}{re.escape(str(top_d_dist))}\b"
+    top_d_named = bool(re.search(top_d_pat, content))
+    top_d_amt_hit = bool(re.search(rf"{amt_m}", content)
+                         or re.search(r"113", content))
+    top_d_ctx = bool(re.search(r"最高|最大|first|top|highest|金額最", low))
+    scores["top_district"] = (
+        1.0 if (top_d_named and (top_d_amt_hit or top_d_ctx))
+        else 0.5 if top_d_named
+        else 0.0
+    )
+
+    # ---------- 7) 風險等級分類 ----------
+    tier_terms = sum(bool(re.search(p, content)) for p in
+                     [r"高風險", r"中風險", r"低風險"])
+    tier_thresh = bool(re.search(r"0\.75", content) and re.search(r"0\.5", content))
+    tier_counts = bool(re.search(rf"{len(high_tier)}", content)
+                       and re.search(rf"{len(low_tier)}", content))
+    tcount = (1 if tier_terms >= 2 else 0) + (1 if tier_thresh else 0) \
+        + (1 if tier_counts else 0)
+    scores["risk_tiers"] = (
+        1.0 if tcount >= 2 else 0.5 if tcount >= 1 else 0.0
+    )
+
+    # ---------- 8) 高風險縣市清單 ----------
+    hr_named = sum(1 for n in high_tier if n in content)
+    hr_ctx = bool(re.search(r"高風險", content))
+    scores["high_risk_states"] = (
+        1.0 if (hr_named >= max(3, len(high_tier) - 1) and hr_ctx)
+        else 0.5 if hr_named >= 2
+        else 0.0
+    )
+
+    # ---------- 9) 摘要與建議 ----------
     rec_patterns = [
-        r'recommend',
-        r'(?:monitor|watch|attention|concern)',
-        r'(?:mitigat|manag|address|plan)',
-        r'(?:risk|exposure).*(?:profile|assessment|overall)',
+        r"建議|recommend",
+        r"監測|監控|關注|留意|注意|monitor",
+        r"管理|因應|處理|規劃|mitigat|manag",
+        r"摘要|總體|整體|風險樣貌|summary",
     ]
-    rec_count = sum(1 for p in rec_patterns if re.search(p, content_lower))
-    scores["summary_recommendations"] = 1.0 if rec_count >= 2 else (0.5 if rec_count >= 1 else 0.0)
+    rec = sum(1 for p in rec_patterns if re.search(p, low))
+    scores["summary_recommendations"] = (
+        1.0 if rec >= 2 else 0.5 if rec >= 1 else 0.0
+    )
 
     return scores
 

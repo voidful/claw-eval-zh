@@ -13,15 +13,14 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the stakeholder analysis task.
+    """台灣化「頻譜共用會議利害關係人分析」grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
+    查核項對應原始英文 grader，但事實改自台灣逐字稿 meeting-transcript.md
+    （虛構的數位治理委員會 DGC-SCAB 會議；頻譜管理署 OSM 主張共用優先於遷移、
+    純遷移重置成本新臺幣 180 億元）。僅用標準函式庫。
 
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    注意：報告為中文，轉換器會在中文詞後自動接上英文正規化字串，故本 grader
+    以「中文關鍵字／數值」為主要比對對象（這些字串在正規化後仍原樣保留）。
     """
     from pathlib import Path
     import re
@@ -31,100 +30,136 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     report_path = workspace / "stakeholder_analysis.md"
     if not report_path.exists():
-        alternatives = ["stakeholders.md", "stakeholder_report.md", "analysis.md"]
-        for alt in alternatives:
+        for alt in ["stakeholders.md", "stakeholder_report.md", "analysis.md",
+                    "利害關係人分析.md", "利害關係人.md"]:
             alt_path = workspace / alt
             if alt_path.exists():
                 report_path = alt_path
                 break
 
+    keys = ["report_created", "gov_stakeholders", "commercial_stakeholders",
+            "sharing_preference", "relocation_cost", "sharing_vs_relocation",
+            "common_parameters", "conflicts_identified", "member_positions"]
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "gov_stakeholders": 0.0,
-            "commercial_stakeholders": 0.0,
-            "sharing_preference": 0.0,
-            "relocation_cost": 0.0,
-            "sharing_vs_relocation": 0.0,
-            "common_parameters": 0.0,
-            "conflicts_identified": 0.0,
-            "member_positions": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
     scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
+    low = content.lower()
 
-    # Government stakeholders identified
-    gov_entities = ["ntia", "dod", "department of defense", "defense",
-                    "dhs", "homeland security", "justice",
-                    "white house", "ostp", "science and technology policy"]
-    gov_found = sum(1 for g in gov_entities if g in content_lower)
-    scores["gov_stakeholders"] = 1.0 if gov_found >= 4 else (0.5 if gov_found >= 2 else 0.0)
+    # --- 從逐字稿動態讀出「應有事實」，盡量避免硬寫 ---
+    transcript_path = workspace / "meeting-transcript.md"
+    ttext = ""
+    if transcript_path.exists():
+        ttext = transcript_path.read_text(encoding="utf-8", errors="ignore")
 
-    # Commercial stakeholders identified
-    commercial = ["carrier", "wireless", "commercial", "industry",
-                   "at&t", "att", "verizon", "intel", "t-mobile",
-                   "equipment manufacturer", "service provider",
-                   "ctia", "broadband"]
-    comm_found = sum(1 for c in commercial if c in content_lower)
-    scores["commercial_stakeholders"] = 1.0 if comm_found >= 4 else (0.5 if comm_found >= 2 else 0.0)
+    # 純遷移重置成本：從逐字稿動態抓「XXX 億元」這個數字（後援為 180 億）
+    cost_amt = None
+    m = re.search(r'重置成本[^0-9]{0,12}?([0-9一二三四五六七八九十百千]+)\s*億', ttext)
+    if not m:
+        m = re.search(r'([0-9]+)\s*億元', ttext)
+    if m:
+        cost_amt = m.group(1)
+    if not cost_amt:
+        cost_amt = "180"
 
-    # NTIA sharing preference noted
+    # 1) 政府利害關係人（從逐字稿可得的政府機關／署）
+    gov_entities = ["數位治理委員會", "dgc", "頻譜管理署", "osm", "資安署",
+                    "國防部", "ostp", "科技與政策辦公室",
+                    "經濟與數位發展部", "經濟與數位"]
+    gov_found = sum(1 for g in gov_entities if g.lower() in low)
+    scores["gov_stakeholders"] = (
+        1.0 if gov_found >= 4 else (0.5 if gov_found >= 2 else 0.0)
+    )
+
+    # 2) 商業界利害關係人（電信業者、設備／科技公司、產業詞）
+    commercial = ["中華電信", "遠傳", "台灣大哥大", "電信業者", "業者",
+                  "鼎峰", "有線電視", "ctia", "電信業者公會",
+                  "lte", "寬頻", "商用"]
+    comm_found = sum(1 for c in commercial if c.lower() in low)
+    scores["commercial_stakeholders"] = (
+        1.0 if comm_found >= 4 else (0.5 if comm_found >= 2 else 0.0)
+    )
+
+    # 3) 頻譜管理署（OSM）偏好共用勝過純遷移
     sharing_patterns = [
-        r'ntia.*(?:prefer|favor|advocate|support).*shar',
-        r'shar.*(?:prefer|favor|better|alternative).*(?:relocat|vacat)',
-        r'(?:better way|minimize.*movement|keep.*cost)',
-        r'days of vacating.*coming to a close',
+        r'(?:osm|頻譜管理署|聶必亞)[^。\n]{0,40}?共用[^。\n]{0,12}?(?:優先|勝過|偏好|主張|傾向)',
+        r'共用[^。\n]{0,8}?(?:優先|勝過)[^。\n]{0,8}?遷移',
+        r'(?:偏好|主張|傾向|支持)[^。\n]{0,12}?共用[^。\n]{0,12}?(?:勝過|而非|不是|優先)?[^。\n]{0,6}?遷移',
+        r'整批清空頻段的年代[^。\n]{0,12}?(?:走入尾聲|尾聲|結束)',
+        r'共用優先',
     ]
-    scores["sharing_preference"] = 1.0 if any(re.search(p, content_lower) for p in sharing_patterns) else 0.0
+    scores["sharing_preference"] = (
+        1.0 if any(re.search(p, content) for p in sharing_patterns) else 0.0
+    )
 
-    # $18 billion relocation cost mentioned
-    cost_patterns = [r'\$?18\s*billion', r'18b', r'\$18b', r'18,000', r'eighteen billion']
-    scores["relocation_cost"] = 1.0 if any(re.search(p, content_lower) for p in cost_patterns) else 0.0
+    # 4) 新臺幣 180 億元（18 billion）遷移成本
+    cost_patterns = [
+        re.escape(cost_amt) + r'\s*億',
+        r'180\s*億',
+        r'18\s*billion',
+        r'18,?000,?000,?000',
+        r'一百八十\s*億',
+    ]
+    scores["relocation_cost"] = (
+        1.0 if any(re.search(p, content, re.IGNORECASE) for p in cost_patterns) else 0.0
+    )
 
-    # Sharing vs relocation tension described
+    # 5) 共用對比遷移的張力
     tension_patterns = [
-        r'shar.*(?:vs|versus|or|instead of|rather than).*relocat',
-        r'relocat.*(?:vs|versus|or|instead of|rather than).*shar',
-        r'(?:sharing|relocation).*(?:tension|debate|disagreement|question|trade-?off)',
-        r'(?:why.*spend.*money.*move|if.*sharing.*works)',
+        r'共用[^。\n]{0,10}?(?:對比|對上|相對於|還是|而非|而不是|或是|vs|versus)[^。\n]{0,10}?遷移',
+        r'遷移[^。\n]{0,10}?(?:對比|對上|相對於|還是|而非|而不是|或是|vs|versus)[^。\n]{0,10}?共用',
+        r'(?:共用|遷移)[^。\n]{0,20}?(?:張力|衝突|爭議|辯論|分歧|取捨|tension|trade-?off)',
+        r'(?:張力|衝突|爭議|辯論|分歧|取捨)[^。\n]{0,20}?(?:共用|遷移)',
+        r'為(?:什麼|甚麼)[^。\n]{0,12}?花[^。\n]{0,12}?搬',
     ]
-    scores["sharing_vs_relocation"] = 1.0 if any(re.search(p, content_lower) for p in tension_patterns) else 0.0
+    scores["sharing_vs_relocation"] = (
+        1.0 if any(re.search(p, content, re.IGNORECASE) for p in tension_patterns) else 0.0
+    )
 
-    # Common parameters debate captured
+    # 6) 共同（佈建）參數的辯論（周明德／鄭雅文／黃國昌／何信宏）
     param_patterns = [
-        r'(?:common|uniform|consistent).*(?:parameter|characteristic|assumption|input)',
-        r'(?:parameter|characteristic|assumption).*(?:common|uniform|consistent|agree)',
-        r'rush.*(?:parameter|standard|commercial)',
-        r'warren.*(?:common|input|working group)',
-        r'kahn.*(?:standard|lte)',
+        r'(?:共同|一致|統一|相同)[^。\n]{0,8}?(?:佈建|部署|商用|技術)?[^。\n]{0,4}?參數',
+        r'參數[^。\n]{0,8}?(?:共同|一致|統一|相同)',
+        r'common\s+(?:deployment\s+)?parameters',
+        r'周明德[^。\n]{0,30}?(?:共同|參數|工作小組)',
+        r'鄭雅文[^。\n]{0,30}?(?:lte|參數|標準)',
+        r'黃國昌[^。\n]{0,30}?(?:small\s*cell|小型基地台|低功率)',
     ]
-    scores["common_parameters"] = 1.0 if any(re.search(p, content_lower) for p in param_patterns) else 0.0
+    scores["common_parameters"] = (
+        1.0 if any(re.search(p, content, re.IGNORECASE) for p in param_patterns) else 0.0
+    )
 
-    # Conflicts/agreements identified (look for structural markers)
+    # 7) 衝突／共識／未解決問題的結構性指標
     conflict_indicators = 0
     conflict_terms = [
-        r'(?:tension|conflict|disagree|debate|challenge|concern|oppose)',
-        r'(?:agree|consensus|common ground|alignment|shared interest)',
-        r'(?:unresolved|open question|outstanding|remain)',
+        r'張力|衝突|分歧|辯論|爭議|挑戰|關切|擔憂|反對|質疑',
+        r'共識|一致|認同|同意|合作|共同立場|共同點|共同利益',
+        r'未(?:解決|解|決)|待解|開放(?:問題|議題)|懸而未決|尚未|有待',
     ]
     for ct in conflict_terms:
-        if re.search(ct, content_lower):
+        if re.search(ct, content):
             conflict_indicators += 1
-    scores["conflicts_identified"] = 1.0 if conflict_indicators >= 2 else (0.5 if conflict_indicators >= 1 else 0.0)
+    scores["conflicts_identified"] = (
+        1.0 if conflict_indicators >= 2 else (0.5 if conflict_indicators >= 1 else 0.0)
+    )
 
-    # Individual member positions linked to organizations
+    # 8) 個別委員立場連結到其組織／利益（中文姓名 + 組織或主張關鍵字）
     member_org_pairs = [
-        (r'rush', r'(?:consult|cmr|fcc|parameter)'),
-        (r'warren', r'(?:lockheed|defense|military|engineer)'),
-        (r'kahn', r'(?:intel|standard|lte)'),
-        (r'calabrese', r'(?:new america|small cell|unlicensed|public interest)'),
-        (r'povelites', r'(?:at.t|carrier|cost|relocation)'),
+        (r'周明德', r'南港大學|共同[^。\n]{0,4}?參數|工作小組|方法論'),
+        (r'鄭雅文', r'鼎峰|lte|標準|參數'),
+        (r'黃國昌', r'pinf|公共利益|小型基地台|small\s*cell|低功率'),
+        (r'馮淑惠', r'遠傳|確定性|成本|時程|電信'),
+        (r'吳孟儒', r'玉山防務|dzx|衛星|電子戰|空中|uav'),
+        (r'聶必亞', r'頻譜管理署|osm|180|共用|遷移'),
     ]
-    pair_found = sum(1 for name, org in member_org_pairs
-                     if re.search(name, content_lower) and re.search(org, content_lower))
-    scores["member_positions"] = 1.0 if pair_found >= 3 else (0.5 if pair_found >= 2 else 0.0)
+    pair_found = sum(
+        1 for name, org in member_org_pairs
+        if re.search(name, content) and re.search(org, content, re.IGNORECASE)
+    )
+    scores["member_positions"] = (
+        1.0 if pair_found >= 3 else (0.5 if pair_found >= 2 else 0.0)
+    )
 
     return scores
 

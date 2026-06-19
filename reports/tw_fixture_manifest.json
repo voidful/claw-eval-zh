@@ -1,6 +1,6 @@
 {
   "generated_by": "Phase 3 Taiwan localization",
-  "note": "新增的台灣 fixtures 登錄表。改 fixture 必同步重算 expected values 並更新 grader/reference。",
+  "note": "新增的台灣 fixtures 登錄表。改 fixture 必同步重算 expected values 並更新 grader/reference。（Phase: deepening — 新增 advisory/gov 逐字稿、氣象站/鄉鎮市區/退休金 CSV；各 hybrid grader 對 fixture 動態計算，不沿用美國數值。）",
   "fixtures": [
     {
       "path": "assets/tw/csvs/tw_stock_2330_2024.csv",
@@ -116,6 +116,86 @@
       "deterministic": true,
       "license": "synthetic",
       "risk_notes": "虛構合約；非法律意見；用於合約審閱（llm_judge）。"
+    },
+    {
+      "path": "assets/tw/meetings/tw_advisory_meeting.md",
+      "source_task": [
+        "task_meeting_advisory_attendees",
+        "task_meeting_advisory_stakeholders",
+        "task_meeting_advisory_technical",
+        "task_meeting_advisory_timeline",
+        "task_meeting_advisory_acronyms"
+      ],
+      "origin": "synthetic_illustrative",
+      "data_source": "虛構台灣技術顧問委員會逐字稿",
+      "deterministic": true,
+      "license": "synthetic / 公開概值",
+      "risk_notes": "虛構人物/單位；含與會者、利害關係人、技術討論、時程、縮寫供擷取評分。"
+    },
+    {
+      "path": "assets/tw/meetings/tw_gov_hearing.md",
+      "source_task": [
+        "task_meeting_gov_speaker_summary",
+        "task_meeting_gov_qa_extract",
+        "task_meeting_gov_recommendations",
+        "task_meeting_gov_data_sources",
+        "task_meeting_gov_controversy",
+        "task_meeting_gov_next_steps"
+      ],
+      "origin": "synthetic_illustrative",
+      "data_source": "虛構『數位治理委員會』生成式 AI 治理公聽會逐字稿（取代原 NASA UAP）",
+      "deterministic": true,
+      "license": "synthetic / 公開概值",
+      "risk_notes": "虛構機關與發言者；避免真實官員爭議。含發言摘要、問答、建議、資料來源、爭議、後續步驟。"
+    },
+    {
+      "path": "assets/tw/csvs/tw_weather_stations.csv",
+      "source_task": [
+        "task_csv_stations_by_elevation",
+        "task_csv_stations_coverage",
+        "task_csv_stations_filter"
+      ],
+      "origin": "synthetic_public_approx",
+      "data_source": "台灣氣象/測站資料集（取代 Idaho）；站名/站號/管理機關/縣市/經緯度/海拔",
+      "deterministic": true,
+      "license": "synthetic / 公開概值",
+      "risk_notes": "虛構/概值氣象站；grader 對此 fixture 動態計算正解，不沿用美國數值。"
+    },
+    {
+      "path": "assets/tw/csvs/tw_townships.csv",
+      "source_task": [
+        "task_csv_cities_ranking",
+        "task_csv_cities_growth"
+      ],
+      "origin": "synthetic_public_approx",
+      "data_source": "台灣鄉鎮市區人口資料（將美國大城市降格為鄉鎮市區）；City/County/Population/lat/lon",
+      "deterministic": true,
+      "license": "synthetic / 公開概值",
+      "risk_notes": "鄉鎮市區層級；人口為概值；grader 對此 fixture 動態計算。"
+    },
+    {
+      "path": "assets/tw/csvs/tw_townships_density.csv",
+      "source_task": [
+        "task_csv_cities_density"
+      ],
+      "origin": "synthetic_public_approx",
+      "data_source": "台灣鄉鎮市區（密度分析用）",
+      "deterministic": true,
+      "license": "synthetic / 公開概值",
+      "risk_notes": "密度分析用鄉鎮市區資料；grader 動態計算集中度。"
+    },
+    {
+      "path": "assets/tw/csvs/tw_pension.csv",
+      "source_task": [
+        "task_csv_pension_ranking",
+        "task_csv_pension_liability",
+        "task_csv_pension_risk"
+      ],
+      "origin": "synthetic_illustrative",
+      "data_source": "台灣各縣市退休金（勞退/退撫）示例資料（取代美國聯邦退休金）",
+      "deterministic": true,
+      "license": "synthetic / 公開概值",
+      "risk_notes": "示例/概值，明確標示非官方統計；grader 對此 fixture 動態計算。"
     }
   ]
 }

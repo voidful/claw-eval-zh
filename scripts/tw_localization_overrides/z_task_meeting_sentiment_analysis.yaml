@@ -1,0 +1,262 @@
+tasks:
+  task_meeting_sentiment_analysis:
+    task_name: |
+      會議情緒分析
+    prompt: |
+      我手上有一個檔案 `meeting_transcript.md`，內含「鼎峰科技」產品暨行銷週會的逐字稿（日期 2025-03-18，台北市內湖區總部，時區 Asia/Taipei）。請幫我分析這場會議整體的情緒與情感動態。
+
+      請把分析寫入名為 `sentiment_analysis.md` 的檔案，全程使用繁體中文（zh-TW），內容涵蓋：
+
+      - **整體會議情緒**（正面、負面或混合），並附簡短理由
+      - **逐主題情緒拆解**：針對每個主要討論主題，評定其情緒（正面／中性／負面）並說明原因。逐字稿主要涵蓋四大主題：企業活動贊助與分工、鼎峰匯流大會產品發布題材、競品比較資訊圖設計、競品分析方法論與訊息架構標語練習。
+      - **團隊動態觀察**：記錄出現認同、分歧、熱絡或不滿的時刻
+      - **值得注意的引言（notable quotes）**：摘出 3-5 句最能呈現會議情感基調的直接引言（請直接引用逐字稿原文）
+      - **投入程度（engagement level）**：評估參與者的投入程度（積極討論 vs. 被動聆聽）
+      - **潛在疑慮**：找出參與者表達遲疑、不確定或反對意見的主題
+
+      逐字稿中的與會者包含：王志明（主持）、林淑芬、高敏哲、陳柏宇、蔡思敏、戴立安。請在分析中適度具名，把情緒歸於特定人物。
+    expected_behavior: |
+      助手應該：
+
+      1. 讀取會議逐字稿 `meeting_transcript.md`
+      2. 辨識整體偏正面／合作的情緒——團隊大致同調且具生產力
+      3. 逐主題分析情緒：
+         - 企業活動贊助與分工：中性／略帶不確定（各條主線的贊助承諾仍待各活動行銷經理確認，王志明先標為「暫定」）
+         - 鼎峰匯流大會產品發布：正面／熱絡（團隊對把多個小型 MVC 彙整成主題敘事、主打「漏洞管理」感到興奮）
+         - 競品比較資訊圖：正面，伴隨輕度爭辯（戴立安質疑為何不用紅色、最後決定維持只用綠色的配色；stage 名稱描述性不足）
+         - 訊息架構與標語練習：高度投入、帶玩鬧氣氛（《頭文字 D》賽車片的玩笑、對標語的熱烈討論）
+      4. 記錄具體動態：
+         - 對「更快交付，更低風險」主標語的熱情（團隊共識最愛）
+         - 玩鬧式打趣（戴立安說「根本像在拍賽車片」、王志明出《頭文字 D》回家作業）
+         - 王志明直白的「喜歡就超愛、不喜歡就直說我超討厭」風格
+         - 林淑芬對公司不夠慶祝成果的輕微不滿
+         - 蔡思敏對競品試算表方法論的建設性反對意見（每個 stage 只放相關對手、加上鼎峰一列）
+      5. 摘出能呈現基調的相關引言（直接引用逐字稿原文）
+      6. 評估整體偏高的投入程度
+    grading_criteria:
+      - "已建立 `sentiment_analysis.md` 檔案"
+      - "整體情緒正確辨識為正面／合作"
+      - "至少分析 3 個主題並各自評定情緒（企業活動／產品發布／競品資訊圖／訊息標語）"
+      - "包含團隊動態或人際互動觀察（認同、分歧、熱絡或不滿）"
+      - "包含至少 2 句來自逐字稿的直接引言"
+      - "評估了投入程度（engagement level）"
+      - "至少辨識出一項疑慮或不確定之處（如贊助承諾待確認、stage 名稱描述性不足、競品方法論爭議）"
+      - "分析能區分不同主題間的不同情感基調"
+    llm_judge_rubric: |
+      ### 評分項 1：分析深度（權重 35%）
+
+      **1.0 分**：分析超越表層的情緒標籤。辨識出會議過程中細膩的情緒轉折，解釋為何某些主題（如標語練習）更具熱度，並掌握「非正式卻有生產力」的動態。記錄如戴立安「根本像在拍賽車片」、王志明出《頭文字 D》回家作業等具體玩鬧時刻，作為團隊默契的佐證。
+
+      **0.75 分**：分析良好，逐主題拆解清楚並具一定細膩度。
+
+      **0.5 分**：指派了基本情緒標籤，但說明或洞見有限。
+
+      **0.25 分**：分析淺薄，大多只是重述明顯的觀察。
+
+      **0.0 分**：未做出有意義的分析。
+
+      ### 評分項 2：以證據為本的觀察（權重 30%）
+
+      **1.0 分**：論點有逐字稿中的具體引言或時刻佐證。在適當之處將情緒歸於特定人物（例如王志明對標語「喜歡就超愛、不喜歡就直說我超討厭」的強烈意見、蔡思敏對競品試算表方法論的條理化建設性反對、林淑芬對公司不夠慶祝成果的不滿）。引言選得好且具說明力。
+
+      **0.75 分**：多數論點有證據支持，引言選擇良好。
+
+      **0.5 分**：提供部分證據，但許多論點是無佐證的斷言。
+
+      **0.25 分**：引言極少或全無，多為臆測。
+
+      **0.0 分**：未使用逐字稿中的任何證據。
+
+      ### 評分項 3：實用價值（權重 35%）
+
+      **1.0 分**：分析提供團隊主管可用的可執行洞見——辨識潛在摩擦點（如競品方法論爭議、配色決策）、團隊同調之處（標語共識）、誰可能需要更多支援，以及哪些主題能激發團隊。「疑慮」區段點出真正值得處理的問題（如贊助承諾尚未確認、stage 名稱描述性不足）。
+
+      **0.75 分**：大致可執行，能良好辨識動態與疑慮。
+
+      **0.5 分**：有一些有用觀察，但多為描述性而非可執行。
+
+      **0.25 分**：實用價值有限；讀起來更像讀書報告而非有用的分析。
+
+      **0.0 分**：沒有可執行的洞見。
+    workspace_files:
+      - source: tw/meetings/tw_tech_product_meeting.md
+        dest: meeting_transcript.md
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """為「會議情緒分析」（台灣在地化）評分。
+
+          做法：先從工作區內的台灣逐字稿（dest=meeting_transcript.md）動態推導
+          「應有事實」（與會者、四大主題、關鍵決議／標語），再比對 agent 產生的
+          中文報告 sentiment_analysis.md。僅用標準函式庫。
+
+          回傳：check 名稱 -> 分數（0.0~1.0）。
+          """
+          import re
+          from pathlib import Path
+
+          workspace = Path(workspace_path)
+
+          # --- 找出 agent 的報告檔 ---
+          report_path = workspace / "sentiment_analysis.md"
+          if not report_path.exists():
+              for alt in (
+                  "sentiment_report.md", "sentiment.md",
+                  "meeting_sentiment.md", "analysis.md", "情緒分析.md",
+              ):
+                  alt_path = workspace / alt
+                  if alt_path.exists():
+                      report_path = alt_path
+                      break
+
+          checks = (
+              "file_created", "overall_sentiment", "topic_breakdown",
+              "team_dynamics", "quotes_included", "engagement_assessed",
+              "concerns_identified", "tonal_distinction",
+          )
+          if not report_path.exists():
+              return {c: 0.0 for c in checks}
+
+          scores = {"file_created": 1.0}
+          content = report_path.read_text(encoding="utf-8", errors="ignore")
+
+          # --- 從台灣逐字稿動態推導應有事實 ---
+          transcript_path = workspace / "meeting_transcript.md"
+          tx = ""
+          if transcript_path.exists():
+              tx = transcript_path.read_text(encoding="utf-8", errors="ignore")
+
+          # 與會者：逐字稿中出現過的具名人物（用「姓名：」的發言格式偵測）
+          candidate_names = ["王志明", "林淑芬", "高敏哲", "陳柏宇", "蔡思敏", "戴立安"]
+          attendees = [n for n in candidate_names if (n in tx if tx else True)]
+          if not attendees:
+              attendees = candidate_names
+
+          # 主標語：從逐字稿動態擷取（被宣告為主標語／final 的句子）
+          tagline = "更快交付，更低風險"
+          if tx:
+              m = re.search(r"主標語[，。]?\s*[「『]([^」』]{2,20})[」』]", tx)
+              if not m:
+                  m = re.search(r"以[「『]([^」』]{2,20})[」』]\s*當主標語", tx)
+              if m:
+                  tagline = m.group(1)
+
+          # --- 整體情緒：應辨識為正面／合作 ---
+          positive_terms = [
+              "正面", "合作", "建設性", "具生產力", "有生產力",
+              "積極", "正向", "熱絡", "同調", "良好",
+          ]
+          overall_ctx = re.search(
+              r"(整體|總體|大致|綜觀|總結).{0,40}(" + "|".join(positive_terms) + ")",
+              content,
+          ) or re.search(
+              r"(" + "|".join(positive_terms) + r").{0,30}(基調|氛圍|情緒|語氣|氣氛)",
+              content,
+          )
+          scores["overall_sentiment"] = 1.0 if overall_ctx else 0.0
+
+          # --- 逐主題拆解：四大主題各自帶情緒詞 ---
+          sentiment_word = (
+              r"(正面|中性|負面|混合|正向|熱絡|熱情|興奮|不確定|"
+              r"爭辯|爭議|投入|玩鬧|遲疑|不滿|建設性|中立)"
+          )
+          topic_anchors = [
+              r"(活動|贊助|研討會|COSCUP|DevOpsDays|Kubernetes\s*Day)",
+              r"(產品發布|匯流大會|漏洞管理|MVC|keynote|top\s*5|前\s*5)",
+              r"(資訊圖|競品比較|配色|綠色|stage\s*名稱)",
+              r"(訊息|標語|tagline|支柱|" + re.escape(tagline) + r")",
+          ]
+          topic_count = 0
+          for anchor in topic_anchors:
+              # 主題錨點與情緒詞同段（任一順序、近距離）出現即算一個主題
+              near = re.search(
+                  anchor + r"[^\n。]{0,80}" + sentiment_word, content
+              ) or re.search(
+                  sentiment_word + r"[^\n。]{0,80}" + anchor, content
+              )
+              if near:
+                  topic_count += 1
+          # 後備：4 個以上小節 + 足量情緒詞也算達標
+          if topic_count < 3:
+              sections = re.findall(r"^#{2,4}\s+\S+", content, re.MULTILINE)
+              sentiment_hits = len(re.findall(sentiment_word, content))
+              if len(sections) >= 4 and sentiment_hits >= 5:
+                  topic_count = max(topic_count, 3)
+          scores["topic_breakdown"] = (
+              1.0 if topic_count >= 3 else (0.5 if topic_count >= 2 else 0.0)
+          )
+
+          # --- 團隊動態：認同／分歧／熱絡／玩鬧／合作 ---
+          dynamics_patterns = [
+              r"(認同|共識|同意|一致|同調)",
+              r"(分歧|反對|質疑|爭辯|爭議|不滿|張力)",
+              r"(熱情|興奮|熱絡|活力|投入)",
+              r"(玩鬧|打趣|玩笑|笑|幽默|賽車片|頭文字)",
+              r"(合作|協作|支持|互相)",
+          ]
+          dynamics_count = sum(
+              1 for p in dynamics_patterns if re.search(p, content)
+          )
+          scores["team_dynamics"] = (
+              1.0 if dynamics_count >= 3 else (0.5 if dynamics_count >= 2 else 0.0)
+          )
+
+          # --- 引言：全形／半形引號或區塊引言，且須是逐字稿中的真實片段 ---
+          quote_spans = []
+          for m in re.finditer(r"[「『\"“]([^」』\"”\n]{4,})[」』\"”]", content):
+              quote_spans.append(m.group(1).strip())
+          for m in re.finditer(r"^\s*>\s*(.+)$", content, re.MULTILINE):
+              quote_spans.append(m.group(1).strip())
+
+          # 與逐字稿做模糊比對：取引言中的中文片段，看是否出現在逐字稿
+          def _grounded(q):
+              if not tx:
+                  return True  # 無逐字稿可比對時不扣分
+              core = re.sub(r"[^一-鿿]", "", q)
+              if len(core) < 4:
+                  return False
+              # 取連續 4 字視窗，任一視窗出現在逐字稿即視為有所本
+              return any(core[i:i + 4] in tx for i in range(len(core) - 3))
+
+          grounded_quotes = [q for q in quote_spans if _grounded(q)]
+          n_quotes = len(grounded_quotes)
+          scores["quotes_included"] = (
+              1.0 if n_quotes >= 2 else (0.5 if n_quotes >= 1 else 0.0)
+          )
+
+          # --- 投入程度 ---
+          engagement_patterns = [
+              r"投入(程度|度)?",
+              r"(積極|熱烈|踴躍).{0,6}(討論|參與|發言|辯論)",
+              r"(高度|強烈|良好).{0,6}(投入|參與|互動|能量)",
+              r"engag",
+          ]
+          eng_hits = sum(1 for p in engagement_patterns if re.search(p, content, re.IGNORECASE))
+          scores["engagement_assessed"] = (
+              1.0 if eng_hits >= 2 else (0.5 if eng_hits >= 1 else 0.0)
+          )
+
+          # --- 疑慮／不確定 ---
+          concern_patterns = [
+              r"(疑慮|遲疑|不確定|不滿|挑戰|顧慮|擔憂)",
+              r"(待確認|尚未確認|暫定|未定案)",
+              r"(反對|質疑|抗拒|阻力)",
+              r"(不清楚|不夠|描述性不足|不準確)",
+              r"(風險|爭議|摩擦)",
+          ]
+          concern_hits = sum(1 for p in concern_patterns if re.search(p, content))
+          scores["concerns_identified"] = (
+              1.0 if concern_hits >= 2 else (0.5 if concern_hits >= 1 else 0.0)
+          )
+
+          # --- 情感基調區分：出現多種不同的情緒詞 ---
+          tone_terms = re.findall(
+              r"(正面|負面|中性|混合|正向|熱絡|熱情|興奮|不確定|玩鬧|"
+              r"爭辯|爭議|不滿|遲疑|建設性|投入|中立|嚴肅|輕鬆)",
+              content,
+          )
+          unique_tones = set(tone_terms)
+          scores["tonal_distinction"] = (
+              1.0 if len(unique_tones) >= 4 else (0.5 if len(unique_tones) >= 2 else 0.0)
+          )
+
+          return scores

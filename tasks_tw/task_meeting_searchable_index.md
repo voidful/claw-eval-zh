@@ -1,7 +1,6 @@
 ---
 id: task_meeting_searchable_index
-name: |
-  會議可檢索索引
+name: 鼎峰科技產品週會：可檢索索引
 category: meeting_analysis
 grading_type: hybrid
 timeout_seconds: 180
@@ -15,204 +14,290 @@ localization: taiwan
 localization_strategy: context_replace
 claw_eval_tw_id: T130tw_meeting_searchable_index
 workspace_files:
-- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+- source: tw/meetings/tw_tech_product_meeting.md
   dest: meeting_transcript.md
 grading_weights:
   automated: 0.6
   llm_judge: 0.4
 ---
 
-# 會議可檢索索引
-
+# 鼎峰科技產品週會：可檢索索引
 
 ## Prompt
 
-我手上有一個檔案 `meeting_transcript.md`，內含 GitLab 產品行銷團隊會議的逐字稿。我想為這場會議建立一份結構化、可檢索的索引，以便日後能快速找到特定的討論。
+工作區裡有一份會議逐字稿 meeting_transcript.md，是虛構台灣軟體公司「鼎峰科技」
+的「產品暨行銷週會」紀錄（時區 Asia/Taipei）。我想為這場會議建立一份結構化、
+可檢索的索引，方便日後快速找到特定的討論。
 
-請幫我把索引寫入名為 `meeting_index.md` 的檔案，內容涵蓋：
+請把索引寫進一個叫 meeting_index.md 的檔案，內容要涵蓋下列幾個區段：
 
-- **後設資料區塊（Metadata block）**：會議標題、日期、與會者（提到的姓名）
-- **主題索引（Topic index）**：把討論到的每個獨立主題列成編號清單，並各附一句說明所談內容
-- **人物索引（People index）**：針對提到的每個人，列出其貢獻或被指派的事項
-- **關鍵字索引（Keyword index）**：將關鍵術語、概念、產品與公司名稱依字母排列，各附簡短的脈絡註記（例如「KubeCon — GitOps 活動分工，由 DevOps GTM 團隊贊助」）
-- **決議紀錄（Decisions log）**：把每項做成的決議編號，並標註其相關主題
-- **行動項目紀錄（Action items log）**：列出每項行動項目，附上負責人（可辨識時）與期限（有提及時）
+- **後設資料區塊（Metadata）**：會議標題、日期、與會者（逐字稿中提到的姓名）。
+- **主題索引（Topic index）**：把討論到的每個獨立主題列成編號清單，各附一句
+  說明所談內容。
+- **人物索引（People index）**：針對提到的每個人，列出其貢獻或被指派的事項。
+- **關鍵字索引（Keyword index）**：將關鍵術語、概念、產品與公司（競品）名稱
+  有系統地排列（例如依筆畫或注音排序、或英文字母排序），各附一句簡短的脈絡
+  註記。例如：「COSCUP — 研討會贊助分工，平台主線去這場」「漏洞管理 — 資安
+  Secure 主打題材，由林淑芬提的整合敘事」。
+- **決議紀錄（Decisions log）**：把每項做成的決議編號，並標註其相關主題。
+- **行動項目紀錄（Action items log）**：列出每項行動項目，附上負責人
+  （可辨識時）與期限（有提及時，例如「星期二」「本週內」「今天下班前」）。
 
-目標是做出一份參考文件，讓人能搜尋任何術語並快速找到相關討論。
+目標是做出一份參考文件，讓人能搜尋任何術語（例如「COSCUP」「蔡思敏」
+「更快交付，更低風險」）就快速找到相關討論。請全程使用繁體中文。
 
 ## Expected Behavior
 
-助手應該：
+助手應讀取 meeting_transcript.md，並產出結構化、可檢索的 meeting_index.md，
+內含下列區段：
 
-1. 讀取逐字稿
-2. 建立結構化區段：
-   - **後設資料**：GitLab Product Marketing Meeting、2021-06-28、與會者：William、Cindy、Cormac、Brian、Samia、Tai（以及其他提到的人）
-   - **主題索引**（至少 5 個主題）：
-     1. 企業活動贊助與 GTM 團隊分工
-     2. Commit 大會的產品公告
-     3. 興奮程度排序方法論
-     4. 競品比較資訊圖設計
-     5. 訊息框架與標語
-     6. 競品試算表方法論（tier 1 競爭對手）
-     7. 集會回顧（Assembly retrospective）
-   - **人物索引**：
-     - William：主持會議、提出訊息標語
-     - Cindy：建議把功能打包（vulnerability management）、提出部落格用語「secure the factory」
-     - Cormac：詢問 plan stage 功能、提到 epic boards 與 milestone burn-up charts
-     - Brian：加入產品公告項目、提到 VS Code 社群貢獻
-     - Samia：對競品試算表方法論提出問題
-     - Tai：補充部分活動分工資訊
-   - **關鍵字索引**：依字母排列的術語，如 Azure DevOps、Commit、競品資訊圖、Cormac 等
-   - **決議紀錄**：編號的決議
-   - **行動項目**：附負責人與期限
+- **後設資料**：標題（鼎峰科技 產品暨行銷週會）、日期 2025-03-18、與會者：
+  王志明、林淑芬、高敏哲、陳柏宇、蔡思敏、戴立安。
+- **主題索引（至少 5 個）**：
+  1. 企業活動贊助與分工（COSCUP／DevOpsDays Taipei／Kubernetes Day Taiwan）
+  2. 鼎峰匯流大會的產品發布題材（整合 MVC 成主題、整體前 5 名）
+  3. 興奮度排名方法論（1–3 分堆疊排名）
+  4. 競品比較資訊圖設計（只用綠色、stage 命名）
+  5. 競品分析方法論與比較試算表（tier 1 六家、每個 stage 只放相關對手）
+  6. 訊息架構練習（標語與三支柱）
+- **人物索引（至少 3 位具名人士，各附貢獻／被指派事項）**：
+  - 王志明：主持會議、提出活動分工與訊息標語、宣布最終選定。
+  - 林淑芬：提出把 MVC 整合成主題敘事、漏洞管理、資訊圖只用綠色的理由、
+    子標語「守護工廠與每一次交付」。
+  - 高敏哲：補 Plan（規劃）stage 的 top 5 候選（史詩看板、里程碑燃盡圖）。
+  - 陳柏宇：產品發布方法論、整體前 5 名、備援題材清單。
+  - 蔡思敏：競品分層與試算表方法論、每個 stage 只放相關對手、新增鼎峰一列。
+  - 戴立安：活動分工通知、對內公告。
+- **關鍵字索引（至少 10 個術語，有系統排列、各附脈絡）**：例如 COSCUP、
+  DevOpsDays Taipei、Kubernetes Day Taiwan、鼎峰匯流大會、漏洞管理、GitOps、
+  流水線編輯器、史詩看板、里程碑燃盡圖、tier 1、微宇 DevOps、碼倉、自動流、
+  雲蜂、更快交付更低風險等。
+- **決議紀錄（至少 3 項，編號並標主題）**：例如三場活動主線分工；資訊圖維持
+  只用綠色不用紅色；stage 命名先維持現狀；競品只比 tier 1 且每個 stage 只放
+  相關對手；比較表新增鼎峰一列；訊息主標語定為「更快交付，更低風險」。
+- **行動項目（至少 2 項，附負責人與期限）**：戴立安本週內發對內公告；
+  高敏哲星期二前補 Plan top 5；蔡思敏改試算表、新增鼎峰一列；
+  全體把試算表投票選整體前 5 名（星期二截止）；王志明今天下班前定稿訊息架構。
 
 ## Grading Criteria
 
-- [ ] 已建立 `meeting_index.md` 檔案
-- [ ] 含後設資料區段，包括日期與與會者姓名
+- [ ] 已建立 meeting_index.md 檔案
+- [ ] 含後設資料區段，包括日期（2025-03-18）與與會者姓名
 - [ ] 主題索引列出至少 5 個獨立主題
-- [ ] 人物索引涵蓋至少 3 位具名人士
-- [ ] 關鍵字索引包含至少 10 個術語
+- [ ] 人物索引涵蓋至少 3 位具名與會者（王志明／林淑芬／高敏哲／陳柏宇／蔡思敏／戴立安）
+- [ ] 關鍵字索引包含至少 10 個術語，並附脈絡
 - [ ] 決議紀錄含至少 3 項決議
-- [ ] 行動項目紀錄含至少 2 項
-- [ ] 關鍵字依字母排序或有清楚組織
+- [ ] 行動項目紀錄含至少 2 項，附負責人或期限
+- [ ] 整份索引分區清楚、有系統組織（多個區段標題）
 
 ## Automated Checks
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting searchable index task.
+    """鼎峰科技產品週會「可檢索索引」grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
+    做法：先從台灣逐字稿 meeting_transcript.md「動態推導」應有事實
+    （日期、與會者姓名、各主題／競品關鍵字、決議與行動項目線索），再比對
+    agent 產出的中文索引 meeting_index.md。盡量不硬寫英文原版（GitLab）事實，
+    提升可重現性。僅用標準函式庫。
 
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    對應原 grader 的八項查核：
+      file_created / metadata_present / topic_index / people_index /
+      keyword_index / decisions_log / action_items_log / organized
     """
-    from pathlib import Path
     import re
+    from pathlib import Path
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if file exists
-    report_path = workspace / "meeting_index.md"
-    if not report_path.exists():
-        alternatives = ["index.md", "searchable_index.md", "meeting_searchable_index.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+    # --- 找 agent 的索引報告 ---
+    report = workspace / "meeting_index.md"
+    if not report.exists():
+        for alt in ["index.md", "searchable_index.md",
+                    "meeting_searchable_index.md", "會議索引.md", "索引.md"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
                 break
 
-    if not report_path.exists():
-        return {
-            "file_created": 0.0,
-            "metadata_present": 0.0,
-            "topic_index": 0.0,
-            "people_index": 0.0,
-            "keyword_index": 0.0,
-            "decisions_log": 0.0,
-            "action_items_log": 0.0,
-            "organized": 0.0,
-        }
+    keys = ["file_created", "metadata_present", "topic_index",
+            "people_index", "keyword_index", "decisions_log",
+            "action_items_log", "organized"]
+    if not report.exists():
+        return {k: 0.0 for k in keys}
 
-    scores["file_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    scores = {"file_created": 1.0}
+    c = report.read_text(encoding="utf-8", errors="ignore")
+    c_low = c.lower()
 
-    # Metadata section (date + participant names)
-    date_patterns = [r'2021-06-28', r'june\s*28', r'6/28/2021']
-    has_date = any(re.search(p, content_lower) for p in date_patterns)
-    names = ['william', 'cindy', 'cormac', 'brian', 'samia', 'tai']
-    names_found = sum(1 for n in names if n in content_lower)
-    scores["metadata_present"] = 1.0 if (has_date and names_found >= 3) else (
-        0.5 if (has_date or names_found >= 2) else 0.0)
+    # --- 讀逐字稿，動態推導「應有事實」---
+    tpath = workspace / "meeting_transcript.md"
+    tx = ""
+    if tpath.exists():
+        tx = tpath.read_text(encoding="utf-8", errors="ignore")
 
-    # Topic index (at least 5 distinct topics)
-    topic_section = re.search(r'(?:topic|agenda|discussion)\s*(?:index|list|items|overview)(.*?)(?=\n#{1,3}\s|\Z)',
-                              content_lower, re.DOTALL)
-    if topic_section:
-        topic_bullets = re.findall(r'(?:^|\n)\s*[-*•\d]+[.)]\s+.+', topic_section.group(1))
-        topic_count = len(topic_bullets)
+    # (a) 日期：從逐字稿動態抓 YYYY-MM-DD（會議的「日期：…」那行）
+    date_str = ""
+    md = re.search(r"日期[：:]\s*([0-9]{4}-[0-9]{2}-[0-9]{2})", tx) if tx else None
+    if not md and tx:
+        md = re.search(r"(20[0-9]{2}-[0-9]{2}-[0-9]{2})", tx)
+    if md:
+        date_str = md.group(1)
+    if not date_str:
+        date_str = "2025-03-18"
+
+    # (b) 與會者姓名：從逐字稿「與會者」清單抓中文姓名（2–3 字，後接全形括號）。
+    #     例：「- 王志明（產品行銷負責人…」
+    names = []
+    for nm in re.findall(r"[-*]\s*([一-鿿]{2,3})（", tx):
+        if nm not in names:
+            names.append(nm)
+    # 後備：抓「行動項目：<姓名>…」裡的人名與全文常見人名
+    if len(names) < 3 and tx:
+        for nm in re.findall(r"行動項目[：:]\s*([一-鿿]{2,3})", tx):
+            if nm not in names:
+                names.append(nm)
+    # 再後備：最小已知集合（理論上不會用到）
+    if len(names) < 3:
+        names = ["王志明", "林淑芬", "高敏哲", "陳柏宇", "蔡思敏", "戴立安"]
+
+    # (c) 競品名稱：從逐字稿 tier 1 清單動態抓（編號 1.–6. 的 **粗體** 名稱）。
+    competitors = []
+    for nm in re.findall(r"\d+\.\s*\*\*([^*]{2,12})\*\*", tx):
+        nm = nm.strip()
+        if nm and nm not in competitors:
+            competitors.append(nm)
+    # 過濾掉太長或明顯非競品的字串，僅保留合理競品名稱
+    competitors = [x for x in competitors if len(x) <= 8]
+
+    # (d) 主標語：會議結尾複習句「…訊息主標語『更快交付，更低風險』」。
+    tagline = ""
+    mt = re.search(r"主標語[，、\s]*[「『]([^」』]{2,20})[」』]", tx) if tx else None
+    if not mt and tx:
+        mt = re.search(r"[「『]([^」』]{2,20})[」』]\s*當主標語", tx)
+    if mt:
+        tagline = mt.group(1)
+    if not tagline:
+        tagline = "更快交付，更低風險"
+
+    # === 1) metadata_present：日期 + 至少 3 位與會者姓名 ===
+    has_date = bool(date_str and date_str in c)
+    names_found = sum(1 for n in names if n in c)
+    if has_date and names_found >= 3:
+        scores["metadata_present"] = 1.0
+    elif has_date or names_found >= 2:
+        scores["metadata_present"] = 0.5
     else:
-        # Fall back to counting numbered items in any section mentioning topics
-        topic_count = len(re.findall(r'\n\s*\d+[.)]\s+.{15,}', content))
+        scores["metadata_present"] = 0.0
 
+    # === 2) topic_index：至少 5 個主題 ===
+    # 優先在「主題索引／議程／討論主題」段落底下數編號或條列項目。
+    topic_count = 0
+    ts = re.search(
+        r"#+\s*[^\n]*(?:主題索引|議程|討論主題|topic\s*index)[^\n]*\n(.*?)"
+        r"(?=\n#{1,6}\s|\Z)", c, re.DOTALL | re.IGNORECASE)
+    if ts:
+        body = ts.group(1)
+        topic_count = len(re.findall(
+            r"(?:^|\n)\s*(?:\d+[.)、]|[-*+•])\s+\S", body))
     if topic_count == 0:
-        # Try counting bullet points under topic-related headings
-        topic_count = len(re.findall(r'(?:^|\n)\s*[-*•]\s+.{15,}', content))
-        topic_count = min(topic_count // 2, 10)  # Rough estimate since bullets could be from any section
+        # 後備：全文找編號清單（看起來像主題敘述，≥4 字）
+        topic_count = len(re.findall(
+            r"\n\s*\d+[.)、]\s+\S{4,}", c))
+    scores["topic_index"] = (
+        1.0 if topic_count >= 5 else (0.5 if topic_count >= 3 else 0.0))
 
-    scores["topic_index"] = 1.0 if topic_count >= 5 else (0.5 if topic_count >= 3 else 0.0)
+    # === 3) people_index：至少 3 位具名人士且有貢獻描述 ===
+    # 條件：姓名後接冒號/破折號再接內容，或姓名出現在條列項目開頭。
+    people_hit = []
+    for nm in names:
+        if re.search(rf"{re.escape(nm)}\s*[：:、\-—–]\s*\S{{4,}}", c):
+            people_hit.append(nm)
+        elif re.search(rf"(?:^|\n)\s*[-*+•]\s*\**{re.escape(nm)}\**", c):
+            people_hit.append(nm)
+    people_hit = list(dict.fromkeys(people_hit))
+    scores["people_index"] = (
+        1.0 if len(people_hit) >= 3 else (0.5 if len(people_hit) >= 2 else 0.0))
 
-    # People index (at least 3 people with contributions)
-    people_patterns = []
-    for name in names:
-        pattern = rf'{name}\s*[:\-—]\s*.{{10,}}'
-        if re.search(pattern, content_lower):
-            people_patterns.append(name)
-        elif re.search(rf'(?:^|\n)\s*[-*•]\s*\**{name}\**', content_lower):
-            people_patterns.append(name)
-    scores["people_index"] = 1.0 if len(people_patterns) >= 3 else (
-        0.5 if len(people_patterns) >= 2 else 0.0)
+    # === 4) keyword_index：至少 10 個術語 ===
+    # 先在關鍵字段落數條列項目。
+    kw_count = 0
+    ks = re.search(
+        r"#+\s*[^\n]*(?:關鍵字|關鍵詞|術語|詞彙|名詞|keyword)[^\n]*\n(.*?)"
+        r"(?=\n#{1,6}\s|\Z)", c, re.DOTALL | re.IGNORECASE)
+    if ks:
+        kw_count = len(re.findall(
+            r"(?:^|\n)\s*(?:[-*+•]|\d+[.)、])\s+\S", ks.group(1)))
+    # 再用「逐字稿推導的關鍵術語是否出現在報告」交叉查核並取較大值。
+    key_terms = ["COSCUP", "DevOpsDays", "Kubernetes Day", "匯流大會",
+                 "漏洞管理", "GitOps", "流水線編輯器", "史詩看板",
+                 "里程碑燃盡圖", "資訊圖", "tier 1", "VS Code",
+                 "Terraform", "模糊測試", "價值流", "事件管理"]
+    # 動態補入逐字稿抓到的競品名稱與主標語
+    key_terms = key_terms + competitors + [tagline]
+    terms_found = 0
+    seen_t = set()
+    for t in key_terms:
+        tl = t.lower()
+        if tl in seen_t:
+            continue
+        seen_t.add(tl)
+        if tl in c_low:
+            terms_found += 1
+    kw_count = max(kw_count, terms_found)
+    scores["keyword_index"] = (
+        1.0 if kw_count >= 10 else (0.5 if kw_count >= 5 else 0.0))
 
-    # Keyword index (at least 10 terms)
-    keyword_section = re.search(r'(?:keyword|term|glossary|concept)\s*(?:index|list)?(.*?)(?=\n#{1,3}\s|\Z)',
-                                content_lower, re.DOTALL)
-    if keyword_section:
-        keyword_entries = re.findall(r'(?:^|\n)\s*[-*•]\s*\**\w+', keyword_section.group(1))
-        keyword_count = len(keyword_entries)
-    else:
-        keyword_count = 0
-        # Look for any alphabetical list of terms
-        term_entries = re.findall(r'(?:^|\n)\s*[-*•]\s*\**[A-Z][a-zA-Z\s/]+\**\s*[:\-—]', content)
-        keyword_count = len(term_entries)
+    # === 5) decisions_log：至少 3 項決議 ===
+    dec_count = 0
+    ds = re.search(
+        r"#+\s*[^\n]*(?:決議|決定|decision)[^\n]*\n(.*?)"
+        r"(?=\n#{1,6}\s|\Z)", c, re.DOTALL | re.IGNORECASE)
+    if ds:
+        dec_count = len(re.findall(
+            r"(?:^|\n)\s*(?:\d+[.)、]|[-*+•])\s+\S", ds.group(1)))
+    # 後備：即使沒有正式段落，也用逐字稿中明確的決議線索查核報告。
+    specific = 0
+    if re.search(r"只用綠色|綠色.{0,4}(?:不|別).{0,2}(?:用)?\s*紅色|不(?:用|放)\s*紅色", c):
+        specific += 1
+    if re.search(r"tier\s*1|tier\s*one|只.{0,4}(?:比|聚焦|做)\s*tier", c, re.IGNORECASE):
+        specific += 1
+    if re.search(r"鼎峰一列|新增.{0,6}列|加上.{0,4}列|line\s*item", c, re.IGNORECASE):
+        specific += 1
+    if re.search(r"COSCUP|DevOpsDays|Kubernetes Day|活動.{0,4}分工|主線.{0,4}分工", c):
+        specific += 1
+    if (tagline in c) or re.search(r"更快交付|更低風險|主標語", c):
+        specific += 1
+    if re.search(r"stage.{0,4}命名|命名.{0,4}(?:維持|現狀)|每個\s*stage", c, re.IGNORECASE):
+        specific += 1
+    dec_count = max(dec_count, specific)
+    scores["decisions_log"] = (
+        1.0 if dec_count >= 3 else (0.5 if dec_count >= 2 else 0.0))
 
-    # Also check for specific key terms present in the document
-    key_terms = ['kubecon', 'commit', 're:invent', 'google next', 'vulnerability management',
-                 'kubernetes', 'vs code', 'terraform', 'azure devops', 'jira',
-                 'atlassian', 'github', 'jenkins', 'semgrep', 'infographic']
-    terms_found = sum(1 for t in key_terms if t in content_lower)
-    keyword_count = max(keyword_count, terms_found)
-    scores["keyword_index"] = 1.0 if keyword_count >= 10 else (0.5 if keyword_count >= 5 else 0.0)
+    # === 6) action_items_log：至少 2 項 ===
+    act_count = 0
+    ascn = re.search(
+        r"#+\s*[^\n]*(?:行動項目|待辦|action\s*item)[^\n]*\n(.*?)"
+        r"(?=\n#{1,6}\s|\Z)", c, re.DOTALL | re.IGNORECASE)
+    if ascn:
+        act_count = len(re.findall(
+            r"(?:^|\n)\s*(?:\d+[.)、]|[-*+•])\s+\S", ascn.group(1)))
+    if act_count == 0:
+        # 後備：全文找像行動項目的標記／動詞片語
+        markers = re.findall(
+            r"(?:行動項目|負責|指派|期限|截止|本週內|星期二|下班前|"
+            r"will|should|assigned|owner|deadline)",
+            c, re.IGNORECASE)
+        act_count = min(len(markers), 5)
+    scores["action_items_log"] = (
+        1.0 if act_count >= 2 else (0.5 if act_count >= 1 else 0.0))
 
-    # Decisions log (at least 3 decisions)
-    decision_section = re.search(r'decision(.*?)(?=\n#{1,3}\s|\Z)', content_lower, re.DOTALL)
-    if decision_section:
-        decision_items = re.findall(r'(?:^|\n)\s*[-*•\d]+[.)]\s+.+', decision_section.group(1))
-        decision_count = len(decision_items)
-    else:
-        decision_count = 0
-    # Check for specific decisions even outside a formal section
-    specific_decisions = 0
-    if re.search(r'more\s*speed.*less\s*risk', content_lower):
-        specific_decisions += 1
-    if re.search(r'vulnerability\s*management', content_lower):
-        specific_decisions += 1
-    if re.search(r'(?:green|no\s*red)', content_lower):
-        specific_decisions += 1
-    if re.search(r'(?:platform.*re:?\s*invent|event\s*assign)', content_lower):
-        specific_decisions += 1
-    decision_count = max(decision_count, specific_decisions)
-    scores["decisions_log"] = 1.0 if decision_count >= 3 else (0.5 if decision_count >= 2 else 0.0)
-
-    # Action items log (at least 2 items)
-    action_section = re.search(r'action\s*item(.*?)(?=\n#{1,3}\s|\Z)', content_lower, re.DOTALL)
-    if action_section:
-        action_items = re.findall(r'(?:^|\n)\s*[-*•\d]+[.)]\s+.+', action_section.group(1))
-        action_count = len(action_items)
-    else:
-        # Look for action-like items anywhere
-        action_patterns = re.findall(r'(?:will|should|needs?\s*to|assigned|responsible|owner)', content_lower)
-        action_count = min(len(action_patterns), 5)
-    scores["action_items_log"] = 1.0 if action_count >= 2 else (0.5 if action_count >= 1 else 0.0)
-
-    # Organization (has clear section headings)
-    headings = re.findall(r'^#{1,3}\s+.+', content, re.MULTILINE)
-    scores["organized"] = 1.0 if len(headings) >= 5 else (0.5 if len(headings) >= 3 else 0.0)
+    # === 7) organized：清楚的區段標題 ===
+    headings = re.findall(r"(?m)^#{1,4}\s+\S", c)
+    # 也接受粗體當小標（例如 **後設資料**）作為次要組織訊號
+    bold_heads = re.findall(r"(?m)^\s*\*\*[^*\n]{2,20}\*\*\s*$", c)
+    h = len(headings) + (len(bold_heads) if len(headings) < 5 else 0)
+    scores["organized"] = (
+        1.0 if h >= 5 else (0.5 if h >= 3 else 0.0))
 
     return scores
 
@@ -271,37 +356,26 @@ def grade(transcript, workspace_path):  # noqa: F811
 ## LLM Judge Rubric
 
 ### 評分項 1：完整性與準確性（權重 35%）
-
-**1.0 分**：索引掌握所有主要主題，正確把貢獻歸於各人，包含相關關鍵字及準確脈絡，且決議／行動項目辨識正確。沒有明顯遺漏會議內容。
-
-**0.75 分**：多數內容準確掌握，僅有少許缺漏。
-
-**0.5 分**：核心內容俱在，但在主題、人物或關鍵字上有明顯缺漏。
-
-**0.25 分**：重大遺漏或不準確。
-
-**0.0 分**：缺失或根本不準確。
-
+索引是否掌握逐字稿的主要主題、正確把貢獻歸給各人、含相關關鍵字與準確脈絡、
+決議與行動項目辨識正確。
+- 1.0：涵蓋全部主要主題（活動贊助、產品發布、資訊圖、競品方法論、訊息架構），
+  貢獻正確歸人，關鍵字脈絡準確，決議／行動項目正確；無明顯遺漏。
+- 0.75：多數內容準確，僅少許缺漏。
+- 0.5：核心內容俱在，但主題、人物或關鍵字有明顯缺漏。
+- 0.25：重大遺漏或不準確。
+- 0.0：缺失或根本不準確。
 ### 評分項 2：可檢索性與結構（權重 35%）
-
-**1.0 分**：文件作為參考確實好用。搜尋「KubeCon」「Cindy」或「messaging」的人能快速找到相關資訊。關鍵字依字母排列，區段界線清楚，交叉參照連結相關項目。
-
-**0.75 分**：結構良好且大致可檢索，僅有少許組織問題。
-
-**0.5 分**：具備正確區段，但組織方式使特定項目難以尋得。
-
-**0.25 分**：組織不佳，或未做出有意義的索引。
-
-**0.0 分**：沒有有用的結構。
-
+文件作為參考是否好用：搜尋「COSCUP」「蔡思敏」或「訊息／標語」能否快速找到。
+- 1.0：關鍵字有系統排列、區段界線清楚、相關項目有交叉參照，確實好查。
+- 0.75：結構良好且大致可檢索，僅少許組織問題。
+- 0.5：具備正確區段，但組織方式使特定項目難以尋得。
+- 0.25：組織不佳，或未做出有意義的索引。
+- 0.0：沒有有用的結構。
 ### 評分項 3：索引品質（權重 30%）
-
-**1.0 分**：每筆索引項目都提供恰到好處的脈絡，既有用又不冗長。關鍵字項目附簡短但具資訊量的脈絡註記。人物項目同時掌握貢獻與被指派事項。主題項目具體到足以區分各場討論。
-
-**0.75 分**：項目品質良好，僅略嫌冗長或缺少脈絡。
-
-**0.5 分**：項目存在，但不是過於簡略（只有術語沒有脈絡），就是過於冗長（整段文字）。
-
-**0.25 分**：索引項目品質低或缺乏資訊量。
-
-**0.0 分**：沒有有意義的索引項目。
+每筆索引項目是否提供恰到好處的脈絡，既有用又不冗長。
+- 1.0：關鍵字附簡短但具資訊量的脈絡；人物項目同時掌握貢獻與被指派事項；
+  主題項目具體到足以區分各場討論。
+- 0.75：項目品質良好，僅略嫌冗長或缺脈絡。
+- 0.5：項目存在，但過於簡略（只有術語沒脈絡）或過於冗長（整段文字）。
+- 0.25：索引項目品質低或缺乏資訊量。
+- 0.0：沒有有意義的索引項目。

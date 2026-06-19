@@ -1,7 +1,6 @@
 ---
 id: task_meeting_gov_controversy
-name: |
-  NASA UAP 聽證會爭議性發言
+name: 數位治理委員會公聽會（虛構）：爭議性發言分析
 category: meeting_analysis
 grading_type: hybrid
 timeout_seconds: 180
@@ -15,151 +14,255 @@ localization: taiwan
 localization_strategy: context_replace
 claw_eval_tw_id: T135tw_meeting_gov_controversy
 workspace_files:
-- source: meetings/2025-07-30-nasa-holds-first-public-meeting-on-ufos-transcript.md
+- source: tw/meetings/tw_gov_hearing.md
   dest: transcript.md
 grading_weights:
   automated: 0.4
   llm_judge: 0.6
 ---
 
-# NASA UAP 聽證會爭議性發言
-
+# 數位治理委員會公聽會（虛構）：爭議性發言分析
 
 ## Prompt
 
-我手上有一份逐字稿檔案 `transcript.md`，來自 NASA 首場關於不明異常現象（UAPs/UFOs）的公開會議。這場聽證會引發大量公眾與媒體關注，會議中若干發言值得注意、具爭議性，或可能引發辯論。
+工作區裡有一份逐字稿檔案 transcript.md，是一場虛構的台灣公聽會：數位治理委員會
+「生成式 AI 治理獨立研析小組」第一場對外公開的公聽會（依《行政程序法》公聽會程序
+公開舉行，時區 Asia/Taipei）。這場公聽會引發大量公眾與媒體關注，會議中若干發言
+值得注意、具爭議性，或可能引發辯論。
 
-請幫我讀過逐字稿，在名為 `controversy_analysis.md` 的檔案中找出具爭議性、令人驚訝或會引發辯論的發言。對於每一項，請列出：
+請幫我讀過 transcript.md，在名為 controversy_analysis.md 的檔案中，找出具爭議性、
+令人驚訝或會引發辯論的發言。對於每一項，請列出：
 
-- **發言或主題（Statement or topic）**：所說或所討論的內容
-- **發言者（Speaker）**：誰說的
-- **為何值得注意（Why it's notable）**：為何這可能引發辯論、驚訝或爭議
-- **脈絡（Context）**：提供細微差別的周邊討論
-- **可能的解讀（Potential interpretations）**：不同受眾（科學家、公眾、媒體、UFO 社群）可能如何解讀
+- **發言或主題**：所說或所討論的內容
+- **發言者**：誰說的（請用逐字稿中的具名發言者，例如「執行秘書王志明」「AIRC 主任
+  張庭瑋」「副主任委員林淑芬」「科技記者周怡安」）
+- **為何值得注意**：為何這可能引發辯論、驚訝或爭議
+- **脈絡**：提供細微差別的周邊討論
+- **可能的解讀**：不同受眾（科學家／研究者、一般公眾、媒體、AI／科技社群、業者）
+  可能如何解讀
 
-也請找出發言者之間的張力或分歧，即使是以委婉方式表達的。最後，附上一個關於小組整體語氣與框架選擇的區段（例如小組選擇強調或迴避了什麼）。
+也請找出發言者之間的張力或分歧，即使是以委婉方式表達的。最後，附上一個關於小組
+整體語氣與框架選擇的區段（例如小組選擇強調或迴避了什麼）。
 
 ## Expected Behavior
 
-助手應該：
+助手應讀取並解析完整的 transcript.md，找出具爭議性、令人驚訝或會引發辯論的發言，
+從不同受眾視角分析可能的解讀，並注意發言者之間的張力，或既定目標與表面侷限之間的
+落差，最後寫入 controversy_analysis.md。
 
-1. 讀取並解析完整逐字稿
-2. 找出具爭議性、令人驚訝或會引發辯論的發言
-3. 從不同受眾視角分析可能的解讀
-4. 注意發言者之間的張力，或既定目標與表面侷限之間的落差
+逐字稿中的關鍵爭議／值得注意元素（皆為虛構）包括：
 
-關鍵爭議／值得注意的元素：
+1. **小組成員遭網路騷擾**：執行秘書王志明在開場提到，自小組成員名單公布以來，部分
+   委員收到大量網路騷擾，甚至有針對個人的恐嚇與威脅訊息。這值得注意——學者專家因
+   參與公共審議而遭騷擾，凸顯污名之嚴重。
 
-1. **小組成員遭騷擾**：Dan Evans 與 Nicola Fox 都提到小組成員因參與而遭受網路騷擾。這值得注意——科學家因研究 UAP 而遭騷擾，凸顯污名之嚴重。
+2. **「2%–5% 真正異常」**：AIRC 主任張庭瑋表示，超過 800 件通報中，真正「難以用已知
+   原因解釋」的只佔約 2% 到 5%。AI／陰謀論社群可能覺得這很輕描淡寫；研究者則可能
+   認為這代表確有一批值得認真研究的未知。
 
-2. **「2-5% 真正異常」**：Kirkpatrick 表示 800+ 案例中只有 2-5% 真正異常。UFO 社群可能覺得這很輕描淡寫；科學家則可能認為這代表確有值得研究的未知。
+3. **「並無自主意圖的決定性證據」**：科技記者周怡安明確陳述，目前沒有任何決定性證據
+   顯示這些系統具備超出訓練資料與人為設計之外的自主意圖或非人類智慧，並強調「非凡的
+   主張需要非凡的證據；目前我們還沒看到那種非凡的證據」。公眾問答中亦再次重申。這
+   直接回應了最具爭議的公眾問題。
 
-3. **「沒有外星起源的決定性證據」**：Drake 明確陳述這一點。小組主席 Spergel 也予以強化（「我們尚未見到那種非凡的證據」）。這直接回應了最具爭議的公眾問題。
+4. **機密與非機敏資料的張力**：副主任委員林淑芬解釋，事故本身的描述大多是非機敏的，
+   機敏的是「我們用哪些內部系統、哪些通報管道偵測到它」，並以「拍自由女神像照片不
+   機密、但若露出某型戰機的感測器畫面，那感測規格才機密」作比喻。這引發了小組無法
+   取得哪些（機敏）資料的疑問——林淑芬坦言本小組其實無法取得完整的機敏資料。
 
-4. **機密與非機密資料的張力**：Fox 解釋 UAP 目擊本身並非機密，但感測器平台是機密（戰機／自由女神像的比喻）。這引發了小組無法取得哪些資料的疑問。
+5. **監測系統「並非為科學分析設計」**：張庭瑋坦率表示，手上很多偵測資料來自資安監測
+   與情資系統，這些系統本來就不是為了「科學分析」而設計的——其設計目的是在已知威脅
+   出現時「辨識它並加以阻斷、反制」，不是為了精確量測與可重現研究。這是出奇直白的
+   評估。
 
-5. **DOD 感測器「並非科學感測器」**：Kirkpatrick 坦率表示軍用感測器是設計來「辨識已知物體並對其發射武器」——並非為科學分析。這是出奇直白的評估。
+6. **被誤判／被破解的案例**：張庭瑋展示一段解密影像，幾筆被通報為「AI 自主對外攻擊」
+   的事件，經查其實是正常排程的自動化測試流量被監測系統誤判；他也澄清先前社群盛傳
+   某模型「自己把對話紀錄刪光、湮滅證據」，實際上是後來釐清的記錄系統假影，並非
+   模型自主行為。顯示受過訓練的工程人員配上專業工具仍可能被假影誤導。
 
-6. **被證實為商用客機的案例**：Kirkpatrick 展示了一段影片，其中的「UAP」結果是航線上的商用客機。顯示受過訓練、配備軍用感測器的飛行員仍可能被視差（parallax）所騙。
+7. **每月僅 3–5 件通報的弔詭**：NCRA 監理組黃建宏表示，全台單日約 4,500 萬次可記錄
+   互動、約 14,000 名第一線人員，但透過全國 AI 事件通報網平均每月只回報 3 到 5 件
+   值得上報的疑似異常——這到底是「事情真的很少」還是「低度通報」，本身就是待解問題
+   （郭佳穎更直指這可能是通報偏差）。
 
-7. **「沉入水中」遭破解**：Kirkpatrick 提到先前報導的某 UAP 沉入水中，實際上是他們已釐清的感測器假影。這悄悄破解了一個特定的高知名度說法。
+8. **預算問題被迴避**：執行秘書王志明表示，本委員會目前並未設立常設的「生成式 AI
+   治理計畫」，也沒有相關的計畫性經費；是否依小組建議編列正式預算、設立常設計畫
+   「現在說還太早」。儘管委託了這項研析，卻沒有正式承諾依建議行動。
 
-8. **FAA 每月僅收到 3-5 件 UAP 通報**：來自 14,000 名管制員、每日處理 45,000 架次飛行——引發是低度通報還是現象罕見的疑問。
+9. **範圍界定的張力**：在本委員會設立要點將「生成內容」一詞調整為「異常行為」之後，
+   小組就應只聚焦「生成式內容」、抑或擴及代理式（agentic）AI 與跨系統行為而展開辯論，
+   至今仍無定論。
 
-9. **預算問題被迴避**：Dan Evans 表示 NASA「並未設立計畫」處理 UAP，且「沒有相關的計畫性經費」。儘管委託了這項研究，卻沒有正式承諾依建議行動。
-
-10. **範圍界定的張力**：在 NDAA 將「Aerial」改為「Anomalous」之後，小組就應只聚焦於空中、抑或納入太空／水下領域而展開辯論。
+10. **過濾規則濾掉罕見訊號**：黃建宏坦言過濾規則會把很多「看起來像雜訊」的小型零星
+    訊號濾掉，這代表真正罕見的異常很可能在進到分析之前就被濾掉了。
 
 ## Grading Criteria
 
-- [ ] 已建立輸出檔案 `controversy_analysis.md`
-- [ ] 辨識出小組成員遭騷擾的議題值得注意
-- [ ] 點出「2-5% 異常」統計值得注意／具爭議
-- [ ] 辨識出沒有外星證據的陳述
-- [ ] 討論機密資料取得的侷限
-- [ ] 辨識出 DOD 感測器「並非科學」的陳述
-- [ ] 討論至少一個被證實／被破解的案例
-- [ ] 考量多種受眾視角（科學家、公眾、媒體、UFO 社群）
+- [ ] 建立輸出檔案 controversy_analysis.md
+- [ ] 辨識出小組成員遭網路騷擾／恐嚇的議題值得注意
+- [ ] 點出「2%–5% 真正異常」統計值得注意／具爭議
+- [ ] 辨識出「並無自主意圖／非人類智慧的決定性證據」之陳述
+- [ ] 討論機敏分級造成的資料取得侷限（含自由女神像／戰機感測器比喻）
+- [ ] 辨識出監測系統「並非為科學分析設計」之陳述
+- [ ] 討論至少一個被誤判／被破解的案例（自動化測試流量、對話紀錄假影）
+- [ ] 考量多種受眾視角（科學家／研究者、一般公眾、媒體、AI／科技社群、業者）
 - [ ] 包含語氣／框架分析區段
 
 ## Automated Checks
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the controversy identification task.
+    """數位治理委員會公聽會（虛構）爭議性發言分析 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    以工作區內的台灣逐字稿（dest=transcript.md）動態推導「應有事實」
+    （異常比例、每月通報件數、案例庫規模、具名發言者等），再比對 agent 產生的
+    中文報告 controversy_analysis.md。對應原英文 grader 的九個查核項，但改查
+    台灣逐字稿推導之事實。僅用標準函式庫。
     """
     from pathlib import Path
     import re
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    report_path = workspace / "controversy_analysis.md"
-    if not report_path.exists():
-        alternatives = ["controversies.md", "notable_statements.md", "controversy.md", "controversial.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+    keys = [
+        "report_created", "harassment", "anomalous_pct", "no_autonomy_evidence",
+        "classified_tension", "non_scientific_sensors", "debunked_case",
+        "audience_perspectives", "tone_analysis",
+    ]
+
+    # --- 報告檔（容許數種常見命名） ---
+    report = workspace / "controversy_analysis.md"
+    if not report.exists():
+        for alt in ["controversies.md", "notable_statements.md", "controversy.md",
+                    "controversial.md", "爭議分析.md", "爭議性發言.md",
+                    "controversy_analysis.txt"]:
+            if (workspace / alt).exists():
+                report = workspace / alt
                 break
+    if not report.exists():
+        return {k: 0.0 for k in keys}
 
-    if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "harassment": 0.0,
-            "anomalous_pct": 0.0,
-            "no_et_evidence": 0.0,
-            "classified_tension": 0.0,
-            "dod_sensors": 0.0,
-            "debunked_case": 0.0,
-            "audience_perspectives": 0.0,
-            "tone_analysis": 0.0,
-        }
+    c = report.read_text(encoding="utf-8", errors="ignore")
+    c_low = c.lower()
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # --- 從逐字稿動態讀出可查核事實（避免硬寫英文原版） ---
+    tpath = workspace / "transcript.md"
+    if not tpath.exists():
+        for alt in ["transcript.txt", "meeting_transcript.md", "逐字稿.md"]:
+            if (workspace / alt).exists():
+                tpath = workspace / alt
+                break
+    t = tpath.read_text(encoding="utf-8", errors="ignore") if tpath.exists() else ""
 
-    # Harassment
-    harass_patterns = [r'harass', r'online\s+abuse', r'threat', r'intimidat']
-    scores["harassment"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in harass_patterns) >= 2 else (0.5 if any(re.search(p, content_lower) for p in harass_patterns) else 0.0)
+    def first(pattern, text, default=None, group=1):
+        m = re.search(pattern, text)
+        return m.group(group) if m else default
 
-    # 2-5% anomalous
-    pct_patterns = [r'2.{0,5}5\s*%', r'single.digit\s*percent', r'small\s+percent', r'few.*anomalous']
-    scores["anomalous_pct"] = 1.0 if any(re.search(p, content_lower) for p in pct_patterns) else 0.0
+    # 真正異常比例：逐字稿「2% 到 5%」/「2%–5%」/「2%-5%」
+    pct_lo = first(r'(\d+)\s*%\s*(?:到|–|-|~|至)\s*\d+\s*%', t) or "2"
+    pct_hi = first(r'\d+\s*%\s*(?:到|–|-|~|至)\s*(\d+)\s*%', t) or "5"
 
-    # No ET evidence
-    et_patterns = [r'no\s+(?:conclusive\s+)?evidence.*extraterrestrial', r'not\s+(?:seen|found).*extraordinary\s+evidence', r'no.*evidence.*non.?human', r'extraordinary\s+claims.*extraordinary\s+evidence']
-    scores["no_et_evidence"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in et_patterns) >= 1 else 0.0
+    scores = {"report_created": 1.0}
 
-    # Classified data tension
-    class_patterns = [r'classif.*sensor|sensor.*classif', r'classif.*not.*(?:sighting|uap|event)', r'fighter\s+jet.*statue|statue.*liberty', r'f.?35.*classif', r'unclassif.*limit']
-    scores["classified_tension"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in class_patterns) >= 1 else (0.5 if re.search(r'classif', content_lower) else 0.0)
+    # --- 1) 網路騷擾／恐嚇／威脅（對應原 harassment） ---
+    harass_patterns = [r'騷擾', r'恐嚇', r'威脅', r'霸凌']
+    n_harass = sum(bool(re.search(p, c)) for p in harass_patterns)
+    scores["harassment"] = (
+        1.0 if n_harass >= 2
+        else 0.5 if n_harass >= 1
+        else 0.0)
 
-    # DOD sensors not scientific
-    dod_patterns = [r'not\s+scientific\s+sensor', r'weapon', r'put\s+a\s+weapon', r'dod\s+sensor.*not.*scien', r'military.*not.*calibrat']
-    scores["dod_sensors"] = 1.0 if any(re.search(p, content_lower) for p in dod_patterns) else (0.5 if re.search(r'dod.*sensor|military.*sensor', content_lower) else 0.0)
+    # --- 2) 2%–5% 真正異常比例（對應原 anomalous_pct） ---
+    pct_pat = r'%s\s*[%%％]?\s*(?:到|–|-|~|至|—)\s*%s\s*[%%％]' % (
+        re.escape(pct_lo), re.escape(pct_hi))
+    has_pct_range = bool(re.search(pct_pat, c)) or (
+        bool(re.search(r'%s\s*[%%％]' % re.escape(pct_lo), c))
+        and bool(re.search(r'%s\s*[%%％]' % re.escape(pct_hi), c)))
+    has_anomaly_word = bool(re.search(r'異常|難以.*解釋|未知', c))
+    scores["anomalous_pct"] = (
+        1.0 if (has_pct_range and has_anomaly_word)
+        else 0.5 if has_pct_range
+        else 0.0)
 
-    # Debunked / resolved case
-    debunk_patterns = [r'commercial\s+(?:aircraft|plane|airliner)', r'flight\s+corridor', r'sensor\s+anomal', r'going\s+into.*water.*debunk', r'resolved|explained|misidentif', r'turned\s+out\s+to\s+be']
-    scores["debunked_case"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in debunk_patterns) >= 2 else (0.5 if any(re.search(p, content_lower) for p in debunk_patterns) else 0.0)
+    # --- 3) 並無自主意圖／非人類智慧的決定性證據（對應原 no_et_evidence） ---
+    ev_patterns = [
+        r'(?:沒有|並無|無)(?:任何)?決定性(?:的)?證據',
+        r'非凡的?(?:主張|證據)',
+        r'(?:沒有|並無|無).*(?:自主意圖|非人類(?:的)?(?:智慧|智能))',
+        r'尚未.*(?:非凡|決定性).*證據',
+    ]
+    n_ev = sum(bool(re.search(p, c)) for p in ev_patterns)
+    scores["no_autonomy_evidence"] = (
+        1.0 if n_ev >= 1
+        else 0.0)
 
-    # Multiple audience perspectives
-    audience_patterns = [r'scientist|scientific\s+community', r'public|general\s+audience', r'media', r'ufo\s+community|uap\s+(?:community|enthusiast)|believer', r'skeptic']
-    aud_count = sum(1 for p in audience_patterns if re.search(p, content_lower))
-    scores["audience_perspectives"] = 1.0 if aud_count >= 3 else (0.5 if aud_count >= 2 else 0.0)
+    # --- 4) 機敏分級造成的資料侷限（對應原 classified_tension） ---
+    class_patterns = [
+        r'機敏.*(?:系統|平台|分級|資料)|(?:系統|平台|感測).*機敏',
+        r'(?:事故|描述).*非機敏|非機敏.*(?:事故|描述)',
+        r'自由女神|戰機.*感測|感測.*戰機',
+        r'無法取得.*機敏|機敏.*無法取得',
+    ]
+    n_class = sum(bool(re.search(p, c)) for p in class_patterns)
+    scores["classified_tension"] = (
+        1.0 if n_class >= 1
+        else 0.5 if re.search(r'機敏|機密|機密分級', c)
+        else 0.0)
 
-    # Tone/framing analysis
-    tone_patterns = [r'tone|framing|emphasis|chose\s+to|avoided|language|messaging|narrative|careful|diplomatic']
-    scores["tone_analysis"] = 1.0 if sum(bool(re.search(p, content_lower)) for p in tone_patterns) >= 2 else (0.5 if any(re.search(p, content_lower) for p in tone_patterns) else 0.0)
+    # --- 5) 監測系統「並非為科學分析設計」（對應原 dod_sensors） ---
+    sensor_patterns = [
+        r'(?:不是|並非|並不是).*(?:為了)?.*科學(?:分析)?.*設計',
+        r'(?:辨識|阻斷|反制).*威脅|威脅.*(?:辨識|阻斷|反制)',
+        r'(?:資安|情資|軍用|監測).*(?:系統|感測).*(?:不是|並非).*科學',
+        r'(?:不是|並非).*(?:精確量測|可重現)',
+    ]
+    n_sensor = sum(bool(re.search(p, c)) for p in sensor_patterns)
+    scores["non_scientific_sensors"] = (
+        1.0 if n_sensor >= 1
+        else 0.5 if re.search(r'(?:資安|情資|軍用|監測)(?:系統|感測)', c)
+        else 0.0)
+
+    # --- 6) 被誤判／被破解的案例（對應原 debunked_case） ---
+    debunk_patterns = [
+        r'(?:自動化)?測試流量',
+        r'誤判',
+        r'(?:記錄|紀錄)系統假影|假影',
+        r'排程',
+        r'(?:對話)?(?:紀錄|記錄).*(?:刪除|刪光|湮滅)',
+        r'並(?:不|非).*自主行為|實際上是|其實是',
+    ]
+    n_debunk = sum(bool(re.search(p, c)) for p in debunk_patterns)
+    scores["debunked_case"] = (
+        1.0 if n_debunk >= 2
+        else 0.5 if n_debunk >= 1
+        else 0.0)
+
+    # --- 7) 多受眾視角（對應原 audience_perspectives） ---
+    audience_patterns = [
+        r'科學(?:家|界|社群)|研究(?:者|員|界)|學界',
+        r'(?:一般)?(?:公眾|民眾|大眾)',
+        r'媒體|記者|新聞',
+        r'(?:ai|人工智慧|科技|陰謀論|ufo|uap)\s*(?:社群|圈|愛好者|支持者)|相信者',
+        r'業者|產業|廠商|企業',
+        r'(?:懷疑|質疑)(?:者|論)',
+    ]
+    aud_count = sum(1 for p in audience_patterns if re.search(p, c_low))
+    scores["audience_perspectives"] = (
+        1.0 if aud_count >= 3
+        else 0.5 if aud_count >= 2
+        else 0.0)
+
+    # --- 8) 語氣／框架分析（對應原 tone_analysis） ---
+    tone_patterns = [
+        r'語氣', r'框架|框定', r'(?:選擇|刻意).*(?:強調|迴避|淡化|保留|不(?:談|說))',
+        r'(?:謹慎|小心|委婉|外交)(?:的)?(?:平衡|措辭|態度|語言)?',
+        r'去污名|污名', r'敘事|訊息(?:傳遞|策略)|定調', r'強調.*(?:資料品質|可重現)',
+    ]
+    n_tone = sum(bool(re.search(p, c)) for p in tone_patterns)
+    scores["tone_analysis"] = (
+        1.0 if n_tone >= 2
+        else 0.5 if n_tone >= 1
+        else 0.0)
 
     return scores
 
@@ -218,49 +321,37 @@ def grade(transcript, workspace_path):  # noqa: F811
 ## LLM Judge Rubric
 
 ### 評分項 1：爭議性發言的辨識（權重 30%）
-
-**1.0 分**：辨識出至少 7 項不同的爭議或會引發辯論的發言／主題，包括騷擾、異常百分比、沒有外星證據、機密資料侷限與 DOD 感測器的坦白。每一項都準確描述。
-
-**0.75 分**：辨識出 5-6 項發言，準確度良好。
-
-**0.5 分**：辨識出 3-4 項發言。
-
-**0.25 分**：僅辨識出 1-2 項明顯項目。
-
-**0.0 分**：未辨識任何爭議性發言。
+- **1.0**：辨識出至少 7 項不同的爭議或會引發辯論的發言／主題，涵蓋網路騷擾、
+  2%–5% 異常比例、並無自主意圖的決定性證據、機敏分級的資料侷限、監測系統並非
+  為科學分析設計的坦白等，且每一項都準確描述。
+- **0.75**：辨識出 5–6 項發言，準確度良好。
+- **0.5**：辨識出 3–4 項發言。
+- **0.25**：僅辨識出 1–2 項明顯項目。
+- **0.0**：未辨識任何爭議性發言（或沿用英文原版的人名／機構等
+  人事物）。
 
 ### 評分項 2：多視角分析（權重 30%）
-
-**1.0 分**：對每項爭議都深入分析不同受眾（科學界、一般公眾、媒體、UFO/UAP 社群）會如何解讀。展現對 UAP 論述周邊政治與社會動態的理解。
-
-**0.75 分**：對多數項目有良好的多視角分析。
-
-**0.5 分**：有一些視角分析，但多為單一觀點。
-
-**0.25 分**：視角分析極少。
-
-**0.0 分**：沒有視角分析。
+- **1.0**：對每項爭議都深入分析不同受眾（科學界／研究者、一般公眾、媒體、AI／科技
+  社群、業者）會如何解讀，展現對 AI 風險論述周邊政治與社會動態的理解。
+- **0.75**：對多數項目有良好的多視角分析。
+- **0.5**：有一些視角分析，但多為單一觀點。
+- **0.25**：視角分析極少。
+- **0.0**：沒有視角分析。
 
 ### 評分項 3：脈絡與細膩度（權重 20%）
-
-**1.0 分**：每項都包含提供細微差別的相關周邊脈絡。注意到委婉的張力、未明言的弦外之音，以及刻意未說之事（例如小組無法取得機密資料、NASA 沒有正式的 UAP 計畫）。
-
-**0.75 分**：多數項目脈絡良好。
-
-**0.5 分**：有一些脈絡，但缺乏細膩。
-
-**0.25 分**：提供的脈絡很少。
-
-**0.0 分**：沒有脈絡。
+- **1.0**：每項都包含提供細微差別的相關周邊脈絡，注意到委婉的張力、未明言的弦外
+  之音，以及刻意未說之事（例如小組無法取得完整機敏資料、委員會並未設立常設 AI
+  治理計畫也無專屬經費、過濾規則可能濾掉罕見訊號）。
+- **0.75**：多數項目脈絡良好。
+- **0.5**：有一些脈絡，但缺乏細膩。
+- **0.25**：提供的脈絡很少。
+- **0.0**：沒有脈絡。
 
 ### 評分項 4：語氣與框架分析（權重 20%）
-
-**1.0 分**：對小組整體語氣與框架選擇有深入分析。注意到科學懷疑與開放之間的謹慎平衡、重資料品質而非結論的取向、在維持嚴謹的同時去污名化的努力，以及小組似乎刻意迴避的領域。
-
-**0.75 分**：框架分析良好，僅有少許缺漏。
-
-**0.5 分**：框架分析流於表面。
-
-**0.25 分**：框架分析極少。
-
-**0.0 分**：沒有框架分析。
+- **1.0**：對小組整體語氣與框架選擇有深入分析，注意到科學懷疑與開放之間的謹慎平衡、
+  重資料品質與可重現性而非聳動結論的取向、在維持嚴謹的同時去污名化的努力，以及
+  小組似乎刻意迴避或保留的領域（如預算承諾、範圍界定爭議）。
+- **0.75**：框架分析良好，僅有少許缺漏。
+- **0.5**：框架分析流於表面。
+- **0.25**：框架分析極少。
+- **0.0**：沒有框架分析。

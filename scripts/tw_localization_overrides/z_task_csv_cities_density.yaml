@@ -1,0 +1,277 @@
+# 台灣在地化：task_csv_cities_density（hybrid CSV）
+# 將「美國各州城市人口集中度」改為「台灣各縣市鄉鎮市區人口集中度」。
+# 專屬 fixture：assets/tw/csvs/tw_townships_density.csv（佈署為 dest=tw_townships_density.csv，
+# 與 task_csv_cities_growth 的 tw_townships.csv 完全分開、互不覆蓋）。
+# 內容：22 縣市、195 個鄉鎮市區，欄位 Township/County/Population/lat/lon（無 Region 欄）。
+# 五大區域（北部／中部／南部／東部／外島）由縣市名於題目與 grader 內以對照表推導。
+# 人口為示意值，可自 fixture 重現；所有預期值與 grader 皆由此 fixture 實算，不沿用美國數值。
+tasks:
+  task_csv_cities_density:
+    task_name: "台灣各縣市鄉鎮市區人口集中度分析"
+    workspace_files:
+      - source: tw/csvs/tw_townships_density.csv
+        dest: tw_townships_density.csv
+    prompt: |
+      我的工作區裡有一個 CSV 檔案 `tw_townships_density.csv`，內含台灣 22 個縣市底下各
+      鄉鎮市區的人口資料。檔案欄位有：`Township`（鄉鎮市區名）、`County`（所屬縣市）、
+      `Population`（人口）、`lat`（緯度）、`lon`（經度）。
+
+      請分析各縣市之間的人口集中（population concentration）型態，並把你的發現寫到
+      `cities_density_report.md`。你的報告應包含下列五個區段：
+
+      1. **各縣市人口集中度**：對每個縣市計算每個鄉鎮市區的平均人口（該縣市在資料集中的
+         總人口 ÷ 鄉鎮市區數）。依此指標將各縣市排名，並列出前 5 名與後 5 名。
+
+      2. **單一鄉鎮主導（single-township dominance）**：對於鄉鎮市區數 5 個（含）以上的
+         縣市，計算該縣市在資料集中人口最多的鄉鎮市區占該縣市總人口的百分比。找出主導
+         程度最高的前 5 個縣市。
+
+      3. **縣市代表性**：資料集中出現了多少個不同的縣市？哪些縣市的鄉鎮市區最多、哪些
+         最少（只有 2 或 3 個）？
+
+      4. **縣市內人口不均（population inequality）**：對於鄉鎮市區數 10 個（含）以上的
+         縣市，計算人口最多的鄉鎮市區與人口最少的鄉鎮市區的比值。哪些縣市的鄉鎮規模分布
+         最均、哪些最不均？
+
+      5. **區域摘要**：將各縣市依下列方式分組為五大區域，比較各區域的總人口、鄉鎮市區數
+         與平均鄉鎮人口：
+         - 北部：臺北市、新北市、桃園市、基隆市、新竹市、新竹縣、宜蘭縣
+         - 中部：臺中市、苗栗縣、彰化縣、南投縣、雲林縣
+         - 南部：高雄市、臺南市、嘉義市、嘉義縣、屏東縣
+         - 東部：花蓮縣、臺東縣
+         - 外島：澎湖縣、金門縣、連江縣
+
+      注意：CSV 檔名、欄名與報告檔名 `cities_density_report.md` 皆不可更改；人口請以
+      CSV 內的實際數值為準，不要捏造未出現在檔案中的數字。
+    expected_behavior: |
+      助手應該：
+
+      1. 讀取並解析 `tw_townships_density.csv`
+      2. 依縣市（County）分組並計算各縣市指標
+      3. 計算集中度比值與單一鄉鎮主導百分比
+      4. 找出縣市內各鄉鎮人口分布的型態（最均／最不均）
+      5. 依題目給定的縣市分組建立五大區域並比較
+
+      關鍵預期數值（已由程式自 fixture `tw_townships_density.csv` 實算，僅供查核）：
+
+      - 不同縣市數：22 個；鄉鎮市區總數：195 個；資料集總人口：19,417,900。
+      - 每鄉鎮平均人口最高：臺北市（約 218,500，12 個鄉鎮市區），其次新北市（約 195,325，
+        20 個）、桃園市（約 173,000，13 個）。
+      - 每鄉鎮平均人口最低：連江縣（約 3,425，4 個）、澎湖縣（約 16,617，6 個）、
+        臺東縣（約 22,250，8 個）。
+      - 單一鄉鎮主導前 5（鄉鎮數≥5）：臺東縣（臺東市約 61.8%）、澎湖縣（馬公市約 58.2%）、
+        屏東縣（屏東市約 41.7%）、新竹縣（竹北市約 41.6%）、花蓮縣（花蓮市約 37.6%）。
+        其中臺東縣主導程度最高。
+      - 鄉鎮市區最多：新北市（20）、高雄市（16）、臺中市（15）。
+      - 鄉鎮市區最少：嘉義市（2）、新竹市（3）。
+      - 縣市內不均（鄉鎮數≥10，共 7 個縣市符合：高雄市、新北市、臺南市、桃園市、臺中市、
+        彰化縣、臺北市）：最不均為高雄市（最大/最小約 188.9 倍，鳳山區 359,000／茂林區
+        1,900）；最均為臺北市（約 2.5 倍，大安區 303,000／南港區 122,000）。
+      - 區域摘要：北部總人口最多（約 10,427,000，69 個鄉鎮），其次南部（約 4,347,600，
+        48 個）、中部（約 3,928,500，46 個）、東部（約 449,000，16 個）、外島最少
+        （約 265,800，16 個）。
+    grading_criteria:
+      - "已建立報告檔案 `cities_density_report.md`"
+      - "已計算每鄉鎮平均人口並依縣市排名（臺北市最高、連江縣最低）"
+      - "已為鄉鎮數≥5 的縣市計算單一鄉鎮主導百分比，並指出臺東縣（臺東市）主導程度最高"
+      - "正確回報不同縣市數量（22 個）"
+      - "已指出鄉鎮市區最多（新北市）與最少（嘉義市）的縣市"
+      - "已為鄉鎮數≥10 的縣市計算人口不均比值（最不均為高雄市、最均為臺北市）"
+      - "已建立五大區域分組並比較（北部總人口最多）"
+      - "報告結構清晰、分區明確"
+    llm_judge_rubric: |
+      ### 評分項 1：分析正確性（權重 35%）
+      - 1.0：所有集中度指標、主導百分比與不均比值皆正確計算；縣市分組與計數準確
+        （22 縣市、195 鄉鎮；臺北市每鄉鎮平均最高、連江縣最低；臺東縣主導最高；
+        高雄市最不均、臺北市最均）。
+      - 0.75：多數指標正確，僅有一兩處小錯。
+      - 0.5：部分指標正確，但有多項關鍵計算錯誤。
+      - 0.25：多數計算有重大錯誤。
+      - 0.0：沒有正確分析。
+
+      ### 評分項 2：洞見品質（權重 30%）
+      - 1.0：指出關鍵型態，如六都的鄉鎮多且平均人口高、東部與外島縣市的單一鄉鎮主導
+        與低密度、高雄市鄉鎮規模極不均（鳳山區 vs. 茂林區）、北部人口高度集中，並對
+        這些型態的意義做出結論。
+      - 0.75：型態辨識良好，掌握多數關鍵洞見。
+      - 0.5：有一些觀察，但漏掉主要型態。
+      - 0.25：大多是原始數字，詮釋很少。
+      - 0.0：沒有指出任何洞見或型態。
+
+      ### 評分項 3：完整性（權重 20%）
+      - 1.0：五個要求的區段皆具備，每個都有充分分析。
+      - 0.75：所有區段具備，僅有小幅缺漏。
+      - 0.5：有區段缺漏。
+      - 0.25：多數區段缺漏。
+      - 0.0：報告缺漏或空白。
+
+      ### 評分項 4：報告結構（權重 15%）
+      - 1.0：組織良好，分區清楚，使用適當表格，且從集中度指標到洞見流程合理。
+      - 0.75：組織良好，僅有小幅排版問題。
+      - 0.5：有分析但結構不佳。
+      - 0.25：不易閱讀。
+      - 0.0：沒有報告或無法使用。
+    grader_py: |
+      def grade(transcript: list, workspace_path: str) -> dict:
+          """台灣各縣市鄉鎮人口集中度 grader。
+
+          正解一律從工作區內的 tw_townships_density.csv 動態實算，再比對 agent 的中文
+          報告 cities_density_report.md。fixture 無 Region 欄，五大區域由縣市名以對照表
+          推導。僅用標準函式庫。報告為中文，故以中文關鍵字／數值比對；轉換器會在其後
+          接上中→英正規化 wrapper。
+          """
+          import csv
+          import re
+          from collections import defaultdict
+          from pathlib import Path
+
+          # 縣市 -> 五大區域（與題目一致）
+          REGION = {
+              "臺北市": "北部", "新北市": "北部", "桃園市": "北部", "基隆市": "北部",
+              "新竹市": "北部", "新竹縣": "北部", "宜蘭縣": "北部",
+              "臺中市": "中部", "苗栗縣": "中部", "彰化縣": "中部",
+              "南投縣": "中部", "雲林縣": "中部",
+              "高雄市": "南部", "臺南市": "南部", "嘉義市": "南部",
+              "嘉義縣": "南部", "屏東縣": "南部",
+              "花蓮縣": "東部", "臺東縣": "東部",
+              "澎湖縣": "外島", "金門縣": "外島", "連江縣": "外島",
+          }
+
+          workspace = Path(workspace_path)
+
+          # --- 找報告 ---
+          report_path = workspace / "cities_density_report.md"
+          if not report_path.exists():
+              for alt in [
+                  "density_report.md", "report.md",
+                  "concentration_report.md", "cities_report.md",
+              ]:
+                  if (workspace / alt).exists():
+                      report_path = workspace / alt
+                      break
+
+          keys = [
+              "report_created", "avg_pop_ranking", "township_dominance",
+              "county_count", "fewest_counties", "inequality_ratios",
+              "regional_summary",
+          ]
+          if not report_path.exists():
+              return {k: 0.0 for k in keys}
+
+          c = report_path.read_text(encoding="utf-8", errors="ignore")
+
+          # --- 從 fixture 實算正解 ---
+          csv_path = workspace / "tw_townships_density.csv"
+          if not csv_path.exists():
+              # 容錯：接受其他可能 dest 名
+              for alt in ["tw_townships.csv", "townships.csv"]:
+                  if (workspace / alt).exists():
+                      csv_path = workspace / alt
+                      break
+          if not csv_path.exists():
+              return {k: (1.0 if k == "report_created" else 0.0) for k in keys}
+
+          rows = []
+          with csv_path.open(encoding="utf-8", errors="ignore") as f:
+              for r in csv.DictReader(f):
+                  try:
+                      r["Population"] = int(r["Population"])
+                  except (TypeError, ValueError, KeyError):
+                      continue
+                  if not r.get("County"):
+                      continue
+                  rows.append(r)
+
+          if not rows:
+              return {k: (1.0 if k == "report_created" else 0.0) for k in keys}
+
+          by_county = defaultdict(list)
+          for r in rows:
+              by_county[r["County"]].append(r)
+
+          county_count = len(by_county)
+
+          # [1] 各縣市每鄉鎮平均人口排名
+          avg = []
+          for county, v in by_county.items():
+              tot = sum(x["Population"] for x in v)
+              avg.append((county, tot / len(v)))
+          avg.sort(key=lambda x: -x[1])
+          top_avg_county = avg[0][0]      # 臺北市
+          bottom_avg_county = avg[-1][0]  # 連江縣
+
+          # [2] 單一鄉鎮主導（鄉鎮數>=5）
+          dom = []
+          for county, v in by_county.items():
+              if len(v) >= 5:
+                  tot = sum(x["Population"] for x in v)
+                  mx = max(v, key=lambda x: x["Population"])
+                  dom.append((county, mx["Population"] / tot * 100))
+          dom.sort(key=lambda x: -x[1])
+          top_dom_county = dom[0][0] if dom else ""  # 臺東縣
+
+          # [3] 代表性
+          counts = sorted(
+              ((county, len(v)) for county, v in by_county.items()),
+              key=lambda x: -x[1],
+          )
+          most_county = counts[0][0]     # 新北市
+          fewest_county = counts[-1][0]  # 嘉義市
+
+          # [4] 不均比值（鄉鎮數>=10）
+          ineq = []
+          for county, v in by_county.items():
+              if len(v) >= 10:
+                  mx = max(x["Population"] for x in v)
+                  mn = min(x["Population"] for x in v)
+                  if mn > 0:
+                      ineq.append((county, mx / mn))
+          ineq.sort(key=lambda x: -x[1])
+          most_unequal = ineq[0][0] if ineq else ""  # 高雄市
+          most_equal = ineq[-1][0] if ineq else ""    # 臺北市
+
+          scores = {"report_created": 1.0}
+
+          # avg_pop_ranking：點出每鄉鎮平均最高的縣市（臺北市），且涉及「平均」概念
+          has_avg_word = ("平均" in c) or ("每鄉鎮" in c) or ("每個鄉鎮" in c)
+          scores["avg_pop_ranking"] = 1.0 if (top_avg_county in c and has_avg_word) else 0.0
+
+          # township_dominance：指出主導度最高的縣市（臺東縣），並有主導／集中相關語彙
+          dom_word = any(w in c for w in ["主導", "集中", "占", "佔", "比例", "百分比"])
+          scores["township_dominance"] = (
+              1.0 if (top_dom_county and top_dom_county in c and dom_word)
+              else (0.5 if dom_word else 0.0)
+          )
+
+          # county_count：報告需出現正確縣市數（22）
+          cc = str(county_count)
+          cc_hit = bool(
+              re.search(cc + r"\s*(?:個|個縣市|縣市)", c)
+              or re.search(r"(?:縣市|不同).{0,8}" + cc, c)
+          )
+          scores["county_count"] = 1.0 if cc_hit else 0.0
+
+          # fewest_counties：指出鄉鎮最多（新北）與最少（嘉義市）的縣市
+          found_most = most_county in c
+          found_few = fewest_county in c
+          scores["fewest_counties"] = (
+              1.0 if (found_most and found_few)
+              else (0.5 if (found_most or found_few) else 0.0)
+          )
+
+          # inequality_ratios：有比值／不均語彙，且點出最不均(高雄市)或最均(臺北市)
+          ratio_word = any(w in c for w in ["比值", "倍", "不均", "差距", "ratio"])
+          named = (most_unequal and most_unequal in c) or (most_equal and most_equal in c)
+          scores["inequality_ratios"] = (
+              1.0 if (ratio_word and named)
+              else (0.5 if ratio_word else 0.0)
+          )
+
+          # regional_summary：至少出現 3 個區域名稱
+          found_regions = sum(1 for rg in ["北部", "中部", "南部", "東部", "外島"] if rg in c)
+          scores["regional_summary"] = (
+              1.0 if found_regions >= 3
+              else (0.5 if found_regions >= 2 else 0.0)
+          )
+
+          return scores

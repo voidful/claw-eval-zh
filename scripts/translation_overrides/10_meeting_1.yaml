@@ -326,7 +326,7 @@ tasks:
       4. **競爭比較表方法論**：僅使用 tier one 競爭對手；僅納入與各特定 stage 相關的競爭對手（並非每個 stage 都放全部 5 個）；加入一個 GitLab 項目以供比較
       5. **資訊圖配色**：維持只用綠色的配色方案（不用紅/黃），以保持比較（comparison）的調性而非競爭攻擊
       6. **訊息標語挑選**：選定「More speed less risk」為最終標語（勝過「move fast with confidence」、「no trade-offs」等替代方案）
-      7. **Stage 命名**：承認如「configure」與「monitor」等 stage 名稱描述性不足，但目前先沿用；下一次迭代將加入可點擊進入的細節頁面
+      7. **Stage 命名**：承認如「configure」與「monitor」等 stage 名稱描述性不足，但目前先沿用；下一次迭代將加入可點選進入的細節頁面
     grading_criteria:
       - "已建立檔案 decisions.md"
       - "至少辨識出 5 項不同的決議"

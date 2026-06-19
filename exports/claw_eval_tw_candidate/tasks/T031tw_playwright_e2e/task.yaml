@@ -61,7 +61,7 @@ judge_rubric: '### 評分項 1：多步驟導覽（權重 30%）
 
   **1.0 分**：腳本正確地依序走過全部 3 個表單步驟。每次步驟轉換都很明確——填寫
 
-  欄位、點擊 Next，並在繼續前確認新步驟為 active。以 `select_option` 處理 state
+  欄位、點選 Next，並在繼續前確認新步驟為 active。以 `select_option` 處理 state
 
   下拉選單。有測試返回（back）導覽，或至少未使其失效。
 
@@ -149,8 +149,8 @@ judge_rubric: '### 評分項 1：多步驟導覽（權重 30%）
 reference_solution: "助手應該：\n\n1. 閱讀 `form.html` 並分析 DOM 結構，留意 `data-testid` 屬性、表單驗證規則與\n   步驟導覽邏輯\n2.\
   \ 使用 `playwright.sync_api` 搭配 `sync_playwright` context manager 建立\n   `test_form.py`\n3. 啟動 Chromium\
   \ 瀏覽器（headless 模式）\n4. 以 `file://` URL 開啟本機的 `form.html` 檔案\n5. 以有效的測試資料填寫步驟 1 的欄位（fullname、email、phone）\n\
-  6. 點擊「Next」，確認步驟 2 為 active 且步驟 1 已隱藏\n7. 以有效資料填寫步驟 2 的欄位（street、city、state 下拉選單、zip）\n8. 點擊「Next」，確認步驟\
-  \ 3 顯示 review 摘要\n9. 斷言（assert）review 中的值與輸入的內容相符\n10. 點擊「Submit Registration」\n11. 確認成功面板可見且包含一組 submission\
+  6. 點選「Next」，確認步驟 2 為 active 且步驟 1 已隱藏\n7. 以有效資料填寫步驟 2 的欄位（street、city、state 下拉選單、zip）\n8. 點選「Next」，確認步驟\
+  \ 3 顯示 review 摘要\n9. 斷言（assert）review 中的值與輸入的內容相符\n10. 點選「Submit Registration」\n11. 確認成功面板可見且包含一組 submission\
   \ ID\n12. 擷取螢幕截圖並儲存為 `success.png`\n13. 加入重試／等待邏輯，避免不穩定（flaky）的選擇器使測試立即失敗\n14. 使用正確的 Playwright 慣用法：`page.locator()`、`data-testid`\
   \ 選擇器、\n    `expect()` 斷言"
 primary_dimensions:

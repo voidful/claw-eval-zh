@@ -1,7 +1,6 @@
 ---
 id: task_meeting_tech_competitors
-name: |
-  會議競爭對手分析擷取
+name: 台灣公司產品會議：競品分析擷取
 category: meeting_analysis
 grading_type: hybrid
 timeout_seconds: 180
@@ -15,71 +14,79 @@ localization: taiwan
 localization_strategy: context_replace
 claw_eval_tw_id: T117tw_meeting_tech_competitors
 workspace_files:
-- source: meetings/2021-06-28-gitlab-product-marketing-meeting.md
+- source: tw/meetings/tw_tech_product_meeting.md
   dest: meeting_transcript.md
 grading_weights:
   automated: 0.6
   llm_judge: 0.4
 ---
 
-# 會議競爭對手分析擷取
-
+# 台灣公司產品會議：競品分析擷取
 
 ## Prompt
 
-我手上有一個檔案 `meeting_transcript.md`，內含一場 2021 年 6 月 28 日的 GitLab Product Marketing 週會逐字稿。會議的一部分涉及競爭定位（competitive positioning）、一份比較試算表，以及如何呈現 GitLab 對比競爭對手的詳細討論。
+工作區裡有一份會議逐字稿 meeting_transcript.md（虛構台灣軟體公司「鼎峰科技」的產品
+暨行銷週會，主角產品是一站式軟體開發平台「鼎峰雲平台」，文中多以「鼎峰」代稱）。會議
+中有一大段在談**競爭定位（competitive positioning）**、一份競品比較試算表，以及那張只用
+綠色的競品比較資訊圖（infographic）要怎麼呈現「鼎峰」對比各家對手。
 
-請幫我分析這份逐字稿，並建立一個名為 `competitor_analysis.md` 的檔案，內容涵蓋：
+請閱讀逐字稿（請特別看「三、競品比較資訊圖設計回饋」與「四、競品分析方法論與比較試算表」
+兩節），整理成一份名為 competitor_analysis.md 的繁體中文報告，內容涵蓋：
 
-1. **提及的競爭對手**：列出所有提及的競爭對手或競品，並附上有討論到的層級分類（tier classification）
-2. **競爭定位方式**：團隊計畫如何將 GitLab 定位於這些競爭對手之上？
-3. **各 stage 對應的競爭對手對照**：哪些競爭對手對應到哪些產品 stages（如討論所述）？
-4. **方法論決議**：對於如何進行競爭分析做了哪些決定（例如聚焦哪些 tiers、如何處理競爭對手不適用的 stage）？
-5. **關鍵競爭洞察**：討論中提到關於特定競爭對手的任何策略性洞察
+1. **提及的競爭對手**：列出逐字稿提到的所有競爭對手／競品，並附上有討論到的層級
+   分類（tier）。
+2. **競爭定位方式**：團隊打算怎麼把「鼎峰」定位於這些對手之上？
+3. **各 stage 對應的競爭對手對照**：哪些對手對應到哪些產品 stage（依逐字稿所述）？
+4. **方法論決議**：對於怎麼做競品分析下了哪些決定（例如先聚焦哪一層 tier、某 stage
+   不適用某對手時怎麼處理、比較表要不要加上「鼎峰」自己一列）？
+5. **關鍵競爭洞察**：討論中關於特定對手或定位的任何策略性洞察（例如哪些對手自稱
+   platform、哪些不是；資訊圖配色的用意）。
 
 ## Expected Behavior
 
-助手應該：
+助手應仔細閱讀 meeting_transcript.md，從中擷取並分類所有競爭對手，並掌握下列事實
+（全部出自逐字稿第三、四節，公司與對手皆為虛構）：
 
-1. 仔細閱讀會議逐字稿
-2. 擷取所有競爭對手名稱並予以分類
+- **Tier 1 六家對手**（目前分析聚焦的對象）：微宇 DevOps、群智協作、碼倉、自動流、
+  制品庫、雲蜂。
+- **層級分類**：團隊先前已把對手分成 tier 1、tier 2、tier 3 三層；現階段只聚焦
+  tier 1，其餘日後再擴展。
+- **Platform 定位區分**：微宇 DevOps、碼倉、群智協作、制品庫 都自稱「平台
+  （platform）」；但自動流和雲蜂並不是平台，只做單點工具。這個區分要寫進去。
+- **Stage 相關性**：並非所有 tier 1 對手都適用於所有 stage。例如「監控（Monitor）」
+  這個 stage，雲蜂和碼倉其實沒有這塊，硬塞進去會失真。
+- **試算表複製貼上的問題**：現在的試算表是直接複製貼上，每個 stage 分頁都放同樣那
+  六家——這被指出是錯的；決定改成每個 stage 只列與該 stage 相關的對手。
+- **加上「鼎峰」一列**：團隊決定在比較表加入「鼎峰」自己一列（line item），讓表格
+  不會只秀我們較強的地方，也誠實呈現對手較好之處。
+- **功能挑選的市場視角（market lens）**：功能要從買家實際選購時會比較的角度挑，而非
+  只挑「鼎峰視角」對我們有利的；為求誠實也要放幾個「只有對手才有」的功能。
+- **資訊圖設計理念**：新版只用綠色、不放紅色（也不放黃色），要呈現為「有幫助的產業
+  比較」給買家參考，而非「競爭攻擊式（attack piece）」素材。
 
-關鍵競爭對手與細節：
-
-- **Tier 1 競爭對手**（目前分析的重點）：Azure DevOps（ADO）、Atlassian、GitHub、Jenkins、JFrog、CloudBees
-- **層級分類**：團隊先前已將競爭對手分為 tier 1、2、3；目前僅聚焦於 tier 1
-- **Stage 相關性**：並非所有 tier 1 競爭對手都適用於所有 stages（例如 CloudBees 可能與 Monitor 無關；GitHub 可能與 Monitor 無關）
-- **Platform 定位**：部分競爭對手（Azure DevOps、GitHub、Atlassian、JFrog）將自己定位為 platform；Jenkins/CloudBees 則否
-- **方法論**：競爭試算表是被複製貼上、每個 stage 分頁都放同樣的 6 個競爭對手，這被指出是錯的——每個 stage 應只出現相關的競爭對手
-- **GitLab 項目**：團隊決定在比較表加入一個 GitLab 列，使該表不會只呈現 GitLab 較強之處
-- **功能挑選視角**：功能應從市場視角（market lens，即買家會比較選購什麼）挑選，而非僅從 GitLab 視角；為求誠實，也應納入一些僅競爭對手才有的功能
-- **資訊圖方式**：新設計只用綠色（不用紅色），呈現為有幫助的產業比較，而非競爭攻擊式素材
+助手應把以上整理成清楚、條列分明的 competitor_analysis.md。
 
 ## Grading Criteria
 
-- [ ] 已建立檔案 competitor_analysis.md
-- [ ] 已列出所有 tier 1 競爭對手（ADO/Azure DevOps、Atlassian、GitHub、Jenkins、JFrog、CloudBees）
-- [ ] 已提及層級分類系統（tier 1、2、3）
-- [ ] 已討論各 stage 的相關性（並非所有競爭對手都適用於所有 stages）
-- [ ] 已掌握 platform 與非 platform 的區分（GitHub、ADO、Atlassian、JFrog 為 platform；Jenkins/CloudBees 則否）
-- [ ] 已掌握加入 GitLab 項目的決議
-- [ ] 已記下功能挑選的市場視角（market lens）方式
-- [ ] 已掌握資訊圖設計理念（只用綠色、比較而非攻擊）
-- [ ] 已掌握先聚焦 tier 1 的方法論決議
+- [ ] 建立報告檔案 competitor_analysis.md
+- [ ] 列出全部六家 tier 1 對手（微宇 DevOps、群智協作、碼倉、自動流、制品庫、雲蜂）
+- [ ] 提及層級分類系統（tier 1／2／3，現階段聚焦 tier 1）
+- [ ] 討論各 stage 的相關性（並非所有對手都適用所有 stage，例如監控 Monitor）
+- [ ] 掌握 platform 與非 platform 的區分（自動流／雲蜂不是平台）
+- [ ] 掌握在比較表加入「鼎峰」一列的決議
+- [ ] 記下功能挑選的市場視角（market lens）方式
+- [ ] 掌握資訊圖設計理念（只用綠色、是比較而非攻擊）
+- [ ] 掌握先聚焦 tier 1 的方法論決議
 
 ## Automated Checks
 
 ```python
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting competitor analysis extraction task.
+    """TW tech-meeting competitor-analysis grader.
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    查核項對應原始英文 grader，但事實改自台灣逐字稿 meeting_transcript.md
+    （虛構公司「鼎峰科技」／產品「鼎峰」；tier 1 六家對手為微宇 DevOps、群智協作、
+    碼倉、自動流、制品庫、雲蜂）。僅用標準函式庫。
     """
     from pathlib import Path
     import re
@@ -89,99 +96,129 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     report_path = workspace / "competitor_analysis.md"
     if not report_path.exists():
-        for alt in ["competitors.md", "competitive_analysis.md", "competitor_report.md"]:
+        for alt in ["competitors.md", "competitive_analysis.md",
+                    "competitor_report.md", "競品分析.md", "競爭對手分析.md"]:
             alt_path = workspace / alt
             if alt_path.exists():
                 report_path = alt_path
                 break
 
+    keys = ["report_created", "tier1_competitors", "tier_system", "stage_relevance",
+            "platform_distinction", "host_line_item", "market_lens",
+            "infographic_philosophy", "tier1_focus"]
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "tier1_competitors": 0.0,
-            "tier_system": 0.0,
-            "stage_relevance": 0.0,
-            "platform_distinction": 0.0,
-            "gitlab_line_item": 0.0,
-            "market_lens": 0.0,
-            "infographic_philosophy": 0.0,
-            "tier1_focus": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
     scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
 
-    # Tier 1 competitors listed
-    competitors = {
-        "ado": [r'(?:azure\s*devops|ado)'],
-        "atlassian": [r'atlassian'],
-        "github": [r'github'],
-        "jenkins": [r'jenkins'],
-        "jfrog": [r'jfrog|j\s*frog'],
-        "cloudbees": [r'cloudbees|cloud\s*bees'],
-    }
-    comp_count = 0
-    for name, patterns in competitors.items():
-        if any(re.search(p, content_lower) for p in patterns):
-            comp_count += 1
-    scores["tier1_competitors"] = 1.0 if comp_count >= 5 else (0.75 if comp_count >= 4 else (0.5 if comp_count >= 3 else 0.0))
+    # --- 從逐字稿動態讀出「應有的 tier 1 對手」，避免硬寫 ---
+    transcript_path = workspace / "meeting_transcript.md"
+    tier1_expected = []
+    if transcript_path.exists():
+        ttext = transcript_path.read_text(encoding="utf-8", errors="ignore")
+        # 只擷取「Tier 1 一共…家」那句之後、緊接著的 1.~6. 編號清單，避免抓到
+        # 後段（如訊息架構評估準則）同樣是編號清單的條目。
+        anchor = re.search(r'[Tt]ier\s*1[^\n]{0,12}?(?:六家|6\s*家|共[^\n]{0,4}家)', ttext)
+        region = ttext[anchor.end():] if anchor else ""
+        for line in region.splitlines():
+            m = re.match(r'\s*\d+\.\s*\*{0,2}([^（(*]+?)\*{0,2}\s*(?:[（(]|$)', line)
+            if m:
+                name = m.group(1).strip()
+                # 只收形似競品名稱（中文／英數混合、長度合理）的條目
+                if 2 <= len(name) <= 12 and re.search(r'[一-鿿]', name):
+                    tier1_expected.append(name)
+                # 連續編號清單一旦遇到空白行就停（避免吃到後面段落）
+            elif tier1_expected and not line.strip():
+                break
+    # 後援：逐字稿讀不到時才退回已知清單
+    if len(tier1_expected) < 6:
+        tier1_expected = ["微宇 DevOps", "群智協作", "碼倉", "自動流", "制品庫", "雲蜂"]
+    # 去重、保序、取前六
+    seen = set()
+    uniq = []
+    for n in tier1_expected:
+        if n not in seen:
+            seen.add(n)
+            uniq.append(n)
+    tier1_expected = uniq[:6]
 
-    # Tier classification system
-    tier_patterns = [r'tier\s*(?:one|1|two|2|three|3)', r'tier[- ]?\d']
-    scores["tier_system"] = 1.0 if any(re.search(p, content_lower) for p in tier_patterns) else 0.0
+    # 1) Tier 1 對手是否列出（用核心關鍵字比對，容忍 DevOps 大小寫與全形空白）
+    def _match(name: str, text: str) -> bool:
+        core = name.replace("DevOps", "").replace(" ", "").replace("　", "").strip()
+        if core and core in text:
+            return True
+        # 含英文部分者（如「微宇 DevOps」）再寬鬆比對中文核心
+        if "DevOps" in name and core and core in text:
+            return True
+        return name in text
+    comp_count = sum(1 for n in tier1_expected if _match(n, content))
+    scores["tier1_competitors"] = (
+        1.0 if comp_count >= 5 else
+        0.75 if comp_count >= 4 else
+        0.5 if comp_count >= 3 else 0.0
+    )
 
-    # Stage-specific relevance
-    stage_patterns = [
-        r'(?:not\s*(?:all|every)|relevant|applicable|apply).*(?:stage|monitor|configure)',
-        r'(?:stage|monitor|configure).*(?:not\s*(?:all|every)|relevant|applicable)',
-    ]
-    scores["stage_relevance"] = 1.0 if any(re.search(p, content_lower) for p in stage_patterns) else 0.0
+    # 2) 層級分類系統（tier 1/2/3）
+    scores["tier_system"] = 1.0 if re.search(
+        r'tier\s*[123一二三]|第?\s*[123一二三]\s*層|層級|分層', content, re.IGNORECASE
+    ) else 0.0
 
-    # Platform distinction
-    platform_patterns = [
-        r'platform',
-    ]
-    non_platform_patterns = [
-        r'(?:jenkins|cloudbees).*(?:not|don.t|doesn.t).*platform',
-        r'(?:not|don.t|doesn.t).*platform.*(?:jenkins|cloudbees)',
-    ]
-    has_platform = any(re.search(p, content_lower) for p in platform_patterns)
-    has_non_platform = any(re.search(p, content_lower) for p in non_platform_patterns)
-    scores["platform_distinction"] = 1.0 if has_platform and has_non_platform else (0.5 if has_platform else 0.0)
+    # 3) 各 stage 相關性：並非所有對手都適用所有 stage（提監控 Monitor 更佳）
+    has_stage = bool(re.search(r'stage|監控|Monitor|設定|Configure|階段', content, re.IGNORECASE))
+    has_not_all = bool(re.search(r'並非所有|不是每|不適用|不一定|未必|不是所有|只放相關|只列相關|相關的對手', content))
+    if has_stage and has_not_all:
+        scores["stage_relevance"] = 1.0
+    elif has_stage and re.search(r'監控|Monitor', content, re.IGNORECASE) and re.search(r'雲蜂|碼倉', content):
+        scores["stage_relevance"] = 1.0
+    elif has_stage:
+        scores["stage_relevance"] = 0.5
+    else:
+        scores["stage_relevance"] = 0.0
 
-    # GitLab line item decision
-    gitlab_patterns = [
-        r'(?:add|include).*gitlab.*(?:line|row|column|entry)',
-        r'gitlab.*(?:line|row|column|entry).*(?:add|include)',
-        r'(?:add|include).*(?:line|row|column|entry).*gitlab',
-    ]
-    scores["gitlab_line_item"] = 1.0 if any(re.search(p, content_lower) for p in gitlab_patterns) else 0.0
+    # 4) platform 與非 platform 的區分（自動流／雲蜂不是平台）
+    has_platform = bool(re.search(r'平台|platform', content, re.IGNORECASE))
+    has_non_platform = bool(
+        re.search(r'(?:自動流|雲蜂)[^。\n]{0,30}?(?:不是|並非|不算|非)[^。\n]{0,6}?(?:平台|platform)', content, re.IGNORECASE)
+        or re.search(r'(?:不是|並非|不算|非)[^。\n]{0,6}?(?:平台|platform)[^。\n]{0,30}?(?:自動流|雲蜂)', content, re.IGNORECASE)
+    )
+    scores["platform_distinction"] = (
+        1.0 if has_platform and has_non_platform else (0.5 if has_platform else 0.0)
+    )
 
-    # Market lens approach
-    market_patterns = [
-        r'market\s*lens',
-        r'(?:buyer|customer|shopp)',
-        r'(?:honest|trustworthy|accurate\s*assessment)',
-    ]
-    market_hits = sum(1 for p in market_patterns if re.search(p, content_lower))
+    # 5) 在比較表加入「鼎峰」自己一列（line item）
+    scores["host_line_item"] = 1.0 if re.search(
+        r'(?:加入|加上|新增|增加|放上)[^。\n]{0,20}?鼎峰[^。\n]{0,12}?(?:一列|一欄|一行|列|欄|line\s*item)'
+        r'|鼎峰[^。\n]{0,12}?(?:一列|一欄|一行|line\s*item)',
+        content, re.IGNORECASE
+    ) else 0.0
+
+    # 6) 功能挑選的市場視角（market lens）
+    market_hits = 0
+    if re.search(r'市場視角|market\s*lens', content, re.IGNORECASE):
+        market_hits += 1
+    if re.search(r'買家|客戶|選購|採購|購買', content):
+        market_hits += 1
+    if re.search(r'誠實|可信|公正|客觀|對手.{0,6}才有|只有對手', content):
+        market_hits += 1
     scores["market_lens"] = 1.0 if market_hits >= 2 else (0.5 if market_hits >= 1 else 0.0)
 
-    # Infographic philosophy
-    infographic_patterns = [
-        r'(?:green|color).*(?:comparison|helpful|industry)',
-        r'(?:no\s*red|without\s*red|avoid\s*red)',
-        r'(?:comparison|helpful).*(?:not\s*(?:competitive|attack))',
-    ]
-    infographic_hits = sum(1 for p in infographic_patterns if re.search(p, content_lower))
-    scores["infographic_philosophy"] = 1.0 if infographic_hits >= 2 else (0.5 if infographic_hits >= 1 else 0.0)
+    # 7) 資訊圖設計理念（只用綠色、是比較而非攻擊）
+    info_hits = 0
+    if re.search(r'(?:只用|僅用|單用|只.{0,2}綠|綠色)', content) and re.search(r'比較|產業|參考|有幫助', content):
+        info_hits += 1
+    if re.search(r'不(?:用|放|加).{0,2}紅|不要紅|避免紅|無紅|不用紅色', content):
+        info_hits += 1
+    if re.search(r'(?:比較|有幫助|產業).{0,12}?(?:而非|不是|不要)?.{0,6}?攻擊|不是攻擊|非攻擊|不打對手|attack', content, re.IGNORECASE):
+        info_hits += 1
+    scores["infographic_philosophy"] = 1.0 if info_hits >= 2 else (0.5 if info_hits >= 1 else 0.0)
 
-    # Tier 1 focus decision
-    focus_patterns = [
-        r'(?:focus|only|just).*tier\s*(?:one|1)',
-        r'tier\s*(?:one|1).*(?:focus|first|now|current)',
-    ]
-    scores["tier1_focus"] = 1.0 if any(re.search(p, content_lower) for p in focus_patterns) else 0.0
+    # 8) 先聚焦 tier 1 的決議
+    scores["tier1_focus"] = 1.0 if re.search(
+        r'(?:只|先|聚焦|專注|現階段|目前)[^。\n]{0,12}?tier\s*[1一]'
+        r'|tier\s*[1一][^。\n]{0,12}?(?:聚焦|為主|優先|先|現階段|目前)',
+        content, re.IGNORECASE
+    ) else 0.0
 
     return scores
 
@@ -240,32 +277,33 @@ def grade(transcript, workspace_path):  # noqa: F811
 ## LLM Judge Rubric
 
 ### 評分項 1：競爭對手辨識完整度（權重 30%）
-
-**1.0 分**：辨識出全部六個 tier 1 競爭對手（Azure DevOps、Atlassian、GitHub、Jenkins、JFrog、CloudBees），並有準確的層級分類與對 tier 系統的討論。
-**0.75 分**：辨識出多數競爭對手並附 tier 資訊，漏掉一兩個。
-**0.5 分**：辨識出數個競爭對手，但 tier 系統說明不佳。
-**0.25 分**：僅提及少數競爭對手且無分類。
-**0.0 分**：未辨識出競爭對手。
+**1.0 分**：辨識出全部六家 tier 1 對手（微宇 DevOps、群智協作、碼倉、自動流、制品庫、
+雲蜂），並有準確的層級分類與對 tier 系統（先前分 1／2／3、現只聚焦 tier 1）的討論。
+**0.75 分**：辨識出多數對手並附 tier 資訊，漏掉一兩家。
+**0.5 分**：辨識出數家對手，但 tier 系統說明不佳。
+**0.25 分**：僅提及少數對手且無分類。
+**0.0 分**：未辨識出對手。
 
 ### 評分項 2：策略定位分析（權重 30%）
-
-**1.0 分**：完整掌握 GitLab 定位方式的所有細微之處：功能採市場視角、platform 對比非 platform 的區分、只用綠色的資訊圖以呈現比較（而非攻擊）、加入 GitLab 列以誠實比較，以及打造有幫助的產業資源此一目標。
+**1.0 分**：完整掌握「鼎峰」定位方式的所有細微之處：功能採市場視角（market lens）、
+platform 對比非 platform 的區分（自動流／雲蜂非平台）、只用綠色的資訊圖以呈現比較
+（而非攻擊）、加入「鼎峰」一列以誠實比較，以及打造「有幫助的產業比較」此一目標。
 **0.75 分**：掌握多數定位要素，僅有少許缺口。
 **0.5 分**：有部分定位洞察，但漏掉關鍵策略決議。
 **0.25 分**：對競爭定位僅有表面提及。
 **0.0 分**：無定位分析。
 
 ### 評分項 3：各 stage 對照（權重 20%）
-
-**1.0 分**：清楚說明並非所有競爭對手都適用於所有 stages，給出具體例子（例如 CloudBees/GitHub 與 Monitor 無關），並記下被指出的試算表複製貼上問題。
+**1.0 分**：清楚說明並非所有對手都適用於所有 stage，給出具體例子（例如監控 Monitor
+這塊雲蜂／碼倉沒有），並記下被指出的試算表「複製貼上、每頁都塞六家」的問題。
 **0.75 分**：對 stage 相關性有良好理解，僅有少許缺口。
 **0.5 分**：提及 stage 相關性但缺乏具體細節。
-**0.25 分**：對 stages 僅含糊提及。
+**0.25 分**：對 stage 僅含糊提及。
 **0.0 分**：無各 stage 分析。
 
 ### 評分項 4：方法論清晰度（權重 20%）
-
-**1.0 分**：清楚記載議定的方法論：先聚焦 tier 1，再擴展；每個 stage 只放相關競爭對手；功能採市場視角；加入 GitLab 以供比較。並以可行動的指引方式呈現。
+**1.0 分**：清楚記載議定的方法論：先聚焦 tier 1、再擴展；每個 stage 只放相關對手；
+功能採市場視角；加入「鼎峰」一列以供誠實比較。並以可行動的指引方式呈現。
 **0.75 分**：掌握多數方法論決議。
 **0.5 分**：提及部分方法論但不完整。
 **0.25 分**：方法論描述含糊。

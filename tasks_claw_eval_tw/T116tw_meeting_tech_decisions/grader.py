@@ -13,15 +13,12 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting decisions extraction task.
+    """台灣鼎峰科技產品會議「決議擷取」grader（固定虛構逐字稿）。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    對應原 PinchBench task_meeting_tech_decisions 的九個查核項，但改查台灣逐字稿
+    (dest=meeting_transcript.md) 推導之事實 + agent 的中文報告 decisions.md。
+    僅用標準函式庫。報告為繁體中文，故以中文關鍵字／數值比對；轉換器會在其後自動
+    接上中→英正規化 wrapper（附加英文關鍵字、保留原中文），不影響中文比對。
     """
     from pathlib import Path
     import re
@@ -31,7 +28,9 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     report_path = workspace / "decisions.md"
     if not report_path.exists():
-        for alt in ["meeting_decisions.md", "decision_log.md", "decisions_summary.md"]:
+        for alt in ["meeting_decisions.md", "decision_log.md",
+                    "decisions_summary.md", "decisions_report.md",
+                    "會議決議.md", "決議.md"]:
             alt_path = workspace / alt
             if alt_path.exists():
                 report_path = alt_path
@@ -51,58 +50,86 @@ def grade(transcript: list, workspace_path: str) -> dict:
         }
 
     scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
+    low = content.lower()
 
-    # Check minimum number of decisions
-    decision_markers = re.findall(r'(?:^|\n)\s*(?:[-*•]|\d+[.)]) .{10,}', content)
+    # --- 從逐字稿動態讀出「應有事實」以供比對（避免硬寫）---
+    tpath = workspace / "meeting_transcript.md"
+    tx = ""
+    if tpath.exists():
+        tx = tpath.read_text(encoding="utf-8", errors="ignore")
+    tx_low = tx.lower()
+
+    # 1) 最少決議數量：中文標題/條列/含「決議|決定」的行
+    decision_markers = re.findall(
+        r'(?:^|\n)\s*(?:[-*•]|\d+[.)、]|決議|決定) .{4,}', content)
     headers = re.findall(r'(?:^|\n)#+\s+.+', content)
-    scores["min_decisions"] = 1.0 if len(decision_markers) >= 5 or len(headers) >= 5 else (0.5 if len(decision_markers) >= 3 or len(headers) >= 3 else 0.0)
+    decision_word_lines = re.findall(r'(?:^|\n)[^\n]*(?:決議|決定)[^\n]{2,}', content)
+    n_dec = max(len(decision_markers), len(decision_word_lines))
+    if n_dec >= 5 or len(headers) >= 5:
+        scores["min_decisions"] = 1.0
+    elif n_dec >= 3 or len(headers) >= 3:
+        scores["min_decisions"] = 0.5
+    else:
+        scores["min_decisions"] = 0.0
 
-    # Event assignments
-    event_terms = ["reinvent", "re:invent", "google next", "kubecon"]
-    event_hits = sum(1 for t in event_terms if t in content_lower)
-    scores["event_assignments"] = 1.0 if event_hits >= 2 else (0.5 if event_hits >= 1 else 0.0)
+    # 2) 活動贊助分工：三場台灣研討會（COSCUP / DevOpsDays Taipei / Kubernetes Day）
+    #    從逐字稿動態抓出實際出現的活動名，再看報告命中幾個。
+    event_terms = []
+    for pat in [r'coscup', r'devopsdays', r'kubernetes day']:
+        if re.search(pat, tx_low):
+            event_terms.append(pat)
+    if not event_terms:  # 逐字稿缺失時的保險預設
+        event_terms = [r'coscup', r'devopsdays', r'kubernetes day']
+    # 中文別名也接受（開源人年會 ~ COSCUP）
+    event_hits = 0
+    if re.search(r'coscup|開源人年會', low):
+        event_hits += 1
+    if re.search(r'devopsdays', low):
+        event_hits += 1
+    if re.search(r'kubernetes day|k8s day', low):
+        event_hits += 1
+    scores["event_assignments"] = (
+        1.0 if event_hits >= 2 else (0.5 if event_hits >= 1 else 0.0))
 
-    # Announcement approach (bundling/grouping MVCs)
-    announce_patterns = [
-        r'(?:bundle|group|bucket|aggregat)',
-        r'(?:vulnerability\s*management|mvc|14\.0)',
-    ]
-    announce_hits = sum(1 for p in announce_patterns if re.search(p, content_lower))
-    scores["announcement_approach"] = 1.0 if announce_hits >= 2 else (0.5 if announce_hits >= 1 else 0.0)
+    # 3) 產品發布整合方式：把多個 MVC 包成主題（如漏洞管理），重用 5.0 版內容
+    announce_a = bool(re.search(r'整合|包成|彙整|歸納|bundle|綁成一(?:包|個)|打包|主題敘事', content, re.IGNORECASE))
+    announce_b = bool(re.search(r'漏洞管理|vulnerability\s*management|mvc|5\.0', content, re.IGNORECASE))
+    announce_hits = int(announce_a) + int(announce_b)
+    scores["announcement_approach"] = (
+        1.0 if announce_hits >= 2 else (0.5 if announce_hits >= 1 else 0.0))
 
-    # Competitive methodology
-    comp_patterns = [
-        r'(?:tier\s*(?:one|1))',
-        r'(?:gitlab\s*(?:line|row|column)|add\s*gitlab|gitlab\s*comparison)',
-        r'(?:relevant|applicable).*(?:stage|competitor)',
-    ]
-    comp_hits = sum(1 for p in comp_patterns if re.search(p, content_lower))
-    scores["competitive_methodology"] = 1.0 if comp_hits >= 2 else (0.5 if comp_hits >= 1 else 0.0)
+    # 4) 競品方法論：只用 tier 1、每個 stage 只放相關對手、新增鼎峰一列
+    comp_a = bool(re.search(r'tier\s*(?:1|one|一)|第一層|一級', content, re.IGNORECASE))
+    comp_b = bool(re.search(r'鼎峰.{0,8}(?:一列|一行|加[一上]|列|row|line)|新增.{0,6}鼎峰|加上.{0,6}鼎峰|gitlab', content, re.IGNORECASE))
+    comp_c = bool(re.search(r'(?:相關|適用|對應)[^\n]{0,12}(?:stage|對手|競爭|競品)|每個\s*stage|各\s*stage', content, re.IGNORECASE))
+    comp_hits = int(comp_a) + int(comp_b) + int(comp_c)
+    scores["competitive_methodology"] = (
+        1.0 if comp_hits >= 2 else (0.5 if comp_hits >= 1 else 0.0))
 
-    # Messaging tagline
-    tagline_patterns = [
-        r'more\s*speed\s*less\s*risk',
-    ]
-    scores["messaging_tagline"] = 1.0 if any(re.search(p, content_lower) for p in tagline_patterns) else 0.0
+    # 5) 訊息主標語：選定「更快交付，更低風險」
+    tagline = bool(re.search(r'更快交付[，,、\s]*更低風險|more\s*speed\s*less\s*risk', content, re.IGNORECASE))
+    scores["messaging_tagline"] = 1.0 if tagline else 0.0
 
-    # Infographic colors
-    color_patterns = [
-        r'(?:green|color).*(?:no\s*red|without\s*red|comparison)',
-        r'(?:no\s*red|avoid\s*red|stick\s*with\s*green)',
-    ]
-    scores["infographic_colors"] = 1.0 if any(re.search(p, content_lower) for p in color_patterns) else 0.0
+    # 6) 資訊圖配色：只用綠色、不放紅色（保持比較調性）
+    color = bool(re.search(
+        r'(?:只用|維持|保留|沿用).{0,6}綠|綠色.{0,10}(?:不[用放]|沒有|避免).{0,4}紅|不[用放].{0,4}紅|避免.{0,4}紅|綠色.{0,6}比較|green.*(?:no\s*red|without\s*red)',
+        content, re.IGNORECASE))
+    scores["infographic_colors"] = 1.0 if color else 0.0
 
-    # Context provided (look for explanatory text around decisions)
-    context_patterns = [r'(?:because|reason|background|context|rationale|why|since|given\s*that)', r'(?:discuss|debate|consider|weigh)']
-    context_hits = sum(1 for p in context_patterns if re.search(p, content_lower))
-    scores["context_provided"] = 1.0 if context_hits >= 2 else (0.5 if context_hits >= 1 else 0.0)
+    # 7) 背景脈絡：報告中有解釋性敘述
+    ctx_a = bool(re.search(r'因為|原因|背景|脈絡|理由|為了|由於|考量|緣由|since|because|rationale|context', content, re.IGNORECASE))
+    ctx_b = bool(re.search(r'討論|考慮|權衡|評估|爭論|斟酌|替代方案|候選|discuss|debate|consider', content, re.IGNORECASE))
+    ctx_hits = int(ctx_a) + int(ctx_b)
+    scores["context_provided"] = (
+        1.0 if ctx_hits >= 2 else (0.5 if ctx_hits >= 1 else 0.0))
 
-    # Status indicated
-    status_patterns = [r'(?:final|tentative|follow.?up|confirmed|pending|needs?\s*(?:confirmation|follow))', r'(?:status|resolved|agreed|consensus)']
-    status_hits = sum(1 for p in status_patterns if re.search(p, content_lower))
-    scores["status_indicated"] = 1.0 if status_hits >= 2 else (0.5 if status_hits >= 1 else 0.0)
+    # 8) 決議狀態：final / tentative / needs follow-up（暫定、待確認、定案…）
+    st_a = bool(re.search(r'final|定案|確定|拍板|tentative|暫定|待確認|待後續|follow.?up|needs?\s*follow|待跟進|待確定|未定案', content, re.IGNORECASE))
+    st_b = bool(re.search(r'狀態|status|共識|consensus|已通過|議定|達成|agreed', content, re.IGNORECASE))
+    st_hits = int(st_a) + int(st_b)
+    scores["status_indicated"] = (
+        1.0 if st_hits >= 2 else (0.5 if st_hits >= 1 else 0.0))
 
     return scores
 

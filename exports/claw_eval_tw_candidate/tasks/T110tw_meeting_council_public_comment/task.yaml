@@ -18,28 +18,29 @@ source:
   original_task_id: task_meeting_council_public_comment
   original_file: tasks/task_meeting_council_public_comment.md
 prompt:
-  text: '我手邊有一份 2026 年 4 月 2 日舉行的 Tampa City Council 會議逐字稿，存放在 `transcript.md`。這是一份即時聽打的字幕稿。
+  text: '我手邊有一份 2026 年 4 月 2 日（星期四，時區 Asia/Taipei）舉行的「南港市議會 第 12 屆第 3 次定期會」會議逐字稿，存放在 `transcript.md`。這是一份即時聽打的字幕稿（realtime
+    captioning），並非正式逐字紀錄，內容以實際議事錄為準。逐字稿中的南港市、各里別、人名、機關、議案與金額皆為虛構教學素材。
 
 
-    請幫我分析公眾意見（public comment）的部分，並產生一個名為 `public_comments_report.md` 的檔案，摘要每一位公眾發言者的意見。針對每位發言者，請包含：
+    請幫我分析其中「市民公眾意見發言（Public Comment）」的部分，並產生一個名為 `public_comments_report.md` 的檔案，摘要每一位上台（或線上視訊）發言市民的意見。針對每位發言者，請包含：
 
 
-    - **發言者姓名**
+    - **發言者姓名**（以逐字稿登載之姓名為準）
 
-    - **提及的主題或議程項目**（若適用）
+    - **提及的主題或議程項目**（若適用，例如第幾案、里別）
 
     - **提出的重點或關切事項**
 
-    - **對議會提出的任何具體請求或要求**
+    - **對議會提出的任何具體請求或要求**（含金額、天數等具體數字）
 
 
-    最後也請附上一個**主題摘要（thematic summary）**，依主題領域（例如基礎建設、住房、歷史保存、警政、交通等）將意見分組，並指出哪些主題引發最多公眾關注。'
+    最後也請附上一段**主題摘要（thematic summary）**，依主題領域（例如基礎建設、住宅、文史保存、警政、交通、環境防災等）將意見分組，並指出哪些主題引發最多市民關注。請以繁體中文（zh-TW）撰寫，金額沿用逐字稿之新臺幣（NT$）表示。'
   language: zh
 tools: []
 tool_endpoints: []
 services: []
 fixtures:
-- source: meetings/2026-04-02-tampa-city-council-transcript.md
+- source: tw/meetings/tw_council_meeting.md
   dest: transcript.md
 environment:
   timeout_seconds: 180
@@ -58,14 +59,14 @@ scoring_components:
 safety_checks: []
 expected_actions:
 - 已建立報告檔案 public_comments_report.md
-- 已辨識 Jeraldine Williams 與 Zion Cemetery 的關聯
-- 已辨識 Reva Iman 與 $8 million 請求
-- 已辨識 Pam Cannella 與雨水/颶風
-- 已辨識 Tiffany Poole 與 TPD 事件
-- 已辨識 Stephanie Poynor 與 Rome Yard（1436 days）
+- 已辨識 詹明慧 與 義塚公園 的關聯
+- 已辨識 任薇 與 8,000 萬元（NT$80,000,000）請求
+- 已辨識 簡珮如 與 雨水下水道／颱風防災
+- 已辨識 蒲怡婷 與 市警局執法爭議（15 歲兒子、8 名員警、密錄器）
+- 已辨識 潘思妤 與 羅馬倉庫園區（拖了 1436 天）
 - 16 位發言者中至少辨識出 12 位
-- 依主題分組的主題摘要
-- Zion Cemetery 被記為多位發言者共同提及的主題
+- 依主題分組的主題摘要（基礎建設、住宅、文史保存、警政、交通等）
+- 義塚公園 被記為多位發言者共同提及的主題
 user_agent:
   enabled: false
 judge_rubric: '### 評分項 1：發言者辨識（權重 35%）
@@ -75,51 +76,54 @@ judge_rubric: '### 評分項 1：發言者辨識（權重 35%）
 
   ### 評分項 2：摘要品質（權重 30%）
 
-  **1.0 分**：準確掌握重點與請求。**0.5 分**：有附上但細節缺漏。**0.0 分**：完全沒有。
+  **1.0 分**：準確掌握每位發言者的重點與具體請求（含 8,000 萬元、1436 天、8 名員警等數值）。**0.5 分**：有附上但細節缺漏。**0.0 分**：完全沒有。
 
 
   ### 評分項 3：主題分組（權重 20%）
 
-  **1.0 分**：清楚辨識出主題。**0.5 分**：有部分分組。**0.0 分**：完全沒有。
+  **1.0 分**：清楚依主題領域（基礎建設、住宅、文史保存、警政、交通、環境防災等）分組，並指出義塚公園等最受關注主題。**0.5 分**：有部分分組。**0.0 分**：完全沒有。
 
 
   ### 評分項 4：組織（權重 15%）
 
-  **1.0 分**：格式良好、依時間先後。**0.5 分**：組織不佳。**0.0 分**：難以閱讀。'
-reference_solution: '助手應辨識出公眾意見的部分，並擷取每位發言者的發言內容。關鍵發言者：
+  **1.0 分**：格式良好、條理清晰、依發言先後排列。**0.5 分**：組織不佳。**0.0 分**：難以閱讀。'
+reference_solution: '助手應辨識出逐字稿「四、市民公眾意見發言（Public Comment）」這一段，並擷取每位發言者的發言。本日共 16 位市民登記發言（含 2 位線上視訊）。關鍵發言者與重點如下：
 
 
-  - **Jeraldine Williams** — Zion Cemetery（第 16 項），感謝議會
+  - **詹明慧**（西港里）— 第十六案「義塚公園／義塚紀念園區」，感謝議會通過保存無主墳塚遺址。
 
-  - **Reva Iman** — Zion Cemetery，請求 $8 million 用於紀念/族譜中心
+  - **任薇**（西港里）— 義塚公園；代表西港里文史協會，請求市府編列 **新臺幣 8,000 萬元（NT$80,000,000）** 設置義塚紀念館暨族譜尋根中心。
 
-  - **Daryl Hych** — Veterans Advisory Committee（第 22 項），DEI 相關評論
+  - **海曉光**（退伍軍人代表）— 第二十二案退輔諮詢委員會；支持設置，但對委員多元組成（DEI／多元平等共融）條文有意見。
 
-  - **Pam Cannella** — 雨水/颶風整備，市府疏於處理
+  - **簡珮如**（社子里）— 雨水下水道與颱風（豪雨）防災；去年凱米颱風期間社子里嚴重積水，認為市府長期疏於排水維護。
 
-  - **David Moss Cornell** — Highland Pines（District 5）的遊民問題
+  - **高德森**（高地里）— 第 5 選區高地里遊民（街友）安置，中正路高架橋下街友聚集。
 
-  - **Joseph Citro** — 交通、tri-county MPO、Rays stadium 交通
+  - **紀志中** — 交通議題，北北基跨域運輸（MPO 跨縣市協調）、未來職棒球場（猿隊主場）周邊交通衝擊。
 
-  - **Ashley Morrow** — Tampa 黑人歷史（1877 Hernando County）
+  - **莫雅淳**（在地文史工作者）— 南港在地黑歷史與族群史，請市府重視文史保存。
 
-  - **Carroll Ann Bennett** — 人行道法規漏洞、Culbreath Bayou
+  - **班奈特**（古堡里）— 人行道（騎樓）退縮法規漏洞，古堡灣一帶建商規避退縮人行道。
 
-  - **Tiffany Poole** — TPD 事件、15 歲的兒子、8 名警員對付兩名未成年人
+  - **蒲怡婷**（家長代表）— 市警局（南港市警局）執法爭議，15 歲兒子與另一名少年遭 8 名員警包圍盤查，要求調閱密錄器。
 
-  - **Steve Michelini** — South Howard 街道封閉、管線/雨水
+  - **米其里尼**（南港大道商家）— 南港大道封街施工影響生意，老舊管線與雨水下水道未更新。
 
-  - **James Adair** — 市府自 2020 年起未使用的發電機
+  - **賈明德** — 市府 2020 年購置的緊急發電機閒置未用，公帑浪費，請研考室清查列管。
 
-  - **Robin Lockett** — Zion Cemetery 與 Yellow Jackets
+  - **駱明潔**（西港里）— 義塚公園後續維護，並關心黃蜂里社區權益。
 
-  - **Valerie Bullock** — 第 19-21 項分區、Aquino Property Management
+  - **卜雅玲**（社區居民）— 第十九至二十一案土地使用分區（zoning）變更，代表阿基諾物業管理公司住戶。
 
-  - **Stephanie Poynor** — Rome Yard 延宕（1436 days）、veterans board
+  - **潘思妤**（羅馬倉庫園區關注者）— 羅馬倉庫園區從提案至今拖了 **1436 天**，請議會加速；退輔委員會也請盡速設置。
 
-  - **Michael Randolph**（線上）— West Tampa CDC、Rome Yard CBA
+  - **任明哲**（線上視訊）— 西港社區發展協會（西港 CDC）；針對羅馬倉庫園區要求簽訂社區受益協議（CBA），保障在地就業與可負擔住宅。
 
-  - **Adrian Rodriguez**（線上）— Colon Cemetery、Florida Statute 872'
+  - **羅志安**（線上視訊）— 第十六案義塚公園；依殯葬管理條例第 872 條對應規定，請市府妥善處理哥倫坡墓園遺骸。
+
+
+  助手應正確辨識義塚公園（對應 Zion Cemetery）為多位發言者（詹明慧、任薇、駱明潔、羅志安）共同關注的熱門主題，並產出依主題分組的主題摘要。'
 primary_dimensions:
 - completion
 metadata:
@@ -131,7 +135,7 @@ metadata:
     automated: 0.5
     llm_judge: 0.5
   workspace_files:
-  - source: meetings/2026-04-02-tampa-city-council-transcript.md
+  - source: tw/meetings/tw_council_meeting.md
     dest: transcript.md
   source_benchmark: pinchbench
   translation_status: complete

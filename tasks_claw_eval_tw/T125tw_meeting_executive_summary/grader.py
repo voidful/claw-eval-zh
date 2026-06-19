@@ -13,111 +13,145 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the meeting executive summary task.
+    """高階主管摘要 grader（台灣虛構逐字稿：鼎峰科技產品行銷週會）。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    應有事實盡量從 meeting_transcript.md 動態推導，再比對 agent 的中文報告
+    executive_summary.md。僅用標準函式庫。
     """
     from pathlib import Path
     import re
 
-    scores = {}
     workspace = Path(workspace_path)
 
-    # Check if report exists
+    # --- 讀取 agent 報告 ---
     report_path = workspace / "executive_summary.md"
     if not report_path.exists():
-        alternatives = ["exec_summary.md", "summary.md", "meeting_summary.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in ["exec_summary.md", "summary.md", "meeting_summary.md", "摘要.md"]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
 
+    keys = [
+        "file_created", "meeting_date", "topics_identified", "events_covered",
+        "announcements_covered", "decisions_documented", "attendees_named",
+        "action_items_present", "concise",
+    ]
     if not report_path.exists():
-        return {
-            "file_created": 0.0,
-            "meeting_date": 0.0,
-            "topics_identified": 0.0,
-            "events_covered": 0.0,
-            "announcements_covered": 0.0,
-            "decisions_documented": 0.0,
-            "action_items_present": 0.0,
-            "concise": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
-    scores["file_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    content = report_path.read_text(encoding="utf-8", errors="ignore")
 
-    # Check meeting date
-    date_patterns = [r'2021-06-28', r'june\s*28', r'6/28/2021', r'28\s*june\s*2021']
-    scores["meeting_date"] = 1.0 if any(re.search(p, content_lower) for p in date_patterns) else 0.0
+    # --- 從逐字稿動態推導應有事實 ---
+    src = workspace / "meeting_transcript.md"
+    src_text = src.read_text(encoding="utf-8", errors="ignore") if src.exists() else ""
 
-    # Count key topics identified
+    # 日期：抓逐字稿裡的 YYYY-MM-DD（取第一個）
+    m = re.search(r"(20\d{2})-(\d{2})-(\d{2})", src_text)
+    if m:
+        y, mo, d = m.group(1), m.group(2), m.group(3)
+        date_variants = [
+            rf"{y}-{mo}-{d}",
+            rf"{y}\s*年\s*{int(mo)}\s*月\s*{int(d)}\s*日",
+            rf"{y}/{int(mo)}/{int(d)}",
+            rf"{y}/{mo}/{d}",
+        ]
+    else:
+        date_variants = [r"2025-03-18"]
+
+    # 與會者：抓逐字稿裡反覆出現的三字中文人名
+    known_owners = ["王志明", "林淑芬", "高敏哲", "陳柏宇", "蔡思敏", "戴立安"]
+    attendees = [n for n in known_owners if n in src_text]
+    if not attendees:
+        attendees = known_owners
+
+    scores = {"file_created": 1.0}
+
+    # --- 會議日期 ---
+    scores["meeting_date"] = (
+        1.0 if any(re.search(p, content) for p in date_variants) else 0.0
+    )
+
+    # --- 關鍵主題數 ---
     topic_count = 0
-    if re.search(r'(?:corporate\s*event|event\s*sponsor|re:?\s*invent|kubecon|google\s*next)', content_lower):
+    if re.search(r"(?:企業活動|活動贊助|贊助分工|研討會|COSCUP|DevOpsDays|Kubernetes\s*Day)",
+                 content, re.IGNORECASE):
         topic_count += 1
-    if re.search(r'(?:product\s*announce|commit\s*(?:conference|event)|top\s*(?:5|five)\s*feature)', content_lower):
+    if re.search(r"(?:鼎峰匯流|DingFeng\s*Connect|產品發布|前\s*5\s*名|前五名|top\s*5|漏洞管理)",
+                 content, re.IGNORECASE):
         topic_count += 1
-    if re.search(r'(?:competitive|infographic|comparison)', content_lower):
+    if re.search(r"(?:競品|比較|資訊圖|infographic)", content, re.IGNORECASE):
         topic_count += 1
-    if re.search(r'(?:messaging\s*framework|tagline|more\s*speed|single\s*source\s*of\s*truth)', content_lower):
+    if re.search(r"(?:訊息架構|標語|支柱|更快交付|單一真相來源)", content):
         topic_count += 1
-    if re.search(r'(?:vulnerability\s*management|security\s*announce)', content_lower):
+    if re.search(r"(?:tier\s*1|分層|試算表|每個\s*stage)", content, re.IGNORECASE):
         topic_count += 1
-    scores["topics_identified"] = 1.0 if topic_count >= 3 else (0.5 if topic_count >= 2 else 0.0)
+    scores["topics_identified"] = (
+        1.0 if topic_count >= 3 else (0.5 if topic_count >= 2 else 0.0)
+    )
 
-    # Events coverage
-    events_patterns = [
-        r're:?\s*invent',
-        r'google\s*next',
-        r'kubecon',
-        r'event\s*(?:sponsor|support|assign)',
+    # --- 企業活動分工涵蓋 ---
+    event_patterns = [
+        r"COSCUP|開源人年會",
+        r"DevOpsDays\s*Taipei|DevOpsDays",
+        r"Kubernetes\s*Day\s*Taiwan|Kubernetes\s*Day",
+        r"活動\s*(?:贊助|分工|主線)|研討會",
     ]
-    scores["events_covered"] = 1.0 if sum(1 for p in events_patterns if re.search(p, content_lower)) >= 2 else 0.0
+    ev = sum(1 for p in event_patterns if re.search(p, content, re.IGNORECASE))
+    scores["events_covered"] = 1.0 if ev >= 2 else (0.5 if ev >= 1 else 0.0)
 
-    # Product announcements coverage
+    # --- 產品發布題材涵蓋 ---
     announce_patterns = [
-        r'commit',
-        r'product\s*announce',
-        r'top\s*(?:5|five)',
-        r'vulnerability\s*management',
-        r'kubernetes\s*agent',
+        r"鼎峰匯流|DingFeng\s*Connect",
+        r"產品發布|keynote|發布題材",
+        r"前\s*5\s*名|前五名|top\s*5",
+        r"漏洞管理|vulnerability\s*management",
+        r"MVC|主題敘事|整合\s*(?:成|為)?\s*主題",
     ]
-    scores["announcements_covered"] = 1.0 if sum(1 for p in announce_patterns if re.search(p, content_lower)) >= 2 else 0.0
+    an = sum(1 for p in announce_patterns if re.search(p, content, re.IGNORECASE))
+    scores["announcements_covered"] = 1.0 if an >= 2 else (0.5 if an >= 1 else 0.0)
 
-    # Decisions documented
+    # --- 決議記載 ---
     decision_count = 0
-    if re.search(r'more\s*speed.*less\s*risk', content_lower):
+    if re.search(r"更快交付[，,、\s]*更低風險", content):
         decision_count += 1
-    if re.search(r'(?:green|no\s*red|color)', content_lower):
+    if re.search(r"(?:只用綠色|綠色|不用紅色|不放紅色|綠色配色)", content):
         decision_count += 1
-    if re.search(r'vulnerability\s*management', content_lower):
+    if re.search(r"漏洞管理", content):
         decision_count += 1
-    if re.search(r'(?:platform.*re:?\s*invent|ci.*cd.*google|gitops.*kubecon)', content_lower):
+    if re.search(r"(?:平台.*COSCUP|CI/?CD.*DevOpsDays|GitOps.*Kubernetes\s*Day)",
+                 content, re.IGNORECASE | re.DOTALL):
         decision_count += 1
-    scores["decisions_documented"] = 1.0 if decision_count >= 2 else (0.5 if decision_count >= 1 else 0.0)
+    if re.search(r"(?:每個\s*stage\s*只|相關.*對手|新增鼎峰|鼎峰一列|加上鼎峰)",
+                 content, re.IGNORECASE):
+        decision_count += 1
+    scores["decisions_documented"] = (
+        1.0 if decision_count >= 2 else (0.5 if decision_count >= 1 else 0.0)
+    )
 
-    # Action items present
+    # --- 與會者姓名 ---
+    named = sum(1 for n in attendees if n in content)
+    scores["attendees_named"] = (
+        1.0 if named >= 2 else (0.5 if named >= 1 else 0.0)
+    )
+
+    # --- 行動項目／後續步驟 ---
     action_patterns = [
-        r'action\s*item',
-        r'next\s*step',
-        r'follow[\s-]*up',
-        r'(?:need|should|will|to)\s*(?:do|complete|confirm|add|update|review)',
-        r'assign(?:ed|ment)',
-        r'(?:cormac|cindy|brian|samia|william).*(?:will|to|should)',
+        r"行動項目|action\s*item",
+        r"後續步驟|後續|next\s*step",
+        r"待辦|follow[\s-]*up|追蹤",
+        r"星期二|截止|下次會議",
+        r"負責人|指派|負責",
+        r"(?:王志明|戴立安|高敏哲|蔡思敏|陳柏宇|林淑芬).{0,12}(?:負責|要|將|需|補|確認|定稿|修改)",
     ]
-    scores["action_items_present"] = 1.0 if sum(1 for p in action_patterns if re.search(p, content_lower)) >= 2 else 0.0
+    ac = sum(1 for p in action_patterns if re.search(p, content, re.IGNORECASE))
+    scores["action_items_present"] = 1.0 if ac >= 2 else (0.5 if ac >= 1 else 0.0)
 
-    # Conciseness check (under ~800 words)
-    word_count = len(content.split())
-    scores["concise"] = 1.0 if word_count <= 800 else (0.5 if word_count <= 1200 else 0.0)
+    # --- 精簡度（中文以字元數估算，約 1200 字以內）---
+    cjk = len(re.findall(r"[一-鿿]", content))
+    length = cjk if cjk > 0 else len(content.split())
+    scores["concise"] = (
+        1.0 if length <= 1200 else (0.5 if length <= 1800 else 0.0)
+    )
 
     return scores
 

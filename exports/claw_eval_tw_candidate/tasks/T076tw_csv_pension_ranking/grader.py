@@ -13,115 +13,153 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the pension fund ranking task.
+    """台灣各縣市公教退休給付排名 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    應有事實「從 tw_pension.csv（佈署的台灣 CSV）動態實算」——聚合縣市總計、
+    依金額與人數排序、篩選後段，再比對 agent 產生的中文報告
+    pension_ranking_report.md。僅用標準函式庫，不沿用任何美國數值。
     """
     from pathlib import Path
+    import csv
     import re
 
-    scores = {}
+    keys = [
+        "report_created", "top_10_listed", "rank1_taichung",
+        "rank2_newtaipei", "rank3_kaohsiung", "bottom_states",
+        "grand_total", "payee_count_ranking", "geographic_analysis",
+    ]
     workspace = Path(workspace_path)
 
-    # Check if report exists
+    # --- 找報告檔 ---
     report_path = workspace / "pension_ranking_report.md"
     if not report_path.exists():
-        alternatives = ["ranking_report.md", "report.md", "pension_report.md", "pension_ranking.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in ["ranking_report.md", "report.md", "pension_report.md",
+                    "pension_ranking.md", "退休給付報告.md", "排名報告.md"]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
-
     if not report_path.exists():
-        return {
-            "report_created": 0.0,
-            "top_10_listed": 0.0,
-            "ohio_first": 0.0,
-            "pennsylvania_second": 0.0,
-            "florida_third": 0.0,
-            "bottom_states": 0.0,
-            "grand_total": 0.0,
-            "payee_count_ranking": 0.0,
-            "geographic_analysis": 0.0,
-        }
+        return {k: 0.0 for k in keys}
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # --- 從 CSV 動態實算正解 ---
+    csv_path = workspace / "tw_pension.csv"
 
-    # Check top 10 listing — at least 8 of the actual top 10 states mentioned
-    top_10_states = ["ohio", "pennsylvania", "florida", "michigan", "california",
-                     "new york", "illinois", "indiana", "north carolina", "georgia"]
-    mentioned = sum(1 for s in top_10_states if s in content_lower)
-    scores["top_10_listed"] = 1.0 if mentioned >= 8 else (0.5 if mentioned >= 5 else 0.0)
+    def to_int(s):
+        d = re.sub(r"[^\d]", "", s or "")
+        return int(d) if d else 0
 
-    # Ohio as #1 by amount
-    ohio_patterns = [
-        r'ohio.*(?:536|first|#1|highest|top|rank.*1|largest)',
-        r'(?:first|#1|highest|top|rank.*1|largest).*ohio',
-        r'1[\.\)]\s*(?:oh[- ])?ohio',
-        r'ohio.*\$?536',
-    ]
-    scores["ohio_first"] = 1.0 if any(re.search(p, content_lower) for p in ohio_patterns) else 0.0
+    grand = None
+    totals = []  # [(縣市名, 金額, 領取人數, 遞延人數)]
+    if csv_path.exists():
+        with csv_path.open(encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                name = (row.get("STATE_ABBREV_NAME") or "").strip()
+                amt = to_int(row.get("PAYEE_AMOUNT"))
+                pc = to_int(row.get("PAYEE_COUNT"))
+                dc = to_int(row.get("DEFERRED_COUNT"))
+                if name == "Grand Total":
+                    grand = (amt, pc, dc)
+                elif name.endswith("Total"):
+                    # 去掉「簡碼-縣市名」中的簡碼與末尾 Total，只留中文縣市/機關名
+                    label = name[: -len("Total")].strip()
+                    if "-" in label:
+                        label = label.split("-", 1)[1].strip()
+                    totals.append((label, amt, pc, dc))
 
-    # Pennsylvania as #2
-    pa_patterns = [
-        r'pennsylvania.*(?:456|second|#2|rank.*2)',
-        r'(?:second|#2|rank.*2).*pennsylvania',
-        r'2[\.\)]\s*(?:pa[- ])?pennsylvania',
-        r'pennsylvania.*\$?456',
-    ]
-    scores["pennsylvania_second"] = 1.0 if any(re.search(p, content_lower) for p in pa_patterns) else 0.0
+    by_amt = sorted(totals, key=lambda t: t[1], reverse=True)
+    by_amt_asc = sorted([t for t in totals if t[1] > 0], key=lambda t: t[1])
+    by_pc = sorted(totals, key=lambda t: t[2], reverse=True)
 
-    # Florida as #3
-    fl_patterns = [
-        r'florida.*(?:429|third|#3|rank.*3)',
-        r'(?:third|#3|rank.*3).*florida',
-        r'3[\.\)]\s*(?:fl[- ])?florida',
-        r'florida.*\$?429',
-    ]
-    scores["florida_third"] = 1.0 if any(re.search(p, content_lower) for p in fl_patterns) else 0.0
+    # --- 讀報告，準備數字比對（去千分位逗號與空白）---
+    c = report_path.read_text(encoding="utf-8", errors="ignore")
+    nospace = re.sub(r"[\s,]", "", c)
 
-    # Bottom states mentioned
-    bottom_terms = ["northern mariana", "american samoa", "armed forces", "guam", "palau"]
-    bottom_count = sum(1 for t in bottom_terms if t in content_lower)
-    scores["bottom_states"] = 1.0 if bottom_count >= 3 else (0.5 if bottom_count >= 2 else 0.0)
+    def has_name(name):
+        return bool(name) and name in c
 
-    # Grand total
-    grand_patterns = [
-        r'5[,.]7\d*\s*billion',
-        r'\$?5[,.]711',
-        r'877[,.]?\d*\s*(?:thousand|payee|recipient)',
-        r'483[,.]?\d*\s*(?:thousand|deferred)',
-    ]
-    grand_count = sum(1 for p in grand_patterns if re.search(p, content_lower))
-    scores["grand_total"] = 1.0 if grand_count >= 2 else (0.5 if grand_count >= 1 else 0.0)
+    def has_amount(amt):
+        # 接受 561,035,674 / 561035674 / 5.61 億 等寫法皆視為命中（以無逗號全額為準）
+        return amt > 0 and str(amt) in nospace
 
-    # Payee count ranking (PA and OH should be top by count)
-    payee_patterns = [
-        r'pennsylvania.*78[,.]?119',
-        r'ohio.*77[,.]?679',
-        r'payee.*count.*pennsylvania',
-        r'(?:most|highest).*(?:payee|recipient).*pennsylvania',
-    ]
-    scores["payee_count_ranking"] = 1.0 if any(re.search(p, content_lower) for p in payee_patterns) else 0.5 if "payee" in content_lower and "count" in content_lower else 0.0
+    scores = {"report_created": 1.0}
 
-    # Geographic analysis
+    # 前 10 大（金額）：實算前 10 名縣市名至少出現 8 個
+    top10_names = [t[0] for t in by_amt[:10]]
+    mentioned = sum(1 for n in top10_names if has_name(n))
+    scores["top_10_listed"] = (
+        1.0 if mentioned >= 8 else (0.5 if mentioned >= 5 else 0.0)
+    )
+
+    # 第 1 名（金額）：名稱 + 金額皆需命中
+    if by_amt:
+        n1, a1 = by_amt[0][0], by_amt[0][1]
+        scores["rank1_taichung"] = (
+            1.0 if (has_name(n1) and has_amount(a1)) else 0.0
+        )
+    else:
+        scores["rank1_taichung"] = 0.0
+
+    # 第 2 名（金額）
+    if len(by_amt) >= 2:
+        n2, a2 = by_amt[1][0], by_amt[1][1]
+        scores["rank2_newtaipei"] = (
+            1.0 if (has_name(n2) and has_amount(a2)) else 0.0
+        )
+    else:
+        scores["rank2_newtaipei"] = 0.0
+
+    # 第 3 名（金額）
+    if len(by_amt) >= 3:
+        n3, a3 = by_amt[2][0], by_amt[2][1]
+        scores["rank3_kaohsiung"] = (
+            1.0 if (has_name(n3) and has_amount(a3)) else 0.0
+        )
+    else:
+        scores["rank3_kaohsiung"] = 0.0
+
+    # 後 5 名（金額非零，由小到大）：實算後 5 名至少提及 3 個
+    bottom5 = [t[0] for t in by_amt_asc[:5]]
+    bottom_hit = sum(1 for n in bottom5 if has_name(n))
+    scores["bottom_states"] = (
+        1.0 if bottom_hit >= 3 else (0.5 if bottom_hit >= 2 else 0.0)
+    )
+
+    # Grand Total：總金額／總領取人數／總遞延人數三項命中其二即滿分
+    if grand:
+        g_amt, g_pc, g_dc = grand
+        g_hits = sum(
+            1 for v in (g_amt, g_pc, g_dc) if v > 0 and str(v) in nospace
+        )
+        scores["grand_total"] = (
+            1.0 if g_hits >= 2 else (0.5 if g_hits >= 1 else 0.0)
+        )
+    else:
+        scores["grand_total"] = 0.0
+
+    # 領取人數排名：前 2 名（依人數）之名稱 + 人數命中其一即可，另接受出現「領取人數」段落
+    pc_hit = False
+    for nm, _amt, pc, _dc in by_pc[:2]:
+        if has_name(nm) and pc > 0 and str(pc) in nospace:
+            pc_hit = True
+            break
+    if pc_hit:
+        scores["payee_count_ranking"] = 1.0
+    elif re.search(r"(領取(者)?人數|領取人口|現職領取)", c):
+        scores["payee_count_ranking"] = 0.5
+    else:
+        scores["payee_count_ranking"] = 0.0
+
+    # 地理／人口分析：命中關鍵分析詞彙的數量
     geo_patterns = [
-        r'(?:rust\s*belt|midwest|industrial)',
-        r'(?:geographic|regional|pattern)',
-        r'(?:federal|government|military).*(?:employ|presence|base)',
-        r'(?:northeast|southeast|sunbelt)',
+        r"(六都|都會區|直轄市|人口規模|人口數)",
+        r"(地理|區域|分布|集中|模式|趨勢)",
+        r"(公教|退休人口|軍公教|公務人力)",
+        r"(離島|偏鄉|北部|中部|南部|東部)",
     ]
-    geo_count = sum(1 for p in geo_patterns if re.search(p, content_lower))
-    scores["geographic_analysis"] = 1.0 if geo_count >= 2 else (0.5 if geo_count >= 1 else 0.0)
+    geo_count = sum(1 for p in geo_patterns if re.search(p, c))
+    scores["geographic_analysis"] = (
+        1.0 if geo_count >= 2 else (0.5 if geo_count >= 1 else 0.0)
+    )
 
     return scores
 

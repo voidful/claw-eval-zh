@@ -220,9 +220,7 @@
       "locale": "zh-TW",
       "grading_type": "llm_judge",
       "grader_entrypoint": null,
-      "fixtures": [
-        "ai_blog.txt"
-      ]
+      "fixtures": []
     },
     {
       "task_id": "T025tw_commit_message_writer",
@@ -373,7 +371,9 @@
       "locale": "zh-TW",
       "grading_type": "llm_judge",
       "grader_entrypoint": null,
-      "fixtures": []
+      "fixtures": [
+        "video_transcript.txt"
+      ]
     },
     {
       "task_id": "T040tw_iterative_code_refine",
@@ -553,7 +553,7 @@
       "grading_type": "llm_judge",
       "grader_entrypoint": null,
       "fixtures": [
-        "apple_stock_2014.csv"
+        "tw_stock_2330_2024.csv"
       ]
     },
     {
@@ -663,7 +663,7 @@
       "grading_type": "hybrid",
       "grader_entrypoint": "grader.py",
       "fixtures": [
-        "idaho_weather_stations.csv"
+        "tw_weather_stations.csv"
       ]
     },
     {
@@ -674,7 +674,7 @@
       "grading_type": "hybrid",
       "grader_entrypoint": "grader.py",
       "fixtures": [
-        "idaho_weather_stations.csv"
+        "tw_weather_stations.csv"
       ]
     },
     {
@@ -685,7 +685,7 @@
       "grading_type": "hybrid",
       "grader_entrypoint": "grader.py",
       "fixtures": [
-        "idaho_weather_stations.csv"
+        "tw_weather_stations.csv"
       ]
     },
     {
@@ -729,7 +729,7 @@
       "grading_type": "hybrid",
       "grader_entrypoint": "grader.py",
       "fixtures": [
-        "us_cities_top1000.csv"
+        "tw_townships.csv"
       ]
     },
     {
@@ -751,7 +751,7 @@
       "grading_type": "hybrid",
       "grader_entrypoint": "grader.py",
       "fixtures": [
-        "us_cities_top1000.csv"
+        "tw_townships_density.csv"
       ]
     },
     {
@@ -762,7 +762,7 @@
       "grading_type": "hybrid",
       "grader_entrypoint": "grader.py",
       "fixtures": [
-        "us_cities_top1000.csv"
+        "tw_townships.csv"
       ]
     },
     {
@@ -773,7 +773,7 @@
       "grading_type": "hybrid",
       "grader_entrypoint": "grader.py",
       "fixtures": [
-        "us_pension_by_state.csv"
+        "tw_pension.csv"
       ]
     },
     {
@@ -784,7 +784,7 @@
       "grading_type": "hybrid",
       "grader_entrypoint": "grader.py",
       "fixtures": [
-        "us_pension_by_state.csv"
+        "tw_pension.csv"
       ]
     },
     {
@@ -795,7 +795,7 @@
       "grading_type": "hybrid",
       "grader_entrypoint": "grader.py",
       "fixtures": [
-        "us_pension_by_state.csv"
+        "tw_pension.csv"
       ]
     },
     {

@@ -1,7 +1,5 @@
 task_id: T124tw_meeting_advisory_acronyms
-task_name: 'NTIA 諮詢委員會縮寫詞彙表
-
-  '
+task_name: 頻譜共用顧問委員會：縮寫詞彙表（虛構）
 version: 0.3.0
 category: meeting_analysis
 difficulty: medium
@@ -18,32 +16,47 @@ source:
   original_task_id: task_meeting_advisory_acronyms
   original_file: tasks/task_meeting_advisory_acronyms.md
 prompt:
-  text: '我手上有一份美國政府諮詢委員會的會議逐字稿，存放在 `meeting-transcript.md`。這是商務部頻譜管理諮詢委員會（Commerce Spectrum Management
-    Advisory Committee, CSMAC）於 2012 年 5 月 30 日召開的會議，討論聯邦頻譜管理與共享。
+  text: '工作區裡有一份政府顧問委員會的會議逐字稿 meeting-transcript.md（虛構的台灣
+
+    「數位治理委員會 智慧城市暨資安顧問委員會（DGC-SCAB）」第 14 次會議）。會議於
+
+    2025 年 5 月 30 日在台北市南港數位治理大樓召開，主題是 1755-1850 MHz 聯邦級
+
+    頻段之政府與商用寬頻共用（spectrum sharing）與遷移（relocation）。逐字稿全文
+
+    為繁體中文，但機關、技術與法規名稱大量夾雜英文縮寫（如 DGC、OSM、MHz、LTE、
+
+    UAV、STA、ISART 等）。
 
 
-    請幫我分析這份逐字稿，在一個名為 `acronym_glossary.md` 的檔案中建立一份完整的縮寫詞彙表。對於每個找到的縮寫或簡稱，請列出：
+    請幫我分析這份逐字稿，在一個名為 `acronym_glossary.md` 的檔案中，建立一份完整的
+
+    縮寫詞彙表。對於每個找到的縮寫或簡稱，請列出：
 
 
-    - **縮寫（Acronym）**：逐字稿中使用的簡稱
+    - **縮寫**：逐字稿中使用的簡稱（如 DGC、MHz、STA）
 
-    - **全稱（Full form）**：它所代表的完整名稱
+    - **全稱**：它所代表的完整名稱（中文全稱為主，可附英文對應）
 
-    - **脈絡（Context）**：簡述它在本次會議中的使用方式（1-2 句）
+    - **脈絡**：簡述它在本次會議中的使用方式（1-2 句，須貼合本次頻譜共用會議）
 
-    - **類別（Category）**：政府機關（Government Agency）、頻譜／技術（Spectrum/Technical）、法規（Regulatory）、業界（Industry）、軍事（Military）或其他（Other）
-
-
-    請依縮寫的字母順序排序，並在最後附上找到的縮寫總數。
+    - **類別**：政府機關、頻譜／技術、法規、業界、軍事或其他
 
 
-    提醒：有些縮寫可能在逐字稿中本身就有展開；其他則可能需要頻譜管理與電信政策的領域知識才能解讀。請把所有出現的縮寫都擷取出來，包含只出現一次的。'
+    請依縮寫的英文字母順序排序，並在最後附上找到的縮寫總數。
+
+
+    提醒：有些縮寫在逐字稿中本身就有展開（例如 OSM 標註為「頻譜管理署」）；其他
+
+    則需要電信與頻譜管理的領域知識才能解讀。請把所有出現的縮寫都擷取出來，包含
+
+    只出現一次的（例如口語自嘲的 TMI、比喻用的 NFL、各工作小組 WG1～WG5）。'
   language: zh
 tools: []
 tool_endpoints: []
 services: []
 fixtures:
-- source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+- source: tw/meetings/tw_advisory_meeting.md
   dest: meeting-transcript.md
 environment:
   timeout_seconds: 180
@@ -61,164 +74,98 @@ scoring_components:
     description: 語意評分，依 judge_rubric
 safety_checks: []
 expected_actions:
-- 已建立 `acronym_glossary.md` 檔案
-- CSMAC 正確展開
-- NTIA 正確展開
+- 建立縮寫詞彙表檔案 acronym_glossary.md
+- DGC 正確展開為「數位治理委員會」
+- OSM 正確展開為「頻譜管理署」
 - 辨識出至少 15 個不重複的縮寫
 - 辨識出至少 20 個不重複的縮寫（加分門檻）
 - 包含技術類縮寫（MHz、GHz、LTE、UAV、STA）
-- 包含政府機關（FCC、DoD、DHS、OMB、OSTP）
-- 對各項目套用類別或分組
-- 採用字母順序排序
+- 包含政府機關縮寫（OSM、OSTP、OMB、ITS）
+- 對各項目套用類別或分組（政府機關／頻譜技術／法規／業界／軍事／其他）
+- 採用英文字母順序排序，並附上縮寫總數
 user_agent:
   enabled: false
-judge_rubric: '### 評分項 1：縮寫涵蓋度（權重 35%）
+judge_rubric: "### 評分項 1：縮寫涵蓋度（權重 35%）\n- 1.0：辨識出 25 個以上縮寫，包含冷僻的如 CSEA、ISART、TSB、CMRS、DGO，以及\n  脈絡性用法如\
+  \ NFL（比喻大城市）、TMI（口語自嘲）與 WG1～WG5 工作小組。\n  既涵蓋明顯的政府縮寫，也涵蓋技術性頻譜術語。\n- 0.75：辨識出 20～24 個縮寫，涵蓋多數主要類別。\n- 0.5：辨識出\
+  \ 15～19 個縮寫，涵蓋明顯的縮寫但漏掉數個領域專有術語。\n- 0.25：辨識出 10～14 個縮寫，大多只是常見機關。\n- 0.0：辨識出的縮寫少於 10 個。\n### 評分項 2：展開準確性（權重\
+  \ 30%）\n- 1.0：所有縮寫展開皆正確且貼合台灣語境（DGC＝數位治理委員會、OSM＝頻譜管理署、\n  STA＝特別臨時授權、ISART＝先進無線技術國際研討會、CMRS＝商用行動無線服務）。\n\
+  - 0.75：多數展開正確，僅有一兩處小錯。\n- 0.5：常見縮寫正確，但數個領域專有縮寫錯誤或缺少展開。\n- 0.25：多處展開錯誤。\n- 0.0：展開大多錯誤或捏造（如沿用英文原版 CSMAC／NTIA\
+  \ 等與本逐字稿不符之事實）。\n### 評分項 3：脈絡品質（權重 20%）\n- 1.0：每筆項目都有貼合本次會議的脈絡描述，說明該縮寫與 1755-1850 MHz 頻譜共用\n  討論的關聯（如\
+  \ STA 是台灣大哥大會同電信公會提出的實地量測申請）。\n- 0.75：多數項目有實用脈絡。\n- 0.5：有脈絡但偏籠統（只重述全稱，而非會議脈絡）。\n- 0.25：脈絡極少或為樣板文字。\n\
+  - 0.0：完全沒有提供脈絡。\n### 評分項 4：組織與分類（權重 15%）\n- 1.0：依英文字母排序、分類清楚（政府機關、頻譜技術、法規、業界、軍事、其他）、\n  全篇格式一致，並附縮寫總數。\n\
+  - 0.75：組織良好，僅有少許格式不一致。\n- 0.5：有一些組織，但分類或排序不完整。\n- 0.25：組織不佳。\n- 0.0：沒有組織。"
+reference_solution: '助手應讀取 meeting-transcript.md，辨識所有縮寫與簡稱，判斷其中文全稱、貼合
 
+  會議的脈絡與類別，依字母排序後寫入 acronym_glossary.md，並在最後附上縮寫總數。
 
-  **1.0 分**：辨識出 25 個以上縮寫，包含冷僻的如 CSEA、ISART、TSB、CMRS，以及脈絡性用法如 NFL（隱喻）與 TMI。既涵蓋明顯的政府縮寫，也涵蓋技術性頻譜術語。
 
+  逐字稿中出現的關鍵縮寫（最低集合，全稱以台灣語境為準）：
 
-  **0.75 分**：辨識出 20-24 個縮寫，涵蓋多數主要類別。
 
+  | 縮寫 | 全稱（台灣語境） | 類別 |
 
-  **0.5 分**：辨識出 15-19 個縮寫，涵蓋明顯的縮寫，但漏掉數個領域專有術語。
+  |------|------------------|------|
 
+  | DGC | 數位治理委員會 | 政府機關 |
 
-  **0.25 分**：辨識出 10-14 個縮寫，大多只是廣為人知的政府機關。
+  | SCAB | 智慧城市暨資安顧問委員會 | 政府機關 |
 
+  | OSM | 頻譜管理署（Office of Spectrum Management） | 政府機關 |
 
-  **0.0 分**：辨識出的縮寫少於 10 個。
+  | OSTP | 行政院科技與政策辦公室 | 政府機關 |
 
+  | OMB | 行政院主計與預算辦公室 | 政府機關 |
 
-  ### 評分項 2：展開準確性（權重 30%）
+  | ITS | 電信技術研究所 | 政府機關 |
 
+  | ISART | 先進無線技術國際研討會 | 頻譜技術 |
 
-  **1.0 分**：所有縮寫展開皆正確。領域專有術語（CSEA、CSMAC、CMRS、ISART、TSB 10F）準確展開。
+  | MHz | 百萬赫茲（Megahertz） | 頻譜技術 |
 
+  | GHz | 十億赫茲（Gigahertz） | 頻譜技術 |
 
-  **0.75 分**：多數展開正確，僅有一兩處小錯。
+  | LTE | 長期演進技術（Long-Term Evolution） | 產業 |
 
+  | UAV | 無人機／無人飛行載具 | 軍事 |
 
-  **0.5 分**：常見縮寫正確，但數個領域專有縮寫錯誤或缺少展開。
+  | PCS | 個人通訊服務 | 頻譜技術 |
 
+  | AWS | 先進無線服務 | 頻譜技術 |
 
-  **0.25 分**：多處展開錯誤。
+  | CMRS | 商用行動無線服務 | 產業 |
 
+  | STA | 特別臨時授權（Special Temporary Authority） | 法規 |
 
-  **0.0 分**：展開大多錯誤或捏造。
+  | CSEA | 商用頻譜加值條例 | 法規 |
 
+  | PCAST | 科技顧問會議 | 政府機關 |
 
-  ### 評分項 3：脈絡品質（權重 20%）
+  | CTIA | 電信業者公會 | 產業 |
 
+  | TIA | 電信工業協會 | 產業 |
 
-  **1.0 分**：每筆項目都包含有意義且貼合本次會議的脈絡描述，說明該縮寫與此次 CSMAC 討論的關聯。
+  | TSB | 電信系統公報 | 頻譜技術 |
 
+  | ITU-R | 國際電信聯盟無線電通信部門 | 頻譜技術 |
 
-  **0.75 分**：多數項目有實用的脈絡。
+  | WRC | 世界無線電通信大會 | 頻譜技術 |
 
+  | EW | 電子戰（Electronic Warfare） | 軍事 |
 
-  **0.5 分**：有脈絡但偏籠統（只是重述展開，而非會議脈絡）。
+  | DGO | 指定政府聯絡官 | 政府機關 |
 
+  | IP | 智慧財產權 | 其他 |
 
-  **0.25 分**：脈絡極少或為樣板文字。
+  | TMI | 資訊過載（與會者口語自嘲） | 其他 |
 
+  | NFL | 職業聯盟（比喻「重點大城市」的口語） | 其他 |
 
-  **0.0 分**：完全沒有提供脈絡。
+  | WG1～WG5 | 第 1 至第 5 工作小組 | 其他 |
 
 
-  ### 評分項 4：組織與分類（權重 15%）
+  此外，逐字稿也提到 NESA（鼎峰緊急救難服務協會）、PINF（公共利益網路基金會）、
 
-
-  **1.0 分**：依字母排序，分類清楚（Government、Technical、Regulatory、Industry、Military、Other），全篇格式一致。
-
-
-  **0.75 分**：組織良好，僅有少許格式不一致。
-
-
-  **0.5 分**：有一些組織，但分類或排序不完整。
-
-
-  **0.25 分**：組織不佳。
-
-
-  **0.0 分**：沒有組織。'
-reference_solution: '助手應該：
-
-
-  1. 讀取並解析會議逐字稿
-
-  2. 辨識所有縮寫與簡稱
-
-  3. 由脈絡或領域知識判斷其全稱
-
-  4. 加以分類並排序
-
-
-  預期的關鍵縮寫（最低集合）：
-
-
-  | Acronym | Full Form | Category |
-
-  |---------|-----------|----------|
-
-  | CSMAC | Commerce Spectrum Management Advisory Committee | Government Agency |
-
-  | NTIA | National Telecommunications and Information Administration | Government Agency |
-
-  | FCC | Federal Communications Commission | Government Agency |
-
-  | NOAA | National Oceanic and Atmospheric Administration | Government Agency |
-
-  | DoD | Department of Defense | Government Agency |
-
-  | DHS | Department of Homeland Security | Government Agency |
-
-  | OMB | Office of Management and Budget | Government Agency |
-
-  | OSTP | Office of Science and Technology Policy | Government Agency |
-
-  | ITS | Institute for Telecommunication Sciences | Government Agency |
-
-  | ISART | International Symposium on Advanced Radio Technologies | Spectrum/Technical |
-
-  | MHz | Megahertz | Spectrum/Technical |
-
-  | GHz | Gigahertz | Spectrum/Technical |
-
-  | UAV | Unmanned Aerial Vehicle | Military |
-
-  | LTE | Long-Term Evolution | Industry |
-
-  | PCS | Personal Communications Service | Spectrum/Technical |
-
-  | AWS | Advanced Wireless Services | Spectrum/Technical |
-
-  | CMRS | Commercial Mobile Radio Service | Industry |
-
-  | STA | Special Temporary Authority | Regulatory |
-
-  | CSEA | Commercial Spectrum Enhancement Act | Regulatory |
-
-  | PCAST | President''s Council of Advisors on Science and Technology | Government Agency |
-
-  | CTIA | Cellular Telecommunications Industry Association | Industry |
-
-  | TIA | Telecommunications Industry Association | Industry |
-
-  | TSB | Telecommunications Systems Bulletin | Spectrum/Technical |
-
-  | ITU-R | International Telecommunication Union - Radiocommunication | Spectrum/Technical |
-
-  | WRC | World Radiocommunication Conference | Spectrum/Technical |
-
-  | IP | Intellectual Property | Other |
-
-  | TMI | Too Much Information | Other |
-
-  | NFL | National Football League（隱喻指代大城市）| Other |
-
-
-  總計：約 25-30 個縮寫'
+  DZX（玉山防務系統）等虛構機構縮寫，可一併收錄。總計約 25～30 個縮寫。'
 primary_dimensions:
 - completion
 metadata:
@@ -230,7 +177,7 @@ metadata:
     automated: 0.6
     llm_judge: 0.4
   workspace_files:
-  - source: meetings/2012-05-30-meeting-transcript-ntia-csmac.md
+  - source: tw/meetings/tw_advisory_meeting.md
     dest: meeting-transcript.md
   source_benchmark: pinchbench
   translation_status: complete

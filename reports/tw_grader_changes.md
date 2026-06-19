@@ -53,3 +53,22 @@
 > 「查對正確標的 + 提供查詢日期與來源」，符合可重現性原則（method-based）。
 > 其餘 14 個 live-web 任務為 llm_judge/hybrid，未改 grader；改的是 prompt/rubric
 > （在地化主題 + 要求來源/查詢日期/不確定性）。
+
+## 深化批次（deepening）— 會議 / CSV / asset 同步 grader
+
+把剩餘約 35 個任務做台灣在地化，並對其中 **36 個 hybrid 任務同步改寫 grader**（寫於
+`scripts/tw_localization_overrides/z_<task>.yaml` 的 `grader_py`，重生後即 tasks_claw_eval_tw 的
+grader.py）：
+
+| 群組 | 任務 | 取代 | grader 改法 |
+|---|---|---|---|
+| 會議·議會 | council_votes/public_comment/budget/upcoming/contact_info/neighborhood（T109-114） | Tampa 市議會 → 虛構南港市議會 | 改查台灣逐字稿（dest=transcript.md）動態推導之事實 |
+| 會議·公司 | tech_*／executive_summary/sentiment/follow_up/blog/tldr/searchable（T115-130） | 英文產品會議 → 鼎峰科技 | 同上（dest=meeting_transcript.md） |
+| 會議·顧問 | advisory_*（T120-124） | 英文顧問會議 → 虛構技術顧問委員會 | 同上 |
+| 會議·政府 | gov_*（T131-136） | NASA UAP 公聽會 → 數位治理委員會 AI 公聽會 | 同上 |
+| CSV | csv_stations_*（T066-68）、csv_cities_*（T072/74/75）、csv_pension_*（T076-78） | Idaho/美國城市/美國退休金 → 台灣氣象站/鄉鎮市區/退休金 | grader 對台灣 CSV 動態計算正解 |
+| asset | todo_list_cleanup/email_triage/second_brain（hybrid）；daily_summary/summary/humanizer/email_reply/video（llm_judge） | 英文 asset → 繁中台灣 asset | hybrid 改查中文內容；T138 導師 `Elena Vasquez·Stanford`→`林淑芬·臺大` + 同步 grader |
+
+> 驗證：143 個 grader 全部可 import；對全部 hybrid grader 做「鑑別測試」（正確中文報告高分、
+> 空白/錯誤報告趨近 0）皆通過；council_votes、tech_action_items 兩個 gold 範例已對新逐字稿重建。
+> 並做殘留掃描：tasks_tw 無 NASA/Tampa/Idaho/Apple 等美國殘留、無簡體、無大陸用語（數據/點擊…）。

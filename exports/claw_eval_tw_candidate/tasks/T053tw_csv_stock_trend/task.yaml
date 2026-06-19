@@ -78,7 +78,7 @@ expected_actions:
 - 描述全年最高／最低或關鍵走勢
 user_agent:
   enabled: false
-judge_rubric: '### 評分項 1：數據分析準確度（權重 35%）
+judge_rubric: '### 評分項 1：資料分析準確度（權重 35%）
 
   - 1.0：起始/結束價、漲跌幅、連漲連跌、最高最低等數值正確且清楚呈現
 

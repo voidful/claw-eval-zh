@@ -24,10 +24,10 @@
 | task_financial_ratio_calculation | partial | 0.4167 | {'min_mean': 0.2, 'max_mean': 0.75} | ✅ |
 | task_financial_ratio_calculation | fail | 0.0 | {'max_mean': 0.05} | ✅ |
 | task_meeting_council_votes | pass | 1.0 | {'min_mean': 0.9} | ✅ |
-| task_meeting_council_votes | partial | 0.5 | {'min_mean': 0.2, 'max_mean': 0.8} | ✅ |
+| task_meeting_council_votes | partial | 0.5556 | {'min_mean': 0.2, 'max_mean': 0.8} | ✅ |
 | task_meeting_council_votes | fail | 0.0 | {'max_mean': 0.05} | ✅ |
 | task_meeting_tech_action_items | pass | 1.0 | {'min_mean': 0.9} | ✅ |
-| task_meeting_tech_action_items | partial | 0.8 | {'min_mean': 0.2, 'max_mean': 0.8} | ✅ |
+| task_meeting_tech_action_items | partial | 0.4444 | {'min_mean': 0.2, 'max_mean': 0.8} | ✅ |
 | task_meeting_tech_action_items | fail | 0.0 | {'max_mean': 0.05} | ✅ |
 | task_sanity | pass | 1.0 | {'min_mean': 1.0} | ✅ |
 | task_sanity | fail | 0.0 | {'max_mean': 0.0} | ✅ |

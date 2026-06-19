@@ -1,7 +1,6 @@
 ---
 id: task_summary
-name: |
-  文件摘要
+name: 文件摘要（分散式太陽能與智慧電網長文）
 category: analysis
 grading_type: llm_judge
 timeout_seconds: 240
@@ -17,47 +16,37 @@ claw_eval_tw_id: T041tw_summary
 workspace_files:
 - path: summary_source.txt
   content: |-
-    The Rise of Artificial Intelligence in Modern Healthcare
+    分散式太陽能與智慧電網：台灣能源轉型的下一哩路
 
-    Artificial intelligence (AI) has emerged as a transformative force in healthcare, revolutionizing how medical professionals diagnose diseases, develop treatment plans, and manage patient care. Over the past decade, machine learning algorithms have demonstrated remarkable capabilities in analyzing medical imaging, predicting patient outcomes, and identifying patterns that might escape human observation.
+    隨著淨零排放成為全民共識，分散式太陽能與智慧電網正快速崛起，成為改寫台灣能源樣貌的關鍵力量。過去十年間，從屋頂型光電到社區型儲能，再到結合人工智慧的需量管理，這些技術已逐漸從示範案場走入日常生活，改變了民眾用電、產業排程，乃至整體電網調度的方式。虛構的「南港數位治理委員會」在一份產業評估中指出，分散式能源最大的價值，在於把原本集中於少數大型電廠的供電責任，分散到成千上萬個屋頂、停車場與社區，讓供電更貼近用電端，也更具韌性。
 
-    One of the most significant applications of AI in healthcare is in medical imaging analysis. Deep learning models can now detect cancerous tumors, identify fractures, and diagnose conditions like diabetic retinopathy with accuracy rates that match or exceed those of experienced radiologists. These systems process thousands of images during training, learning to recognize subtle patterns and anomalies that indicate disease. For instance, Google's DeepMind has developed AI systems that can detect over 50 eye diseases from retinal scans with 94% accuracy.
+    分散式太陽能最直接的應用，落在屋頂型光電與社區共享電廠。如今台灣的工廠屋頂、學校禮堂、社會住宅乃至農地棚架，都成了發電的場域；以虛構的「鼎峰綠能科技」在桃園推動的社區共享方案為例，住戶不必自行出資裝設模組，便能認購社區電廠的部分發電量，將綠電折抵自家電費。光電之外，智慧電網在需量反應與儲能調度上同樣大有可為。透過分析智慧電表回傳的用電資料、天氣預報與電價訊號，系統能在尖峰時段引導用戶減少非必要負載，並在離峰時把多餘的太陽能存進社區儲能櫃。虛構的「林淑芬」團隊在台南試辦的案場便顯示，導入 AI 需量管理後，社區尖峰用電可削減約一成五，讓既有電網不必擴建就能容納更多再生能源。預測型分析則是另一個正在成形的前沿：藉由整合歷史發電曲線、雲層移動與用電習慣，系統能提前數小時預判某一饋線是否會因日照驟減而供電吃緊，讓調度人員及早因應，避免跳電。
 
-    Beyond imaging, AI is making strides in drug discovery and development. Traditional drug development is a lengthy and expensive process, often taking over a decade and costing billions of dollars. AI algorithms can analyze vast databases of molecular structures, predict how different compounds will interact with disease targets, and identify promising drug candidates much faster than traditional methods. During the COVID-19 pandemic, AI played a crucial role in accelerating vaccine development and identifying potential treatments.
-
-    Predictive analytics represents another frontier where AI is proving invaluable. By analyzing electronic health records, genetic information, and lifestyle factors, AI systems can predict which patients are at high risk for conditions like heart disease, diabetes, or hospital readmission. This enables healthcare providers to intervene earlier with preventive care, potentially saving lives and reducing healthcare costs. Some hospitals have implemented AI systems that predict patient deterioration hours before it becomes clinically apparent, allowing medical teams to take proactive measures.
-
-    However, the integration of AI in healthcare is not without challenges. Privacy concerns are paramount, as these systems require access to sensitive patient data. There are also questions about algorithmic bias, as AI systems trained on non-diverse datasets may perform poorly for underrepresented populations. Additionally, the "black box" nature of some AI algorithms makes it difficult for doctors to understand how the system reached a particular conclusion, which can be problematic in medical decision-making where transparency is crucial.
-
-    Regulatory frameworks are still evolving to keep pace with AI innovation. The FDA and other regulatory bodies worldwide are developing new guidelines for approving AI-based medical devices and ensuring they meet safety and efficacy standards. There's also the question of liability: when an AI system makes an error, who is responsible—the developer, the healthcare provider, or the institution?
-
-    Despite these challenges, the future of AI in healthcare looks promising. Researchers are working on explainable AI systems that can provide clear reasoning for their recommendations. Federated learning approaches allow AI models to be trained on distributed datasets without compromising patient privacy. As these technologies mature and regulatory frameworks solidify, AI is expected to become an increasingly integral part of healthcare delivery.
-
-    The key to successful AI integration lies in viewing these systems as tools to augment, rather than replace, human medical expertise. The most effective healthcare delivery will likely combine the pattern recognition and data processing capabilities of AI with the empathy, ethical judgment, and contextual understanding that human healthcare providers bring to patient care. This collaborative approach promises to improve outcomes, reduce costs, and make quality healthcare more accessible to populations around the world.
+    然而，分散式能源的整合並非全無挑戰。間歇性與併網穩定是首要難題，當天氣瞬息萬變、午後雷陣雨讓發電量在幾分鐘內大起大落，電網的電壓與頻率便面臨考驗，需要儲能與快速調度來緩衝。資料隱私與資安同樣不容忽視，智慧電表細緻地記錄了每一戶的作息，一旦外洩或遭入侵，後果難料；而把調度交給演算法，也讓「黑盒子」決策的透明度成為民眾與監理單位關切的焦點。此外，相關法規與市場機制仍在演進，售電、餽線容量分配與責任歸屬都還在摸索。儘管如此，展望未來，分散式太陽能與智慧電網的前景依舊看好：可解釋的調度模型、社區自主的微電網，以及把多座分散電廠聚合成「虛擬電廠」的商業模式，正逐步成熟。成功整合的關鍵，在於把這些技術視為協助而非取代人為判斷的工具，讓工程師的經驗、社區的參與與演算法的運算能力相輔相成，最終讓乾淨、穩定且人人可負擔的電力，更普及地走進台灣每一個角落。
 ---
 
-# 文件摘要
-
+# 文件摘要（分散式太陽能與智慧電網長文）
 
 ## Prompt
 
 工作區裡有一份文件 summary_source.txt，請閱讀後撰寫一份精簡的 3 段摘要，
 並寫入 summary_output.txt。
 
-摘要請以自然、流暢的繁體中文呈現，明顯短於原文，同時保留必要資訊。
+摘要請以自然、流暢的繁體中文（台灣用語）呈現，明顯短於原文，同時保留必要資訊。
 
 ## Expected Behavior
 
 助手應該：
 
-1. 讀取 summary_source.txt（工作區中提供）的內容
-2. 理解主要論點與核心主題
+1. 讀取 summary_source.txt（工作區中提供）的內容。
+2. 理解這篇長文的主要論點與核心主題：分散式太陽能與智慧電網在台灣能源轉型中的角色。
 3. 撰寫一份精簡的 3 段摘要，內容涵蓋：
-   - 主題與整體概述（第 1 段）
-   - 關鍵應用與效益（第 2 段）
-   - 挑戰與未來展望（第 3 段）
-4. 把摘要儲存到 summary_output.txt
-5. 在保持精簡的同時維持準確性
+   - 主題與整體概述（第 1 段）：分散式太陽能與智慧電網崛起，是台灣能源轉型的關鍵。
+   - 關鍵應用與效益（第 2 段）：屋頂型／社區共享光電、AI 需量反應與儲能調度、預測型分析。
+   - 挑戰與未來展望（第 3 段）：間歇性與併網穩定、資料隱私與資安、法規與市場機制，
+     以及虛擬電廠、微電網、可解釋調度等未來方向。
+4. 把摘要儲存到 summary_output.txt。
+5. 在保持精簡的同時維持準確性，並使用自然的台灣繁體中文。
 
 摘要應明顯短於原文，同時保留必要資訊。
 
@@ -65,22 +54,27 @@ workspace_files:
 
 - [ ] 已建立 summary_output.txt 檔案
 - [ ] 摘要剛好有 3 段
-- [ ] 摘要準確掌握主題（醫療領域的 AI）
-- [ ] 摘要提及關鍵應用（醫療影像、藥物研發、預測分析）
-- [ ] 摘要談及挑戰（隱私、偏誤、法規）
+- [ ] 摘要準確掌握主題（分散式太陽能與智慧電網在台灣能源轉型的角色）
+- [ ] 摘要提及關鍵應用（屋頂型／社區共享光電、AI 需量反應與儲能、預測型分析）
+- [ ] 摘要談及挑戰（間歇性／併網穩定、資料隱私與資安、法規與市場機制）
 - [ ] 摘要精簡（明顯短於原文）
-- [ ] 行文清晰、連貫
+- [ ] 行文清晰、連貫，為自然的台灣繁體中文
 - [ ] 沒有重大事實錯誤或失真
 
 ## LLM Judge Rubric
 
 ### 評分項 1：準確性與完整性（權重 35%）
 
-**1.0 分**：摘要準確掌握所有主要主題：AI 在醫療的應用（醫療影像、藥物研發、預測分析）、效益、挑戰（隱私、偏誤、法規）與未來展望。沒有事實錯誤或失真。
+**1.0 分**：摘要準確掌握所有主要主題：分散式太陽能與智慧電網在台灣能源轉型的角色、
+關鍵應用（屋頂型／社區共享光電、AI 需量反應與儲能調度、預測型分析）、效益、
+挑戰（間歇性／併網穩定、資料隱私與資安、法規與市場機制）與未來展望（虛擬電廠、
+微電網、可解釋調度）。沒有事實錯誤或失真。
 
-**0.75 分**：摘要掌握多數主要主題，僅有少數遺漏。某一關鍵面向可能著墨不足。沒有重大事實錯誤。
+**0.75 分**：摘要掌握多數主要主題，僅有少數遺漏。某一關鍵面向可能著墨不足。
+沒有重大事實錯誤。
 
-**0.5 分**：摘要掌握部分主要主題，但漏掉重要面向。可能有輕微事實不準確，或過度強調較不重要的論點。
+**0.5 分**：摘要掌握部分主要主題，但漏掉重要面向。可能有輕微事實不準確，
+或過度強調較不重要的論點。
 
 **0.25 分**：摘要漏掉多個主要主題，或含有重大事實錯誤。對原文的呈現不佳。
 
@@ -88,23 +82,27 @@ workspace_files:
 
 ### 評分項 2：精簡度（權重 25%）
 
-**1.0 分**：摘要長度適中（150-250 字），在不堆砌細節的前提下掌握必要資訊。資訊密度極佳。
+**1.0 分**：摘要長度適中（約 250 至 450 字），在不堆砌細節的前提下掌握必要資訊。
+資訊密度極佳。
 
-**0.75 分**：摘要相當精簡（250-350 字），資訊密度良好。略顯冗長。
+**0.75 分**：摘要相當精簡（約 450 至 600 字），資訊密度良好。略顯冗長。
 
-**0.5 分**：摘要略嫌冗長（350-450 字），或過短（少於 100 字），未能在精簡與完整之間取得平衡。
+**0.5 分**：摘要略嫌冗長（約 600 至 750 字），或過短（少於 180 字），
+未能在精簡與完整之間取得平衡。
 
-**0.25 分**：摘要過長（超過 450 字），或過短（少於 75 字）以致沒有用處。
+**0.25 分**：摘要過長（超過 750 字），或過短（少於 120 字）以致沒有用處。
 
 **0.0 分**：摘要長度完全不恰當，或內容缺失。
 
 ### 評分項 3：結構與連貫性（權重 20%）
 
-**1.0 分**：剛好 3 段，組織良好且邏輯流暢。第 1 段介紹主題，第 2 段涵蓋應用／效益，第 3 段談挑戰／未來。銜接與連貫性極佳。
+**1.0 分**：剛好 3 段，組織良好且邏輯流暢。第 1 段介紹主題，第 2 段涵蓋應用／效益，
+第 3 段談挑戰／未來。銜接與連貫性極佳。
 
 **0.75 分**：3 段且組織良好。在流暢度或段落聚焦上有少許問題。整體連貫。
 
-**0.5 分**：有 3 段但存在組織問題，或段數錯誤（2 段或 4 段）但其餘結構尚可。連貫性略有問題。
+**0.5 分**：有 3 段但存在組織問題，或段數錯誤（2 段或 4 段）但其餘結構尚可。
+連貫性略有問題。
 
 **0.25 分**：結構不佳且連貫性問題顯著。可能段數錯誤且內容雜亂。
 
@@ -112,7 +110,8 @@ workspace_files:
 
 ### 評分項 4：寫作品質（權重 15%）
 
-**1.0 分**：寫作出色，行文清晰、專業。沒有文法或錯字。用詞與語氣恰當，為自然的台灣繁體中文。
+**1.0 分**：寫作出色，行文清晰、專業。沒有文法或錯字。用詞與語氣恰當，
+為自然的台灣繁體中文（未出現簡體字或中國用語）。
 
 **0.75 分**：寫作品質良好，僅有少許問題。錯誤很少。整體清晰、專業。
 
@@ -124,7 +123,8 @@ workspace_files:
 
 ### 評分項 5：任務完成度（權重 5%）
 
-**1.0 分**：以正確檔名（summary_output.txt）建立檔案，助手讀取了原始檔案，所有要求皆達成。
+**1.0 分**：以正確檔名（summary_output.txt）建立檔案，助手讀取了原始檔案，
+所有要求皆達成。
 
 **0.75 分**：建立檔案但有小問題（例如檔名略有差異），但任務基本完成。
 

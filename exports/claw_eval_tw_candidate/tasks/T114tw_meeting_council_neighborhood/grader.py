@@ -13,34 +13,116 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
+    """南港市議會（虛構）里別／選區辨識 grader。
+
+    查核項對應原版，但改查台灣逐字稿（dest=transcript.md）推導之事實，
+    比對 agent 產出之中文報告 neighborhoods_report.md。僅用標準函式庫。
+    """
     from pathlib import Path
     import re
-    scores = {}
+
     workspace = Path(workspace_path)
     report_path = workspace / "neighborhoods_report.md"
     if not report_path.exists():
-        for alt in ["neighborhoods.md", "locations.md", "districts.md", "areas.md"]:
+        for alt in ["neighborhoods.md", "locations.md", "districts.md",
+                    "areas.md", "里別報告.md", "社區報告.md", "報告.md"]:
             if (workspace / alt).exists():
                 report_path = workspace / alt
                 break
+
+    keys = ["report_created", "temple_crest", "west_tampa", "south_howard",
+            "east_tampa", "highland_pines", "rezoning_addresses", "macdill",
+            "riverwalk", "frequency_or_crossref", "location_count"]
     if not report_path.exists():
-        return {k: 0.0 for k in ["report_created", "temple_crest", "west_tampa", "south_howard", "east_tampa", "highland_pines", "rezoning_addresses", "macdill", "riverwalk", "frequency_or_crossref", "location_count"]}
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    cl = content.lower()
-    scores["temple_crest"] = 1.0 if (re.search(r'temple\s*crest', cl) and re.search(r'(?:crime|mcneil|officer|50th|busch)', cl)) else 0.0
-    scores["west_tampa"] = 1.0 if (re.search(r'west\s*tampa', cl) and re.search(r'(?:rome\s*yard|ray|stadium|develop)', cl)) else 0.0
-    scores["south_howard"] = 1.0 if (re.search(r'(?:south\s*howard|soho)', cl) and re.search(r'(?:street|pipe|stormwater|michelini)', cl)) else 0.0
-    scores["east_tampa"] = 1.0 if (re.search(r'east\s*tampa', cl) and re.search(r'(?:develop|construct|22nd|build|rezon)', cl)) else 0.0
-    scores["highland_pines"] = 1.0 if (re.search(r'highland\s*pines', cl) and re.search(r'(?:homeless|cornell|broadway)', cl)) else 0.0
-    addresses = [r'4102.*22nd', r'2707.*22nd', r'110\s*south\s*boulevard']
-    scores["rezoning_addresses"] = 1.0 if sum(1 for a in addresses if re.search(a, cl)) >= 3 else (0.5 if sum(1 for a in addresses if re.search(a, cl)) >= 2 else 0.0)
-    scores["macdill"] = 1.0 if re.search(r'macdill', cl) else 0.0
-    scores["riverwalk"] = 1.0 if (re.search(r'riverwalk', cl) and re.search(r'(?:rome|connect|extension|west|develop)', cl)) else 0.0
-    scores["frequency_or_crossref"] = 1.0 if re.search(r'(?:frequen|count|cross[\s-]*ref|most\s*discuss)', cl) else 0.0
-    location_patterns = [r'temple\s*crest', r'west\s*tampa', r'south\s*howard|soho', r'east\s*tampa', r'highland\s*pines', r'tampa\s*heights', r'culbreath', r'downtown', r'drew\s*park', r'hyde\s*park', r'ybor', r'bayshore', r'macdill', r'rome\s*yard', r'riverwalk', r'marion', r'franklin', r'port\s*tampa']
-    found = sum(1 for l in location_patterns if re.search(l, cl))
-    scores["location_count"] = 1.0 if found >= 15 else (0.75 if found >= 10 else (0.5 if found >= 6 else 0.0))
+        return {k: 0.0 for k in keys}
+
+    scores = {"report_created": 1.0}
+    c = report_path.read_text(encoding="utf-8", errors="ignore")
+
+    # 廟前里（Temple Crest）：治安改善 / 麥尼爾巡佐 / 犯罪下降
+    scores["temple_crest"] = 1.0 if (
+        re.search(r"廟前里|廟前", c)
+        and re.search(r"麥尼爾|治安|犯罪|竊盜|模範員警|Temple\s*Crest", c)
+    ) else 0.0
+
+    # 西港里：羅馬倉庫園區 / 職棒球場（猿隊）/ 開發
+    scores["west_tampa"] = 1.0 if (
+        re.search(r"西港里|西港", c)
+        and re.search(r"羅馬倉庫園區|羅馬倉庫|Rome\s*Yard|猿隊|職棒|球場|開發", c)
+    ) else 0.0
+
+    # 南港大道（South Howard）：封街施工 / 老舊管線 / 雨水下水道
+    scores["south_howard"] = 1.0 if (
+        re.search(r"南港大道", c)
+        and re.search(r"封街|施工|管線|下水道|米其里尼|South\s*Howard", c)
+    ) else 0.0
+
+    # 東港里：22 路廊 / 開發 / 分區變更 / 環評
+    scores["east_tampa"] = 1.0 if (
+        re.search(r"東港里|東港", c)
+        and re.search(r"開發|建設|22\s*路廊|分區|環評", c)
+    ) else 0.0
+
+    # 高地里（Highland Pines）：街友 / 遊民 / 安置 / 中正路 / 高德森
+    scores["highland_pines"] = 1.0 if (
+        re.search(r"高地里|高地", c)
+        and re.search(r"街友|遊民|安置|中正路|高德森|Highland\s*Pines", c)
+    ) else 0.0
+
+    # 分區變更門牌：公道五路 4102 / 市民大道二段 2707 / 南港大道 110
+    addresses = [
+        r"公道五路\s*4102|4102\s*號",
+        r"市民大道(?:二段)?\s*2707|2707\s*號",
+        r"南港大道\s*110|110\s*號",
+    ]
+    addr_hits = sum(1 for a in addresses if re.search(a, c))
+    scores["rezoning_addresses"] = (
+        1.0 if addr_hits >= 3 else (0.5 if addr_hits >= 2 else 0.0)
+    )
+
+    # 南港空軍基地（MacDill AFB）
+    scores["macdill"] = 1.0 if re.search(r"南港空軍基地|空軍基地|MacDill", c) else 0.0
+
+    # 河岸步道（Riverwalk）：與 羅馬倉庫園區 / 串聯 / 延伸 / 西側 / 開發
+    scores["riverwalk"] = 1.0 if (
+        re.search(r"河岸步道|Riverwalk", c)
+        and re.search(r"羅馬倉庫|串聯|延伸|西側|連通|連結|開發|基隆河", c)
+    ) else 0.0
+
+    # 出現次數統計 或 議題交叉對照
+    scores["frequency_or_crossref"] = 1.0 if re.search(
+        r"提及\s*\d+\s*次|提及次數|提及頻次|頻次|次數統計|交叉對照|"
+        r"cross[\s-]*ref|最熱門|最頻繁|最常|frequen", c
+    ) else 0.0
+
+    # 不同地點數（自台灣逐字稿推導之候選清單）
+    location_patterns = [
+        r"廟前里|廟前",
+        r"西港里|西港",
+        r"南港大道",
+        r"東港里|東港",
+        r"高地里|高地",
+        r"社子里|社子",
+        r"古堡里|古堡灣|古堡",
+        r"市中心|商圈",
+        r"河岸步道|基隆河",
+        r"黃蜂里|黃蜂",
+        r"羅馬倉庫園區|羅馬倉庫",
+        r"南港空軍基地|空軍基地",
+        r"公道五路",
+        r"市民大道",
+        r"忠孝東路",
+        r"中正路",
+        r"中興路",
+        r"福橡活動中心|福橡",
+        r"義塚公園|義塚",
+        r"台中|臺中|嘉義|高雄",
+    ]
+    found = sum(1 for p in location_patterns if re.search(p, c))
+    scores["location_count"] = (
+        1.0 if found >= 15 else (0.75 if found >= 10 else (0.5 if found >= 6 else 0.0))
+    )
+
     return scores
 
 
