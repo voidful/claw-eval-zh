@@ -16,7 +16,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
     """數位治理委員會公聽會（虛構）問答擷取 grader。
 
     以工作區內的台灣逐字稿（dest=transcript.md）動態推導「應有事實」
-    （案例數、異常比例、發言者名單、NCRA 監測等），再比對 agent 產生的
+    （案例數、異常比例、發言者名單、通監中心監測等），再比對 agent 產生的
     中文報告 qa_exchanges.md。僅用標準函式庫。
     """
     from pathlib import Path
@@ -62,7 +62,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
     # 真正異常比例：逐字稿「2% 到 5%」/「2%–5%」/「2%-5%」
     pct_lo = first(r'(\d+)\s*%\s*(?:到|–|-|~|至)\s*\d+\s*%', t) or "2"
     pct_hi = first(r'\d+\s*%\s*(?:到|–|-|~|至)\s*(\d+)\s*%', t) or "5"
-    # NCRA 第一線每月通報件數：逐字稿「每月只回報 3 到 5 件」
+    # 通監中心第一線每月通報件數：逐字稿「每月只回報 3 到 5 件」
     rep_lo = first(r'每月只?\s*回?報\s*(\d+)\s*(?:到|–|-|~|至)\s*\d+\s*件', t) or "3"
     rep_hi = first(r'每月只?\s*回?報\s*\d+\s*(?:到|–|-|~|至)\s*(\d+)\s*件', t) or "5"
 
@@ -111,8 +111,8 @@ def grade(transcript: list, workspace_path: str) -> dict:
         else 0.5 if (has_total or has_pct)
         else 0.0)
 
-    # --- NCRA／黃建宏 相關問答：須點名黃建宏或 NCRA，且至少觸及兩個 NCRA 主題 ---
-    has_ncra = bool(re.search(r'黃建宏|ncra|國家通訊傳播監理署', c, re.IGNORECASE))
+    # --- 通監中心／黃建宏 相關問答：須點名黃建宏或通監中心，且至少觸及兩個監測主題 ---
+    has_ncra = bool(re.search(r'黃建宏|通監中心|通訊傳播監理中心', c, re.IGNORECASE))
     ncra_topics = sum([
         # 原始資料保存／輪替刪除
         bool(re.search(r'保存|輪替|刪除|數個月|原始(?:流量|資料|紀錄)', c)),
@@ -135,7 +135,6 @@ def grade(transcript: list, workspace_path: str) -> dict:
     nhi_hits = sum([
         bool(re.search(r'非人類(?:的)?(?:智慧|智能)', c)),
         bool(re.search(r'自主(?:意圖|意識|智慧)', c)),
-        bool(re.search(r'外星', c)),
         bool(re.search(r'非凡的?(?:主張|證據)', c)),
         bool(re.search(r'(?:沒有|無)決定性(?:的)?證據', c)),
     ])

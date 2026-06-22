@@ -92,7 +92,7 @@ tasks:
       def grade(transcript: list, workspace_path: str) -> dict:
           """TW tech-meeting competitor-analysis grader.
 
-          查核項對應原始英文 grader，但事實改自台灣逐字稿 meeting_transcript.md
+          查核項事實改自台灣逐字稿 meeting_transcript.md
           （虛構公司「鼎峰科技」／產品「鼎峰」；tier 1 六家對手為微宇 DevOps、群智協作、
           碼倉、自動流、制品庫、雲蜂）。僅用標準函式庫。
           """

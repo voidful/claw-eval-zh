@@ -17,7 +17,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     做法：先從台灣逐字稿 meeting-transcript.md「動態推導」出應有事實
     （各頻段、五個工作小組編號、干擾方向、STA 申請者等），再比對 agent
-    產出的中文報告 technical_discussions.md。盡量不硬寫英文原版事實，
+    產出的中文報告 technical_discussions.md。盡量不硬寫固定事實，
     提升可重現性。僅用標準函式庫。
 
     注意：轉換器會在本函式後自動接上中→英正規化 wrapper，會把中文報告
@@ -161,12 +161,12 @@ def grade(transcript: list, workspace_path: str) -> dict:
     scores["working_groups"] = 1.0 if wg_indicators >= 3 else (
         0.5 if wg_indicators >= 1 else 0.0)
 
-    # 7) STA 特別臨時授權測量申請（台灣大哥大／電信業者公會 CTIA 級）。
+    # 7) STA 特別臨時授權測量申請（台灣大哥大／中華電信業者公會）。
     #    申請者名稱由逐字稿動態確認，避免硬寫。
     sta_kw = bool(re.search(r"STA|特別臨時授權|臨時授權|special\s*temporary",
                             c, re.I))
     applicant_terms = []
-    for term in ["台灣大哥大", "電信業者公會", "電信公會", "CTIA", "T-Mobile",
+    for term in ["台灣大哥大", "中華電信業者公會", "電信業者公會", "電信公會",
                  "公會"]:
         if tx_has(term) and re.search(re.escape(term), c, re.I):
             applicant_terms.append(term)

@@ -57,7 +57,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
     water_new = find_amount(r"調整為\s*自來水\s*\*{0,2}NT\$?([\d,]+)", "1530")  # 1530
     sewer_new = "1847"  # 提議之污水費率（逐字稿第二筆污水數字）
     three_b = find_amount(r"NT\$?([\d,]+)，3 billion", "3000000000")    # 30 億
-    rome = find_amount(r"羅馬倉庫園區.{0,40}?NT\$?([\d,]+)，94 million", "94000000")
+    rome = find_amount(r"中崙倉庫園區.{0,40}?NT\$?([\d,]+)，94 million", "94000000")
     annex = find_amount(r"行政園區增建案.{0,20}?NT\$?([\d,]+)，34", "34200000")
     phase1 = find_amount(r"第一期已支用約\s*\*{0,2}NT\$?([\d,]+)", "7000000")
     gas = find_amount(r"和解金\s*新臺幣[^（]*（NT\$?([\d,]+)", "650000")  # 650000
@@ -89,16 +89,16 @@ def grade(transcript: list, workspace_path: str) -> dict:
     rev_ctx = re.search(r"(收入|增加|每年|額外|挹注)", c)
     scores["annual_revenue_increase"] = 1.0 if (rev_amt and rev_ctx) else 0.0
 
-    # 羅馬倉庫園區 9,400 萬元（NT$94,000,000）
+    # 中崙倉庫園區 9,400 萬元（NT$94,000,000）
     rome_amt = (re.search(r"9[,，]?400\s*萬", c) or has_num(rome)
                 or re.search(r"94\s*million", c.lower()))
-    rome_ctx = re.search(r"羅馬倉庫", c)
+    rome_ctx = re.search(r"中崙倉庫", c)
     scores["rome_yard_94m"] = 1.0 if (rome_amt and rome_ctx) else 0.0
 
     # 行政園區增建 3,420 萬元（NT$34,200,000）
     annex_amt = (re.search(r"3[,，]?420\s*萬", c) or has_num(annex)
                  or re.search(r"34\.?2?\s*million", c.lower()))
-    annex_ctx = re.search(r"(行政園區增建|南港大道.{0,6}增建|Howard)", c)
+    annex_ctx = re.search(r"(行政園區增建|南港大道.{0,6}增建)", c)
     scores["annex_34m"] = 1.0 if (annex_amt and annex_ctx) else 0.0
 
     # 第一期已支出 NT$700 萬元（NT$7,000,000）

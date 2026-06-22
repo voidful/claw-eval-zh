@@ -15,7 +15,7 @@ from __future__ import annotations
 def grade(transcript: list, workspace_path: str) -> dict:
     """南港市議會（虛構）里別／選區辨識 grader。
 
-    查核項對應原版，但改查台灣逐字稿（dest=transcript.md）推導之事實，
+    查核項依台灣逐字稿（dest=transcript.md）推導之事實比對，
     比對 agent 產出之中文報告 neighborhoods_report.md。僅用標準函式庫。
     """
     from pathlib import Path
@@ -39,34 +39,34 @@ def grade(transcript: list, workspace_path: str) -> dict:
     scores = {"report_created": 1.0}
     c = report_path.read_text(encoding="utf-8", errors="ignore")
 
-    # 廟前里（Temple Crest）：治安改善 / 麥尼爾巡佐 / 犯罪下降
+    # 廟前里：治安改善 / 麥尼爾巡佐 / 犯罪下降
     scores["temple_crest"] = 1.0 if (
         re.search(r"廟前里|廟前", c)
-        and re.search(r"麥尼爾|治安|犯罪|竊盜|模範員警|Temple\s*Crest", c)
+        and re.search(r"麥尼爾|治安|犯罪|竊盜|模範員警", c)
     ) else 0.0
 
-    # 西港里：羅馬倉庫園區 / 職棒球場（猿隊）/ 開發
+    # 西港里：中崙倉庫園區 / 職棒球場（樂天桃猿）/ 開發
     scores["west_tampa"] = 1.0 if (
         re.search(r"西港里|西港", c)
-        and re.search(r"羅馬倉庫園區|羅馬倉庫|Rome\s*Yard|猿隊|職棒|球場|開發", c)
+        and re.search(r"中崙倉庫園區|中崙倉庫|樂天桃猿|猿|職棒|球場|開發", c)
     ) else 0.0
 
-    # 南港大道（South Howard）：封街施工 / 老舊管線 / 雨水下水道
+    # 南港大道：封街施工 / 老舊管線 / 雨水下水道
     scores["south_howard"] = 1.0 if (
         re.search(r"南港大道", c)
-        and re.search(r"封街|施工|管線|下水道|米其里尼|South\s*Howard", c)
+        and re.search(r"封街|施工|管線|下水道|米其里尼", c)
     ) else 0.0
 
-    # 東港里：22 路廊 / 開發 / 分區變更 / 環評
+    # 東港里：東港路廊 / 開發 / 分區變更 / 環評
     scores["east_tampa"] = 1.0 if (
         re.search(r"東港里|東港", c)
-        and re.search(r"開發|建設|22\s*路廊|分區|環評", c)
+        and re.search(r"開發|建設|東港路廊|路廊|分區|環評", c)
     ) else 0.0
 
-    # 高地里（Highland Pines）：街友 / 遊民 / 安置 / 中正路 / 高德森
+    # 高地里：街友 / 遊民 / 安置 / 中正路 / 高德森
     scores["highland_pines"] = 1.0 if (
         re.search(r"高地里|高地", c)
-        and re.search(r"街友|遊民|安置|中正路|高德森|Highland\s*Pines", c)
+        and re.search(r"街友|遊民|安置|中正路|高德森", c)
     ) else 0.0
 
     # 分區變更門牌：公道五路 4102 / 市民大道二段 2707 / 南港大道 110
@@ -80,13 +80,13 @@ def grade(transcript: list, workspace_path: str) -> dict:
         1.0 if addr_hits >= 3 else (0.5 if addr_hits >= 2 else 0.0)
     )
 
-    # 南港空軍基地（MacDill AFB）
-    scores["macdill"] = 1.0 if re.search(r"南港空軍基地|空軍基地|MacDill", c) else 0.0
+    # 南港空軍基地
+    scores["macdill"] = 1.0 if re.search(r"南港空軍基地|空軍基地", c) else 0.0
 
-    # 河岸步道（Riverwalk）：與 羅馬倉庫園區 / 串聯 / 延伸 / 西側 / 開發
+    # 河岸步道：與 中崙倉庫園區 / 串聯 / 延伸 / 西側 / 開發
     scores["riverwalk"] = 1.0 if (
-        re.search(r"河岸步道|Riverwalk", c)
-        and re.search(r"羅馬倉庫|串聯|延伸|西側|連通|連結|開發|基隆河", c)
+        re.search(r"河岸步道|基隆河", c)
+        and re.search(r"中崙倉庫|串聯|延伸|西側|連通|連結|開發|基隆河", c)
     ) else 0.0
 
     # 出現次數統計 或 議題交叉對照
@@ -106,8 +106,8 @@ def grade(transcript: list, workspace_path: str) -> dict:
         r"古堡里|古堡灣|古堡",
         r"市中心|商圈",
         r"河岸步道|基隆河",
-        r"黃蜂里|黃蜂",
-        r"羅馬倉庫園區|羅馬倉庫",
+        r"永豐里|永豐",
+        r"中崙倉庫園區|中崙倉庫",
         r"南港空軍基地|空軍基地",
         r"公道五路",
         r"市民大道",

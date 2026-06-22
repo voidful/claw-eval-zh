@@ -113,7 +113,7 @@ tasks:
           """
           TW（鼎峰科技）產品功能優先排序 grader。
 
-          查核項對應原始英文 grader，但事實改從台灣逐字稿
+          查核項事實改從台灣逐字稿
           （dest=meeting_transcript.md）動態推導，再比對 agent 的中文報告
           （feature_priorities.md）。僅用標準函式庫。
           """

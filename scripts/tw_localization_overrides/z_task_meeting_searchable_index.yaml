@@ -1,7 +1,7 @@
 # 台灣在地化整題取代：task_meeting_searchable_index（hybrid）
 # 此檔以 z_ 開頭，於目錄合併時最後生效，覆寫 05_meeting_2.yaml / 09_meetings_contract.yaml
 # 內同 task 的設定。grader 改為「從台灣逐字稿 meeting_transcript.md 動態推導應有事實」
-# 再比對 agent 的中文報告，避免硬寫英文原版（GitLab）事實，提升可重現性。
+# 再比對 agent 的中文報告，避免硬寫死特定事實，提升可重現性。
 #
 # 註：轉換器會在 grader_py 之後自動接上「中→英正規化 wrapper」。該 wrapper 只會把
 # 中文檔案內偵測到的關鍵字「附加」到檔尾的註解區塊，原始中文逐字保留，故本 grader
@@ -106,10 +106,10 @@ tasks:
 
           做法：先從台灣逐字稿 meeting_transcript.md「動態推導」應有事實
           （日期、與會者姓名、各主題／競品關鍵字、決議與行動項目線索），再比對
-          agent 產出的中文索引 meeting_index.md。盡量不硬寫英文原版（GitLab）事實，
+          agent 產出的中文索引 meeting_index.md。盡量不硬寫死特定事實，
           提升可重現性。僅用標準函式庫。
 
-          對應原 grader 的八項查核：
+          本任務的八項查核：
             file_created / metadata_present / topic_index / people_index /
             keyword_index / decisions_log / action_items_log / organized
           """

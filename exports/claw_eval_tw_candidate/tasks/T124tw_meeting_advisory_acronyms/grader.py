@@ -13,11 +13,12 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """頻譜共用顧問委員會（虛構）縮寫詞彙表 grader。
+    """頻譜共用顧問委員會（虛構）縮寫與簡稱詞彙表 grader。
 
-    以工作區內的台灣逐字稿（dest=meeting-transcript.md）動態推導「應有的縮寫
-    與中文全稱」，再比對 agent 產出的中文報告 acronym_glossary.md。
-    縮寫本身為拉丁字母，逐字稿與報告皆原樣保留，故以「縮寫 + 中文全稱關鍵詞」
+    以工作區內的台灣逐字稿（dest=meeting-transcript.md）動態推導「應有的縮寫／
+    簡稱與中文全稱」，再比對 agent 產出的中文報告 acronym_glossary.md。
+    機關／單位類以中文全名與中文簡稱（如「頻管署」）表示，技術／法規通用術語
+    則為拉丁字母；逐字稿與報告皆原樣保留，故以「縮寫／簡稱 + 中文全稱關鍵詞」
     雙重比對。僅用標準函式庫。
     """
     from pathlib import Path
@@ -55,10 +56,11 @@ def grade(transcript: list, workspace_path: str) -> dict:
                 break
     t = tpath.read_text(encoding="utf-8", errors="ignore") if tpath.exists() else ""
 
-    # 逐字稿中所有「縮寫 → 中文全稱」候選：
-    #   先用對照表段落（| 縮寫 | 全稱… |）抓出明確映射，
-    #   再用全文出現過的拉丁縮寫補齊。
-    tw_acr_full = {}  # 縮寫(大寫) -> 中文全稱字串（取第一個中文片段）
+    # 逐字稿中所有「縮寫／簡稱 → 中文全稱」候選：
+    #   對照表段落（| 縮寫／簡稱 | 全稱… |）抓出明確映射；第一欄可為拉丁縮寫
+    #   （如 DGC、MHz）或中文簡稱（如 頻管署、科政辦）。
+    tw_acr_full = {}    # 拉丁縮寫(大寫) -> 中文全稱字串
+    tw_abbr_full = {}   # 中文簡稱 -> 中文全稱字串
     for line in t.split("\n"):
         m = re.match(r"\s*\|\s*([A-Za-z][A-Za-z0-9\-]{1,7})\s*\|\s*([^|]+)\|", line)
         if m:
@@ -66,6 +68,13 @@ def grade(transcript: list, workspace_path: str) -> dict:
             full = m.group(2).strip()
             if acr not in tw_acr_full:
                 tw_acr_full[acr] = full
+            continue
+        m2 = re.match(r"\s*\|\s*([一-鿿]{2,6})\s*\|\s*([^|]+)\|", line)
+        if m2:
+            abbr = m2.group(1).strip()
+            full = m2.group(2).strip()
+            if abbr not in tw_abbr_full:
+                tw_abbr_full[abbr] = full
 
     # 全文出現過的拉丁縮寫（2~6 字，含連字號如 ITU-R）。
     transcript_acrs = set()
@@ -74,6 +83,12 @@ def grade(transcript: list, workspace_path: str) -> dict:
     # WG1~WG5 之類帶數字者另計
     for mm in re.finditer(r"\bWG[1-9]\b", t):
         transcript_acrs.add(mm.group(0).upper())
+    # 機關／單位中文簡稱（從對照表取得，另含常見口語簡稱）。
+    transcript_abbrs = set(tw_abbr_full.keys())
+    for ab in ["頻管署", "科政辦", "主預辦", "電信所", "資安署",
+               "鼎峰救難協會", "公網會", "電信公會"]:
+        if not t or ab in t:
+            transcript_abbrs.add(ab)
 
     def acr_in_report(acr):
         # 縮寫在報告中出現（大小寫不敏感，作為獨立詞）
@@ -98,28 +113,32 @@ def grade(transcript: list, workspace_path: str) -> dict:
         acr_in_report("DGC") and (dgc_frag in c or "數位治理委員會" in c)
     ) else 0.0
 
-    # --- OSM：須出現縮寫 OSM 且報告含「頻譜管理署」 ---
-    osm_full = tw_acr_full.get("OSM", "頻譜管理署")
-    osm_frag = (re.findall(r"[一-鿿]{3,}", osm_full) or ["頻譜管理署"])[0]
+    # --- 頻管署：報告須含中文簡稱「頻管署」且對應「頻譜管理署」 ---
+    # （機關英文縮寫已在地化為中文全名＋中文簡稱）
     scores["osm_expanded"] = 1.0 if (
-        acr_in_report("OSM") and ("頻譜管理署" in c or osm_frag in c)
+        "頻管署" in c and "頻譜管理署" in c
     ) else 0.0
 
-    # --- 不重複縮寫計數：報告中出現、且確實是逐字稿中存在的縮寫 ---
-    # 以逐字稿縮寫集合為基準，避免把報告裡隨意大寫詞（如英文段落）灌水。
+    # --- 不重複縮寫／簡稱計數：報告中出現、且確實是逐字稿中存在者 ---
+    # 以逐字稿集合為基準，避免把報告裡隨意大寫詞（如英文段落）灌水。
     found_acrs = set()
     for acr in transcript_acrs:
         if acr_in_report(acr):
             found_acrs.add(acr)
-    # 報告自身額外出現、且為已知頻譜縮寫者亦可計入（容錯）
-    known = {"DGC", "SCAB", "NCC", "MODA", "OSM", "OSTP", "OMB", "ITS",
-             "NOAA", "DOD", "ISART", "MHZ", "GHZ", "LTE", "UAV", "PCS",
-             "AWS", "CMRS", "STA", "CSEA", "PCAST", "CTIA", "TIA", "TSB",
-             "ITU", "ITU-R", "WRC", "EW", "DGO", "DZX", "NESA", "PINF",
-             "IP", "TMI", "NFL", "WG1", "WG2", "WG3", "WG4", "WG5", "NC"}
+    # 報告自身額外出現、且為已知頻譜縮寫者亦可計入（容錯）。
+    # 機關／單位英文縮寫已在地化為中文，故 known 僅保留技術／法規通用術語
+    # 與委員會代碼（DGC、SCAB）及工作小組編號。
+    known = {"DGC", "SCAB", "ISART", "MHZ", "GHZ", "LTE", "UAV", "PCS",
+             "AWS", "CMRS", "STA", "CSEA", "TIA", "TSB",
+             "ITU", "ITU-R", "WRC", "EW", "IP",
+             "WG1", "WG2", "WG3", "WG4", "WG5"}
     for acr in known:
         if acr_in_report(acr):
             found_acrs.add(acr)
+    # 機關／單位中文簡稱亦計入不重複總數。
+    for ab in transcript_abbrs:
+        if ab in c:
+            found_acrs.add(ab)
     count = len(found_acrs)
     scores["min_15_acronyms"] = 1.0 if count >= 15 else (0.5 if count >= 10 else 0.0)
     scores["min_20_acronyms"] = 1.0 if count >= 20 else (0.5 if count >= 15 else 0.0)
@@ -129,9 +148,10 @@ def grade(transcript: list, workspace_path: str) -> dict:
     tech_found = sum(1 for a in tech_acrs if acr_in_report(a))
     scores["technical_acronyms"] = 1.0 if tech_found >= 4 else (0.5 if tech_found >= 2 else 0.0)
 
-    # --- 政府機關縮寫（OSM、OSTP、OMB、ITS、SCAB、DGC） ---
-    gov_acrs = ["OSM", "OSTP", "OMB", "ITS", "SCAB", "DGC"]
-    gov_found = sum(1 for a in gov_acrs if acr_in_report(a))
+    # --- 政府機關縮寫／簡稱（頻管署、科政辦、主預辦、電信所＋委員會代碼 DGC/SCAB） ---
+    gov_abbrs = ["頻管署", "科政辦", "主預辦", "電信所", "資安署"]
+    gov_found = sum(1 for a in gov_abbrs if a in c)
+    gov_found += sum(1 for a in ["DGC", "SCAB"] if acr_in_report(a))
     scores["gov_agencies"] = 1.0 if gov_found >= 4 else (0.5 if gov_found >= 2 else 0.0)
 
     # --- 類別／分組：報告須出現數種類別關鍵詞（中英皆可） ---

@@ -15,7 +15,7 @@ from __future__ import annotations
 def grade(transcript: list, workspace_path: str) -> dict:
     """數位治理委員會（虛構）公聽會後續步驟擷取 grader。
 
-    對應原版任務的查核項，但改查工作區內的台灣逐字稿
+    查核項皆改查工作區內的台灣逐字稿
     （dest=transcript.md）動態推導之事實，再與 agent 產生的中文報告
     next_steps.md 比對。報告為中文（轉換器會在其後接上中→英正規化 wrapper，
     但中文原文會被保留），故以中文關鍵字為主、英文為輔。僅用標準函式庫。
@@ -166,7 +166,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         r'範圍.{0,6}(?:辯論|爭議|界定)|生成式?內容.{0,8}(?:代理|跨系統)|聚焦.{0,4}範圍|scope',
         c, re.IGNORECASE))
     has_def = bool(re.search(
-        r'(?:精確)?定義.{0,4}(?:異常|anomalous)|異常.{0,4}(?:精確)?定義|defin.*anomal',
+        r'(?:精確)?定義.{0,4}異常|異常.{0,4}(?:精確)?定義',
         c, re.IGNORECASE))
     has_raw = bool(re.search(
         r'原始.{0,4}(?:監測)?資料|未過濾.{0,4}資料|raw\s*data', c, re.IGNORECASE))
@@ -193,9 +193,9 @@ def grade(transcript: list, workspace_path: str) -> dict:
     named = {s for s in speakers if s in c}
     org_patterns = [
         r'數位治理委員會|本委員會|委員會',
-        r'\bAIRC\b|風險研析中心',
+        r'風析中心|風險研析中心',
         r'研析小組|本小組|小組',
-        r'\bNCRA\b|通訊傳播監理署',
+        r'通監中心|通訊傳播監理中心',
     ]
     org_hits = sum(1 for p in org_patterns if re.search(p, c, re.IGNORECASE))
     party_total = len(named) + org_hits

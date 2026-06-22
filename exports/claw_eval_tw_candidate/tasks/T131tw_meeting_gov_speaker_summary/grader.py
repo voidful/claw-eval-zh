@@ -15,7 +15,7 @@ from __future__ import annotations
 def grade(transcript: list, workspace_path: str) -> dict:
     """數位治理委員會（虛構）公聽會 發言者摘要 grader。
 
-    對應原版 grader 的查核項，但改查台灣逐字稿（dest=transcript.md）
+    查核項皆改查台灣逐字稿（dest=transcript.md）
     推導之事實 + agent 的中文報告 speaker_summary.md。僅用標準函式庫。
     報告為繁體中文，故以中文關鍵字／數值比對；可查核的數值（800、2-5%、
     每月 3-5 件、14000、4500 萬）優先從逐字稿動態讀出再比對。
@@ -57,15 +57,15 @@ def grade(transcript: list, workspace_path: str) -> dict:
         m = re.search(pattern, text)
         return m.group(group) if m else default
 
-    # AIRC 案例件數（逐字稿：「超過 800 件」）
+    # 風析中心案例件數（逐字稿：「超過 800 件」）
     case_count = first(r'超過\s*(\d{3,})\s*件', t) or first(r'(\d{3,})\s*多?\s*件', t) or "800"
     # 真正異常比例（逐字稿：「2% 到 5%」「約 2%–5%」）
     anom_lo = first(r'(\d+)\s*%\s*(?:到|–|-|~|～)\s*\d+\s*%', t) or "2"
     anom_hi = first(r'\d+\s*%\s*(?:到|–|-|~|～)\s*(\d+)\s*%', t) or "5"
-    # NCRA 每月通報件數（逐字稿：「每月只回報 3 到 5 件」「每月只有 3–5 件」）
+    # 通監中心每月通報件數（逐字稿：「每月只回報 3 到 5 件」「每月只有 3–5 件」）
     rep_lo = first(r'每月[^。]{0,12}?(\d+)\s*(?:到|–|-|~|～)\s*\d+\s*件', t) or "3"
     rep_hi = first(r'每月[^。]{0,12}?\d+\s*(?:到|–|-|~|～)\s*(\d+)\s*件', t) or "5"
-    # NCRA 第一線人力（逐字稿：「約 14,000 名」）
+    # 通監中心第一線人力（逐字稿：「約 14,000 名」）
     staff = first(r'約\s*([\d,]{4,})\s*名', t)
     staff = staff.replace(",", "") if staff else "14000"
 
@@ -93,18 +93,18 @@ def grade(transcript: list, workspace_path: str) -> dict:
     ])
     scores["lin_shufen"] = 1.0 if (has_lin and lin_pts >= 2) else (0.5 if has_lin else 0.0)
 
-    # --- 陳冠宇（召集人）：FRB 比喻、校準、公民科學、異常是發現的引擎 ---
+    # --- 陳冠宇（召集人）：快速電波爆發比喻、校準、公民科學、異常是發現的引擎 ---
     has_chen = has(r'陳冠宇', r'召集人')
     chen_pts = sum([
-        bool(has(r'快速電波爆發', r'電波爆發', r'\bFRB\b')),
+        bool(has(r'快速電波爆發', r'電波爆發')),
         bool(has(r'校準', r'高品質.{0,4}資料', r'可重現', r'calibrat')),
         bool(has(r'公民科學', r'群眾參與', r'citizen\s*science')),
         bool(has(r'異常.{0,8}引擎', r'發現的引擎', r'先把.{0,4}正常')),
     ])
     scores["chen_guanyu"] = 1.0 if (has_chen and chen_pts >= 2) else (0.5 if has_chen else 0.0)
 
-    # --- 張庭瑋／AIRC：800+ 件、2-5% 異常、解密影像 ---
-    has_zhang = has(r'張庭瑋', r'AIRC', r'風險研析中心')
+    # --- 張庭瑋／風析中心：800+ 件、2-5% 異常、解密影像 ---
+    has_zhang = has(r'張庭瑋', r'風析中心', r'風險研析中心')
     cc = re.escape(case_count)
     lo = re.escape(anom_lo)
     hi = re.escape(anom_hi)
@@ -119,8 +119,8 @@ def grade(transcript: list, workspace_path: str) -> dict:
     ])
     scores["zhang_tingwei"] = 1.0 if (has_zhang and zhang_pts >= 2) else (0.5 if has_zhang else 0.0)
 
-    # --- 黃建宏／NCRA：監測、每月 3-5 件、人力、過濾／保存限制 ---
-    has_ncra = has(r'黃建宏', r'NCRA', r'通訊傳播監理署', r'監理組')
+    # --- 黃建宏／通監中心：監測、每月 3-5 件、人力、過濾／保存限制 ---
+    has_ncra = has(r'黃建宏', r'通監中心', r'通訊傳播監理中心', r'監理組')
     rl = re.escape(rep_lo)
     rh = re.escape(rep_hi)
     rep_num = re.search(r'每月[^。\n]{0,12}?%s\s*(?:到|–|-|~|～|至)\s*%s\s*件' % (rl, rh), c) \
@@ -146,7 +146,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
     quote_patterns = re.findall(r'[「『“"].{8,}?[」』”"]', c)
     scores["quotes_included"] = 1.0 if len(quote_patterns) >= 3 else (0.5 if len(quote_patterns) >= 1 else 0.0)
 
-    # --- 出場順序：王志明／林淑芬／陳冠宇在前 -> 張庭瑋居中 -> 黃建宏／NCRA 在後 ---
+    # --- 出場順序：王志明／林淑芬／陳冠宇在前 -> 張庭瑋居中 -> 黃建宏／通監中心 在後 ---
     def pos(*pats):
         best = -1
         for p in pats:
@@ -156,7 +156,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         return best
     early = pos(r'王志明', r'林淑芬', r'陳冠宇')
     mid = pos(r'張庭瑋')
-    late = pos(r'黃建宏', r'NCRA', r'通訊傳播監理署')
+    late = pos(r'黃建宏', r'通監中心', r'通訊傳播監理中心')
     if early >= 0 and mid >= 0 and late >= 0:
         scores["speaker_order"] = 1.0 if early < mid < late else 0.5
     elif early >= 0 and mid >= 0:

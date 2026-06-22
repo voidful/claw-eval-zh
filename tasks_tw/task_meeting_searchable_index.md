@@ -98,10 +98,10 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     做法：先從台灣逐字稿 meeting_transcript.md「動態推導」應有事實
     （日期、與會者姓名、各主題／競品關鍵字、決議與行動項目線索），再比對
-    agent 產出的中文索引 meeting_index.md。盡量不硬寫英文原版（GitLab）事實，
+    agent 產出的中文索引 meeting_index.md。盡量不硬寫死特定事實，
     提升可重現性。僅用標準函式庫。
 
-    對應原 grader 的八項查核：
+    本任務的八項查核：
       file_created / metadata_present / topic_index / people_index /
       keyword_index / decisions_log / action_items_log / organized
     """

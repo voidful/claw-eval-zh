@@ -15,7 +15,7 @@ from __future__ import annotations
 def grade(transcript: list, workspace_path: str) -> dict:
     """TW (fictional) council upcoming-events grader.
 
-    查核項對應原 grader，但事實改由台灣逐字稿（dest=transcript.md）推導，
+    查核項依台灣逐字稿（dest=transcript.md）推導之事實比對，
     再比對 agent 產生的中文報告 upcoming_events.md。僅用標準函式庫。
     """
     from pathlib import Path
@@ -88,10 +88,10 @@ def grade(transcript: list, workspace_path: str) -> dict:
         re.search(r"容量費|容量接管費|費率|自來水|污水|capacity|fee", c, re.IGNORECASE))
     scores["march_2027_fees"] = 1.0 if (fact and ok) else 0.0
 
-    # 7) 2028 年 9 月：羅馬倉庫園區第四期完工
-    fact = tx_has(r"2028\s*年\s*9\s*月", r"羅馬倉庫")
+    # 7) 2028 年 9 月：中崙倉庫園區第四期完工
+    fact = tx_has(r"2028\s*年\s*9\s*月", r"中崙倉庫")
     ok = bool(re.search(r"2028\s*年\s*9\s*月|2028[/-]0?9|(?:September|Sept).*28", c)) and bool(
-        re.search(r"羅馬倉庫|園區|第四期|Phase\s*4|完工|completion", c, re.IGNORECASE))
+        re.search(r"中崙倉庫|園區|第四期|Phase\s*4|完工|completion", c, re.IGNORECASE))
     scores["rome_yard_sept2028"] = 1.0 if (fact and ok) else 0.0
 
     # 8) 依時間先後（至少出現 4 個不同月份／日期錨點）

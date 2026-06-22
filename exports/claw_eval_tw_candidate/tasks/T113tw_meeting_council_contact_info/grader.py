@@ -83,26 +83,26 @@ def grade(transcript: list, workspace_path: str) -> dict:
     scores["council_members"] = 1.0 if council_hit >= 7 else (
         0.5 if council_hit >= 4 else 0.0)
 
-    # 議會法律顧問 謝佩玲（對應原版 Shelby/Council Attorney）。
+    # 議會法律顧問 謝佩玲。
     scores["shelby_attorney"] = 1.0 if (
         "謝佩玲" in content
         and re.search(r'法律顧問|法制顧問|法律|法務|顧問', content)
     ) else 0.0
 
-    # 外部顧問 韓明翰／瑞富緯（對應原版 Hamilton/Raftelis）。
+    # 外部顧問 韓明翰／瑞富緯顧問。
     scores["hamilton_raftelis"] = 1.0 if (
         "韓明翰" in content and re.search(r'瑞富緯|顧問', content)
     ) else 0.0
 
-    # 警察局長 包柯偉（對應原版 Bercaw/Police Chief）。
+    # 警察局長 包柯偉。
     scores["bercaw_chief"] = 1.0 if (
         "包柯偉" in content and re.search(r'警察局長|警察局|局長|警政', content)
     ) else 0.0
 
-    # 本月模範員警 麥尼爾（對應原版 McNeil/Officer of the Month）。
+    # 本月模範員警 麥尼爾。
     scores["mcneil_officer"] = 1.0 if (
         "麥尼爾" in content
-        and re.search(r'本月模範員警|模範員警|本月最佳員警|Officer of the Month|表揚|頒獎|獲獎',
+        and re.search(r'本月模範員警|模範員警|本月最佳員警|表揚|頒獎|獲獎',
                       content)
     ) else 0.0
 
@@ -127,7 +127,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
     scores["organized_sections"] = 1.0 if sec_hit >= 3 else (
         0.5 if sec_hit >= 2 else 0.0)
 
-    # 米羅／鼎峰都更開發（對應原版 Milo/Related Urban president）。
+    # 米羅／鼎峰都更開發（社區致贈紀念品代表）。
     scores["milo_related"] = 1.0 if (
         "米羅" in content
         and re.search(r'鼎峰都更開發|鼎峰都更|鼎峰|董事長|總裁', content)

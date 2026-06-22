@@ -103,7 +103,7 @@ tasks:
       def grade(transcript: list, workspace_path: str) -> dict:
           """台灣鼎峰科技產品會議「決議擷取」grader（固定虛構逐字稿）。
 
-          對應原 PinchBench task_meeting_tech_decisions 的九個查核項，但改查台灣逐字稿
+          本任務的九個查核項，改查台灣逐字稿
           (dest=meeting_transcript.md) 推導之事實 + agent 的中文報告 decisions.md。
           僅用標準函式庫。報告為繁體中文，故以中文關鍵字／數值比對；轉換器會在其後自動
           接上中→英正規化 wrapper（附加英文關鍵字、保留原中文），不影響中文比對。

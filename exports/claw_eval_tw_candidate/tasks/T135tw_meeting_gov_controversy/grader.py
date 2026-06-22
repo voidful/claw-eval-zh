@@ -17,7 +17,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     以工作區內的台灣逐字稿（dest=transcript.md）動態推導「應有事實」
     （異常比例、每月通報件數、案例庫規模、具名發言者等），再比對 agent 產生的
-    中文報告 controversy_analysis.md。對應原英文 grader 的九個查核項，但改查
+    中文報告 controversy_analysis.md。共九個查核項，皆改查
     台灣逐字稿推導之事實。僅用標準函式庫。
     """
     from pathlib import Path
@@ -65,7 +65,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     scores = {"report_created": 1.0}
 
-    # --- 1) 網路騷擾／恐嚇／威脅（對應原 harassment） ---
+    # --- 1) 網路騷擾／恐嚇／威脅 ---
     harass_patterns = [r'騷擾', r'恐嚇', r'威脅', r'霸凌']
     n_harass = sum(bool(re.search(p, c)) for p in harass_patterns)
     scores["harassment"] = (
@@ -73,7 +73,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         else 0.5 if n_harass >= 1
         else 0.0)
 
-    # --- 2) 2%–5% 真正異常比例（對應原 anomalous_pct） ---
+    # --- 2) 2%–5% 真正異常比例 ---
     pct_pat = r'%s\s*[%%％]?\s*(?:到|–|-|~|至|—)\s*%s\s*[%%％]' % (
         re.escape(pct_lo), re.escape(pct_hi))
     has_pct_range = bool(re.search(pct_pat, c)) or (
@@ -85,7 +85,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         else 0.5 if has_pct_range
         else 0.0)
 
-    # --- 3) 並無自主意圖／非人類智慧的決定性證據（對應原 no_et_evidence） ---
+    # --- 3) 並無自主意圖／非人類智慧的決定性證據 ---
     ev_patterns = [
         r'(?:沒有|並無|無)(?:任何)?決定性(?:的)?證據',
         r'非凡的?(?:主張|證據)',
@@ -97,7 +97,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         1.0 if n_ev >= 1
         else 0.0)
 
-    # --- 4) 機敏分級造成的資料侷限（對應原 classified_tension） ---
+    # --- 4) 機敏分級造成的資料侷限 ---
     class_patterns = [
         r'機敏.*(?:系統|平台|分級|資料)|(?:系統|平台|感測).*機敏',
         r'(?:事故|描述).*非機敏|非機敏.*(?:事故|描述)',
@@ -110,7 +110,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         else 0.5 if re.search(r'機敏|機密|機密分級', c)
         else 0.0)
 
-    # --- 5) 監測系統「並非為科學分析設計」（對應原 dod_sensors） ---
+    # --- 5) 監測系統「並非為科學分析設計」 ---
     sensor_patterns = [
         r'(?:不是|並非|並不是).*(?:為了)?.*科學(?:分析)?.*設計',
         r'(?:辨識|阻斷|反制).*威脅|威脅.*(?:辨識|阻斷|反制)',
@@ -123,7 +123,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         else 0.5 if re.search(r'(?:資安|情資|軍用|監測)(?:系統|感測)', c)
         else 0.0)
 
-    # --- 6) 被誤判／被破解的案例（對應原 debunked_case） ---
+    # --- 6) 被誤判／被破解的案例 ---
     debunk_patterns = [
         r'(?:自動化)?測試流量',
         r'誤判',
@@ -138,12 +138,12 @@ def grade(transcript: list, workspace_path: str) -> dict:
         else 0.5 if n_debunk >= 1
         else 0.0)
 
-    # --- 7) 多受眾視角（對應原 audience_perspectives） ---
+    # --- 7) 多受眾視角 ---
     audience_patterns = [
         r'科學(?:家|界|社群)|研究(?:者|員|界)|學界',
         r'(?:一般)?(?:公眾|民眾|大眾)',
         r'媒體|記者|新聞',
-        r'(?:ai|人工智慧|科技|陰謀論|ufo|uap)\s*(?:社群|圈|愛好者|支持者)|相信者',
+        r'(?:ai|人工智慧|科技|陰謀論)\s*(?:社群|圈|愛好者|支持者)|相信者',
         r'業者|產業|廠商|企業',
         r'(?:懷疑|質疑)(?:者|論)',
     ]
@@ -153,7 +153,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         else 0.5 if aud_count >= 2
         else 0.0)
 
-    # --- 8) 語氣／框架分析（對應原 tone_analysis） ---
+    # --- 8) 語氣／框架分析 ---
     tone_patterns = [
         r'語氣', r'框架|框定', r'(?:選擇|刻意).*(?:強調|迴避|淡化|保留|不(?:談|說))',
         r'(?:謹慎|小心|委婉|外交)(?:的)?(?:平衡|措辭|態度|語言)?',

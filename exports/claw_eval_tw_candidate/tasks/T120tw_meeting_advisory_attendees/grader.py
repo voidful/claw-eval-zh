@@ -55,17 +55,17 @@ def grade(transcript: list, workspace_path: str) -> dict:
     # 視訊連線委員（9 位）
     remote = _names(r"委員（視訊連線 remote / phone）")
     if len(remote) < 6:
-        remote = ["何信宏", "馮淑惠", "麥國輝", "史丹利", "雷瑞瑟",
-                  "唐諾文", "包大維", "賴明達", "柯怡君"]
+        remote = ["何信宏", "馮淑惠", "麥國輝", "沈柏睿", "雷宗翰",
+                  "湯志賢", "鮑昌霖", "賴明達", "柯怡君"]
 
     # 列席官員（4 位，非委員）
     officials = _names(r"列席官員（Also Present，非委員）")
     if len(officials) < 3:
-        officials = ["史國良", "聶必亞", "鮑威霖", "包柏特"]
+        officials = ["史國良", "聶國維", "鮑彥廷", "卜啟文"]
 
-    # 對應原版 6 位 remote 查核（Hatfield/Feldman/McGinnis/Stancil/Reaser/Donovan）。
+    # 取前 6 位視訊連線委員作為核心查核名單。
     remote_core = remote[:6] if len(remote) >= 6 else [
-        "何信宏", "馮淑惠", "麥國輝", "史丹利", "雷瑞瑟", "唐諾文"]
+        "何信宏", "馮淑惠", "麥國輝", "沈柏睿", "雷宗翰", "湯志賢"]
 
     # 全體委員（含主席）名單，用於 member_count。
     all_members = [chair] + inperson + remote
@@ -90,11 +90,11 @@ def grade(transcript: list, workspace_path: str) -> dict:
     content = report_path.read_text(encoding="utf-8", errors="ignore")
 
     # --- 3. 逐項比對中文關鍵字／人物 ---
-    # 主席：王志明 + 「主席」+ NESA／鼎峰緊急救難協會。
+    # 主席：王志明 + 「主席」+ 鼎峰救難協會／鼎峰緊急救難。
     chair_ok = (
         chair in content
         and re.search(r"主席|Chair", content)
-        and re.search(r"NESA|鼎峰緊急救難", content)
+        and re.search(r"鼎峰救難|鼎峰緊急救難", content)
     )
     scores["chair_identified"] = 1.0 if chair_ok else 0.0
 
@@ -126,10 +126,10 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     # 所屬機關／公司：從逐字稿出現的關鍵組織名取交集後再比對報告。
     org_candidates = [
-        "NESA", "鼎峰緊急救難", "鼎峰科技", "中華電信", "遠傳", "台電",
+        "鼎峰救難協會", "鼎峰緊急救難", "鼎峰科技", "中華電信", "遠傳", "台電",
         "工研院", "雷神", "玉山防務", "南港大學", "中央科技大學",
         "資安署", "頻譜管理署", "經濟與數位發展部", "數位治理委員會",
-        "公共利益網路基金會", "PINF", "有線電視業者協會", "南港市政府",
+        "公共利益網路基金會", "公網會", "有線電視業者協會", "南港市政府",
         "頻譜政策研究中心", "智慧城市辦公室",
     ]
     orgs = [o for o in org_candidates if o in tcontent] or org_candidates
@@ -145,8 +145,8 @@ def grade(transcript: list, workspace_path: str) -> dict:
     scores["attendance_mode"] = (
         1.0 if mode_found >= 2 else (0.5 if mode_found >= 1 else 0.0))
 
-    # 公眾參與者 史耐德。
-    scores["public_participant"] = 1.0 if "史耐德" in content else 0.0
+    # 公眾參與者 施敬堯。
+    scores["public_participant"] = 1.0 if "施敬堯" in content else 0.0
 
     # 彙總計數：報告中須出現「總數／合計／共 N 位」等含數字的彙總敘述。
     count_patterns = [

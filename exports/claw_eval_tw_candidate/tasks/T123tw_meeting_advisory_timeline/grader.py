@@ -15,7 +15,7 @@ from __future__ import annotations
 def grade(transcript: list, workspace_path: str) -> dict:
     """TW (fictional) advisory-committee timeline grader.
 
-    查核項對應原 grader（presidential_memo / october_report / next_meeting /
+    查核項（presidential_memo / october_report / next_meeting /
     september_target / january_target / ten_year_transition / isart_meeting /
     chronological_order），但事實改由台灣逐字稿（dest=meeting-transcript.md）動態
     推導，再比對 agent 產生的中文報告 timeline.md。僅用標準函式庫。

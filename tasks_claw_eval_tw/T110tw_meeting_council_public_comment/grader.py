@@ -116,7 +116,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         1.0 if ("蒲怡婷" in content and tpd) else 0.0
     )
 
-    romeyard = re.search(r"羅馬倉庫|1436", content)
+    romeyard = re.search(r"中崙倉庫|1436", content)
     scores["poynor_romeyard"] = (
         1.0 if ("潘思妤" in content and romeyard) else 0.0
     )
@@ -143,7 +143,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         1.0 if (has_grouping and has_topic) else 0.0
     )
 
-    # --- 義塚（Zion）為多位發言者共同提及 ---
+    # --- 義塚 為多位發言者共同提及 ---
     # 動態：在逐字稿中找出提及「義塚」的公眾發言者，於報告中檢查其與「義塚」同段出現。
     zion_candidates = ["詹明慧", "任薇", "駱明潔", "羅志安"]
     # 以「段落」為單位（以兩個以上換行或 ### 標題切段較難，採行/區塊鄰近法）

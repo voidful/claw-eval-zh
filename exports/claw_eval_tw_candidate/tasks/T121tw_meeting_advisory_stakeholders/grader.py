@@ -15,8 +15,8 @@ from __future__ import annotations
 def grade(transcript: list, workspace_path: str) -> dict:
     """台灣化「頻譜共用會議利害關係人分析」grader。
 
-    查核項對應原始英文 grader，但事實改自台灣逐字稿 meeting-transcript.md
-    （虛構的數位治理委員會 DGC-SCAB 會議；頻譜管理署 OSM 主張共用優先於遷移、
+    查核項之事實全部出自台灣逐字稿 meeting-transcript.md
+    （虛構的數位治理委員會 DGC-SCAB 會議；頻譜管理署〔頻管署〕主張共用優先於遷移、
     純遷移重置成本新臺幣 180 億元）。僅用標準函式庫。
 
     注意：報告為中文，轉換器會在中文詞後自動接上英文正規化字串，故本 grader
@@ -64,8 +64,8 @@ def grade(transcript: list, workspace_path: str) -> dict:
         cost_amt = "180"
 
     # 1) 政府利害關係人（從逐字稿可得的政府機關／署）
-    gov_entities = ["數位治理委員會", "dgc", "頻譜管理署", "osm", "資安署",
-                    "國防部", "ostp", "科技與政策辦公室",
+    gov_entities = ["數位治理委員會", "dgc", "頻譜管理署", "頻管署", "資安署",
+                    "國防部", "科政辦", "科技與政策辦公室",
                     "經濟與數位發展部", "經濟與數位"]
     gov_found = sum(1 for g in gov_entities if g.lower() in low)
     scores["gov_stakeholders"] = (
@@ -74,16 +74,16 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     # 2) 商業界利害關係人（電信業者、設備／科技公司、產業詞）
     commercial = ["中華電信", "遠傳", "台灣大哥大", "電信業者", "業者",
-                  "鼎峰", "有線電視", "ctia", "電信業者公會",
+                  "鼎峰", "有線電視", "電信公會", "電信業者公會",
                   "lte", "寬頻", "商用"]
     comm_found = sum(1 for c in commercial if c.lower() in low)
     scores["commercial_stakeholders"] = (
         1.0 if comm_found >= 4 else (0.5 if comm_found >= 2 else 0.0)
     )
 
-    # 3) 頻譜管理署（OSM）偏好共用勝過純遷移
+    # 3) 頻譜管理署（頻管署）偏好共用勝過純遷移
     sharing_patterns = [
-        r'(?:osm|頻譜管理署|聶必亞)[^。\n]{0,40}?共用[^。\n]{0,12}?(?:優先|勝過|偏好|主張|傾向)',
+        r'(?:頻譜管理署|頻管署|聶國維)[^。\n]{0,40}?共用[^。\n]{0,12}?(?:優先|勝過|偏好|主張|傾向)',
         r'共用[^。\n]{0,8}?(?:優先|勝過)[^。\n]{0,8}?遷移',
         r'(?:偏好|主張|傾向|支持)[^。\n]{0,12}?共用[^。\n]{0,12}?(?:勝過|而非|不是|優先)?[^。\n]{0,6}?遷移',
         r'整批清空頻段的年代[^。\n]{0,12}?(?:走入尾聲|尾聲|結束)',
@@ -93,7 +93,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         1.0 if any(re.search(p, content) for p in sharing_patterns) else 0.0
     )
 
-    # 4) 新臺幣 180 億元（18 billion）遷移成本
+    # 4) 新臺幣 180 億元遷移成本
     cost_patterns = [
         re.escape(cost_amt) + r'\s*億',
         r'180\s*億',
@@ -148,10 +148,10 @@ def grade(transcript: list, workspace_path: str) -> dict:
     member_org_pairs = [
         (r'周明德', r'南港大學|共同[^。\n]{0,4}?參數|工作小組|方法論'),
         (r'鄭雅文', r'鼎峰|lte|標準|參數'),
-        (r'黃國昌', r'pinf|公共利益|小型基地台|small\s*cell|低功率'),
+        (r'黃國昌', r'公網會|公共利益|小型基地台|small\s*cell|低功率'),
         (r'馮淑惠', r'遠傳|確定性|成本|時程|電信'),
-        (r'吳孟儒', r'玉山防務|dzx|衛星|電子戰|空中|uav'),
-        (r'聶必亞', r'頻譜管理署|osm|180|共用|遷移'),
+        (r'吳孟儒', r'玉山防務|衛星|電子戰|空中|uav'),
+        (r'聶國維', r'頻譜管理署|頻管署|180|共用|遷移'),
     ]
     pair_found = sum(
         1 for name, org in member_org_pairs

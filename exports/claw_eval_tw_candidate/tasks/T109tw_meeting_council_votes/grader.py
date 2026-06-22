@@ -110,11 +110,11 @@ def grade(transcript: list, workspace_path: str) -> dict:
         and re.search(r'卡爾森|蔡明憲', c)
     ) else 0.0
 
-    # 羅馬倉庫園區：須提到羅馬倉庫／園區 且 記名表決 5 比 2（或 5-2）
+    # 中崙倉庫園區：須提到中崙倉庫／園區 且 記名表決 5 比 2（或 5-2）
     rc_pat = r'%s\s*(?:比|[-:：])\s*%s\b' % (re.escape(rc_a), re.escape(rc_b))
-    rc_sec = section(c, [r'羅馬倉庫', r'園區', r'十四', r'十五', r'14', r'15'])
+    rc_sec = section(c, [r'中崙倉庫', r'園區', r'十四', r'十五', r'14', r'15'])
     scores["rollcall_item"] = 1.0 if (
-        re.search(r'羅馬倉庫|園區|十四|十五|14|15', c)
+        re.search(r'中崙倉庫|園區|十四|十五|14|15', c)
         and re.search(rc_pat, rc_sec)
     ) else 0.0
 

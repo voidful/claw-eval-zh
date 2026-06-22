@@ -47,10 +47,10 @@ grading_weights:
 - 8 月 3 日、8 月 10 日、8 月 17 日：民國 116 年度（2027 年度）總預算編列工作坊三場。
 - 2027 年 3 月 1 日：自來水及污水容量費新費率開始實施。
 - 2027 年 9 月：第 24 號消防分隊完工。
-- 2028 年 9 月：羅馬倉庫園區第四期（Phase 4）完工。
+- 2028 年 9 月：中崙倉庫園區第四期（Phase 4）完工。
 - 2030 年 3 月：容量費三階段調整全面到位。
 - 下週：大眾捷運董事會（南港捷運董事會）開會。
-- 約 60 天內：羅馬倉庫園區土地交割（closing）完成。
+- 約 60 天內：中崙倉庫園區土地交割（closing）完成。
 並以「值得關注」重點區段標出最關鍵的幾項（如 4 月 16 日次會、5 月 15 日消防分隊
 GMP、8 月三場預算工作坊、2027 年 3 月容量費上路）。
 
@@ -63,7 +63,7 @@ GMP、8 月三場預算工作坊、2027 年 3 月容量費上路）。
 - [ ] 辨識 5 月 15 日 第 24 號消防分隊 GMP
 - [ ] 辨識 8 月三場預算編列工作坊
 - [ ] 辨識 2027 年 3 月 容量費新費率上路
-- [ ] 辨識 2028 年 9 月 羅馬倉庫園區第四期完工
+- [ ] 辨識 2028 年 9 月 中崙倉庫園區第四期完工
 - [ ] 依時間先後組織
 - [ ] 包含『值得關注／重點』區段
 
@@ -73,7 +73,7 @@ GMP、8 月三場預算工作坊、2027 年 3 月容量費上路）。
 def grade(transcript: list, workspace_path: str) -> dict:
     """TW (fictional) council upcoming-events grader.
 
-    查核項對應原 grader，但事實改由台灣逐字稿（dest=transcript.md）推導，
+    查核項依台灣逐字稿（dest=transcript.md）推導之事實比對，
     再比對 agent 產生的中文報告 upcoming_events.md。僅用標準函式庫。
     """
     from pathlib import Path
@@ -146,10 +146,10 @@ def grade(transcript: list, workspace_path: str) -> dict:
         re.search(r"容量費|容量接管費|費率|自來水|污水|capacity|fee", c, re.IGNORECASE))
     scores["march_2027_fees"] = 1.0 if (fact and ok) else 0.0
 
-    # 7) 2028 年 9 月：羅馬倉庫園區第四期完工
-    fact = tx_has(r"2028\s*年\s*9\s*月", r"羅馬倉庫")
+    # 7) 2028 年 9 月：中崙倉庫園區第四期完工
+    fact = tx_has(r"2028\s*年\s*9\s*月", r"中崙倉庫")
     ok = bool(re.search(r"2028\s*年\s*9\s*月|2028[/-]0?9|(?:September|Sept).*28", c)) and bool(
-        re.search(r"羅馬倉庫|園區|第四期|Phase\s*4|完工|completion", c, re.IGNORECASE))
+        re.search(r"中崙倉庫|園區|第四期|Phase\s*4|完工|completion", c, re.IGNORECASE))
     scores["rome_yard_sept2028"] = 1.0 if (fact and ok) else 0.0
 
     # 8) 依時間先後（至少出現 4 個不同月份／日期錨點）
