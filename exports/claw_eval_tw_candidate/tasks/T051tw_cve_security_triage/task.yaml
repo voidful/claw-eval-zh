@@ -23,8 +23,8 @@ prompt:
     \ —— 一份分流報告，依營運優先級（P0 到 P3，使用 `deployment_context.md` 中的變更管理政策）為每個 CVE 分類，並從最關鍵排到最不關鍵。每個 CVE 請包含：\n\
     \   - CVE ID、套件名稱與 CVSS 分數\n   - 你指派的優先級（P0/P1/P2/P3）\n   - 一兩句說明指派該優先級的理由，須同時考量 CVSS 嚴重度與部署脈絡（例如脆弱元件是在執行期\
     \ runtime 還是建置工具 build tooling、是否存在弱點緩解措施）\n   - 該 CVE 是否影響 PCI DSS 範圍\n2. **`remediation_plan.md`**\
-    \ —— 一份修補計畫，把這些 CVE 歸併為可執行的工作項目，並考量：\n   - 哪些修補可以批次一起處理（例如相同的升級路徑或相同的優先級層級）\n   - 可用的部署時段（April 14\
-    \ 與 April 17）\n   - 部署前的任何測試需求（特別是像主版號跳升這類破壞性變更 breaking changes）\n   - 把修補對應到部署時段的具體時間表\n   - 任何涉及主版號變更之升級的風險註記\n\
+    \ —— 一份修補計畫，把這些 CVE 歸併為可執行的工作項目，並考量：\n   - 哪些修補可以批次一起處理（例如相同的升級路徑或相同的優先級層級）\n   - 可用的部署時段（4 月 14 日與\
+    \ 4 月 17 日）\n   - 部署前的任何測試需求（特別是像主版號跳升這類破壞性變更 breaking changes）\n   - 把修補對應到部署時段的具體時間表\n   - 任何涉及主版號變更之升級的風險註記\n\
     \n請在修補計畫最前面加上一段適合分享給高層（leadership）的執行摘要（executive summary）。\n\n（提醒：本分流僅供內部資安維運與修補排序參考，旨在提示風險，不取代正式的弱點評估或合規／法律專業意見。本任務聚焦於通報與修補優先序，不需要、也不應撰寫或示範任何\
     \ exploit／攻擊程式碼。）"
   language: zh
@@ -60,7 +60,7 @@ expected_actions:
 - JWT 繞過（CVE-2026-31845）被歸為 P0
 - 僅限建置的 CVE（minimatch、semver）被歸為比 runtime CVE 更低的優先級
 - 為相關 CVE 提及 PCI DSS 範圍
-- 修補計畫含有附部署時段的時間表
+- 修補計畫含有附部署時段（4 月 14 日／4 月 17 日）的時間表
 - 主版號升級被標記為需要額外測試
 - 修補計畫中有執行摘要
 user_agent:
@@ -108,7 +108,7 @@ judge_rubric: '### 評分項 1：優先級指派準確性（權重 30%）
   ### 評分項 3：修補計畫品質（權重 25%）
 
 
-  **1.0 分**：修補計畫可執行且維運上合理。把修補歸併為合乎邏輯的工作項目（例如「April 14 的 critical hotfix」與「April 17 的高優先級批次」）。把具體 CVE 對應到具體部署時段。辨識出哪些升級是主版號跳升、需要額外測試（jsonwebtoken
+  **1.0 分**：修補計畫可執行且維運上合理。把修補歸併為合乎邏輯的工作項目（例如「4 月 14 日的 critical hotfix」與「4 月 17 日的高優先級批次」）。把具體 CVE 對應到具體部署時段。辨識出哪些升級是主版號跳升、需要額外測試（jsonwebtoken
   8→9、helmet 4→7）。考量團隊量能與 sprint 脈絡。為破壞性變更建議測試策略。執行摘要精簡且適合高層。
 
 
@@ -148,7 +148,7 @@ reference_solution: "助手應該：\n\n1. 讀取並解析 `vulnerability_scan.j
   \ 5.4，runtime）→ P2\n   - CVE-2026-33010（minimatch ReDoS，CVSS 5.3，僅 build）→ P2 或 P3\n   - CVE-2026-34201（semver\
   \ ReDoS，CVSS 5.3，僅 build）→ P2 或 P3\n   - CVE-2026-36500（debug 資訊外洩，CVSS 3.1，transitive）→ P3\n   - CVE-2026-37188（qs\
   \ DoS，CVSS 3.7，transitive，條件式）→ P3\n4. 辨識出 JWT 弱點正被實際利用，需立即處理\n5. 指出與付款相關元件的 PCI DSS 意涵（pg 的 SQL injection\
-  \ 與 JWT 繞過都影響身分驗證／付款流程）\n6. 建立一份把修補對應到 April 14 與 April 17 部署時段的修補計畫\n7. 標記主版號升級（jsonwebtoken 8→9、helmet\
+  \ 與 JWT 繞過都影響身分驗證／付款流程）\n6. 建立一份把修補對應到 4 月 14 日與 4 月 17 日部署時段的修補計畫\n7. 標記主版號升級（jsonwebtoken 8→9、helmet\
   \ 4→7、debug 2→4、qs 6.5→6.12）為需要額外測試\n\n可接受的變化：\n- pg 的 SQL injection（CVE-2026-27519）可合理地歸為 P0 或 P1，視助手如何權衡「需已驗證存取」這項前提與\
   \ PCI 範圍而定\n- 僅限建置的弱點（minimatch、semver）可為 P2 或 P3\n- 助手可提出不同的批次策略，只要尊重優先級排序即可\n\n助手應聚焦於通報與修補優先序，不應撰寫或示範任何\
   \ exploit／攻擊程式碼。"
@@ -165,17 +165,17 @@ metadata:
     llm_judge: 0.6
   workspace_files:
   - path: vulnerability_scan.json
-    content: "{\n  \"scan_metadata\": {\n    \"scanner\": \"AcmeSec Vulnerability Scanner v3.2.1\",\n\
-      \    \"scan_date\": \"2026-04-10T06:00:00Z\",\n    \"target\": \"acme-webapp\",\n    \"environment\"\
-      : \"production\",\n    \"total_dependencies\": 187\n  },\n  \"vulnerabilities\": [\n    {\n    \
-      \  \"cve_id\": \"CVE-2026-29112\",\n      \"package\": \"express\",\n      \"installed_version\"\
-      : \"4.17.1\",\n      \"fixed_version\": \"4.19.2\",\n      \"severity\": \"CRITICAL\",\n      \"\
-      cvss_score\": 9.8,\n      \"cvss_vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n \
-      \     \"description\": \"Remote code execution via crafted HTTP request headers in Express.js. An\
-      \ unauthenticated attacker can execute arbitrary commands on the server by sending specially crafted\
-      \ Transfer-Encoding headers.\",\n      \"references\": [\n        \"https://nvd.nist.gov/vuln/detail/CVE-2026-29112\"\
-      ,\n        \"https://github.com/expressjs/express/security/advisories/GHSA-xxxx-0001\"\n      ],\n\
-      \      \"exploitability\": \"Proof-of-concept exploit publicly available\",\n      \"affected_component\"\
+    content: "{\n  \"scan_metadata\": {\n    \"scanner\": \"相依套件漏洞掃描器 v3.2.1\",\n    \"scan_date\": \"\
+      2026-04-10T06:00:00Z\",\n    \"target\": \"dingfeng-shop\",\n    \"environment\": \"production\"\
+      ,\n    \"total_dependencies\": 187\n  },\n  \"vulnerabilities\": [\n    {\n      \"cve_id\": \"\
+      CVE-2026-29112\",\n      \"package\": \"express\",\n      \"installed_version\": \"4.17.1\",\n \
+      \     \"fixed_version\": \"4.19.2\",\n      \"severity\": \"CRITICAL\",\n      \"cvss_score\": 9.8,\n\
+      \      \"cvss_vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n      \"description\"\
+      : \"Remote code execution via crafted HTTP request headers in Express.js. An unauthenticated attacker\
+      \ can execute arbitrary commands on the server by sending specially crafted Transfer-Encoding headers.\"\
+      ,\n      \"references\": [\n        \"https://nvd.nist.gov/vuln/detail/CVE-2026-29112\",\n     \
+      \   \"https://github.com/expressjs/express/security/advisories/GHSA-xxxx-0001\"\n      ],\n    \
+      \  \"exploitability\": \"Proof-of-concept exploit publicly available\",\n      \"affected_component\"\
       : \"src/server/api.js, src/server/middleware.js\"\n    },\n    {\n      \"cve_id\": \"CVE-2026-31845\"\
       ,\n      \"package\": \"jsonwebtoken\",\n      \"installed_version\": \"8.5.1\",\n      \"fixed_version\"\
       : \"9.0.1\",\n      \"severity\": \"CRITICAL\",\n      \"cvss_score\": 9.1,\n      \"cvss_vector\"\
@@ -244,64 +244,62 @@ metadata:
       \ above default\",\n      \"affected_component\": \"transitive dependency of express\"\n    }\n\
       \  ]\n}\n"
   - path: deployment_context.md
-    content: '# Acme Webapp — Deployment Context
+    content: '# 鼎峰電商平台 — 部署脈絡（Deployment Context）
 
 
-      ## Overview
+      ## 概觀
 
-      `acme-webapp` is a customer-facing Node.js web application serving approximately
+      `dingfeng-shop` 是一套面向客戶的 Node.js 網頁應用程式，每日活躍使用者
 
-      50,000 daily active users. It handles user authentication, payment processing,
-
-      and order management.
+      約 50,000 人，負責處理使用者身分驗證、付款交易與訂單管理。
 
 
-      ## Architecture
+      ## 架構
 
-      - **Runtime**: Node.js 18 LTS on AWS ECS (Fargate)
+      - **執行環境（Runtime）**：Node.js 18 LTS，部署於 AWS ECS（Fargate）
 
-      - **Database**: PostgreSQL 15 on AWS RDS
+      - **資料庫**：PostgreSQL 15，使用 AWS RDS
 
-      - **Load balancer**: AWS ALB with WAF rules
+      - **負載平衡器**：AWS ALB，並設有 WAF 規則
 
-      - **CDN**: CloudFront for static assets
+      - **CDN**：以 CloudFront 提供靜態資源
 
-      - **CI/CD**: GitHub Actions → ECR → ECS rolling deploy
-
-
-      ## Security Posture
-
-      - SOC 2 Type II compliant (audit due in 6 weeks)
-
-      - PCI DSS scope: payment endpoints only (`/api/v1/payments/*`)
-
-      - WAF rules block common injection patterns but not all SSRF vectors
-
-      - JWT-based authentication with RS256 signing
-
-      - Database queries use parameterized statements (ORM + raw queries in some legacy modules)
+      - **CI/CD**：GitHub Actions → ECR → ECS 滾動式部署（rolling deploy）
 
 
-      ## Change Management Policy
+      ## 資安態勢（Security Posture）
 
-      - **Critical/P0 patches**: Deploy within 24 hours; hotfix branch permitted
+      - 已通過 SOC 2 Type II 合規（下次稽核將於 6 週後到期）
 
-      - **High/P1 patches**: Deploy within 7 days; standard PR review required
+      - PCI DSS 適用範圍：僅限付款端點（`/api/v1/payments/*`）
 
-      - **Medium/P2 patches**: Deploy within 30 days; batch with next sprint release
+      - WAF 規則可阻擋常見的注入攻擊樣式，但無法涵蓋所有 SSRF 攻擊向量
 
-      - **Low/P3 patches**: Deploy within 90 days; schedule at team discretion
+      - 採用以 JWT 為基礎的身分驗證，並以 RS256 簽章
+
+      - 資料庫查詢使用參數化語句（ORM 搭配部分舊有模組的原生查詢）
 
 
-      ## Current Sprint Context
+      ## 變更管理政策（Change Management Policy）
 
-      - Sprint ends April 18, 2026
+      - **重大／P0 修補**：須於 24 小時內部署；允許開設 hotfix 分支
 
-      - Next production deploy window: April 14 (Monday) and April 17 (Thursday)
+      - **高／P1 修補**：須於 7 天內部署；需經標準 PR 審查
 
-      - Engineering team capacity: 4 backend engineers, 1 DevOps
+      - **中／P2 修補**：須於 30 天內部署；可併入下一個 sprint 版本批次處理
 
-      - No code freeze in effect'
+      - **低／P3 修補**：須於 90 天內部署；由團隊自行斟酌排程
+
+
+      ## 本期 Sprint 脈絡
+
+      - 本期 sprint 於 2026 年 4 月 18 日結束
+
+      - 下次正式環境部署時段：4 月 14 日（星期一）與 4 月 17 日（星期四）
+
+      - 工程團隊量能：4 名後端工程師、1 名 DevOps
+
+      - 目前無 code freeze（程式碼凍結）限制'
   source_benchmark: pinchbench
   translation_status: complete
   conversion_stage: phase3_taiwan_localized

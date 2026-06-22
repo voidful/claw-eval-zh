@@ -12,7 +12,7 @@ tasks:
       - path: inbox/unread_01_vendor_security_followup.txt
         content: |
           寄件者：張雅婷（鼎峰科技 資安團隊）<yating.chang@dingfeng-tech.com.tw>
-          收件者：me@mycompany.com.tw
+          收件者：me@liantai.com.tw
           日期：2026 年 4 月 7 日（週二）08:12 (Asia/Taipei)
           主旨：跟進：資安問卷明天截止
 
@@ -30,7 +30,7 @@ tasks:
       - path: inbox/unread_02_customer_escalation.txt
         content: |
           寄件者：林建宏（北辰醫療 資訊部）<jianhong.lin@beichen-health.com.tw>
-          收件者：support@mycompany.com.tw、me@mycompany.com.tw
+          收件者：support@liantai.com.tw、me@liantai.com.tw
           日期：2026 年 4 月 7 日（週二）09:03 (Asia/Taipei)
           主旨：客訴升級：董事會前的資料匯出又失敗了
 
@@ -47,8 +47,8 @@ tasks:
           建宏
       - path: inbox/unread_03_internal_review_request.txt
         content: |
-          寄件者：王思婷（產品部）<siting.wang@mycompany.com.tw>
-          收件者：me@mycompany.com.tw
+          寄件者：王思婷（產品部）<siting.wang@liantai.com.tw>
+          收件者：me@liantai.com.tw
           日期：2026 年 4 月 7 日（週二）10:14 (Asia/Taipei)
           主旨：快速審閱：新手導引提示文案
 
@@ -57,14 +57,14 @@ tasks:
           可以麻煩你幫忙看一下改版後的新手導引提示（tooltip）文案，週四下午前回覆意見
           嗎？文件很短（大概 15 分鐘就看得完）。
 
-          草稿連結：https://docs.mycompany.com.tw/onboarding-tooltips-v3
+          草稿連結：https://docs.liantai.com.tw/onboarding-tooltips-v3
 
           謝謝啦！
           思婷
       - path: inbox/unread_04_newsletter.txt
         content: |
           寄件者：技術週報編輯室 <newsletter@devweekly.tw>
-          收件者：me@mycompany.com.tw
+          收件者：me@liantai.com.tw
           日期：2026 年 4 月 7 日（週二）06:00 (Asia/Taipei)
           主旨：技術週報 #242 — 大規模資料庫實戰
 
@@ -77,7 +77,7 @@ tasks:
       - path: inbox/unread_05_partner_meeting_reschedule.txt
         content: |-
           寄件者：陳怡君（聯盟夥伴 業務發展）<yijun.chen@alliance-partners.com.tw>
-          收件者：me@mycompany.com.tw
+          收件者：me@liantai.com.tw
           日期：2026 年 4 月 7 日（週二）11:25 (Asia/Taipei)
           主旨：週四的夥伴同步會議需要改期
 

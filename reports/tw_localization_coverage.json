@@ -18,7 +18,7 @@
     "heavy": 24,
     "none": 52
   },
-  "fixture_replaced_count": 57,
+  "fixture_replaced_count": 58,
   "fixture_replaced": [
     "task_pdf_to_calendar",
     "task_todo_list_cleanup",
@@ -33,6 +33,7 @@
     "task_email_search",
     "task_financial_ratio_calculation",
     "task_contract_analysis",
+    "task_cve_security_triage",
     "task_csv_stock_trend",
     "task_csv_stock_volatility",
     "task_csv_stock_best_worst",
@@ -78,7 +79,7 @@
     "task_memory",
     "task_second_brain"
   ],
-  "grader_changed_count": 53,
+  "grader_changed_count": 54,
   "grader_changed": [
     "task_calendar",
     "task_pdf_to_calendar",
@@ -90,6 +91,7 @@
     "task_spreadsheet_summary",
     "task_email_search",
     "task_financial_ratio_calculation",
+    "task_cve_security_triage",
     "task_csv_stock_trend",
     "task_csv_stock_volatility",
     "task_csv_stock_best_worst",

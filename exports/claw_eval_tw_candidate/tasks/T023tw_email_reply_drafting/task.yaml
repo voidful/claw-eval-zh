@@ -176,7 +176,7 @@ metadata:
   - path: inbox/unread_01_vendor_security_followup.txt
     content: '寄件者：張雅婷（鼎峰科技 資安團隊）<yating.chang@dingfeng-tech.com.tw>
 
-      收件者：me@mycompany.com.tw
+      收件者：me@liantai.com.tw
 
       日期：2026 年 4 月 7 日（週二）08:12 (Asia/Taipei)
 
@@ -205,7 +205,7 @@ metadata:
   - path: inbox/unread_02_customer_escalation.txt
     content: '寄件者：林建宏（北辰醫療 資訊部）<jianhong.lin@beichen-health.com.tw>
 
-      收件者：support@mycompany.com.tw、me@mycompany.com.tw
+      收件者：support@liantai.com.tw、me@liantai.com.tw
 
       日期：2026 年 4 月 7 日（週二）09:03 (Asia/Taipei)
 
@@ -232,9 +232,9 @@ metadata:
 
       '
   - path: inbox/unread_03_internal_review_request.txt
-    content: '寄件者：王思婷（產品部）<siting.wang@mycompany.com.tw>
+    content: '寄件者：王思婷（產品部）<siting.wang@liantai.com.tw>
 
-      收件者：me@mycompany.com.tw
+      收件者：me@liantai.com.tw
 
       日期：2026 年 4 月 7 日（週二）10:14 (Asia/Taipei)
 
@@ -249,7 +249,7 @@ metadata:
       嗎？文件很短（大概 15 分鐘就看得完）。
 
 
-      草稿連結：https://docs.mycompany.com.tw/onboarding-tooltips-v3
+      草稿連結：https://docs.liantai.com.tw/onboarding-tooltips-v3
 
 
       謝謝啦！
@@ -260,7 +260,7 @@ metadata:
   - path: inbox/unread_04_newsletter.txt
     content: '寄件者：技術週報編輯室 <newsletter@devweekly.tw>
 
-      收件者：me@mycompany.com.tw
+      收件者：me@liantai.com.tw
 
       日期：2026 年 4 月 7 日（週二）06:00 (Asia/Taipei)
 
@@ -282,7 +282,7 @@ metadata:
   - path: inbox/unread_05_partner_meeting_reschedule.txt
     content: '寄件者：陳怡君（聯盟夥伴 業務發展）<yijun.chen@alliance-partners.com.tw>
 
-      收件者：me@mycompany.com.tw
+      收件者：me@liantai.com.tw
 
       日期：2026 年 4 月 7 日（週二）11:25 (Asia/Taipei)
 
