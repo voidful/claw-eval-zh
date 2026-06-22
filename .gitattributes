@@ -1,0 +1,12 @@
+# Treat binary / fixed-byte fixtures as binary so git never applies line-ending
+# normalization (which can alter or corrupt fixtures on cross-platform checkouts).
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
+*.ico binary
+
+# CSV fixtures: keep bytes stable (no CRLF<->LF churn across platforms).
+*.csv -text
