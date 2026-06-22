@@ -102,9 +102,9 @@ def grade(transcript: list, workspace_path: str) -> dict:
                 report_path = workspace / alt
                 break
 
-    keys = ["report_created", "temple_crest", "west_tampa", "south_howard",
-            "east_tampa", "highland_pines", "rezoning_addresses", "macdill",
-            "riverwalk", "frequency_or_crossref", "location_count"]
+    keys = ["report_created", "miaoqian_li", "xigang_li", "nangang_ave",
+            "donggang_li", "gaodi_li", "rezoning_addresses", "nangang_airbase",
+            "riverside_trail", "frequency_or_crossref", "location_count"]
     if not report_path.exists():
         return {k: 0.0 for k in keys}
 
@@ -112,31 +112,31 @@ def grade(transcript: list, workspace_path: str) -> dict:
     c = report_path.read_text(encoding="utf-8", errors="ignore")
 
     # 廟前里：治安改善 / 麥尼爾巡佐 / 犯罪下降
-    scores["temple_crest"] = 1.0 if (
+    scores["miaoqian_li"] = 1.0 if (
         re.search(r"廟前里|廟前", c)
         and re.search(r"麥尼爾|治安|犯罪|竊盜|模範員警", c)
     ) else 0.0
 
     # 西港里：中崙倉庫園區 / 職棒球場（樂天桃猿）/ 開發
-    scores["west_tampa"] = 1.0 if (
+    scores["xigang_li"] = 1.0 if (
         re.search(r"西港里|西港", c)
         and re.search(r"中崙倉庫園區|中崙倉庫|樂天桃猿|猿|職棒|球場|開發", c)
     ) else 0.0
 
     # 南港大道：封街施工 / 老舊管線 / 雨水下水道
-    scores["south_howard"] = 1.0 if (
+    scores["nangang_ave"] = 1.0 if (
         re.search(r"南港大道", c)
         and re.search(r"封街|施工|管線|下水道|米其里尼", c)
     ) else 0.0
 
     # 東港里：東港路廊 / 開發 / 分區變更 / 環評
-    scores["east_tampa"] = 1.0 if (
+    scores["donggang_li"] = 1.0 if (
         re.search(r"東港里|東港", c)
         and re.search(r"開發|建設|東港路廊|路廊|分區|環評", c)
     ) else 0.0
 
     # 高地里：街友 / 遊民 / 安置 / 中正路 / 高德森
-    scores["highland_pines"] = 1.0 if (
+    scores["gaodi_li"] = 1.0 if (
         re.search(r"高地里|高地", c)
         and re.search(r"街友|遊民|安置|中正路|高德森", c)
     ) else 0.0
@@ -153,10 +153,10 @@ def grade(transcript: list, workspace_path: str) -> dict:
     )
 
     # 南港空軍基地
-    scores["macdill"] = 1.0 if re.search(r"南港空軍基地|空軍基地", c) else 0.0
+    scores["nangang_airbase"] = 1.0 if re.search(r"南港空軍基地|空軍基地", c) else 0.0
 
     # 河岸步道：與 中崙倉庫園區 / 串聯 / 延伸 / 西側 / 開發
-    scores["riverwalk"] = 1.0 if (
+    scores["riverside_trail"] = 1.0 if (
         re.search(r"河岸步道|基隆河", c)
         and re.search(r"中崙倉庫|串聯|延伸|西側|連通|連結|開發|基隆河", c)
     ) else 0.0

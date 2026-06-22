@@ -13,126 +13,216 @@ from __future__ import annotations
 
 
 def grade(transcript: list, workspace_path: str) -> dict:
-    """
-    Grade the spreadsheet summary task by checking the output report
-    for correct numerical values and key findings.
+    """台灣版 CSV 與 Excel 資料摘要 grader。
 
-    Args:
-        transcript: Parsed JSONL transcript as list of dicts
-        workspace_path: Path to the task's isolated workspace directory
-
-    Returns:
-        Dict mapping criterion names to scores (0.0 to 1.0)
+    應有事實「從佈署的台灣 fixtures 動態實算」——
+      - quarterly_sales.csv：總營收／總利潤／總數量／最佳地區／最佳產品
+      - company_expenses.xlsx：Q1 總費用／最高費用部門／最高費用員工／各部門 Q1 預算
+    再比對 agent 產生的中文報告 data_summary.md。僅用標準函式庫，金額為新臺幣（NT$），
+    不沿用任何美國 $ 數值。.xlsx 以 zipfile + xml.etree 自行解析（不依賴 openpyxl）。
     """
     from pathlib import Path
+    import csv
     import re
+    import zipfile
+    import xml.etree.ElementTree as ET
+    from collections import defaultdict
 
-    scores = {}
+    keys = [
+        "report_created", "total_revenue", "total_profit", "top_region",
+        "top_product", "total_expenses", "top_department", "top_employee",
+        "budget_comparison",
+    ]
     workspace = Path(workspace_path)
 
-    # Check if summary report exists
+    # --- 找報告檔 ---
     report_path = workspace / "data_summary.md"
     if not report_path.exists():
-        # Try common alternative names
-        alternatives = ["summary.md", "report.md", "data_report.md", "analysis.md"]
-        for alt in alternatives:
-            alt_path = workspace / alt
-            if alt_path.exists():
-                report_path = alt_path
+        for alt in ["summary.md", "report.md", "data_report.md", "analysis.md",
+                    "資料摘要.md", "摘要報告.md", "摘要.md"]:
+            if (workspace / alt).exists():
+                report_path = workspace / alt
                 break
-
     if not report_path.exists():
-        scores["report_created"] = 0.0
-        scores["total_revenue"] = 0.0
-        scores["total_profit"] = 0.0
-        scores["top_region"] = 0.0
-        scores["top_product"] = 0.0
-        scores["total_expenses"] = 0.0
-        scores["top_department"] = 0.0
-        scores["top_employee"] = 0.0
-        scores["budget_comparison"] = 0.0
-        return scores
+        return {k: 0.0 for k in keys}
 
-    scores["report_created"] = 1.0
-    content = report_path.read_text()
-    content_lower = content.lower()
+    # --- 從 CSV 動態實算正解 ---
+    csv_path = workspace / "quarterly_sales.csv"
+    total_revenue = total_cost = total_units = 0
+    rev_by_region = defaultdict(int)
+    rev_by_product = defaultdict(int)
+    if csv_path.exists():
+        with csv_path.open(encoding="utf-8") as fh:
+            for row in csv.DictReader(fh):
+                def num(k):
+                    return int(round(float(re.sub(r"[^\d.\-]", "", row.get(k) or "0") or 0)))
+                rev = num("Revenue")
+                cost = num("Cost")
+                units = num("Units_Sold")
+                total_revenue += rev
+                total_cost += cost
+                total_units += units
+                rev_by_region[(row.get("Region") or "").strip()] += rev
+                rev_by_product[(row.get("Product") or "").strip()] += rev
+    total_profit = total_revenue - total_cost
+    top_region = max(rev_by_region.items(), key=lambda kv: kv[1]) if rev_by_region else ("", 0)
+    top_product = max(rev_by_product.items(), key=lambda kv: kv[1]) if rev_by_product else ("", 0)
 
-    # Check total revenue (~119,900)
-    # Look for the number in various formats: 119900, 119,900, 119900.00, etc.
-    revenue_patterns = [
-        r'119[,.]?900',
-        r'119[,.]?900\.00',
-    ]
-    has_revenue = any(re.search(p, content.replace(' ', '')) for p in revenue_patterns)
-    scores["total_revenue"] = 1.0 if has_revenue else 0.0
+    # --- 從 XLSX 動態實算正解（標準函式庫解析 .xlsx）---
+    xlsx_path = workspace / "company_expenses.xlsx"
+    exp_total = 0
+    exp_by_dept = defaultdict(int)
+    exp_by_emp = defaultdict(int)
+    q1_budget = {}
 
-    # Check total profit (~47,960)
-    profit_patterns = [
-        r'47[,.]?960',
-    ]
-    has_profit = any(re.search(p, content.replace(' ', '')) for p in profit_patterns)
-    scores["total_profit"] = 1.0 if has_profit else 0.0
+    def read_xlsx(path):
+        """回傳 {sheet_name: [ [cell, ...], ... ]}，cell 為字串或數字。"""
+        ns = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+              "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships"}
+        out = {}
+        with zipfile.ZipFile(path) as z:
+            shared = []
+            if "xl/sharedStrings.xml" in z.namelist():
+                sroot = ET.fromstring(z.read("xl/sharedStrings.xml"))
+                for si in sroot.findall("m:si", ns):
+                    shared.append("".join(t.text or "" for t in si.iter("{%s}t" % ns["m"])))
+            wbroot = ET.fromstring(z.read("xl/workbook.xml"))
+            sheets = []
+            for sh in wbroot.find("m:sheets", ns).findall("m:sheet", ns):
+                rid = sh.get("{%s}id" % ns["r"])
+                sheets.append((sh.get("name"), rid))
+            rels = ET.fromstring(z.read("xl/_rels/workbook.xml.rels"))
+            rid2target = {}
+            for rel in rels:
+                rid2target[rel.get("Id")] = rel.get("Target")
 
-    # Check top region (East)
-    # Look for East being called out as top/highest/best/leading region
-    east_patterns = [
-        r'east.*(?:top|highest|most|best|leading|largest)',
-        r'(?:top|highest|most|best|leading|largest).*east',
-        r'east.*\$?33[,.]?075',
-        r'33[,.]?075.*east',
-    ]
-    has_top_region = any(re.search(p, content_lower) for p in east_patterns)
-    scores["top_region"] = 1.0 if has_top_region else 0.0
+            def col_idx(ref):
+                m = re.match(r"([A-Z]+)", ref or "")
+                if not m:
+                    return 0
+                s = m.group(1)
+                n = 0
+                for ch in s:
+                    n = n * 26 + (ord(ch) - ord("A") + 1)
+                return n - 1
 
-    # Check top product (Widget B)
-    product_patterns = [
-        r'widget\s*b.*(?:top|highest|most|best|leading|largest)',
-        r'(?:top|highest|most|best|leading|largest).*widget\s*b',
-        r'widget\s*b.*\$?47[,.]?400',
-        r'47[,.]?400.*widget\s*b',
-    ]
-    has_top_product = any(re.search(p, content_lower) for p in product_patterns)
-    scores["top_product"] = 1.0 if has_top_product else 0.0
+            for name, rid in sheets:
+                target = rid2target.get(rid, "")
+                part = "xl/" + target.lstrip("/") if not target.startswith("xl/") else target
+                if part not in z.namelist():
+                    part = "xl/worksheets/" + target.split("/")[-1]
+                root = ET.fromstring(z.read(part))
+                rows = []
+                for r in root.iter("{%s}row" % ns["m"]):
+                    cells = {}
+                    maxc = -1
+                    for cc in r.findall("m:c", ns):
+                        ref = cc.get("r", "")
+                        ci = col_idx(ref)
+                        t = cc.get("t")
+                        v = cc.find("m:v", ns)
+                        if t == "s" and v is not None:
+                            val = shared[int(v.text)]
+                        elif t == "inlineStr":
+                            isn = cc.find("m:is", ns)
+                            val = "".join(x.text or "" for x in isn.iter("{%s}t" % ns["m"])) if isn is not None else ""
+                        elif v is not None:
+                            try:
+                                f = float(v.text)
+                                val = int(f) if f.is_integer() else f
+                            except ValueError:
+                                val = v.text
+                        else:
+                            val = ""
+                        cells[ci] = val
+                        maxc = max(maxc, ci)
+                    rows.append([cells.get(i, "") for i in range(maxc + 1)])
+                out[name] = rows
+        return out
 
-    # Check total Q1 expenses (~15,430)
-    expense_patterns = [
-        r'15[,.]?430',
-    ]
-    has_expenses = any(re.search(p, content.replace(' ', '')) for p in expense_patterns)
-    scores["total_expenses"] = 1.0 if has_expenses else 0.0
+    if xlsx_path.exists():
+        try:
+            data = read_xlsx(xlsx_path)
+            exp_rows = data.get("Q1_Expenses") or []
+            for row in exp_rows[1:]:
+                if len(row) < 4:
+                    continue
+                emp = str(row[0]).strip()
+                dept = str(row[1]).strip()
+                try:
+                    amt = int(round(float(row[3])))
+                except (ValueError, TypeError):
+                    continue
+                if not emp:
+                    continue
+                exp_total += amt
+                exp_by_dept[dept] += amt
+                exp_by_emp[emp] += amt
+            bud_rows = data.get("Budgets") or []
+            for row in bud_rows[1:]:
+                if len(row) < 2:
+                    continue
+                dept = str(row[0]).strip()
+                try:
+                    q1_budget[dept] = int(round(float(row[1])))
+                except (ValueError, TypeError):
+                    pass
+        except Exception:  # noqa: BLE001
+            pass
 
-    # Check top department (Engineering)
-    dept_patterns = [
-        r'engineering.*(?:top|highest|most|largest|leading)',
-        r'(?:top|highest|most|largest|leading).*engineering',
-        r'engineering.*\$?7[,.]?680',
-        r'7[,.]?680.*engineering',
-    ]
-    has_top_dept = any(re.search(p, content_lower) for p in dept_patterns)
-    scores["top_department"] = 1.0 if has_top_dept else 0.0
+    top_dept = max(exp_by_dept.items(), key=lambda kv: kv[1]) if exp_by_dept else ("", 0)
+    top_emp = max(exp_by_emp.items(), key=lambda kv: kv[1]) if exp_by_emp else ("", 0)
 
-    # Check top employee (Alice Chen)
-    employee_patterns = [
-        r'alice\s*chen.*(?:top|highest|most|largest|leading)',
-        r'(?:top|highest|most|largest|leading).*alice\s*chen',
-        r'alice\s*chen.*\$?5[,.]?400',
-        r'5[,.]?400.*alice\s*chen',
-    ]
-    has_top_employee = any(re.search(p, content_lower) for p in employee_patterns)
-    scores["top_employee"] = 1.0 if has_top_employee else 0.0
+    # --- 讀報告，準備比對（去千分位逗號與空白，方便數字匹配）---
+    c = report_path.read_text(encoding="utf-8", errors="ignore")
+    nospace = re.sub(r"[\s,]", "", c)
 
-    # Check for budget vs actual comparison
-    budget_indicators = [
-        r'budget.*actual',
-        r'actual.*budget',
-        r'budget.*expense',
-        r'under\s*budget',
-        r'over\s*budget',
-        r'variance',
-        r'25[,.]?000',  # Engineering Q1 budget
-    ]
-    has_budget = any(re.search(p, content_lower) for p in budget_indicators)
-    scores["budget_comparison"] = 1.0 if has_budget else 0.0
+    def has_num(n):
+        return n > 0 and str(int(n)) in nospace
+
+    def has_name(name):
+        return bool(name) and name in c
+
+    scores = {"report_created": 1.0}
+
+    scores["total_revenue"] = 1.0 if has_num(total_revenue) else 0.0
+    scores["total_profit"] = 1.0 if has_num(total_profit) else 0.0
+
+    region_ok = has_name(top_region[0]) and (
+        has_num(top_region[1])
+        or re.search(re.escape(top_region[0]) + r".{0,30}(最高|最佳|最大|第一|冠軍|居首|領先)", c)
+        or re.search(r"(最高|最佳|最大|第一|冠軍|居首|領先).{0,30}" + re.escape(top_region[0]), c)
+    )
+    scores["top_region"] = 1.0 if region_ok else 0.0
+
+    product_ok = has_name(top_product[0]) and (
+        has_num(top_product[1])
+        or re.search(re.escape(top_product[0]) + r".{0,30}(最高|最佳|最暢銷|最大|第一|冠軍|居首|領先)", c)
+        or re.search(r"(最高|最佳|最暢銷|最大|第一|冠軍|居首|領先).{0,30}" + re.escape(top_product[0]), c)
+    )
+    scores["top_product"] = 1.0 if product_ok else 0.0
+
+    scores["total_expenses"] = 1.0 if has_num(exp_total) else 0.0
+
+    dept_ok = has_name(top_dept[0]) and (
+        has_num(top_dept[1])
+        or re.search(re.escape(top_dept[0]) + r".{0,30}(最高|最多|最大|第一|居首|領先)", c)
+        or re.search(r"(最高|最多|最大|第一|居首|領先).{0,30}" + re.escape(top_dept[0]), c)
+    )
+    scores["top_department"] = 1.0 if dept_ok else 0.0
+
+    emp_ok = has_name(top_emp[0]) and (
+        has_num(top_emp[1])
+        or re.search(re.escape(top_emp[0]) + r".{0,30}(最高|最多|最大|第一|居首|領先)", c)
+        or re.search(r"(最高|最多|最大|第一|居首|領先).{0,30}" + re.escape(top_emp[0]), c)
+    )
+    scores["top_employee"] = 1.0 if emp_ok else 0.0
+
+    budget_terms = re.search(r"(預算|實際|超支|在預算內|結餘|差額|對比|比較)", c)
+    budget_num = any(has_num(v) for v in q1_budget.values())
+    scores["budget_comparison"] = 1.0 if (
+        budget_terms and (budget_num or re.search(r"(預算.{0,40}(實際|費用)|(實際|費用).{0,40}預算)", c))
+    ) else 0.0
 
     return scores
 

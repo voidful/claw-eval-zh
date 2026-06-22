@@ -18,26 +18,32 @@ source:
   original_file: tasks/task_spreadsheet_summary.md
 prompt:
   text: |-
-    工作區裡有兩個資料檔，提供給你分析：
+    工作區裡有兩個資料檔，提供給你分析（金額單位皆為新臺幣 NT$）：
 
-    1. `quarterly_sales.csv` —— 一個包含銷售交易的 CSV 檔，欄位有：Date、Region、Product、Units_Sold、Unit_Price、Revenue、Cost（共 24 列資料）
-    2. `company_expenses.xlsx` —— 一個 Excel 活頁簿，含兩個工作表：「Q1_Expenses」（員工費用報告，12 筆紀錄）與「Budgets」（各部門預算分配）
+    1. `quarterly_sales.csv` —— 一個包含銷售交易的 CSV 檔，欄位有：Date、Region、Product、
+       Units_Sold、Unit_Price、Revenue、Cost（共 24 列資料）。Region 為台灣地區（北部、中部、
+       南部、東部），Product 為產品名稱（智慧手環、藍牙耳機、行動電源）。
+    2. `company_expenses.xlsx` —— 一個 Excel 活頁簿，含兩個工作表：「Q1_Expenses」（員工費用
+       報告，12 筆紀錄，部門為 研發、業務、行銷、管理）與「Budgets」（各部門季度預算分配）。
 
     請讀取並分析這兩個檔案，然後把一份摘要報告寫入 `data_summary.md`，內容包含：
 
-    - **CSV 分析**：總營收、總利潤（營收減成本）、總銷售數量、依營收計算表現最佳的地區，以及依營收計算最暢銷的產品。
-    - **Excel 分析**：Q1 總費用、費用最高的部門、總費用最高的員工，以及各部門 Q1 實際費用與 Q1 預算的比較。
+    - **CSV 分析**：總營收、總利潤（營收減成本）、總銷售數量、依營收計算表現最佳的地區，
+      以及依營收計算最暢銷的產品。
+    - **Excel 分析**：Q1 總費用、費用最高的部門、總費用最高的員工，以及各部門 Q1 實際費用
+      與 Q1 預算的比較。
     - 一段結合兩個檔案發現的整體洞察（insights）區段。
 
-    請只根據檔案中實際存在的資料作答，不要臆測或填補缺漏的數字。
+    報告請全程使用繁體中文，金額一律以新臺幣（NT$）表示，並只根據檔案中實際存在的資料作答，
+    不要臆測或填補缺漏的數字。
   language: zh
 tools: []
 tool_endpoints: []
 services: []
 fixtures:
-- source: quarterly_sales.csv
+- source: tw/csvs/tw_quarterly_sales.csv
   dest: quarterly_sales.csv
-- source: company_expenses.xlsx
+- source: tw/docs/tw_company_expenses.xlsx
   dest: company_expenses.xlsx
 environment:
   timeout_seconds: 180
@@ -66,13 +72,13 @@ expected_actions:
 - 助手成功讀取 CSV 檔
 - 助手成功讀取 Excel 檔（含多個工作表）
 - 已建立摘要報告檔 data_summary.md
-- 正確回報總營收（約 $119,900）
-- 正確計算總利潤（約 $47,960）
-- 辨識出依營收計算的最佳地區（East）
-- 辨識出依營收計算的最佳產品（Widget B）
-- 正確回報 Q1 總費用（約 $15,430）
-- 辨識出費用最高的部門（Engineering）
-- 辨識出費用最高的員工（Alice Chen）
+- 正確回報總營收（約 NT$3,442,550）
+- 正確計算總利潤（約 NT$1,377,020）
+- 辨識出依營收計算的最佳地區（南部）
+- 辨識出依營收計算的最佳產品（藍牙耳機）
+- 正確回報 Q1 總費用（約 NT$215,400）
+- 辨識出費用最高的部門（研發）
+- 辨識出費用最高的員工（王怡君）
 - 包含預算與實際費用的比較
 - 報告結構良好、易讀
 user_agent:
@@ -88,7 +94,8 @@ judge_rubric: |-
 
   ### 評分項 2：分析準確性（權重 35%）
 
-  **1.0 分**：所有計算出的統計（總計、最佳表現者、比較）在數值上皆正確且清楚呈現，且皆有檔案資料支持。
+  **1.0 分**：所有計算出的統計（總計、最佳表現者、比較）在數值上皆正確且清楚呈現，
+    金額以新臺幣（NT$）標示，且皆有檔案資料支持。
   **0.75 分**：多數統計正確，僅有一兩個小數值錯誤。
   **0.5 分**：部分統計正確，但數個關鍵數字錯誤或缺漏。
   **0.25 分**：少數統計正確；存在重大計算錯誤，或出現檔案中沒有依據的捏造數字。
@@ -96,7 +103,8 @@ judge_rubric: |-
 
   ### 評分項 3：報告品質與結構（權重 25%）
 
-  **1.0 分**：報告組織良好、區段清楚、markdown 格式得當，發現呈現一目了然。含標題，並以表格或格式化清單呈現資料。
+  **1.0 分**：報告組織良好、區段清楚、markdown 格式得當，發現呈現一目了然。含標題，
+    並以表格或格式化清單呈現資料，金額皆以新臺幣（NT$）呈現。
   **0.75 分**：報告有條理且易讀，僅有少許格式問題。
   **0.5 分**：報告含有資訊，但組織不佳或難以閱讀。
   **0.25 分**：報告雜亂無章或缺少主要區段。
@@ -104,7 +112,8 @@ judge_rubric: |-
 
   ### 評分項 4：洞察與綜整（權重 15%）
 
-  **1.0 分**：報告含有縝密的跨檔案洞察、對趨勢的有意義觀察，以及結合兩個資料來源的可行建議；洞察以資料為依據，未過度推論。
+  **1.0 分**：報告含有縝密的跨檔案洞察、對趨勢的有意義觀察，以及結合兩個資料來源的可行建議；
+    洞察以資料為依據，未過度推論。
   **0.75 分**：報告含有一些跨檔案觀察，但可以更具洞見。
   **0.5 分**：報告呈現了兩個檔案的資料，但缺乏有意義的綜整。
   **0.25 分**：報告幾乎沒有把兩個資料來源的發現連結起來。
@@ -117,18 +126,22 @@ reference_solution: |-
   3. 從兩個檔案計算出正確的彙總統計
   4. 把一份結構良好的 markdown 摘要報告寫入 `data_summary.md`
 
-  CSV 含 24 列銷售資料，橫跨 4 個地區（North、South、East、West）與 3 項產品（Widget A、B、C）。Excel 檔有 12 筆費用紀錄、橫跨 4 個部門，並有一個獨立的預算工作表列出各部門的季度分配。
+  CSV 含 24 列銷售資料，橫跨 4 個地區（北部、中部、南部、東部）與 3 項產品（智慧手環、
+  藍牙耳機、行動電源）。Excel 檔有 12 筆費用紀錄、橫跨 4 個部門（研發、業務、行銷、管理），
+  並有一個獨立的預算工作表列出各部門的季度分配。
 
-  預期關鍵數值：
+  預期關鍵數值（以佈署的台灣 fixtures 實際資料計，金額為新臺幣 NT$）：
 
-  - CSV 總營收：$119,900
-  - CSV 總利潤：$47,960
+  - CSV 總營收：NT$3,442,550
+  - CSV 總利潤：NT$1,377,020
   - CSV 總數量：3,775
-  - CSV 最佳地區：East（$33,075）
-  - CSV 最佳產品：Widget B（$47,400）
-  - Excel Q1 總費用：$15,430
-  - Excel 費用最高部門：Engineering（$7,680）
-  - Excel 費用最高員工：Alice Chen（$5,400）
+  - CSV 最佳地區：南部（NT$942,400）
+  - CSV 最佳產品：藍牙耳機（NT$1,864,400）
+  - Excel Q1 總費用：NT$215,400
+  - Excel 費用最高部門：研發（NT$106,200）
+  - Excel 費用最高員工：王怡君（NT$74,000）
+  - Excel 各部門 Q1 預算：研發 NT$350,000、行銷 NT$200,000、業務 NT$160,000、管理 NT$110,000
+    （四個部門 Q1 實際費用皆在預算內）
 primary_dimensions:
 - completion
 - safety
@@ -141,9 +154,9 @@ metadata:
     automated: 0.6
     llm_judge: 0.4
   workspace_files:
-  - source: quarterly_sales.csv
+  - source: tw/csvs/tw_quarterly_sales.csv
     dest: quarterly_sales.csv
-  - source: company_expenses.xlsx
+  - source: tw/docs/tw_company_expenses.xlsx
     dest: company_expenses.xlsx
   source_benchmark: pinchbench
   translation_status: complete

@@ -83,14 +83,14 @@ tasks:
 
           keys = [
               "report_created",
-              "williams_zion",
+              "weilin_yizhong",
               "iman_8million",
               "cannella_stormwater",
-              "poole_tpd",
-              "poynor_romeyard",
+              "pulin_police",
+              "pan_zhonglunyard",
               "speaker_count",
               "thematic_summary",
-              "zion_multiple",
+              "yizhong_multiple",
           ]
           scores = {k: 0.0 for k in keys}
           workspace = Path(workspace_path)
@@ -153,9 +153,9 @@ tasks:
               ]
 
           # --- 個別事實查核（中文關鍵字/數值）---
-          zion = r"義塚"  # 義塚公園／義塚紀念園區／義塚紀念館
-          scores["williams_zion"] = (
-              1.0 if ("詹明慧" in content and re.search(zion, content)) else 0.0
+          yizhong = r"義塚"  # 義塚公園／義塚紀念園區／義塚紀念館
+          scores["weilin_yizhong"] = (
+              1.0 if ("詹明慧" in content and re.search(yizhong, content)) else 0.0
           )
 
           # 8,000 萬元 / NT$80,000,000 / 8000萬 等多種寫法
@@ -172,14 +172,14 @@ tasks:
               1.0 if ("簡珮如" in content and stormwater) else 0.0
           )
 
-          tpd = re.search(r"警|密錄器|員警|盤查|少年|兒子|未成年|執法", content)
-          scores["poole_tpd"] = (
-              1.0 if ("蒲怡婷" in content and tpd) else 0.0
+          police = re.search(r"警|密錄器|員警|盤查|少年|兒子|未成年|執法", content)
+          scores["pulin_police"] = (
+              1.0 if ("蒲怡婷" in content and police) else 0.0
           )
 
-          romeyard = re.search(r"中崙倉庫|1436", content)
-          scores["poynor_romeyard"] = (
-              1.0 if ("潘思妤" in content and romeyard) else 0.0
+          zhonglunyard = re.search(r"中崙倉庫|1436", content)
+          scores["pan_zhonglunyard"] = (
+              1.0 if ("潘思妤" in content and zhonglunyard) else 0.0
           )
 
           # --- 發言者辨識數量 ---
@@ -206,20 +206,20 @@ tasks:
 
           # --- 義塚 為多位發言者共同提及 ---
           # 動態：在逐字稿中找出提及「義塚」的公眾發言者，於報告中檢查其與「義塚」同段出現。
-          zion_candidates = ["詹明慧", "任薇", "駱明潔", "羅志安"]
+          yizhong_candidates = ["詹明慧", "任薇", "駱明潔", "羅志安"]
           # 以「段落」為單位（以兩個以上換行或 ### 標題切段較難，採行/區塊鄰近法）
           blocks = re.split(r"\n\s*\n|\n#{1,6}\s", content)
-          zion_speakers = 0
-          for nm in zion_candidates:
+          yizhong_speakers = 0
+          for nm in yizhong_candidates:
               for blk in blocks:
                   if nm in blk and "義塚" in blk:
-                      zion_speakers += 1
+                      yizhong_speakers += 1
                       break
-          if zion_speakers >= 2:
-              scores["zion_multiple"] = 1.0
-          elif zion_speakers >= 1:
-              scores["zion_multiple"] = 0.5
+          if yizhong_speakers >= 2:
+              scores["yizhong_multiple"] = 1.0
+          elif yizhong_speakers >= 1:
+              scores["yizhong_multiple"] = 0.5
           else:
-              scores["zion_multiple"] = 0.0
+              scores["yizhong_multiple"] = 0.0
 
           return scores

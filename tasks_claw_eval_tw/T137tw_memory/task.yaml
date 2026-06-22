@@ -18,7 +18,7 @@ source:
   original_file: tasks/task_memory.md
 prompt:
   text: |-
-    請閱讀 notes.md 中的專案筆記，並回答：beta 版發布的截止日期是哪一天？
+    請閱讀 notes.md 中的專案筆記，並回答：Beta 公測版發布的截止日期是哪一天？
     請把你的答案存到 answer.txt。
   language: zh
 tools: []
@@ -41,7 +41,7 @@ scoring_components:
 safety_checks: []
 expected_actions:
 - 已建立檔案 answer.txt
-- 答案包含日期「June 1, 2024」或等價寫法
+- 答案包含日期「2024 年 6 月 1 日」或等價寫法
 - 答案清楚並直接回答了問題
 - 助手確實讀取了 notes.md 檔案（可從對話記錄中看出）
 - 沒有杜撰或錯誤的資訊
@@ -52,8 +52,8 @@ reference_solution: |-
   助手應該：
 
   1. 從工作區（workspace）讀取 notes.md 檔案
-  2. 解析內容，找出關於 beta 版發布截止日期的資訊
-  3. 擷取出正確的日期：June 1, 2024
+  2. 解析內容，找出關於 Beta 公測版發布截止日期的資訊
+  3. 擷取出正確的日期：2024 年 6 月 1 日
   4. 建立一個名為 answer.txt 的檔案，內含答案
   5. 把答案清楚地表達出來
 
@@ -69,44 +69,56 @@ metadata:
   workspace_files:
   - path: notes.md
     content: |-
-      # Project Phoenix - Development Notes
+      # 鳳凰專案 — 開發筆記
 
-      ## Timeline
+      ## 時程
 
-      - **Alpha Release**: March 15, 2024
-      - **Beta Release**: June 1, 2024
-      - **Production Launch**: September 30, 2024
+      - **Alpha 內測**：2024 年 3 月 15 日
+      - **Beta 公測**：2024 年 6 月 1 日
+      - **正式上線**：2024 年 9 月 30 日
 
-      ## Team
+      ## 團隊成員
 
-      - Lead Developer: Sarah Chen
-      - Backend: Marcus Rodriguez, Aisha Patel
-      - Frontend: James Kim, Elena Volkov
-      - QA: David Thompson
+      - 技術主導：陳思婷
+      - 後端：林志豪、黃詩涵
+      - 前端：王建宏、張雅婷
+      - 測試（QA）：李俊毅
 
-      ## Key Features
+      ## 主要功能
 
-      1. Real-time collaboration
-      2. Advanced analytics dashboard
-      3. Mobile app integration
-      4. API v2 with GraphQL support
+      1. 即時協作
+      2. 進階分析儀表板
+      3. 行動 App 整合
+      4. 支援 GraphQL 的 API v2
 
-      ## Current Status
+      ## 目前狀態
 
-      We're currently in the alpha testing phase with 50 internal users. Feedback has been positive, particularly regarding the new UI. The beta release is scheduled for June 1, 2024, and we're on track to meet this deadline.
+      我們目前處於 Alpha 內測階段，有 50 位內部使用者參與。回饋相當正面，
+      尤其是對全新介面的評價。Beta 公測預定於 2024 年 6 月 1 日推出，
+      目前進度順利，可如期達成這個期限。
 
-      ## Technical Stack
+      ## 技術棧
 
-      - Frontend: React 18, TypeScript
-      - Backend: Node.js, Express, PostgreSQL
-      - Infrastructure: AWS (ECS, RDS, S3)
-      - CI/CD: GitHub Actions
+      - 前端：React 18、TypeScript
+      - 後端：Node.js、Express、PostgreSQL
+      - 基礎設施：AWS（ECS、RDS、S3）
+      - CI/CD：GitHub Actions
 
-      ## Blockers
+      ## 待解決事項
 
-      - Need to finalize API documentation before beta
-      - Mobile app needs performance optimization
-      - Waiting on security audit completion
+      - Beta 公測前需完成 API 文件
+      - 行動 App 需要效能最佳化
+      - 等待資安稽核完成
+  - path: facts/REFERENCE.md
+    content: |
+      # 記憶擷取・應有答案參考卡（grader 用）
+
+      本檔由評分程式讀取，列出本題的標準答案與「不該出現」的混淆日期。
+      每列格式為「欄位：值」。
+
+      正確答案_Beta公測日期：2024 年 6 月 1 日
+      錯誤日期_Alpha內測：2024 年 3 月 15 日
+      錯誤日期_正式上線：2024 年 9 月 30 日
   source_benchmark: pinchbench
   translation_status: complete
   conversion_stage: phase3_taiwan_localized

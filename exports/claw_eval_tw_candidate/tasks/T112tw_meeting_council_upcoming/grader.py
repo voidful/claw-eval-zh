@@ -34,7 +34,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     keys = ["report_created", "april_16_items", "april_20_townhall",
             "may_7_ethics", "fire_station_gmp", "budget_workshops",
-            "march_2027_fees", "rome_yard_sept2028", "chronological",
+            "march_2027_fees", "zhonglun_yard_sept2028", "chronological",
             "highlights_section"]
     if not report.exists():
         return {k: 0.0 for k in keys}
@@ -92,7 +92,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
     fact = tx_has(r"2028\s*年\s*9\s*月", r"中崙倉庫")
     ok = bool(re.search(r"2028\s*年\s*9\s*月|2028[/-]0?9|(?:September|Sept).*28", c)) and bool(
         re.search(r"中崙倉庫|園區|第四期|Phase\s*4|完工|completion", c, re.IGNORECASE))
-    scores["rome_yard_sept2028"] = 1.0 if (fact and ok) else 0.0
+    scores["zhonglun_yard_sept2028"] = 1.0 if (fact and ok) else 0.0
 
     # 8) 依時間先後（至少出現 4 個不同月份／日期錨點）
     anchors = re.findall(

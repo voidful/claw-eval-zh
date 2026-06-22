@@ -56,10 +56,10 @@ def grade(transcript: list, workspace_path: str) -> dict:
     if len(promoted) < 4:
         promoted = ["戴飛理", "梅斯莫", "普瑟爾", "馬可銘"]
 
-    checks = ["report_created", "council_members", "shelby_attorney",
-              "hamilton_raftelis", "bercaw_chief", "mcneil_officer",
-              "public_speakers", "tpd_promotions", "organized_sections",
-              "milo_related"]
+    checks = ["report_created", "council_members", "xie_attorney",
+              "han_consult", "bao_chief", "mai_officer",
+              "public_speakers", "police_promotions", "organized_sections",
+              "miaolin_related"]
 
     # --- 2. 找出 agent 的報告檔 ---
     report_path = workspace / "contacts_report.md"
@@ -84,23 +84,23 @@ def grade(transcript: list, workspace_path: str) -> dict:
         0.5 if council_hit >= 4 else 0.0)
 
     # 議會法律顧問 謝佩玲。
-    scores["shelby_attorney"] = 1.0 if (
+    scores["xie_attorney"] = 1.0 if (
         "謝佩玲" in content
         and re.search(r'法律顧問|法制顧問|法律|法務|顧問', content)
     ) else 0.0
 
     # 外部顧問 韓明翰／瑞富緯顧問。
-    scores["hamilton_raftelis"] = 1.0 if (
+    scores["han_consult"] = 1.0 if (
         "韓明翰" in content and re.search(r'瑞富緯|顧問', content)
     ) else 0.0
 
     # 警察局長 包柯偉。
-    scores["bercaw_chief"] = 1.0 if (
+    scores["bao_chief"] = 1.0 if (
         "包柯偉" in content and re.search(r'警察局長|警察局|局長|警政', content)
     ) else 0.0
 
     # 本月模範員警 麥尼爾。
-    scores["mcneil_officer"] = 1.0 if (
+    scores["mai_officer"] = 1.0 if (
         "麥尼爾" in content
         and re.search(r'本月模範員警|模範員警|本月最佳員警|表揚|頒獎|獲獎',
                       content)
@@ -113,7 +113,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
 
     # 升任警務正四位巡佐：命中 3 位以上滿分。
     promo_hit = sum(1 for p in promoted if p in content)
-    scores["tpd_promotions"] = 1.0 if promo_hit >= 3 else (
+    scores["police_promotions"] = 1.0 if promo_hit >= 3 else (
         0.5 if promo_hit >= 1 else 0.0)
 
     # 分區段整理：至少命中 3 類區段標題。
@@ -128,7 +128,7 @@ def grade(transcript: list, workspace_path: str) -> dict:
         0.5 if sec_hit >= 2 else 0.0)
 
     # 米羅／鼎峰都更開發（社區致贈紀念品代表）。
-    scores["milo_related"] = 1.0 if (
+    scores["miaolin_related"] = 1.0 if (
         "米羅" in content
         and re.search(r'鼎峰都更開發|鼎峰都更|鼎峰|董事長|總裁', content)
     ) else 0.0
