@@ -174,7 +174,7 @@ metadata:
   grading_weights: {}
   workspace_files:
   - path: inbox/unread_01_vendor_security_followup.txt
-    content: '寄件者：張雅婷（鼎峰科技 資安團隊）<rachel.chang@dingfeng-tech.com.tw>
+    content: '寄件者：張雅婷（鼎峰科技 資安團隊）<yating.chang@dingfeng-tech.com.tw>
 
       收件者：me@mycompany.com.tw
 
@@ -203,7 +203,7 @@ metadata:
 
       '
   - path: inbox/unread_02_customer_escalation.txt
-    content: '寄件者：林建宏（北辰醫療 資訊部）<tom.lin@beichen-health.com.tw>
+    content: '寄件者：林建宏（北辰醫療 資訊部）<jianhong.lin@beichen-health.com.tw>
 
       收件者：support@mycompany.com.tw、me@mycompany.com.tw
 
@@ -232,7 +232,7 @@ metadata:
 
       '
   - path: inbox/unread_03_internal_review_request.txt
-    content: '寄件者：王思婷（產品部）<priya.wang@mycompany.com.tw>
+    content: '寄件者：王思婷（產品部）<siting.wang@mycompany.com.tw>
 
       收件者：me@mycompany.com.tw
 
@@ -280,7 +280,7 @@ metadata:
 
       '
   - path: inbox/unread_05_partner_meeting_reschedule.txt
-    content: '寄件者：陳怡君（聯盟夥伴 業務發展）<emily.chen@alliance-partners.com.tw>
+    content: '寄件者：陳怡君（聯盟夥伴 業務發展）<yijun.chen@alliance-partners.com.tw>
 
       收件者：me@mycompany.com.tw
 

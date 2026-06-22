@@ -16,7 +16,7 @@ claw_eval_tw_id: T023tw_email_reply_drafting
 workspace_files:
 - path: inbox/unread_01_vendor_security_followup.txt
   content: |
-    寄件者：張雅婷（鼎峰科技 資安團隊）<rachel.chang@dingfeng-tech.com.tw>
+    寄件者：張雅婷（鼎峰科技 資安團隊）<yating.chang@dingfeng-tech.com.tw>
     收件者：me@mycompany.com.tw
     日期：2026 年 4 月 7 日（週二）08:12 (Asia/Taipei)
     主旨：跟進：資安問卷明天截止
@@ -34,7 +34,7 @@ workspace_files:
     雅婷
 - path: inbox/unread_02_customer_escalation.txt
   content: |
-    寄件者：林建宏（北辰醫療 資訊部）<tom.lin@beichen-health.com.tw>
+    寄件者：林建宏（北辰醫療 資訊部）<jianhong.lin@beichen-health.com.tw>
     收件者：support@mycompany.com.tw、me@mycompany.com.tw
     日期：2026 年 4 月 7 日（週二）09:03 (Asia/Taipei)
     主旨：客訴升級：董事會前的資料匯出又失敗了
@@ -52,7 +52,7 @@ workspace_files:
     建宏
 - path: inbox/unread_03_internal_review_request.txt
   content: |
-    寄件者：王思婷（產品部）<priya.wang@mycompany.com.tw>
+    寄件者：王思婷（產品部）<siting.wang@mycompany.com.tw>
     收件者：me@mycompany.com.tw
     日期：2026 年 4 月 7 日（週二）10:14 (Asia/Taipei)
     主旨：快速審閱：新手導引提示文案
@@ -81,7 +81,7 @@ workspace_files:
     線上閱讀：https://devweekly.tw/issues/242
 - path: inbox/unread_05_partner_meeting_reschedule.txt
   content: |-
-    寄件者：陳怡君（聯盟夥伴 業務發展）<emily.chen@alliance-partners.com.tw>
+    寄件者：陳怡君（聯盟夥伴 業務發展）<yijun.chen@alliance-partners.com.tw>
     收件者：me@mycompany.com.tw
     日期：2026 年 4 月 7 日（週二）11:25 (Asia/Taipei)
     主旨：週四的夥伴同步會議需要改期

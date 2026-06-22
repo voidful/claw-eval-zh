@@ -18,7 +18,7 @@
     "heavy": 24,
     "none": 52
   },
-  "fixture_replaced_count": 56,
+  "fixture_replaced_count": 57,
   "fixture_replaced": [
     "task_pdf_to_calendar",
     "task_todo_list_cleanup",
@@ -30,6 +30,7 @@
     "task_video_transcript_extraction",
     "task_summary",
     "task_spreadsheet_summary",
+    "task_email_search",
     "task_financial_ratio_calculation",
     "task_contract_analysis",
     "task_csv_stock_trend",
@@ -77,7 +78,7 @@
     "task_memory",
     "task_second_brain"
   ],
-  "grader_changed_count": 52,
+  "grader_changed_count": 53,
   "grader_changed": [
     "task_calendar",
     "task_pdf_to_calendar",
@@ -87,6 +88,7 @@
     "task_executive_lookup",
     "task_weather",
     "task_spreadsheet_summary",
+    "task_email_search",
     "task_financial_ratio_calculation",
     "task_csv_stock_trend",
     "task_csv_stock_volatility",
