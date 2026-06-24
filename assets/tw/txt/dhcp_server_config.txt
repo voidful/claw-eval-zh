@@ -1,0 +1,161 @@
+# ISC DHCP Server Configuration
+# Generated: 2026-05-20
+# Site: Office Network - Main Building
+# Managed by: netops@office.local
+
+# Global Options
+option domain-name "office.local";
+option domain-name-servers 192.168.1.1, 8.8.8.8;
+
+# CRITICAL: default-lease-time is set HIGHER than max-lease-time!
+# This causes inconsistency — DHCP server behavior is undefined/may error.
+default-lease-time 86400;
+max-lease-time 3600;
+
+log-facility local7;
+authoritative;
+
+ddns-update-style none;
+
+# ─────────────────────────────────────────────
+# Subnet: 192.168.10.0/24  (Floor 1 - Office)
+# ─────────────────────────────────────────────
+subnet 192.168.10.0 netmask 255.255.255.0 {
+    option routers 192.168.10.1;
+    option subnet-mask 255.255.255.0;
+    option domain-name-servers 192.168.1.1, 8.8.8.8;
+    option broadcast-address 192.168.10.255;
+    option domain-name "office.local";
+    default-lease-time 86400;
+    max-lease-time 3600;
+
+    pool {
+        range 192.168.10.100 192.168.10.200;
+        deny unknown-clients;
+    }
+}
+
+# ─────────────────────────────────────────────
+# Subnet: 192.168.20.0/24  (Floor 2 - Labs)
+# ─────────────────────────────────────────────
+subnet 192.168.20.0 netmask 255.255.255.0 {
+    option routers 192.168.20.1;
+    option subnet-mask 255.255.255.0;
+    option domain-name-servers 192.168.1.1;
+    option broadcast-address 192.168.20.255;
+    option domain-name "office.local";
+    default-lease-time 86400;
+    max-lease-time 3600;
+
+    pool {
+        range 192.168.20.50 192.168.20.150;
+        deny unknown-clients;
+    }
+}
+
+# ─────────────────────────────────────────────
+# Subnet: 10.0.0.0/24  (Management VLAN)
+# ─────────────────────────────────────────────
+subnet 10.0.0.0 netmask 255.255.255.0 {
+    option routers 10.0.0.1;
+    option subnet-mask 255.255.255.0;
+    option domain-name-servers 192.168.1.1;
+    option broadcast-address 10.0.0.255;
+
+    pool {
+        range 10.0.0.50 10.0.0.100;
+        allow members of "MGMT";
+    }
+}
+
+# ─────────────────────────────────────────────
+# Static Host Reservations
+# ─────────────────────────────────────────────
+
+# Office Gateway - Floor 1
+# IP: 192.168.10.1 — OUTSIDE pool range (100-200), no conflict
+host office-gateway {
+    hardware ethernet 00:1A:2B:3C:4D:5E;
+    fixed-address 192.168.10.1;
+    option host-name "office-gateway";
+    option domain-name-servers 192.168.1.1;
+}
+
+# Floor 1 Printer
+# IP: 192.168.10.150 — CONFLICT: falls within pool range 192.168.10.100–192.168.10.200!
+# This host may receive conflicting dynamic leases from the pool.
+host printer-1st-floor {
+    hardware ethernet AA:BB:CC:11:22:33;
+    fixed-address 192.168.10.150;
+    option host-name "printer-1st-floor";
+    option domain-name-servers 192.168.1.1;
+}
+
+# Floor 2 Admin Workstation
+# IP: 192.168.20.30 — OUTSIDE pool range (50-150), no conflict
+host admin-workstation-f2 {
+    hardware ethernet DE:AD:BE:EF:01:02;
+    fixed-address 192.168.20.30;
+    option host-name "admin-workstation-f2";
+}
+
+# Backup Server - Floor 2
+# IP: 192.168.20.100 — CONFLICT: falls within pool range 192.168.20.50–192.168.20.150!
+# Risk: dynamic clients may be assigned 192.168.20.100, causing IP collision.
+host server-backup {
+    hardware ethernet FA:CE:B0:0C:00:01;
+    fixed-address 192.168.20.100;
+    option host-name "server-backup";
+    option domain-name-servers 192.168.1.1;
+}
+
+# NAS Storage Device
+# IP: 192.168.20.200 — OUTSIDE pool range (50-150), no conflict
+host nas-storage-main {
+    hardware ethernet 11:22:33:44:55:66;
+    fixed-address 192.168.20.200;
+    option host-name "nas-storage-main";
+}
+
+# Management Switch
+# IP: 10.0.0.10 — OUTSIDE pool range (50-100), no conflict
+host mgmt-switch-core {
+    hardware ethernet AA:11:BB:22:CC:33;
+    fixed-address 10.0.0.10;
+    option host-name "mgmt-switch-core";
+}
+
+# ─────────────────────────────────────────────
+# Class Definitions
+# ─────────────────────────────────────────────
+class "MGMT" {
+    match if substring(option vendor-class-identifier, 0, 4) = "MGMT";
+}
+
+class "PRINTERS" {
+    match if substring(option vendor-class-identifier, 0, 7) = "PRINTER";
+}
+
+# ─────────────────────────────────────────────
+# Failover Configuration (Stub)
+# ─────────────────────────────────────────────
+# failover peer "dhcp-failover" {
+#     primary;
+#     address 192.168.10.5;
+#     port 519;
+#     peer address 192.168.10.6;
+#     peer port 519;
+#     max-response-delay 30;
+#     max-unacked-updates 10;
+#     load balance max seconds 3;
+#     mclt 1800;
+#     split 128;
+# }
+
+# ─────────────────────────────────────────────
+# Logging & Monitoring
+# ─────────────────────────────────────────────
+# log-facility local7
+# Ensure /etc/rsyslog.d/dhcp.conf routes local7 to /var/log/dhcpd.log
+
+# End of dhcpd.conf

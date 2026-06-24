@@ -1,0 +1,981 @@
+[2026-05-17 08:00:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 08:03:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-17 08:11:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-17 08:15:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 08:19:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 08:22:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 08:30:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 08:37:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 08:44:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 08:47:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-17 08:50:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 08:54:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 09:01:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-17 09:08:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 09:16:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 09:24:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 09:30:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 09:36:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-17 09:41:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 09:44:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 09:48:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 09:54:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-17 09:59:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 10:03:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 10:08:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 10:11:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 10:14:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-17 10:19:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-17 10:24:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 10:27:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 10:33:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 10:36:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 10:42:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 10:49:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-17 10:57:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-17 11:02:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-17 11:06:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 11:09:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-17 11:17:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 11:22:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 11:26:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-17 11:29:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 11:34:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 11:42:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-17 11:47:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 11:52:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-17 11:56:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 12:01:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 12:09:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 12:12:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-17 12:20:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 12:27:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 12:31:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 12:37:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 12:42:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 12:50:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 12:57:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 13:05:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-17 13:08:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 13:11:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 13:16:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 13:21:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 13:25:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 13:32:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 13:40:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-17 13:44:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 13:50:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 13:58:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 14:02:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-17 14:06:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 14:14:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 14:21:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-17 14:29:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-17 14:35:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 14:42:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 14:47:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 14:51:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 14:57:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 15:00:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-17 15:03:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 15:11:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 15:19:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 15:26:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 15:32:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 15:39:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 15:46:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-17 15:53:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-17 15:56:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 16:04:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 16:12:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 16:19:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 16:24:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 16:32:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-17 16:35:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-17 16:41:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 16:47:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-17 16:55:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 17:03:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-17 17:10:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 17:14:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 17:17:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-17 17:25:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-17 17:33:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 17:40:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 17:44:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-17 17:48:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 17:55:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 17:58:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-17 18:03:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 18:06:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 18:11:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 18:16:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 18:19:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 18:26:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 18:29:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 18:35:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-17 18:38:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 18:45:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 18:49:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 18:57:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 19:04:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 19:09:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 19:16:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 19:20:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 19:27:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 19:35:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 19:39:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 19:44:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 19:52:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 19:57:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 20:04:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 20:07:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 20:11:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 20:16:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-17 20:23:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-17 20:27:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-17 20:31:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-17 20:34:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-17 20:42:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-17 20:46:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 20:49:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-17 20:54:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 21:01:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 21:06:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 21:12:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 21:19:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 21:27:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-17 21:34:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-17 21:40:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 21:46:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-17 21:52:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 21:55:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 22:03:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 22:08:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 22:14:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 22:22:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-17 22:30:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 22:38:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 22:41:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 22:49:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-17 22:52:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 22:56:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 23:03:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 23:07:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-17 23:11:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-17 23:17:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-17 23:20:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 23:27:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 23:30:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-17 23:37:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-17 23:40:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-17 23:44:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-17 23:50:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-17 23:56:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 00:02:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 00:05:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 00:11:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 00:17:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 00:23:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 00:29:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 00:37:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 00:44:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 00:52:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 00:56:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 01:01:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 01:04:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 01:12:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 01:15:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 01:20:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 01:23:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 01:29:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 01:36:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 01:39:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 01:42:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 01:46:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 01:53:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 02:01:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 02:05:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 02:08:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 02:15:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 02:22:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 02:25:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 02:28:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 02:36:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 02:43:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 02:48:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 02:53:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 03:01:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 03:06:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 03:11:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 03:15:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 03:23:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 03:29:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 03:32:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 03:38:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 03:45:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 03:48:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 03:52:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 03:57:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 04:02:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 04:05:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 04:09:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 04:14:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 04:20:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 04:27:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 04:32:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 04:40:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 04:43:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 04:50:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 04:58:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 05:02:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 05:05:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 05:08:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 05:15:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 05:20:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 05:27:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 05:35:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 05:39:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 05:47:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 05:52:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 05:58:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 06:01:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 06:09:00] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 06:14:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 06:17:00] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 06:21:00] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 06:26:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 06:34:00] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 06:41:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 06:47:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 06:50:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 06:53:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 07:01:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 07:05:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 07:08:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 07:13:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 07:20:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 07:26:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 07:29:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 07:34:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 07:37:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 07:42:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 07:50:00] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 07:58:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 08:03:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 08:10:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 08:16:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 08:24:00] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 08:28:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 08:32:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 08:36:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 08:42:00] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 08:46:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 08:51:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 08:57:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 09:00:00] [INFO] [admin-alice] Backup DNS config saved to /etc/resolv.conf.bak
+[2026-05-18 09:02:00] [INFO] [admin-alice] Pre-change health check: DNS failure rate 1.8% — within SLA
+[2026-05-18 09:10:00] [INFO] [admin-alice] Preparing to switch to experimental internal resolver 192.168.1.253
+[2026-05-18 09:12:00] [INFO] [admin-alice] Change ticket #CHG-2026-0518-001 opened
+[2026-05-18 09:15:00] [CHANGE] [admin-alice] nameserver changed: 8.8.8.8 → 192.168.1.253 (experimental internal resolver)
+[2026-05-18 09:15:05] [INFO] [admin-alice] /etc/resolv.conf updated with nameserver 192.168.1.253
+[2026-05-18 09:15:30] [INFO] [admin-alice] DNS service reloaded on all nodes
+[2026-05-18 09:16:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 09:16:51] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 09:17:24] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 09:18:44] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 09:19:48] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 09:20:37] [WARN] [monitoring-bot] DNS response time degraded: 3200ms avg
+[2026-05-18 09:21:48] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 09:22:16] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 09:23:20] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 09:24:48] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 09:25:22] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 09:26:04] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 09:26:28] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 09:27:32] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 09:28:47] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 09:29:21] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 09:30:05] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 09:31:20] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 09:32:05] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 09:33:07] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 09:33:42] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 09:35:06] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 09:36:07] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 09:37:37] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 09:38:45] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 09:39:27] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 09:40:38] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 09:41:36] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 09:42:37] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 09:43:24] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 09:44:05] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 09:45:30] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 09:46:32] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 09:47:31] [WARN] [monitoring-bot] DNS response time degraded: 3200ms avg
+[2026-05-18 09:48:09] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 09:49:29] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 09:49:58] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 09:50:42] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 09:52:05] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 09:52:25] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 09:52:58] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 09:53:40] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 09:55:06] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 09:55:57] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 09:57:15] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 09:58:42] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 09:59:42] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 10:00:58] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 10:02:22] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 10:03:52] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 10:05:12] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 10:06:03] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 10:07:29] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 10:08:24] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 10:09:20] [WARN] [monitoring-bot] Resolver 192.168.1.253 slow to respond
+[2026-05-18 10:10:20] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 10:10:57] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 10:11:36] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 10:12:49] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 10:14:08] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 10:15:21] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 10:15:43] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 10:16:51] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 10:17:49] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 10:19:02] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 10:20:31] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 10:21:19] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 10:22:34] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 10:23:37] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 10:24:48] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 10:26:07] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 10:27:35] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 10:27:58] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 10:28:35] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 10:29:01] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 10:29:48] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 10:30:56] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 10:32:09] [WARN] [monitoring-bot] Elevated DNS failure rate detected: 12%
+[2026-05-18 10:33:29] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 10:33:55] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 10:34:43] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 10:35:08] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 10:35:53] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 10:36:32] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 10:37:06] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 10:38:25] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 10:39:32] [WARN] [monitoring-bot] DNS failure rate approaching SLA threshold (8%)
+[2026-05-18 10:40:06] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 10:41:05] [WARN] [monitoring-bot] Elevated DNS failure rate detected: 12%
+[2026-05-18 10:42:04] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 10:43:12] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 10:43:57] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 10:44:30] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 10:45:05] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 10:45:30] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 10:46:37] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 10:46:58] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 10:48:20] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 10:49:38] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 10:50:20] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 10:51:14] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 10:52:42] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 10:53:57] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 10:54:51] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 10:55:22] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 10:56:13] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 10:57:21] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 10:58:22] [WARN] [monitoring-bot] DNS response time degraded: 3200ms avg
+[2026-05-18 10:59:27] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 11:00:22] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 11:01:17] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 11:02:01] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 11:03:23] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 11:04:43] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 11:06:00] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 11:06:57] [WARN] [monitoring-bot] DNS response time degraded: 3200ms avg
+[2026-05-18 11:07:56] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 11:09:16] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 11:10:30] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 11:11:32] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 11:12:26] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 11:13:01] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 11:13:36] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 11:14:19] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 11:15:14] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 11:16:41] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 11:17:25] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 11:18:07] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 11:19:35] [WARN] [monitoring-bot] Elevated DNS failure rate detected: 12%
+[2026-05-18 11:20:01] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 11:20:37] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 11:21:59] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 11:22:55] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 11:23:58] [WARN] [monitoring-bot] Elevated DNS failure rate detected: 12%
+[2026-05-18 11:24:50] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 11:25:24] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 11:26:46] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 11:27:25] [WARN] [monitoring-bot] DNS failure rate approaching SLA threshold (8%)
+[2026-05-18 11:28:23] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 11:28:58] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 11:29:46] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 11:31:03] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 11:32:17] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 11:32:44] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 11:33:16] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 11:34:03] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 11:34:43] [WARN] [monitoring-bot] DNS failure rate approaching SLA threshold (8%)
+[2026-05-18 11:35:12] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 11:36:29] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 11:37:26] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 11:38:22] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 11:38:51] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 11:39:44] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 11:40:29] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 11:41:17] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 11:42:11] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 11:42:38] [WARN] [monitoring-bot] Resolver 192.168.1.253 slow to respond
+[2026-05-18 11:43:34] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 11:44:32] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 11:45:56] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 11:46:26] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 11:47:41] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 11:48:33] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 11:48:55] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 11:49:49] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 11:50:31] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 11:51:47] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 11:53:02] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 11:53:33] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 11:54:35] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 11:55:15] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 11:56:38] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 11:58:08] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 11:59:08] [WARN] [monitoring-bot] Elevated DNS failure rate detected: 12%
+[2026-05-18 12:00:19] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 12:00:39] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 12:01:58] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 12:03:24] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 12:04:47] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 12:05:13] [WARN] [monitoring-bot] DNS failure rate approaching SLA threshold (8%)
+[2026-05-18 12:05:49] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 12:07:11] [WARN] [monitoring-bot] DNS failure rate approaching SLA threshold (8%)
+[2026-05-18 12:08:01] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 12:09:31] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 12:10:02] [WARN] [monitoring-bot] Elevated DNS failure rate detected: 12%
+[2026-05-18 12:11:21] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 12:12:00] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 12:12:57] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 12:14:10] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 12:15:01] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 12:16:10] [WARN] [monitoring-bot] DNS failure rate approaching SLA threshold (8%)
+[2026-05-18 12:17:35] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 12:18:03] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 12:19:16] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 12:20:40] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 12:21:36] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 12:22:58] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 12:24:26] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 12:25:56] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 12:27:14] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 12:27:58] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 12:29:07] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 12:29:32] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 12:30:40] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 12:31:19] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 12:31:55] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 12:32:57] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 12:34:13] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 12:34:34] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 12:35:13] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 12:36:16] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 12:36:46] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 12:38:14] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 12:39:36] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 12:40:04] [WARN] [monitoring-bot] Resolver 192.168.1.253 slow to respond
+[2026-05-18 12:40:53] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 12:41:25] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 12:41:57] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 12:42:55] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 12:43:56] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 12:45:01] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 12:45:52] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 12:46:35] [WARN] [monitoring-bot] Elevated DNS failure rate detected: 12%
+[2026-05-18 12:47:43] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 12:49:06] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 12:49:55] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 12:51:13] [WARN] [monitoring-bot] Elevated DNS failure rate detected: 12%
+[2026-05-18 12:52:32] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 12:54:01] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 12:55:05] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 12:56:19] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 12:57:17] [WARN] [monitoring-bot] Intermittent failures on 192.168.1.253
+[2026-05-18 12:58:38] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 12:59:43] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 13:00:40] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 13:01:35] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 13:02:58] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 13:03:54] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 13:04:59] [WARN] [monitoring-bot] DNS response time degraded: 3200ms avg
+[2026-05-18 13:05:51] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 13:06:28] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 13:06:53] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 13:07:17] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 13:07:53] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 13:08:54] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 13:09:39] [WARN] [monitoring-bot] DNS failure rate approaching SLA threshold (8%)
+[2026-05-18 13:10:45] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 13:11:39] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 13:13:00] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 13:14:03] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 13:14:32] [WARN] [monitoring-bot] DNS response time degraded: 3200ms avg
+[2026-05-18 13:15:42] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 13:16:48] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 13:17:09] [WARN] [monitoring-bot] Elevated DNS failure rate detected: 12%
+[2026-05-18 13:18:27] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 13:19:20] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 13:20:27] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 13:21:47] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 13:22:48] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 13:23:16] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 13:24:14] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 13:24:51] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 13:25:49] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 13:26:21] [WARN] [monitoring-bot] DNS failure rate approaching SLA threshold (8%)
+[2026-05-18 13:26:58] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 13:28:27] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 13:29:06] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 13:29:38] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 13:30:50] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 13:31:14] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 13:32:30] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 13:33:36] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 13:35:05] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 13:36:10] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 13:36:54] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 13:38:12] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 13:38:34] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 13:39:25] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 13:40:11] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 13:40:57] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 13:41:46] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 13:42:06] [WARN] [monitoring-bot] DNS response time degraded: 3200ms avg
+[2026-05-18 13:42:42] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 13:43:24] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 13:44:00] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 13:45:01] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 13:45:27] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 13:46:54] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 13:48:14] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 13:49:39] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 13:51:03] [WARN] [monitoring-bot] DNS failure rate approaching SLA threshold (8%)
+[2026-05-18 13:51:28] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 13:52:54] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 13:53:17] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 13:54:28] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 13:55:50] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 13:56:19] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 13:56:57] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 13:58:27] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 13:59:54] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 14:30:00] [ALERT] [monitoring-bot] DNS failure rate exceeded 40% threshold — current rate: 43.7%
+[2026-05-18 14:30:01] [ALERT] [monitoring-bot] SLA BREACH: DNS availability SLA requires <10% failure rate
+[2026-05-18 14:32:00] [INFO] [monitoring-bot] PagerDuty alert sent to admin-alice, admin-bob
+[2026-05-18 14:45:00] [INFO] [admin-bob] Acknowledged alert CHG-2026-0518-001 related degradation
+[2026-05-18 15:00:00] [CHANGE] [admin-bob] Attempted fix: added secondary nameserver 1.1.1.1 to /etc/resolv.conf
+[2026-05-18 15:00:30] [INFO] [admin-bob] /etc/resolv.conf now contains: nameserver 192.168.1.253, nameserver 1.1.1.1
+[2026-05-18 15:01:00] [INFO] [admin-bob] DNS service reloaded after secondary nameserver addition
+[2026-05-18 15:01:00] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 15:02:35] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 15:03:55] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 15:05:12] [WARN] [monitoring-bot] DNS failure rate still elevated: 28.4%
+[2026-05-18 15:06:35] [WARN] [monitoring-bot] DNS failure rate still elevated: 28.4%
+[2026-05-18 15:07:12] [WARN] [monitoring-bot] DNS failure rate still elevated: 28.4%
+[2026-05-18 15:08:17] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 15:09:01] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 15:09:34] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 15:10:10] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 15:11:22] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 15:11:54] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 15:13:30] [WARN] [monitoring-bot] DNS failure rate still elevated: 28.4%
+[2026-05-18 15:14:10] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 15:15:29] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 15:16:00] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 15:17:04] [WARN] [monitoring-bot] DNS failure rate still elevated: 28.4%
+[2026-05-18 15:18:42] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 15:20:08] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 15:21:17] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 15:21:56] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 15:22:49] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 15:24:25] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 15:26:01] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 15:26:29] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 15:27:37] [WARN] [monitoring-bot] DNS failure rate still elevated: 28.4%
+[2026-05-18 15:28:25] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 15:29:41] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 15:30:17] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 15:31:30] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 15:32:15] [WARN] [monitoring-bot] DNS failure rate still elevated: 28.4%
+[2026-05-18 15:33:21] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 15:33:56] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 15:34:41] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 15:35:16] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 15:36:43] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 15:37:42] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 15:38:21] [WARN] [monitoring-bot] DNS failure rate still elevated: 28.4%
+[2026-05-18 15:39:00] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 15:40:27] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 15:40:57] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 15:41:29] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 15:42:21] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 15:43:18] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 15:43:43] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 15:44:30] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 15:45:24] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 15:46:34] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 15:47:54] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 15:48:59] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 15:50:15] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 15:51:17] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 15:52:23] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 15:53:46] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 15:54:57] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 15:55:53] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 15:57:25] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 15:58:33] [ERROR] [monitoring-bot] NXDOMAIN unexpected for internal host db-01.corp.internal
+[2026-05-18 15:59:07] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 16:30:00] [ALERT] [monitoring-bot] DNS failure rate still 28% — above 10% SLA threshold
+[2026-05-18 16:30:01] [ALERT] [monitoring-bot] Cumulative SLA breach duration: 7h 15m
+[2026-05-18 16:35:00] [INFO] [admin-alice] Reviewing change history and metrics
+[2026-05-18 16:40:00] [INFO] [admin-alice] Pre-change backup verified at /etc/resolv.conf.bak (nameserver 8.8.8.8)
+[2026-05-18 17:00:00] [ESCALATION] [admin-alice] Rollback decision pending — evaluating metrics from CHG-2026-0518-001
+[2026-05-18 17:00:01] [ESCALATION] [admin-alice] Original nameserver 8.8.8.8 backup available at /etc/resolv.conf.bak
+[2026-05-18 17:00:02] [ESCALATION] [admin-alice] Conditions for rollback: failure_rate=28% > 10% SLA, hours_since_change=7.75h < 24h, backup_exists=true
+[2026-05-18 17:00:03] [ESCALATION] [admin-alice] Awaiting automated rollback recommendation — NO ROLLBACK EXECUTED YET
+[2026-05-18 17:01:00] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 17:01:37] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:02:33] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 17:02:54] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 17:03:20] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 17:04:16] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 17:05:00] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 17:05:52] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 17:06:43] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 17:07:18] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 17:07:53] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 17:08:38] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 17:09:10] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 17:09:57] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 17:10:40] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 17:11:13] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 17:12:07] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 17:12:51] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 17:13:08] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 17:13:59] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 17:14:52] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 17:15:10] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 17:15:46] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 17:16:33] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 17:17:03] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 17:17:51] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 17:18:29] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:19:02] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:19:38] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 17:20:33] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 17:21:09] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 17:21:42] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 17:22:06] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:22:58] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 17:23:35] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:24:31] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 17:24:54] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 17:25:28] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 17:26:04] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 17:27:03] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 17:28:01] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 17:28:57] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 17:29:35] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 17:30:01] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 17:30:47] [ERROR] [monitoring-bot] NXDOMAIN unexpected for internal host db-01.corp.internal
+[2026-05-18 17:31:11] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 17:31:58] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 17:32:46] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 17:33:40] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 17:34:04] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 17:34:29] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 17:35:10] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:35:40] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 17:36:13] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 17:36:56] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 17:37:30] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 17:38:15] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 17:38:53] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 17:39:36] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 17:40:15] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 17:40:40] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 17:41:33] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 17:41:51] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 17:42:29] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 17:43:29] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 17:43:51] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:44:16] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 17:44:40] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 17:45:09] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 17:45:46] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 17:46:04] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:46:42] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 17:47:20] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 17:47:41] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 17:48:17] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 17:48:34] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:49:19] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 17:50:19] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 17:50:34] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 17:51:05] [ERROR] [monitoring-bot] NXDOMAIN unexpected for internal host db-01.corp.internal
+[2026-05-18 17:51:55] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 17:52:43] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 17:53:16] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 17:53:34] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 17:54:18] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 17:55:11] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 17:55:58] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 17:56:22] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 17:56:37] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 17:57:28] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 17:58:25] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 17:58:44] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 17:59:31] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 18:00:21] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 18:00:38] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 18:01:09] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 18:01:28] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:02:25] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 18:03:17] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 18:03:40] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 18:04:16] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 18:05:14] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 18:05:59] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 18:06:22] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 18:06:39] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:06:56] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 18:07:13] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:07:47] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 18:08:36] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 18:09:32] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 18:09:50] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 18:10:22] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 18:11:04] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 18:11:47] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 18:12:23] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 18:13:22] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 18:14:10] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 18:14:52] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 18:15:18] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 18:15:39] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 18:16:13] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 18:16:55] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 18:17:32] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 18:18:09] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 18:18:41] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 18:18:59] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 18:19:37] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 18:20:35] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 18:20:59] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 18:21:42] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 18:22:12] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 18:22:50] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:23:41] [ERROR] [monitoring-bot] NXDOMAIN unexpected for internal host db-01.corp.internal
+[2026-05-18 18:24:39] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 18:25:17] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 18:26:08] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 18:26:48] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:27:20] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 18:27:36] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 18:28:24] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:29:14] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 18:30:14] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 18:30:47] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 18:31:14] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 18:31:57] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 18:32:17] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 18:32:52] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 18:33:11] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 18:33:45] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 18:34:45] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 18:35:11] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 18:35:40] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 18:36:03] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 18:36:19] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:37:10] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:38:00] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 18:38:19] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:39:19] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 18:40:00] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 18:40:51] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 18:41:47] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 18:42:45] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 18:43:35] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 18:43:58] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 18:44:16] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 18:44:40] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:45:05] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:46:05] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 18:46:38] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 18:47:05] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 18:47:37] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 18:48:31] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 18:49:27] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 18:49:51] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 18:50:44] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:51:35] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 18:51:55] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 18:52:26] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 18:53:17] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 18:53:33] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 18:54:22] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:54:56] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 18:55:54] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 18:56:13] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 18:56:56] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 18:57:24] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:57:48] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:58:48] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 18:59:25] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 19:00:03] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 19:00:38] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 19:01:10] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 19:01:31] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 19:02:25] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 19:02:50] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 19:03:41] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 19:04:06] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 19:04:50] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 19:05:36] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 19:06:23] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 19:06:51] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 19:07:09] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 19:08:02] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 19:09:00] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 19:09:15] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 19:09:38] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 19:10:16] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 19:10:33] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 19:11:23] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 19:11:56] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 19:12:39] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 19:13:33] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 19:13:56] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 19:14:34] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 19:15:24] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 19:15:48] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 19:16:28] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 19:16:45] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 19:17:30] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 19:18:23] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 19:18:58] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 19:19:23] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 19:20:17] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 19:21:09] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 19:21:56] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 19:22:47] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 19:23:03] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 19:24:01] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 19:24:53] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 19:25:52] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 19:26:37] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 19:27:28] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 19:28:20] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 19:29:15] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 19:29:54] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 19:30:11] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 19:30:33] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 19:31:08] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 19:32:07] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 19:33:01] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 19:33:19] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 19:33:47] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 19:34:32] [INFO] [monitoring-bot] DNSSEC validation successful
+[2026-05-18 19:34:58] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 19:35:34] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 19:36:32] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 19:37:03] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 19:37:33] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 19:38:02] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 19:38:35] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 19:39:35] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 19:40:12] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 19:40:44] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 19:41:35] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 19:42:15] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 19:42:39] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 19:43:12] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 19:43:49] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 19:44:20] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 19:44:47] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 19:45:37] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 19:45:58] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 19:46:28] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 19:46:57] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 19:47:18] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 19:48:03] [ERROR] [monitoring-bot] NXDOMAIN unexpected for internal host db-01.corp.internal
+[2026-05-18 19:48:18] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 19:48:43] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 19:49:28] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 19:50:01] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 19:50:57] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 19:51:53] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 19:52:10] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 19:52:51] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 19:53:08] [INFO] [monitoring-bot] Zone transfer completed for corp.internal
+[2026-05-18 19:53:54] [ERROR] [monitoring-bot] DNS error: connection refused by 192.168.1.253:53
+[2026-05-18 19:54:11] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 19:55:04] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 19:55:37] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 19:56:26] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 19:56:49] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 19:57:21] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 19:57:57] [ERROR] [monitoring-bot] Application timeout due to DNS failure on web-03
+[2026-05-18 19:58:53] [ERROR] [monitoring-bot] NXDOMAIN unexpected for internal host db-01.corp.internal
+[2026-05-18 19:59:08] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 19:59:41] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 20:00:08] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 20:00:50] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 20:01:30] [INFO] [monitoring-bot] Resolver cache flushed on host web-01
+[2026-05-18 20:01:53] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 20:02:23] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 20:02:53] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 20:03:29] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 20:04:20] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 20:05:19] [ERROR] [monitoring-bot] Timeout querying 192.168.1.253 for api.corp.internal
+[2026-05-18 20:06:03] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 20:06:43] [INFO] [monitoring-bot] Query rate 42 qps — normal
+[2026-05-18 20:07:43] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 20:08:05] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 20:08:43] [INFO] [monitoring-bot] DNS monitoring heartbeat OK
+[2026-05-18 20:09:06] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 20:09:59] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 20:10:58] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 20:11:47] [INFO] [monitoring-bot] Log rotation completed
+[2026-05-18 20:12:15] [INFO] [monitoring-bot] DNS TTL values checked, all within policy
+[2026-05-18 20:13:08] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 20:13:56] [INFO] [monitoring-bot] Monitoring agent alive
+[2026-05-18 20:14:34] [ERROR] [monitoring-bot] DNS loop detected in zone corp.internal
+[2026-05-18 20:14:56] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 20:15:43] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 20:16:07] [ERROR] [monitoring-bot] health_check FAILED: unable to resolve monitoring.corp.internal
+[2026-05-18 20:16:50] [ERROR] [monitoring-bot] Resolution failure: mail.corp.com not found
+[2026-05-18 20:17:50] [INFO] [monitoring-bot] Scheduled maintenance window checked
+[2026-05-18 20:18:37] [INFO] [monitoring-bot] DNS health check passed
+[2026-05-18 20:19:21] [ERROR] [monitoring-bot] High latency detected: 7823ms for DNS query
+[2026-05-18 20:20:05] [INFO] [monitoring-bot] PTR record lookup successful
+[2026-05-18 20:20:49] [INFO] [monitoring-bot] Resolver response time within normal range
+[2026-05-18 20:21:05] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 20:21:20] [INFO] [monitoring-bot] Forward lookup verified for mail.corp.com
+[2026-05-18 20:21:39] [ERROR] [monitoring-bot] Query retry limit exceeded for 192.168.1.253
+[2026-05-18 20:22:38] [ERROR] [monitoring-bot] DNS query failed: SERVFAIL from 192.168.1.253
+[2026-05-18 20:22:57] [INFO] [monitoring-bot] Recursive query depth normal
+[2026-05-18 20:23:14] [WARN] [monitoring-bot] DNS failure rate: 26.8% — SLA breach ongoing
+[2026-05-18 20:23:40] [INFO] [monitoring-bot] Backup resolver 8.8.4.4 reachable
+[2026-05-18 20:00:00] [INFO] [monitoring-bot] End of monitoring period snapshot. Rollback not yet executed.

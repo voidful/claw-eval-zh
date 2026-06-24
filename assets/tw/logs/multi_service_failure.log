@@ -1,0 +1,1140 @@
+2026-05-20 08:00:01 - INFO - [radius-auth] DNS query processed: avg latency=23ms
+2026-05-20 08:00:47 - INFO - [patch-mgmt] Certificate valid: 1 more days
+2026-05-20 08:01:13 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 08:01:45 - INFO - [patch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 08:02:13 - INFO - [syslog-server] Certificate valid: 2 more days
+2026-05-20 08:02:48 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 08:03:14 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.2.98 -> 8.8.8.8:53
+2026-05-20 08:03:38 - INFO - [radius-auth] RADIUS auth success: user@corp.com
+2026-05-20 08:03:55 - INFO - [syslog-server] DHCP lease renewed: 192.168.1.170
+2026-05-20 08:03:59 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 08:04:15 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 08:04:17 - INFO - [dns-resolver] DNS query processed: avg latency=23ms
+2026-05-20 08:04:29 - INFO - [syslog-server] Config backup verified: checksum OK
+2026-05-20 08:04:43 - INFO - [syslog-server] Service healthy: all checks passed
+2026-05-20 08:05:36 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 08:05:51 - INFO - [syslog-server] DHCP lease renewed: 192.168.4.234
+2026-05-20 08:06:07 - INFO - [firewall] Certificate valid: 10 more days
+2026-05-20 08:06:09 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 08:06:14 - INFO - [firewall] DHCP lease renewed: 192.168.1.221
+2026-05-20 08:06:24 - INFO - [snmp-collector] RADIUS auth success: user@corp.com
+2026-05-20 08:06:47 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:07:41 - INFO - [syslog-server] Certificate valid: 3 more days
+2026-05-20 08:07:43 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 08:08:06 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 08:08:46 - INFO - [radius-auth] DNS query processed: avg latency=23ms
+2026-05-20 08:09:20 - WARN - [config-mgmt] ARP table approaching capacity (85%)
+2026-05-20 08:09:23 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 08:09:56 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.10.243 -> 8.8.8.8:53
+2026-05-20 08:10:05 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 08:10:42 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:11:04 - INFO - [dhcp-server] DHCP lease renewed: 192.168.9.61
+2026-05-20 08:11:13 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.5.103 -> 8.8.8.8:53
+2026-05-20 08:11:14 - INFO - [cert-monitor] DHCP lease renewed: 192.168.1.59
+2026-05-20 08:11:15 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 08:11:42 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 08:12:06 - INFO - [snmp-collector] Certificate valid: 8 more days
+2026-05-20 08:12:30 - INFO - [switch-mgmt] Certificate valid: 4 more days
+2026-05-20 08:12:42 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:12:46 - INFO - [dhcp-server] DHCP lease renewed: 192.168.1.104
+2026-05-20 08:13:08 - INFO - [snmp-collector] RADIUS auth success: user@corp.com
+2026-05-20 08:13:41 - INFO - [patch-mgmt] DHCP lease renewed: 192.168.4.43
+2026-05-20 08:13:51 - INFO - [dns-resolver] Firewall rule matched: ALLOW 192.168.9.115 -> 8.8.8.8:53
+2026-05-20 08:13:59 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 08:14:18 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:14:24 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 08:14:27 - INFO - [patch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 08:14:31 - INFO - [config-mgmt] Certificate valid: 1 more days
+2026-05-20 08:14:47 - INFO - [syslog-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:15:03 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:15:04 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:15:38 - INFO - [dhcp-server] Certificate valid: 10 more days
+2026-05-20 08:16:04 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:16:25 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 08:16:59 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 08:16:59 - WARN - [dns-resolver] DHCP pool 70% exhausted in subnet 192.168.10.0/24
+2026-05-20 08:17:07 - INFO - [dns-resolver] DNS query processed: avg latency=23ms
+2026-05-20 08:17:28 - INFO - [patch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:17:42 - INFO - [patch-mgmt] DHCP lease renewed: 192.168.3.68
+2026-05-20 08:17:56 - INFO - [dns-resolver] Config backup verified: checksum OK
+2026-05-20 08:18:00 - INFO - [syslog-server] SNMP poll completed: 20 devices OK
+2026-05-20 08:18:16 - INFO - [dhcp-server] Certificate valid: 5 more days
+2026-05-20 08:18:45 - INFO - [syslog-server] SNMP poll completed: 20 devices OK
+2026-05-20 08:19:06 - INFO - [syslog-server] Certificate valid: 10 more days
+2026-05-20 08:19:09 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 08:19:35 - INFO - [snmp-collector] DHCP lease renewed: 192.168.2.242
+2026-05-20 08:19:56 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 08:19:59 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.4.171 -> 8.8.8.8:53
+2026-05-20 08:20:10 - INFO - [dns-resolver] Service healthy: all checks passed
+2026-05-20 08:20:11 - INFO - [syslog-server] Certificate valid: 4 more days
+2026-05-20 08:20:59 - INFO - [switch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:21:42 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:21:49 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 08:21:52 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.4.7 -> 8.8.8.8:53
+2026-05-20 08:22:01 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 08:22:16 - INFO - [dhcp-server] Certificate valid: 6 more days
+2026-05-20 08:22:50 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 08:22:57 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 08:23:23 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 08:23:42 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 08:23:42 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 08:24:13 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:24:19 - INFO - [snmp-collector] Service healthy: all checks passed
+2026-05-20 08:24:26 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 08:25:28 - INFO - [switch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:25:30 - INFO - [cert-monitor] DHCP lease renewed: 192.168.8.107
+2026-05-20 08:25:32 - INFO - [cert-monitor] Firewall rule matched: ALLOW 192.168.5.58 -> 8.8.8.8:53
+2026-05-20 08:25:51 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 08:25:56 - INFO - [cert-monitor] Certificate valid: 8 more days
+2026-05-20 08:26:09 - INFO - [dhcp-server] DHCP lease renewed: 192.168.7.57
+2026-05-20 08:26:11 - INFO - [patch-mgmt] Syslog buffer: 0 drops
+2026-05-20 08:26:54 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 08:27:16 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:27:40 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.5.61
+2026-05-20 08:27:48 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 08:27:58 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:28:14 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.2.107 -> 8.8.8.8:53
+2026-05-20 08:28:21 - INFO - [syslog-server] DHCP lease renewed: 192.168.3.39
+2026-05-20 08:28:26 - INFO - [syslog-server] Certificate valid: 1 more days
+2026-05-20 08:28:53 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:29:14 - INFO - [config-mgmt] Certificate valid: 8 more days
+2026-05-20 08:29:24 - INFO - [syslog-server] Certificate valid: 3 more days
+2026-05-20 08:29:29 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 08:29:30 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 08:29:57 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 08:30:13 - INFO - [config-mgmt] Certificate valid: 5 more days
+2026-05-20 08:30:37 - INFO - [cert-monitor] DHCP lease renewed: 192.168.7.35
+2026-05-20 08:30:47 - INFO - [patch-mgmt] Config backup verified: checksum OK
+2026-05-20 08:30:53 - INFO - [snmp-collector] DHCP lease renewed: 192.168.8.5
+2026-05-20 08:30:55 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:31:01 - INFO - [cert-monitor] DNS query processed: avg latency=23ms
+2026-05-20 08:31:49 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.4.215 -> 8.8.8.8:53
+2026-05-20 08:32:36 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:32:38 - INFO - [cert-monitor] DHCP lease renewed: 192.168.3.247
+2026-05-20 08:33:06 - WARN - [cert-monitor] ARP table approaching capacity (85%)
+2026-05-20 08:33:07 - INFO - [cert-monitor] Config backup verified: checksum OK
+2026-05-20 08:33:36 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.2.152 -> 8.8.8.8:53
+2026-05-20 08:33:44 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:34:04 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 08:34:09 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 08:34:31 - INFO - [dns-resolver] Config backup verified: checksum OK
+2026-05-20 08:34:51 - INFO - [patch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 08:35:11 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:35:20 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.5.226
+2026-05-20 08:35:24 - WARN - [syslog-server] ARP table approaching capacity (85%)
+2026-05-20 08:35:28 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:36:14 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 08:36:35 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.2.62 -> 8.8.8.8:53
+2026-05-20 08:36:45 - INFO - [config-mgmt] Service healthy: all checks passed
+2026-05-20 08:36:46 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.8.166 -> 8.8.8.8:53
+2026-05-20 08:37:13 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:37:18 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 08:37:35 - INFO - [patch-mgmt] Syslog buffer: 0 drops
+2026-05-20 08:37:44 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:37:46 - INFO - [switch-mgmt] Syslog buffer: 0 drops
+2026-05-20 08:38:03 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:38:19 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 08:38:55 - INFO - [dhcp-server] RADIUS auth success: user@corp.com
+2026-05-20 08:39:04 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:39:09 - INFO - [cert-monitor] DHCP lease renewed: 192.168.4.31
+2026-05-20 08:39:11 - INFO - [dhcp-server] RADIUS auth success: user@corp.com
+2026-05-20 08:39:35 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:40:13 - INFO - [radius-auth] DNS query processed: avg latency=23ms
+2026-05-20 08:40:28 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:40:35 - INFO - [dns-resolver] Certificate valid: 8 more days
+2026-05-20 08:40:36 - INFO - [cert-monitor] DHCP lease renewed: 192.168.4.161
+2026-05-20 08:40:38 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.5.181 -> 8.8.8.8:53
+2026-05-20 08:41:03 - INFO - [firewall] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:41:34 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:41:44 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.5.202 -> 8.8.8.8:53
+2026-05-20 08:41:50 - INFO - [cert-monitor] Firewall rule matched: ALLOW 192.168.7.30 -> 8.8.8.8:53
+2026-05-20 08:42:02 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:42:05 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:42:17 - INFO - [patch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 08:42:28 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 08:43:41 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:43:48 - INFO - [radius-auth] DNS query processed: avg latency=23ms
+2026-05-20 08:44:00 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 08:44:05 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 08:44:06 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 08:44:20 - INFO - [radius-auth] Certificate valid: 9 more days
+2026-05-20 08:44:25 - WARN - [patch-mgmt] DHCP pool 70% exhausted in subnet 192.168.10.0/24
+2026-05-20 08:45:00 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.2.119 -> 8.8.8.8:53
+2026-05-20 08:45:01 - INFO - [cert-monitor] DNS query processed: avg latency=23ms
+2026-05-20 08:45:35 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 08:45:39 - INFO - [config-mgmt] Service healthy: all checks passed
+2026-05-20 08:46:17 - INFO - [snmp-collector] RADIUS auth success: user@corp.com
+2026-05-20 08:46:41 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 08:47:04 - INFO - [radius-auth] Certificate valid: 6 more days
+2026-05-20 08:47:24 - INFO - [switch-mgmt] Syslog buffer: 0 drops
+2026-05-20 08:47:50 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 08:48:14 - WARN - [snmp-collector] SNMP timeout: device 192.168.10.150 not responding
+2026-05-20 08:48:29 - INFO - [syslog-server] Firewall rule matched: ALLOW 192.168.10.99 -> 8.8.8.8:53
+2026-05-20 08:48:34 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 08:48:53 - INFO - [cert-monitor] RADIUS auth success: user@corp.com
+2026-05-20 08:49:24 - INFO - [firewall] Service healthy: all checks passed
+2026-05-20 08:49:26 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 08:49:37 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 08:49:44 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 08:49:58 - WARN - [config-mgmt] DNS cache hit ratio dropped to 82%
+2026-05-20 08:50:06 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 08:50:15 - INFO - [radius-auth] DHCP lease renewed: 192.168.7.251
+2026-05-20 08:50:20 - INFO - [dhcp-server] Config backup verified: checksum OK
+2026-05-20 08:50:40 - INFO - [config-mgmt] Service healthy: all checks passed
+2026-05-20 08:51:05 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:51:33 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 08:51:58 - INFO - [cert-monitor] RADIUS auth success: user@corp.com
+2026-05-20 08:52:24 - INFO - [config-mgmt] Certificate valid: 10 more days
+2026-05-20 08:52:34 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 08:52:40 - INFO - [snmp-collector] RADIUS auth success: user@corp.com
+2026-05-20 08:52:42 - INFO - [dhcp-server] RADIUS auth success: user@corp.com
+2026-05-20 08:53:17 - INFO - [dhcp-server] Service healthy: all checks passed
+2026-05-20 08:53:22 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:53:31 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.10.206 -> 8.8.8.8:53
+2026-05-20 08:53:44 - WARN - [radius-auth] SNMP timeout: device 192.168.10.150 not responding
+2026-05-20 08:54:18 - INFO - [syslog-server] DNS query processed: avg latency=23ms
+2026-05-20 08:54:28 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 08:54:40 - INFO - [dns-resolver] Service healthy: all checks passed
+2026-05-20 08:55:07 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:55:33 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 08:55:43 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 08:55:52 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 08:56:00 - INFO - [radius-auth] RADIUS auth success: user@corp.com
+2026-05-20 08:56:14 - WARN - [config-mgmt] ARP table approaching capacity (85%)
+2026-05-20 08:56:44 - INFO - [radius-auth] DHCP lease renewed: 192.168.3.12
+2026-05-20 08:56:47 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 08:56:58 - INFO - [cert-monitor] DHCP lease renewed: 192.168.8.233
+2026-05-20 08:57:19 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.9.35 -> 8.8.8.8:53
+2026-05-20 08:57:24 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 08:58:15 - INFO - [syslog-server] Config backup verified: checksum OK
+2026-05-20 08:58:17 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.8.114 -> 8.8.8.8:53
+2026-05-20 08:58:56 - INFO - [snmp-collector] RADIUS auth success: user@corp.com
+2026-05-20 08:59:03 - INFO - [snmp-collector] DHCP lease renewed: 192.168.8.24
+2026-05-20 08:59:04 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.4.85 -> 8.8.8.8:53
+2026-05-20 08:59:42 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 08:59:50 - INFO - [syslog-server] DNS query processed: avg latency=23ms
+2026-05-20 09:00:08 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:00:50 - WARN - [cert-monitor] DNS cache hit ratio dropped to 82%
+2026-05-20 09:00:55 - INFO - [dhcp-server] Config backup verified: checksum OK
+2026-05-20 09:01:01 - INFO - [firewall] DNS query processed: avg latency=23ms
+2026-05-20 09:01:06 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:01:07 - INFO - [dns-resolver] Config backup verified: checksum OK
+2026-05-20 09:01:50 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 09:02:05 - INFO - [syslog-server] DHCP lease renewed: 192.168.3.71
+2026-05-20 09:02:27 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 09:02:33 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:02:39 - INFO - [cert-monitor] Config backup verified: checksum OK
+2026-05-20 09:02:50 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 09:03:06 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 09:03:09 - INFO - [config-mgmt] DHCP lease renewed: 192.168.2.111
+2026-05-20 09:03:35 - INFO - [patch-mgmt] DHCP lease renewed: 192.168.7.91
+2026-05-20 09:03:46 - INFO - [dns-resolver] Config backup verified: checksum OK
+2026-05-20 09:03:56 - INFO - [switch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 09:04:06 - INFO - [cert-monitor] DNS query processed: avg latency=23ms
+2026-05-20 09:04:48 - INFO - [radius-auth] Certificate valid: 9 more days
+2026-05-20 09:04:49 - INFO - [cert-monitor] Syslog buffer: 0 drops
+2026-05-20 09:04:54 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 09:04:55 - INFO - [dhcp-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:05:00 - INFO - [firewall] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:05:01 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 09:05:09 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 09:05:26 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 09:06:17 - INFO - [config-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 09:06:26 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 09:06:48 - WARN - [cert-monitor] DHCP pool 70% exhausted in subnet 192.168.10.0/24
+2026-05-20 09:06:49 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 09:07:00 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:07:07 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:07:13 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 09:07:38 - WARN - [dhcp-server] ARP table approaching capacity (85%)
+2026-05-20 09:07:42 - WARN - [radius-auth] SNMP timeout: device 192.168.10.150 not responding
+2026-05-20 09:08:20 - INFO - [cert-monitor] Certificate valid: 7 more days
+2026-05-20 09:08:32 - INFO - [patch-mgmt] Config backup verified: checksum OK
+2026-05-20 09:08:55 - INFO - [dhcp-server] RADIUS auth success: user@corp.com
+2026-05-20 09:09:25 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 09:09:53 - INFO - [syslog-server] DHCP lease renewed: 192.168.4.112
+2026-05-20 09:10:09 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:10:12 - INFO - [syslog-server] DNS query processed: avg latency=23ms
+2026-05-20 09:10:21 - INFO - [firewall] DHCP lease renewed: 192.168.9.131
+2026-05-20 09:10:33 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 09:10:48 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 09:11:23 - INFO - [radius-auth] DHCP lease renewed: 192.168.10.153
+2026-05-20 09:11:32 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 09:11:40 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:11:40 - INFO - [syslog-server] DHCP lease renewed: 192.168.8.114
+2026-05-20 09:11:43 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:12:11 - INFO - [dhcp-server] RADIUS auth success: user@corp.com
+2026-05-20 09:12:29 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 09:12:32 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 09:12:51 - INFO - [cert-monitor] Config backup verified: checksum OK
+2026-05-20 09:12:57 - INFO - [syslog-server] DHCP lease renewed: 192.168.9.166
+2026-05-20 09:13:06 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 09:13:21 - INFO - [cert-monitor] Config backup verified: checksum OK
+2026-05-20 09:13:23 - INFO - [syslog-server] Certificate valid: 7 more days
+2026-05-20 09:14:21 - INFO - [dns-resolver] DNS query processed: avg latency=23ms
+2026-05-20 09:14:24 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 09:14:41 - INFO - [snmp-collector] DHCP lease renewed: 192.168.5.144
+2026-05-20 09:15:08 - INFO - [firewall] DHCP lease renewed: 192.168.9.198
+2026-05-20 09:15:11 - INFO - [switch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 09:15:32 - WARN - [syslog-server] ARP table approaching capacity (85%)
+2026-05-20 09:15:34 - WARN - [patch-mgmt] ARP table approaching capacity (85%)
+2026-05-20 09:15:56 - INFO - [cert-monitor] Certificate valid: 3 more days
+2026-05-20 09:16:18 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.5.248 -> 8.8.8.8:53
+2026-05-20 09:16:26 - INFO - [syslog-server] Firewall rule matched: ALLOW 192.168.8.157 -> 8.8.8.8:53
+2026-05-20 09:16:53 - INFO - [cert-monitor] DNS query processed: avg latency=23ms
+2026-05-20 09:17:10 - INFO - [switch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:17:41 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 09:17:49 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 09:17:54 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 09:17:57 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:18:03 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.7.21 -> 8.8.8.8:53
+2026-05-20 09:18:17 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:18:58 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 09:19:00 - WARN - [dns-resolver] DNS cache hit ratio dropped to 82%
+2026-05-20 09:19:09 - WARN - [firewall] SNMP timeout: device 192.168.10.150 not responding
+2026-05-20 09:19:14 - INFO - [dhcp-server] DHCP lease renewed: 192.168.6.203
+2026-05-20 09:19:44 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 09:20:19 - WARN - [dns-resolver] SNMP timeout: device 192.168.10.150 not responding
+2026-05-20 09:20:35 - INFO - [cert-monitor] DHCP lease renewed: 192.168.5.61
+2026-05-20 09:20:40 - INFO - [cert-monitor] DHCP lease renewed: 192.168.8.153
+2026-05-20 09:21:00 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:21:40 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:22:33 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 09:22:50 - INFO - [patch-mgmt] Certificate valid: 8 more days
+2026-05-20 09:23:15 - INFO - [dns-resolver] Config backup verified: checksum OK
+2026-05-20 09:23:22 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:23:23 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 09:23:44 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:23:49 - WARN - [config-mgmt] DNS cache hit ratio dropped to 82%
+2026-05-20 09:24:25 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 09:24:50 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 09:25:24 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 09:25:51 - INFO - [syslog-server] Certificate valid: 8 more days
+2026-05-20 09:25:55 - INFO - [dhcp-server] Config backup verified: checksum OK
+2026-05-20 09:25:59 - INFO - [patch-mgmt] DHCP lease renewed: 192.168.7.21
+2026-05-20 09:26:20 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:26:27 - INFO - [radius-auth] Service healthy: all checks passed
+2026-05-20 09:26:38 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 09:26:40 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 09:26:44 - INFO - [config-mgmt] Service healthy: all checks passed
+2026-05-20 09:27:02 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 09:27:11 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 09:27:20 - INFO - [radius-auth] DHCP lease renewed: 192.168.1.189
+2026-05-20 09:27:28 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 09:27:36 - INFO - [dhcp-server] RADIUS auth success: user@corp.com
+2026-05-20 09:28:04 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 09:28:11 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 09:28:45 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:28:58 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:29:08 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 09:29:36 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 09:29:50 - INFO - [syslog-server] DHCP lease renewed: 192.168.4.203
+2026-05-20 09:30:04 - INFO - [radius-auth] RADIUS auth success: user@corp.com
+2026-05-20 09:30:49 - INFO - [snmp-collector] DHCP lease renewed: 192.168.3.249
+2026-05-20 09:31:10 - INFO - [firewall] Firewall rule matched: ALLOW 192.168.6.243 -> 8.8.8.8:53
+2026-05-20 09:31:32 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 09:31:41 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 09:31:56 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:32:10 - INFO - [cert-monitor] DNS query processed: avg latency=23ms
+2026-05-20 09:32:39 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:32:40 - INFO - [radius-auth] DHCP lease renewed: 192.168.9.165
+2026-05-20 09:32:54 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 09:33:05 - INFO - [dhcp-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:33:13 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 09:34:04 - INFO - [dhcp-server] Certificate valid: 8 more days
+2026-05-20 09:34:13 - INFO - [syslog-server] Config backup verified: checksum OK
+2026-05-20 09:34:41 - INFO - [radius-auth] Certificate valid: 5 more days
+2026-05-20 09:34:55 - INFO - [syslog-server] DNS query processed: avg latency=23ms
+2026-05-20 09:35:09 - INFO - [dns-resolver] Certificate valid: 10 more days
+2026-05-20 09:35:20 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 09:36:48 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 09:36:55 - INFO - [firewall] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:36:56 - INFO - [radius-auth] DHCP lease renewed: 192.168.7.130
+2026-05-20 09:37:00 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 09:37:15 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 09:37:25 - WARN - [syslog-server] DHCP pool 70% exhausted in subnet 192.168.10.0/24
+2026-05-20 09:37:31 - INFO - [cert-monitor] RADIUS auth success: user@corp.com
+2026-05-20 09:37:36 - INFO - [patch-mgmt] Syslog buffer: 0 drops
+2026-05-20 09:38:08 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 09:38:32 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 09:38:38 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 09:38:39 - INFO - [dns-resolver] DHCP lease renewed: 192.168.7.96
+2026-05-20 09:38:50 - INFO - [syslog-server] Config backup verified: checksum OK
+2026-05-20 09:39:20 - INFO - [cert-monitor] Certificate valid: 10 more days
+2026-05-20 09:39:31 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 09:39:53 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 09:40:16 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 09:40:26 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 09:41:12 - INFO - [dhcp-server] Certificate valid: 3 more days
+2026-05-20 09:41:33 - INFO - [cert-monitor] Certificate valid: 3 more days
+2026-05-20 09:41:43 - WARN - [switch-mgmt] DHCP pool 70% exhausted in subnet 192.168.10.0/24
+2026-05-20 09:42:08 - INFO - [patch-mgmt] Config backup verified: checksum OK
+2026-05-20 09:42:24 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 09:42:26 - INFO - [patch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 09:43:13 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 09:43:35 - INFO - [radius-auth] SNMP poll completed: 20 devices OK
+2026-05-20 09:43:43 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.4.72 -> 8.8.8.8:53
+2026-05-20 09:43:59 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:44:15 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 09:44:18 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 09:44:30 - INFO - [switch-mgmt] Syslog buffer: 0 drops
+2026-05-20 09:44:35 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:44:52 - INFO - [syslog-server] DNS query processed: avg latency=23ms
+2026-05-20 09:45:03 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 09:45:26 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.5.83 -> 8.8.8.8:53
+2026-05-20 09:45:49 - WARN - [firewall] DNS cache hit ratio dropped to 82%
+2026-05-20 09:46:31 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 09:46:34 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 09:46:41 - INFO - [dhcp-server] DHCP lease renewed: 192.168.10.60
+2026-05-20 09:46:53 - INFO - [firewall] Service healthy: all checks passed
+2026-05-20 09:47:17 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 09:47:29 - INFO - [radius-auth] Service healthy: all checks passed
+2026-05-20 09:47:36 - INFO - [cert-monitor] Config backup verified: checksum OK
+2026-05-20 09:47:41 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:48:08 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.1.67 -> 8.8.8.8:53
+2026-05-20 09:48:20 - INFO - [dns-resolver] DHCP lease renewed: 192.168.3.252
+2026-05-20 09:48:24 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 09:48:36 - INFO - [switch-mgmt] Certificate valid: 7 more days
+2026-05-20 09:49:16 - INFO - [syslog-server] Service healthy: all checks passed
+2026-05-20 09:49:19 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 09:50:08 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:50:40 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.4.246 -> 8.8.8.8:53
+2026-05-20 09:51:09 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 09:51:33 - INFO - [syslog-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:51:48 - INFO - [cert-monitor] DHCP lease renewed: 192.168.9.115
+2026-05-20 09:51:48 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.4.175 -> 8.8.8.8:53
+2026-05-20 09:51:53 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.10.138 -> 8.8.8.8:53
+2026-05-20 09:52:03 - INFO - [config-mgmt] Certificate valid: 8 more days
+2026-05-20 09:52:03 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 09:52:45 - INFO - [cert-monitor] Syslog buffer: 0 drops
+2026-05-20 09:53:26 - INFO - [firewall] Certificate valid: 6 more days
+2026-05-20 09:53:27 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 09:53:52 - INFO - [dhcp-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:53:57 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 09:54:08 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 09:54:28 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 09:54:29 - INFO - [syslog-server] Firewall rule matched: ALLOW 192.168.2.9 -> 8.8.8.8:53
+2026-05-20 09:54:43 - INFO - [patch-mgmt] Certificate valid: 4 more days
+2026-05-20 09:54:55 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 09:55:02 - INFO - [config-mgmt] Service healthy: all checks passed
+2026-05-20 09:55:02 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 09:55:39 - INFO - [dhcp-server] DHCP lease renewed: 192.168.2.153
+2026-05-20 09:55:55 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 09:55:58 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:56:19 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:56:41 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 09:56:43 - INFO - [snmp-collector] Service healthy: all checks passed
+2026-05-20 09:56:56 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 09:57:03 - INFO - [patch-mgmt] Certificate valid: 9 more days
+2026-05-20 09:57:19 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 09:57:54 - INFO - [switch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 09:58:24 - INFO - [cert-monitor] DHCP lease renewed: 192.168.4.206
+2026-05-20 09:58:24 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 09:58:28 - INFO - [syslog-server] Firewall rule matched: ALLOW 192.168.1.69 -> 8.8.8.8:53
+2026-05-20 09:59:30 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 09:59:48 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 09:59:58 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.2.192 -> 8.8.8.8:53
+2026-05-20 10:00:31 - INFO - [config-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 10:00:35 - INFO - [syslog-server] Certificate valid: 8 more days
+2026-05-20 10:00:41 - INFO - [syslog-server] Config backup verified: checksum OK
+2026-05-20 10:01:09 - INFO - [dhcp-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:01:23 - INFO - [syslog-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:01:26 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 10:02:31 - INFO - [patch-mgmt] Config backup verified: checksum OK
+2026-05-20 10:02:46 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 10:02:52 - INFO - [config-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 10:03:00 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.2.182 -> 8.8.8.8:53
+2026-05-20 10:03:33 - INFO - [dhcp-server] DHCP lease renewed: 192.168.1.196
+2026-05-20 10:04:00 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 10:04:34 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 10:04:40 - INFO - [cert-monitor] RADIUS auth success: user@corp.com
+2026-05-20 10:05:15 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 10:05:34 - WARN - [radius-auth] SNMP timeout: device 192.168.10.150 not responding
+2026-05-20 10:05:50 - INFO - [snmp-collector] Certificate valid: 8 more days
+2026-05-20 10:05:51 - INFO - [firewall] DHCP lease renewed: 192.168.9.39
+2026-05-20 10:06:00 - INFO - [firewall] Certificate valid: 6 more days
+2026-05-20 10:06:25 - INFO - [snmp-collector] RADIUS auth success: user@corp.com
+2026-05-20 10:06:44 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.1.24
+2026-05-20 10:07:55 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 10:07:57 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.4.231 -> 8.8.8.8:53
+2026-05-20 10:08:10 - INFO - [cert-monitor] Certificate valid: 9 more days
+2026-05-20 10:08:37 - INFO - [firewall] Certificate valid: 2 more days
+2026-05-20 10:08:54 - WARN - [syslog-server] DNS cache hit ratio dropped to 82%
+2026-05-20 10:08:57 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 10:09:22 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.2.88 -> 8.8.8.8:53
+2026-05-20 10:09:22 - INFO - [patch-mgmt] Certificate valid: 3 more days
+2026-05-20 10:09:38 - INFO - [cert-monitor] Certificate valid: 6 more days
+2026-05-20 10:09:40 - INFO - [radius-auth] RADIUS auth success: user@corp.com
+2026-05-20 10:09:48 - INFO - [firewall] DHCP lease renewed: 192.168.9.191
+2026-05-20 10:10:05 - INFO - [cert-monitor] Firewall rule matched: ALLOW 192.168.2.22 -> 8.8.8.8:53
+2026-05-20 10:10:17 - INFO - [firewall] DNS query processed: avg latency=23ms
+2026-05-20 10:10:23 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 10:10:28 - INFO - [patch-mgmt] Certificate valid: 2 more days
+2026-05-20 10:10:48 - INFO - [radius-auth] DHCP lease renewed: 192.168.3.111
+2026-05-20 10:11:22 - INFO - [patch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:11:24 - INFO - [dhcp-server] Certificate valid: 2 more days
+2026-05-20 10:12:17 - INFO - [radius-auth] DNS query processed: avg latency=23ms
+2026-05-20 10:12:27 - INFO - [radius-auth] RADIUS auth success: user@corp.com
+2026-05-20 10:12:36 - INFO - [patch-mgmt] Certificate valid: 3 more days
+2026-05-20 10:13:08 - WARN - [radius-auth] SNMP timeout: device 192.168.10.150 not responding
+2026-05-20 10:13:15 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.8.28 -> 8.8.8.8:53
+2026-05-20 10:13:21 - INFO - [cert-monitor] Config backup verified: checksum OK
+2026-05-20 10:13:27 - INFO - [cert-monitor] Config backup verified: checksum OK
+2026-05-20 10:14:17 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:14:30 - INFO - [syslog-server] Certificate valid: 6 more days
+2026-05-20 10:14:47 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.6.97 -> 8.8.8.8:53
+2026-05-20 10:15:00 - WARN - [arp-monitor] ARP conflict detected: IP 192.168.10.150 claimed by both D-003 (printer-1st-floor) and dynamic host 00:1A:2B:3C:4D:EF
+2026-05-20 10:15:05 - WARN - [dhcp-server] DHCP conflict: 192.168.10.150 is both static (D-003) and in DHCP pool range
+2026-05-20 10:15:10 - WARN - [arp-monitor] ARP table inconsistency: 192.168.10.150 MAC changing every 30 seconds
+2026-05-20 10:15:43 - WARN - [patch-mgmt] SNMP timeout: device 192.168.10.150 not responding
+2026-05-20 10:15:45 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 10:15:54 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 10:16:38 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 10:16:40 - INFO - [dns-resolver] Firewall rule matched: ALLOW 192.168.6.43 -> 8.8.8.8:53
+2026-05-20 10:16:42 - INFO - [firewall] Certificate valid: 2 more days
+2026-05-20 10:16:58 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 10:17:00 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 10:17:36 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 10:18:05 - INFO - [dns-resolver] DNS query processed: avg latency=23ms
+2026-05-20 10:18:22 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 10:18:28 - INFO - [syslog-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:19:28 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 10:19:29 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 10:19:41 - INFO - [dns-resolver] DNS query processed: avg latency=23ms
+2026-05-20 10:19:45 - WARN - [dns-resolver] ARP table approaching capacity (85%)
+2026-05-20 10:20:00 - WARN - [dhcp-server] DHCP NAK sent to client 00:1A:2B:3C:4D:EF (IP conflict with D-003)
+2026-05-20 10:20:01 - INFO - [cert-monitor] RADIUS auth success: user@corp.com
+2026-05-20 10:20:10 - WARN - [dhcp-server] Duplicate IP lease request for 192.168.10.150 (5th occurrence in last hour)
+2026-05-20 10:20:35 - INFO - [firewall] Certificate valid: 8 more days
+2026-05-20 10:20:51 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 10:21:00 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.10.27
+2026-05-20 10:21:07 - INFO - [radius-auth] RADIUS auth success: user@corp.com
+2026-05-20 10:21:07 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 10:21:40 - INFO - [syslog-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:21:51 - INFO - [patch-mgmt] Config backup verified: checksum OK
+2026-05-20 10:22:00 - ERROR - [arp-monitor] Persistent ARP conflict on 192.168.10.150: D-003 printer-1st-floor causing network instability
+2026-05-20 10:22:11 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 10:22:15 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 10:22:24 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:22:58 - INFO - [cert-monitor] DNS query processed: avg latency=23ms
+2026-05-20 10:23:05 - WARN - [cert-monitor] DNS cache hit ratio dropped to 82%
+2026-05-20 10:23:18 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 10:23:43 - INFO - [config-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 10:23:52 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 10:23:55 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 10:24:02 - INFO - [radius-auth] SNMP poll completed: 20 devices OK
+2026-05-20 10:24:07 - INFO - [cert-monitor] Syslog buffer: 0 drops
+2026-05-20 10:24:29 - INFO - [cert-monitor] RADIUS auth success: user@corp.com
+2026-05-20 10:24:52 - INFO - [dhcp-server] RADIUS auth success: user@corp.com
+2026-05-20 10:25:00 - WARN - [dns-resolver] Increased DNS query latency from subnet 192.168.10.0/24 (possible ARP instability)
+2026-05-20 10:25:06 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 10:25:22 - INFO - [dns-resolver] DHCP lease renewed: 192.168.4.54
+2026-05-20 10:25:22 - INFO - [patch-mgmt] Syslog buffer: 0 drops
+2026-05-20 10:25:30 - WARN - [wlan-ap-lobby] [D-007] DNS upstream query latency spike: 192.168.1.253 latency=3200ms
+2026-05-20 10:25:39 - INFO - [firewall] Firewall rule matched: ALLOW 192.168.1.146 -> 8.8.8.8:53
+2026-05-20 10:25:51 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:26:18 - INFO - [cert-monitor] Syslog buffer: 0 drops
+2026-05-20 10:26:48 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 10:26:53 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:26:55 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 10:27:24 - INFO - [config-mgmt] DHCP lease renewed: 192.168.7.132
+2026-05-20 10:27:27 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 10:27:31 - INFO - [syslog-server] DHCP lease renewed: 192.168.8.163
+2026-05-20 10:27:42 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 10:27:47 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 10:28:00 - WARN - [wlan-ap-lobby] [D-007] DNS resolver 192.168.1.253 timeout (attempt 1/3)
+2026-05-20 10:28:15 - WARN - [wlan-ap-lobby] [D-007] DNS resolver 192.168.1.253 timeout (attempt 2/3)
+2026-05-20 10:28:28 - WARN - [config-mgmt] SNMP timeout: device 192.168.10.150 not responding
+2026-05-20 10:28:30 - WARN - [wlan-ap-lobby] [D-007] DNS resolver 192.168.1.253 timeout (attempt 3/3)
+2026-05-20 10:28:36 - INFO - [config-mgmt] Service healthy: all checks passed
+2026-05-20 10:28:40 - WARN - [config-mgmt] DNS cache hit ratio dropped to 82%
+2026-05-20 10:29:23 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 10:29:44 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 10:29:59 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 10:30:00 - ERROR - [arp-monitor] D-003 (192.168.10.150) ARP conflict disrupting subnet routing table
+2026-05-20 10:30:02 - ERROR - [dns-resolver] DNS upstream failure: 192.168.1.253 unreachable (possible route disruption from 192.168.10.150 ARP conflict)
+2026-05-20 10:30:05 - ERROR - [wlan-ap-lobby] [D-007] DNS SERVFAIL: lobby AP cannot resolve any external hostname
+2026-05-20 10:30:08 - ERROR - [wlan-ap-lobby] [D-007] All DNS queries failing: SERVFAIL from 192.168.1.253 (linked to D-003 IP conflict propagation)
+2026-05-20 10:30:10 - CRITICAL - [fault-correlator] FAULT PROPAGATION DETECTED: D-003 IP conflict → ARP instability → Route disruption → D-007 DNS failure
+2026-05-20 10:30:15 - CRITICAL - [wlan-ap-lobby] [D-007] Lobby wireless clients losing connectivity (0/47 DNS queries succeeding)
+2026-05-20 10:30:20 - ERROR - [radius-auth] RADIUS authentication failing for lobby WiFi clients: DNS unavailable
+2026-05-20 10:30:30 - ALERT - [monitoring-server] Incident auto-created: TKT-2026-011 (D-007 DNS_FAILURE)
+2026-05-20 10:30:35 - ALERT - [monitoring-server] Related incident: TKT-2026-006 (D-003 DHCP_CONFLICT still open)
+2026-05-20 10:30:40 - INFO - [fault-correlator] Root cause candidate: D-003 static IP 192.168.10.150 conflicts with DHCP pool
+2026-05-20 10:31:00 - ERROR - [arp-monitor] [D-007] wlan-ap-lobby: DNS failure rate=86.9%
+2026-05-20 10:31:45 - ERROR - [dhcp-server] DHCP exhaustion risk: subnet 192.168.10.0/24 at 86.9%
+2026-05-20 10:32:24 - ERROR - [arp-monitor] [D-003] ARP conflict count=16 in last minute
+2026-05-20 10:32:24 - INFO - [firewall] DNS query processed: avg latency=23ms
+2026-05-20 10:32:36 - ERROR - [dhcp-server] [D-003] ARP conflict count=38 in last minute
+2026-05-20 10:33:17 - INFO - [switch-mgmt] Syslog buffer: 0 drops
+2026-05-20 10:33:38 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 10:33:39 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.2.36
+2026-05-20 10:33:46 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 10:33:48 - ERROR - [wlan-ap-lobby] [D-003] ARP conflict count=32 in last minute
+2026-05-20 10:34:31 - ERROR - [wlan-ap-lobby] [D-007] Lobby client 39 disconnected: DNS timeout
+2026-05-20 10:34:48 - ERROR - [wlan-ap-lobby] [D-007] Lobby client 2 disconnected: DNS timeout
+2026-05-20 10:34:59 - ERROR - [dhcp-server] [D-003] ARP conflict count=46 in last minute
+2026-05-20 10:35:02 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 10:35:40 - INFO - [cert-monitor] DNS query processed: avg latency=23ms
+2026-05-20 10:35:45 - INFO - [snmp-collector] Certificate valid: 7 more days
+2026-05-20 10:36:05 - INFO - [switch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 10:36:19 - INFO - [firewall] DHCP lease renewed: 192.168.1.182
+2026-05-20 10:36:25 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 10:36:54 - ERROR - [dhcp-server] [D-007] wlan-ap-lobby: DNS failure rate=84.9%
+2026-05-20 10:37:10 - ERROR - [wlan-ap-lobby] [D-007] Lobby client 47 disconnected: DNS timeout
+2026-05-20 10:37:44 - ERROR - [dhcp-server] [D-007] Lobby client 34 disconnected: DNS timeout
+2026-05-20 10:37:51 - ERROR - [dhcp-server] [D-007] wlan-ap-lobby: DNS failure rate=90.5%
+2026-05-20 10:38:02 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.1.121 -> 8.8.8.8:53
+2026-05-20 10:38:14 - ERROR - [dhcp-server] [D-007] Lobby client 18 disconnected: DNS timeout
+2026-05-20 10:38:23 - ERROR - [dhcp-server] DHCP exhaustion risk: subnet 192.168.10.0/24 at 91.1%
+2026-05-20 10:38:23 - ERROR - [wlan-ap-lobby] [D-007] wlan-ap-lobby: DNS failure rate=95.5%
+2026-05-20 10:38:29 - INFO - [dhcp-server] RADIUS auth success: user@corp.com
+2026-05-20 10:39:32 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 10:39:33 - INFO - [snmp-collector] DHCP lease renewed: 192.168.8.222
+2026-05-20 10:40:00 - ERROR - [arp-monitor] DHCP exhaustion risk: subnet 192.168.10.0/24 at 79.9%
+2026-05-20 10:40:49 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.3.2 -> 8.8.8.8:53
+2026-05-20 10:40:49 - INFO - [syslog-server] DHCP lease renewed: 192.168.9.117
+2026-05-20 10:40:59 - ERROR - [wlan-ap-lobby] [D-007] Lobby client 41 disconnected: DNS timeout
+2026-05-20 10:41:15 - ERROR - [wlan-ap-lobby] [D-003] ARP conflict count=19 in last minute
+2026-05-20 10:41:48 - INFO - [radius-auth] DHCP lease renewed: 192.168.4.136
+2026-05-20 10:42:09 - ERROR - [arp-monitor] [D-003] ARP conflict count=30 in last minute
+2026-05-20 10:42:15 - ERROR - [arp-monitor] [D-007] Lobby client 45 disconnected: DNS timeout
+2026-05-20 10:42:28 - ERROR - [dhcp-server] [D-007] wlan-ap-lobby: DNS failure rate=81.5%
+2026-05-20 10:42:32 - ERROR - [arp-monitor] [D-003] ARP conflict count=14 in last minute
+2026-05-20 10:42:44 - INFO - [config-mgmt] DHCP lease renewed: 192.168.10.25
+2026-05-20 10:43:06 - ERROR - [wlan-ap-lobby] [D-003] ARP conflict count=18 in last minute
+2026-05-20 10:43:13 - INFO - [syslog-server] DNS query processed: avg latency=23ms
+2026-05-20 10:43:15 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 10:43:19 - ERROR - [arp-monitor] [D-007] wlan-ap-lobby: DNS failure rate=97.0%
+2026-05-20 10:43:19 - ERROR - [dhcp-server] [D-003] ARP conflict count=11 in last minute
+2026-05-20 10:44:02 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 10:44:04 - ERROR - [arp-monitor] [D-007] wlan-ap-lobby: DNS failure rate=92.9%
+2026-05-20 10:44:52 - ERROR - [wlan-ap-lobby] [D-007] wlan-ap-lobby: DNS failure rate=93.7%
+2026-05-20 10:45:01 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 10:45:12 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.9.204 -> 8.8.8.8:53
+2026-05-20 10:45:17 - ERROR - [dhcp-server] [D-007] Lobby client 40 disconnected: DNS timeout
+2026-05-20 10:45:31 - ERROR - [wlan-ap-lobby] DHCP exhaustion risk: subnet 192.168.10.0/24 at 80.6%
+2026-05-20 10:45:31 - ERROR - [wlan-ap-lobby] [D-007] Lobby client 23 disconnected: DNS timeout
+2026-05-20 10:46:11 - ERROR - [arp-monitor] [D-007] Lobby client 18 disconnected: DNS timeout
+2026-05-20 10:46:22 - INFO - [patch-mgmt] Config backup verified: checksum OK
+2026-05-20 10:46:42 - ERROR - [arp-monitor] [D-007] Lobby client 15 disconnected: DNS timeout
+2026-05-20 10:46:49 - INFO - [switch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 10:46:59 - INFO - [firewall] DNS query processed: avg latency=23ms
+2026-05-20 10:47:00 - ERROR - [arp-monitor] [D-007] wlan-ap-lobby: DNS failure rate=92.3%
+2026-05-20 10:47:11 - ERROR - [dhcp-server] DHCP exhaustion risk: subnet 192.168.10.0/24 at 79.4%
+2026-05-20 10:47:44 - ERROR - [arp-monitor] [D-007] Lobby client 37 disconnected: DNS timeout
+2026-05-20 10:47:51 - INFO - [syslog-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:48:09 - INFO - [firewall] DHCP lease renewed: 192.168.9.221
+2026-05-20 10:48:23 - INFO - [syslog-server] Certificate valid: 10 more days
+2026-05-20 10:49:11 - INFO - [patch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:49:19 - ERROR - [dhcp-server] [D-007] Lobby client 41 disconnected: DNS timeout
+2026-05-20 10:49:42 - INFO - [firewall] Certificate valid: 5 more days
+2026-05-20 10:49:44 - ERROR - [arp-monitor] [D-007] wlan-ap-lobby: DNS failure rate=83.6%
+2026-05-20 10:50:09 - ERROR - [wlan-ap-lobby] [D-007] Lobby client 21 disconnected: DNS timeout
+2026-05-20 10:50:28 - ERROR - [wlan-ap-lobby] [D-007] wlan-ap-lobby: DNS failure rate=84.2%
+2026-05-20 10:50:38 - ERROR - [wlan-ap-lobby] DHCP exhaustion risk: subnet 192.168.10.0/24 at 87.8%
+2026-05-20 10:51:24 - ERROR - [arp-monitor] [D-007] Lobby client 27 disconnected: DNS timeout
+2026-05-20 10:51:34 - ERROR - [wlan-ap-lobby] [D-003] ARP conflict count=46 in last minute
+2026-05-20 10:52:04 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 10:52:06 - ERROR - [dhcp-server] [D-007] Lobby client 45 disconnected: DNS timeout
+2026-05-20 10:52:16 - INFO - [dns-resolver] Config backup verified: checksum OK
+2026-05-20 10:52:24 - ERROR - [dhcp-server] DHCP exhaustion risk: subnet 192.168.10.0/24 at 86.9%
+2026-05-20 10:52:45 - ERROR - [wlan-ap-lobby] [D-007] wlan-ap-lobby: DNS failure rate=98.8%
+2026-05-20 10:53:13 - ERROR - [arp-monitor] DHCP exhaustion risk: subnet 192.168.10.0/24 at 91.9%
+2026-05-20 10:53:19 - ERROR - [wlan-ap-lobby] [D-007] wlan-ap-lobby: DNS failure rate=81.0%
+2026-05-20 10:53:23 - ERROR - [wlan-ap-lobby] [D-007] wlan-ap-lobby: DNS failure rate=81.8%
+2026-05-20 10:53:30 - ERROR - [wlan-ap-lobby] [D-007] Lobby client 42 disconnected: DNS timeout
+2026-05-20 10:54:09 - INFO - [dns-resolver] DHCP lease renewed: 192.168.6.207
+2026-05-20 10:54:19 - ERROR - [dhcp-server] [D-003] ARP conflict count=12 in last minute
+2026-05-20 10:54:23 - ERROR - [arp-monitor] [D-007] wlan-ap-lobby: DNS failure rate=80.9%
+2026-05-20 10:54:34 - ERROR - [arp-monitor] DHCP exhaustion risk: subnet 192.168.10.0/24 at 76.2%
+2026-05-20 10:54:34 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 10:55:27 - ERROR - [dhcp-server] [D-007] Lobby client 41 disconnected: DNS timeout
+2026-05-20 10:55:48 - ERROR - [wlan-ap-lobby] [D-007] wlan-ap-lobby: DNS failure rate=99.0%
+2026-05-20 10:56:09 - ERROR - [wlan-ap-lobby] [D-007] Lobby client 7 disconnected: DNS timeout
+2026-05-20 10:56:25 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 10:56:55 - ERROR - [wlan-ap-lobby] DHCP exhaustion risk: subnet 192.168.10.0/24 at 90.6%
+2026-05-20 10:56:58 - INFO - [dns-resolver] DHCP lease renewed: 192.168.7.143
+2026-05-20 10:57:03 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 10:57:17 - ERROR - [arp-monitor] [D-003] ARP conflict count=35 in last minute
+2026-05-20 10:57:52 - INFO - [radius-auth] SNMP poll completed: 20 devices OK
+2026-05-20 10:57:56 - ERROR - [wlan-ap-lobby] [D-003] ARP conflict count=41 in last minute
+2026-05-20 10:58:12 - ERROR - [arp-monitor] [D-007] wlan-ap-lobby: DNS failure rate=98.3%
+2026-05-20 10:58:55 - ERROR - [arp-monitor] [D-007] wlan-ap-lobby: DNS failure rate=86.0%
+2026-05-20 10:59:04 - ERROR - [wlan-ap-lobby] [D-003] ARP conflict count=18 in last minute
+2026-05-20 10:59:12 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 10:59:29 - ERROR - [arp-monitor] DHCP exhaustion risk: subnet 192.168.10.0/24 at 82.4%
+2026-05-20 11:00:23 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 11:00:35 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:00:47 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 11:00:59 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:01:10 - INFO - [switch-mgmt] Firewall rule matched: ALLOW 192.168.4.174 -> 8.8.8.8:53
+2026-05-20 11:01:13 - WARN - [fault-correlator] Lobby WiFi: 23 clients unable to connect
+2026-05-20 11:02:11 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.5.156 -> 8.8.8.8:53
+2026-05-20 11:02:55 - INFO - [dhcp-server] RADIUS auth success: user@corp.com
+2026-05-20 11:03:22 - INFO - [switch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 11:03:33 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:03:45 - INFO - [radius-auth] Certificate valid: 7 more days
+2026-05-20 11:04:04 - WARN - [fault-correlator] Lobby WiFi: 18 clients unable to connect
+2026-05-20 11:04:18 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:04:20 - INFO - [radius-auth] SNMP poll completed: 20 devices OK
+2026-05-20 11:04:42 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 11:05:16 - INFO - [snmp-collector] Certificate valid: 1 more days
+2026-05-20 11:05:25 - INFO - [firewall] Service healthy: all checks passed
+2026-05-20 11:05:45 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 11:05:48 - WARN - [fault-correlator] Lobby WiFi: 11 clients unable to connect
+2026-05-20 11:06:10 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 11:06:30 - WARN - [fault-correlator] Lobby WiFi: 18 clients unable to connect
+2026-05-20 11:06:40 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 11:06:51 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 11:07:14 - INFO - [radius-auth] Certificate valid: 6 more days
+2026-05-20 11:07:16 - INFO - [config-mgmt] DHCP lease renewed: 192.168.8.14
+2026-05-20 11:07:55 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:08:19 - INFO - [firewall] DNS query processed: avg latency=23ms
+2026-05-20 11:08:32 - WARN - [fault-correlator] Lobby WiFi: 22 clients unable to connect
+2026-05-20 11:09:21 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 11:09:36 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 11:09:45 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:10:17 - WARN - [fault-correlator] Lobby WiFi: 15 clients unable to connect
+2026-05-20 11:10:39 - INFO - [snmp-collector] Certificate valid: 7 more days
+2026-05-20 11:10:48 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:11:24 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:11:46 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:11:48 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 11:12:08 - WARN - [fault-correlator] Lobby WiFi: 26 clients unable to connect
+2026-05-20 11:12:15 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:12:18 - INFO - [patch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:12:19 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:13:14 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:13:48 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:13:56 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 11:14:01 - INFO - [firewall] DHCP lease renewed: 192.168.6.183
+2026-05-20 11:14:03 - INFO - [dhcp-server] DHCP lease renewed: 192.168.1.13
+2026-05-20 11:14:41 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 11:14:44 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:15:35 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:15:44 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 11:16:42 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:16:53 - INFO - [patch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:17:12 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.6.181 -> 8.8.8.8:53
+2026-05-20 11:17:50 - WARN - [fault-correlator] Lobby WiFi: 16 clients unable to connect
+2026-05-20 11:18:15 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:18:18 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:18:58 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:19:06 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 11:19:14 - INFO - [radius-auth] SNMP poll completed: 20 devices OK
+2026-05-20 11:19:42 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 11:19:46 - WARN - [fault-correlator] Lobby WiFi: 18 clients unable to connect
+2026-05-20 11:20:17 - INFO - [dns-resolver] Config backup verified: checksum OK
+2026-05-20 11:20:20 - INFO - [dns-resolver] DHCP lease renewed: 192.168.1.3
+2026-05-20 11:20:21 - WARN - [fault-correlator] Lobby WiFi: 24 clients unable to connect
+2026-05-20 11:20:54 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:21:25 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 11:21:54 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 11:22:01 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 11:22:26 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:22:39 - WARN - [fault-correlator] Lobby WiFi: 21 clients unable to connect
+2026-05-20 11:22:46 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:23:20 - WARN - [fault-correlator] Lobby WiFi: 26 clients unable to connect
+2026-05-20 11:23:28 - WARN - [fault-correlator] Lobby WiFi: 18 clients unable to connect
+2026-05-20 11:23:36 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 11:24:32 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 11:24:39 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:24:42 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 11:24:44 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.8.89 -> 8.8.8.8:53
+2026-05-20 11:25:20 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:25:25 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 11:25:32 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:26:02 - INFO - [dhcp-server] DHCP lease renewed: 192.168.10.247
+2026-05-20 11:26:20 - WARN - [fault-correlator] Lobby WiFi: 25 clients unable to connect
+2026-05-20 11:26:28 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:26:41 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:27:03 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 11:27:13 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 11:27:39 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 11:27:40 - WARN - [fault-correlator] Lobby WiFi: 26 clients unable to connect
+2026-05-20 11:28:08 - INFO - [snmp-collector] DHCP lease renewed: 192.168.5.157
+2026-05-20 11:28:14 - WARN - [fault-correlator] Lobby WiFi: 21 clients unable to connect
+2026-05-20 11:28:44 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:28:51 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:29:12 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:29:29 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 11:30:02 - INFO - [cert-monitor] DHCP lease renewed: 192.168.8.118
+2026-05-20 11:30:33 - INFO - [patch-mgmt] Certificate valid: 10 more days
+2026-05-20 11:30:42 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 11:31:38 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 11:31:38 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 11:31:49 - INFO - [firewall] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:31:52 - WARN - [fault-correlator] Lobby WiFi: 22 clients unable to connect
+2026-05-20 11:32:18 - INFO - [firewall] DNS query processed: avg latency=23ms
+2026-05-20 11:32:20 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.4.54 -> 8.8.8.8:53
+2026-05-20 11:32:44 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 11:33:08 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 11:33:35 - INFO - [cert-monitor] Certificate valid: 9 more days
+2026-05-20 11:33:40 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:33:45 - WARN - [fault-correlator] Lobby WiFi: 21 clients unable to connect
+2026-05-20 11:34:17 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 11:34:24 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:34:51 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:35:44 - INFO - [switch-mgmt] Syslog buffer: 0 drops
+2026-05-20 11:35:52 - INFO - [cert-monitor] Syslog buffer: 0 drops
+2026-05-20 11:36:18 - INFO - [dhcp-server] Certificate valid: 7 more days
+2026-05-20 11:36:35 - WARN - [fault-correlator] Lobby WiFi: 26 clients unable to connect
+2026-05-20 11:36:47 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:36:50 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 11:37:38 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:37:58 - INFO - [syslog-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:38:11 - INFO - [dns-resolver] DNS query processed: avg latency=23ms
+2026-05-20 11:38:17 - INFO - [firewall] DNS query processed: avg latency=23ms
+2026-05-20 11:38:32 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:39:00 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:39:09 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 11:39:42 - WARN - [fault-correlator] Lobby WiFi: 28 clients unable to connect
+2026-05-20 11:40:04 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 11:40:11 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 11:40:34 - INFO - [syslog-server] Firewall rule matched: ALLOW 192.168.4.170 -> 8.8.8.8:53
+2026-05-20 11:41:21 - WARN - [fault-correlator] Lobby WiFi: 16 clients unable to connect
+2026-05-20 11:41:22 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:41:33 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 11:42:34 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 11:42:43 - INFO - [snmp-collector] DHCP lease renewed: 192.168.7.66
+2026-05-20 11:43:05 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 11:43:28 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.6.132 -> 8.8.8.8:53
+2026-05-20 11:43:40 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:43:55 - INFO - [dns-resolver] Firewall rule matched: ALLOW 192.168.9.213 -> 8.8.8.8:53
+2026-05-20 11:44:11 - INFO - [patch-mgmt] DHCP lease renewed: 192.168.10.211
+2026-05-20 11:44:14 - INFO - [snmp-collector] Certificate valid: 8 more days
+2026-05-20 11:44:29 - INFO - [dhcp-server] DHCP lease renewed: 192.168.2.14
+2026-05-20 11:44:56 - INFO - [snmp-collector] DHCP lease renewed: 192.168.3.7
+2026-05-20 11:45:07 - INFO - [cert-monitor] DHCP lease renewed: 192.168.10.12
+2026-05-20 11:45:27 - WARN - [fault-correlator] Lobby WiFi: 22 clients unable to connect
+2026-05-20 11:45:44 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 11:46:08 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 11:46:19 - INFO - [radius-auth] RADIUS auth success: user@corp.com
+2026-05-20 11:46:43 - INFO - [syslog-server] Service healthy: all checks passed
+2026-05-20 11:46:52 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 11:47:09 - WARN - [fault-correlator] Lobby WiFi: 10 clients unable to connect
+2026-05-20 11:47:19 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:47:26 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 11:47:38 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:48:39 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.3.172
+2026-05-20 11:48:51 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 11:49:04 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:49:06 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:49:06 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:49:21 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:50:20 - WARN - [fault-correlator] Lobby WiFi: 17 clients unable to connect
+2026-05-20 11:50:31 - INFO - [cert-monitor] SNMP poll completed: 20 devices OK
+2026-05-20 11:50:36 - INFO - [syslog-server] Certificate valid: 3 more days
+2026-05-20 11:51:06 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:51:30 - INFO - [syslog-server] SNMP poll completed: 20 devices OK
+2026-05-20 11:51:41 - INFO - [syslog-server] DNS query processed: avg latency=23ms
+2026-05-20 11:51:53 - WARN - [fault-correlator] Lobby WiFi: 14 clients unable to connect
+2026-05-20 11:52:16 - INFO - [dns-resolver] DHCP lease renewed: 192.168.1.218
+2026-05-20 11:52:32 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 11:53:13 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 11:53:32 - WARN - [fault-correlator] Lobby WiFi: 21 clients unable to connect
+2026-05-20 11:53:34 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 11:53:57 - INFO - [radius-auth] DNS query processed: avg latency=23ms
+2026-05-20 11:54:10 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 11:54:42 - WARN - [fault-correlator] Lobby WiFi: 29 clients unable to connect
+2026-05-20 11:55:14 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.5.95
+2026-05-20 11:55:14 - WARN - [fault-correlator] Lobby WiFi: 16 clients unable to connect
+2026-05-20 11:55:36 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 11:55:58 - INFO - [snmp-collector] RADIUS auth success: user@corp.com
+2026-05-20 11:56:02 - INFO - [syslog-server] DHCP lease renewed: 192.168.9.163
+2026-05-20 11:56:53 - WARN - [fault-correlator] Lobby WiFi: 18 clients unable to connect
+2026-05-20 11:57:23 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 11:57:36 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:57:52 - INFO - [config-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 11:57:58 - WARN - [fault-correlator] [D-003] IP conflict not resolved: 192.168.10.150
+2026-05-20 11:58:04 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.3.48 -> 8.8.8.8:53
+2026-05-20 11:58:10 - WARN - [fault-correlator] Lobby WiFi: 13 clients unable to connect
+2026-05-20 11:58:14 - INFO - [syslog-server] DHCP lease renewed: 192.168.8.173
+2026-05-20 11:58:56 - WARN - [fault-correlator] [D-007] DNS failure ongoing: lobby AP
+2026-05-20 11:59:30 - WARN - [fault-correlator] Lobby WiFi: 15 clients unable to connect
+2026-05-20 11:59:37 - WARN - [fault-correlator] Lobby WiFi: 30 clients unable to connect
+2026-05-20 11:59:53 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 12:00:00 - INFO - [admin-carol] Investigating D-003 IP conflict report (TKT-2026-006, TKT-2026-007)
+2026-05-20 12:00:10 - INFO - [admin-carol] Running: arp -n | grep 192.168.10.150
+2026-05-20 12:00:15 - INFO - [admin-carol] Found: 192.168.10.150 has 2 MAC addresses in ARP table
+2026-05-20 12:00:20 - INFO - [admin-carol] Identified: D-003 printer-1st-floor has static IP in DHCP pool range
+2026-05-20 12:05:00 - INFO - [admin-carol] Checking D-007 ticket TKT-2026-011: correlating with D-003 issue
+2026-05-20 12:05:10 - INFO - [admin-carol] CONFIRMED: D-003 IP conflict → ARP instability → D-007 DNS relay failure
+2026-05-20 12:10:00 - INFO - [ticket-system] TKT-2026-021 (D-004) RESOLVED: interface reset completed
+2026-05-20 12:20:00 - INFO - [ticket-system] TKT-2026-022 (D-005) RESOLVED: RAID rebuild completed, interface stable
+2026-05-20 12:30:00 - INFO - [ticket-system] TKT-2026-023 (D-006) RESOLVED: gateway unreachable was ISP timeout
+2026-05-20 12:45:00 - INFO - [ticket-system] TKT-2026-024 (D-008) RESOLVED: DNS cache cleared
+2026-05-20 13:00:00 - INFO - [ticket-system] TKT-2026-025 (D-013) RESOLVED: AP rebooted, interface up
+2026-05-20 13:10:00 - WARN - [cert-monitor] TKT-2026-028: D-019 cert-server-01 certificate renewal failure (auto-renewal script error)
+2026-05-20 13:15:00 - INFO - [ticket-system] TKT-2026-016 (D-009) mail-server-01: CERT_EXPIRED ticket RESOLVED
+2026-05-20 13:30:00 - INFO - [ticket-system] TKT-2026-017 (D-011) RESOLVED: load-balancer interface restored
+2026-05-20 13:45:00 - WARN - [firewall] TKT-2026-027: D-017 squid proxy firewall rule blocking HTTPS inspection
+2026-05-20 14:00:00 - INFO - [admin-carol] Initiating fix for D-003 IP conflict
+2026-05-20 14:00:00 - INFO - [ticket-system] TKT-2026-026 (D-015) RESOLVED: DHCP conflict on backup NAS resolved
+2026-05-20 14:00:05 - INFO - [admin-carol] Action: Remove 192.168.10.150 from DHCP pool range
+2026-05-20 14:00:10 - CONFIG_CHANGE - [admin-carol] DHCP pool modified: range changed from 192.168.10.100-200 to 192.168.10.160-200
+2026-05-20 14:00:15 - INFO - [dhcp-server] Configuration reloaded: D-003 IP 192.168.10.150 no longer in pool
+2026-05-20 14:00:20 - INFO - [arp-monitor] ARP conflict for 192.168.10.150 resolved: only D-003 MAC now active
+2026-05-20 14:05:00 - INFO - [dns-resolver] DNS upstream restored: 192.168.1.253 latency normalizing (still high: 2800ms)
+2026-05-20 14:10:00 - INFO - [admin-carol] Initiating fix for D-007: replacing DNS resolver 192.168.1.253 with 8.8.8.8
+2026-05-20 14:10:05 - CONFIG_CHANGE - [admin-carol] D-007 wlan-ap-lobby DHCP option 6 updated: 8.8.8.8 replaces 192.168.1.253
+2026-05-20 14:15:00 - INFO - [wlan-ap-lobby] [D-007] DNS resolver updated: now using 8.8.8.8
+2026-05-20 14:15:05 - INFO - [wlan-ap-lobby] [D-007] DNS health check: 8.8.8.8 responding, latency=28ms
+2026-05-20 14:15:10 - INFO - [wlan-ap-lobby] [D-007] DNS failure rate: 0.0% (lobby clients reconnecting)
+2026-05-20 14:20:00 - INFO - [monitoring-server] TKT-2026-011 (D-007) status updated: RESOLVED
+2026-05-20 14:20:05 - INFO - [ticket-system] TKT-2026-008 (D-003) resolved: IP conflict fixed by DHCP pool adjustment
+2026-05-20 14:20:36 - INFO - [firewall] Service healthy: all checks passed
+2026-05-20 14:30:38 - INFO - [config-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 14:35:42 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 14:39:24 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 14:40:55 - INFO - [patch-mgmt] Certificate valid: 3 more days
+2026-05-20 14:41:30 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 14:44:30 - INFO - [firewall] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 14:45:49 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 14:52:51 - INFO - [cert-monitor] DHCP lease renewed: 192.168.7.35
+2026-05-20 14:53:49 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.5.154
+2026-05-20 14:56:45 - INFO - [dhcp-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 14:58:13 - INFO - [syslog-server] Certificate valid: 6 more days
+2026-05-20 14:59:41 - INFO - [cert-monitor] SNMP poll completed: 20 devices OK
+2026-05-20 15:00:27 - INFO - [cert-monitor] Config backup verified: checksum OK
+2026-05-20 15:00:43 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.7.142 -> 8.8.8.8:53
+2026-05-20 15:00:50 - INFO - [patch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 15:01:14 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 15:01:22 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 15:01:35 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 15:02:25 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 15:02:40 - INFO - [dhcp-server] DHCP lease renewed: 192.168.3.121
+2026-05-20 15:02:43 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 15:03:23 - INFO - [dns-resolver] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 15:03:24 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 15:03:27 - INFO - [dns-resolver] DHCP lease renewed: 192.168.5.57
+2026-05-20 15:04:00 - INFO - [switch-mgmt] Syslog buffer: 0 drops
+2026-05-20 15:04:02 - INFO - [cert-monitor] Syslog buffer: 0 drops
+2026-05-20 15:04:38 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 15:05:39 - INFO - [firewall] Service healthy: all checks passed
+2026-05-20 15:06:00 - INFO - [firewall] DHCP lease renewed: 192.168.5.200
+2026-05-20 15:06:12 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 15:06:25 - INFO - [syslog-server] Certificate valid: 7 more days
+2026-05-20 15:07:35 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 15:08:12 - INFO - [config-mgmt] Certificate valid: 10 more days
+2026-05-20 15:08:52 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.10.247 -> 8.8.8.8:53
+2026-05-20 15:09:04 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 15:09:11 - INFO - [snmp-collector] Syslog buffer: 0 drops
+2026-05-20 15:10:51 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 15:11:16 - INFO - [config-mgmt] Certificate valid: 10 more days
+2026-05-20 15:11:29 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 15:11:49 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 15:12:04 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.4.205 -> 8.8.8.8:53
+2026-05-20 15:12:20 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 15:13:44 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.5.24 -> 8.8.8.8:53
+2026-05-20 15:14:11 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 15:14:43 - INFO - [syslog-server] DHCP lease renewed: 192.168.9.239
+2026-05-20 15:15:12 - INFO - [switch-mgmt] Firewall rule matched: ALLOW 192.168.5.53 -> 8.8.8.8:53
+2026-05-20 15:15:14 - INFO - [switch-mgmt] Firewall rule matched: ALLOW 192.168.10.92 -> 8.8.8.8:53
+2026-05-20 15:15:17 - INFO - [firewall] Firewall rule matched: ALLOW 192.168.8.189 -> 8.8.8.8:53
+2026-05-20 15:16:49 - INFO - [dns-resolver] DHCP lease renewed: 192.168.2.174
+2026-05-20 15:17:02 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 15:17:31 - INFO - [cert-monitor] SNMP poll completed: 20 devices OK
+2026-05-20 15:17:31 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 15:18:03 - INFO - [patch-mgmt] Certificate valid: 8 more days
+2026-05-20 15:18:17 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.10.33 -> 8.8.8.8:53
+2026-05-20 15:18:34 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 15:19:33 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 15:19:43 - INFO - [switch-mgmt] Certificate valid: 10 more days
+2026-05-20 15:19:49 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 15:20:16 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 15:20:23 - INFO - [cert-monitor] SNMP poll completed: 20 devices OK
+2026-05-20 15:21:13 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 15:21:21 - INFO - [syslog-server] DNS query processed: avg latency=23ms
+2026-05-20 15:21:25 - INFO - [radius-auth] RADIUS auth success: user@corp.com
+2026-05-20 15:22:36 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.5.206
+2026-05-20 15:23:35 - INFO - [snmp-collector] Certificate valid: 4 more days
+2026-05-20 15:24:09 - INFO - [config-mgmt] Service healthy: all checks passed
+2026-05-20 15:24:20 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 15:24:31 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 15:25:03 - INFO - [snmp-collector] DHCP lease renewed: 192.168.3.16
+2026-05-20 15:25:13 - INFO - [radius-auth] RADIUS auth success: user@corp.com
+2026-05-20 15:25:47 - INFO - [syslog-server] SNMP poll completed: 20 devices OK
+2026-05-20 15:26:07 - INFO - [syslog-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 15:26:35 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 15:26:36 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 15:27:05 - INFO - [snmp-collector] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 15:27:43 - INFO - [patch-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 15:28:09 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 15:28:10 - INFO - [syslog-server] Firewall rule matched: ALLOW 192.168.6.82 -> 8.8.8.8:53
+2026-05-20 15:28:39 - INFO - [cert-monitor] Certificate valid: 2 more days
+2026-05-20 15:29:18 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 15:29:28 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 15:29:56 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 15:30:08 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 15:31:25 - INFO - [dns-resolver] DHCP lease renewed: 192.168.2.240
+2026-05-20 15:32:35 - INFO - [dhcp-server] Service healthy: all checks passed
+2026-05-20 15:32:48 - INFO - [dns-resolver] DHCP lease renewed: 192.168.5.159
+2026-05-20 15:33:05 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 15:34:18 - INFO - [config-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 15:34:22 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 15:34:53 - INFO - [firewall] Service healthy: all checks passed
+2026-05-20 15:35:29 - INFO - [cert-monitor] Certificate valid: 9 more days
+2026-05-20 15:35:44 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 15:35:59 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 15:36:14 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 15:36:26 - INFO - [radius-auth] DNS query processed: avg latency=23ms
+2026-05-20 15:36:34 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 15:37:33 - INFO - [firewall] Config backup verified: checksum OK
+2026-05-20 15:38:00 - INFO - [config-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 15:38:49 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 15:38:50 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 15:39:10 - INFO - [snmp-collector] Certificate valid: 4 more days
+2026-05-20 15:39:56 - INFO - [patch-mgmt] Certificate valid: 7 more days
+2026-05-20 15:40:27 - INFO - [switch-mgmt] Syslog buffer: 0 drops
+2026-05-20 15:41:08 - INFO - [radius-auth] DHCP lease renewed: 192.168.8.159
+2026-05-20 15:41:17 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.2.47 -> 8.8.8.8:53
+2026-05-20 15:41:43 - INFO - [radius-auth] SNMP poll completed: 20 devices OK
+2026-05-20 15:42:01 - INFO - [firewall] Service healthy: all checks passed
+2026-05-20 15:42:17 - INFO - [cert-monitor] RADIUS auth success: user@corp.com
+2026-05-20 15:43:06 - INFO - [radius-auth] SNMP poll completed: 20 devices OK
+2026-05-20 15:44:00 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.6.108 -> 8.8.8.8:53
+2026-05-20 15:44:46 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.2.39 -> 8.8.8.8:53
+2026-05-20 15:45:50 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 15:45:50 - INFO - [dhcp-server] Config backup verified: checksum OK
+2026-05-20 15:46:03 - INFO - [radius-auth] Certificate valid: 2 more days
+2026-05-20 15:47:00 - INFO - [dns-resolver] Firewall rule matched: ALLOW 192.168.7.198 -> 8.8.8.8:53
+2026-05-20 15:47:11 - INFO - [switch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 15:48:15 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.8.189 -> 8.8.8.8:53
+2026-05-20 15:48:49 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 15:49:43 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 15:49:46 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 15:50:03 - INFO - [switch-mgmt] DHCP lease renewed: 192.168.4.163
+2026-05-20 15:50:30 - INFO - [radius-auth] Firewall rule matched: ALLOW 192.168.6.228 -> 8.8.8.8:53
+2026-05-20 15:51:07 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.1.249 -> 8.8.8.8:53
+2026-05-20 15:51:20 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 15:52:37 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 15:53:15 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 15:54:09 - INFO - [patch-mgmt] DHCP lease renewed: 192.168.3.125
+2026-05-20 15:54:14 - INFO - [syslog-server] Syslog buffer: 0 drops
+2026-05-20 15:54:21 - INFO - [dhcp-server] Service healthy: all checks passed
+2026-05-20 15:55:46 - INFO - [firewall] SNMP poll completed: 20 devices OK
+2026-05-20 15:55:46 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 15:56:22 - INFO - [syslog-server] RADIUS auth success: user@corp.com
+2026-05-20 15:56:28 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 15:56:31 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 15:57:09 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 15:57:23 - INFO - [config-mgmt] Service healthy: all checks passed
+2026-05-20 15:57:58 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 15:58:11 - INFO - [dhcp-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 15:58:34 - INFO - [snmp-collector] Firewall rule matched: ALLOW 192.168.9.175 -> 8.8.8.8:53
+2026-05-20 15:58:39 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 15:59:20 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 15:59:49 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 16:00:00 - WARN - [config-mgmt] D-012 dev-workstation-5 (172.16.0.10): missing default gateway still unresolved (TKT-2026-020)
+2026-05-20 16:00:05 - WARN - [config-mgmt] D-012: static IP configured but no default gateway entry in network settings
+2026-05-20 16:06:53 - INFO - [firewall] DNS query processed: avg latency=23ms
+2026-05-20 16:07:12 - INFO - [dns-resolver] Service healthy: all checks passed
+2026-05-20 16:12:23 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 16:14:31 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 16:17:23 - INFO - [dhcp-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 16:18:04 - INFO - [radius-auth] DHCP lease renewed: 192.168.4.246
+2026-05-20 16:20:14 - INFO - [patch-mgmt] Certificate valid: 4 more days
+2026-05-20 16:22:40 - INFO - [firewall] Syslog buffer: 0 drops
+2026-05-20 16:28:06 - INFO - [firewall] DNS query processed: avg latency=23ms
+2026-05-20 16:38:40 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 16:40:49 - INFO - [patch-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 16:41:25 - INFO - [dhcp-server] Service healthy: all checks passed
+2026-05-20 16:42:08 - INFO - [radius-auth] Service healthy: all checks passed
+2026-05-20 16:43:54 - INFO - [syslog-server] Service healthy: all checks passed
+2026-05-20 16:47:02 - INFO - [config-mgmt] Config backup verified: checksum OK
+2026-05-20 16:48:56 - INFO - [cert-monitor] Firewall rule matched: ALLOW 192.168.4.66 -> 8.8.8.8:53
+2026-05-20 16:50:25 - INFO - [cert-monitor] Firewall rule matched: ALLOW 192.168.2.186 -> 8.8.8.8:53
+2026-05-20 16:51:30 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 16:54:46 - INFO - [cert-monitor] Certificate valid: 2 more days
+2026-05-20 16:55:49 - INFO - [syslog-server] Config backup verified: checksum OK
+2026-05-20 16:57:49 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 16:59:19 - INFO - [patch-mgmt] Service healthy: all checks passed
+2026-05-20 17:01:44 - INFO - [switch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 17:03:28 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 17:04:18 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 17:05:36 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 17:06:32 - INFO - [snmp-collector] DNS query processed: avg latency=23ms
+2026-05-20 17:08:41 - INFO - [cert-monitor] Firewall rule matched: ALLOW 192.168.9.158 -> 8.8.8.8:53
+2026-05-20 17:11:17 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 17:12:26 - INFO - [snmp-collector] Config backup verified: checksum OK
+2026-05-20 17:13:38 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 17:14:52 - INFO - [config-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 17:15:52 - INFO - [switch-mgmt] Firewall rule matched: ALLOW 192.168.6.40 -> 8.8.8.8:53
+2026-05-20 17:18:03 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 17:20:21 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 17:21:13 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.4.140 -> 8.8.8.8:53
+2026-05-20 17:23:30 - INFO - [cert-monitor] DNS query processed: avg latency=23ms
+2026-05-20 17:26:10 - INFO - [dhcp-server] SNMP poll completed: 20 devices OK
+2026-05-20 17:28:29 - INFO - [dhcp-server] DHCP lease renewed: 192.168.7.170
+2026-05-20 17:29:54 - INFO - [syslog-server] DHCP lease renewed: 192.168.1.75
+2026-05-20 17:30:00 - INFO - [ticket-system] Daily summary: 30 tickets processed, 23 RESOLVED, 4 OPEN, 2 IN_PROGRESS, 1 ESCALATED
+2026-05-20 17:30:05 - INFO - [monitoring-server] D-003 IP conflict rate: 0 (fixed) | D-007 DNS failure: 0% (fixed)
+2026-05-20 17:30:10 - INFO - [monitoring-server] Remaining open: TKT-2026-006 (D-003 historical), TKT-2026-007 (D-003 escalated), TKT-2026-020 (D-012)
+2026-05-20 17:32:24 - INFO - [patch-mgmt] DHCP lease renewed: 192.168.6.125
+2026-05-20 17:35:32 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 17:36:33 - INFO - [radius-auth] Config backup verified: checksum OK
+2026-05-20 17:38:43 - INFO - [syslog-server] Config backup verified: checksum OK
+2026-05-20 17:41:03 - INFO - [radius-auth] Certificate valid: 1 more days
+2026-05-20 17:43:09 - INFO - [syslog-server] Certificate valid: 3 more days
+2026-05-20 17:49:36 - INFO - [firewall] Certificate valid: 5 more days
+2026-05-20 17:51:08 - INFO - [switch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 17:53:08 - INFO - [radius-auth] Syslog buffer: 0 drops
+2026-05-20 17:56:59 - INFO - [cert-monitor] DNS query processed: avg latency=23ms
+2026-05-20 17:59:20 - INFO - [firewall] Service healthy: all checks passed
+2026-05-20 18:00:00 - INFO - [sre-lead] End-of-day report: fault propagation chain D-003→D-007 identified and resolved
+2026-05-20 18:02:47 - INFO - [radius-auth] DNS query processed: avg latency=23ms
+2026-05-20 18:03:01 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 18:05:14 - INFO - [switch-mgmt] Service healthy: all checks passed
+2026-05-20 18:07:32 - INFO - [cert-monitor] RADIUS auth success: user@corp.com
+2026-05-20 18:09:08 - INFO - [firewall] Firewall rule matched: ALLOW 192.168.4.9 -> 8.8.8.8:53
+2026-05-20 18:10:00 - INFO - [radius-auth] Certificate valid: 4 more days
+2026-05-20 18:12:13 - INFO - [dns-resolver] DNS query processed: avg latency=23ms
+2026-05-20 18:17:49 - INFO - [dhcp-server] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 18:18:39 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 18:21:06 - INFO - [config-mgmt] RADIUS auth success: user@corp.com
+2026-05-20 18:24:47 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 18:27:28 - INFO - [snmp-collector] SNMP poll completed: 20 devices OK
+2026-05-20 18:28:18 - INFO - [cert-monitor] Service healthy: all checks passed
+2026-05-20 18:29:53 - INFO - [config-mgmt] DHCP lease renewed: 192.168.9.29
+2026-05-20 18:30:37 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 18:31:01 - INFO - [firewall] RADIUS auth success: user@corp.com
+2026-05-20 18:33:29 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 18:36:46 - INFO - [dns-resolver] DHCP lease renewed: 192.168.2.181
+2026-05-20 18:37:23 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 18:41:24 - INFO - [dhcp-server] DNS query processed: avg latency=23ms
+2026-05-20 18:44:09 - INFO - [firewall] Service healthy: all checks passed
+2026-05-20 18:45:49 - INFO - [config-mgmt] SNMP poll completed: 20 devices OK
+2026-05-20 18:48:48 - INFO - [radius-auth] Service healthy: all checks passed
+2026-05-20 18:51:56 - INFO - [config-mgmt] Firewall rule matched: ALLOW 192.168.4.151 -> 8.8.8.8:53
+2026-05-20 18:53:28 - INFO - [dns-resolver] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 18:54:35 - INFO - [radius-auth] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 18:56:09 - INFO - [dhcp-server] Config backup verified: checksum OK
+2026-05-20 19:00:58 - INFO - [dns-resolver] Service healthy: all checks passed
+2026-05-20 19:02:18 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 19:06:02 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 19:11:30 - INFO - [firewall] DHCP lease renewed: 192.168.5.85
+2026-05-20 19:16:46 - INFO - [patch-mgmt] DHCP lease renewed: 192.168.8.186
+2026-05-20 19:20:38 - INFO - [syslog-server] SNMP poll completed: 20 devices OK
+2026-05-20 19:22:08 - INFO - [cert-monitor] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 19:24:51 - INFO - [firewall] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 19:25:12 - INFO - [dhcp-server] DHCP lease renewed: 192.168.1.120
+2026-05-20 19:27:54 - INFO - [switch-mgmt] Heartbeat OK: monitoring-server 10.0.1.50
+2026-05-20 19:28:22 - INFO - [patch-mgmt] Firewall rule matched: ALLOW 192.168.1.164 -> 8.8.8.8:53
+2026-05-20 19:29:18 - INFO - [radius-auth] DHCP lease renewed: 192.168.5.77
+2026-05-20 19:31:00 - INFO - [dns-resolver] Config backup verified: checksum OK
+2026-05-20 19:34:11 - INFO - [switch-mgmt] Config backup verified: checksum OK
+2026-05-20 19:39:40 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 19:41:47 - INFO - [dhcp-server] Syslog buffer: 0 drops
+2026-05-20 19:43:34 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.10.176 -> 8.8.8.8:53
+2026-05-20 19:44:58 - INFO - [syslog-server] DHCP lease renewed: 192.168.3.72
+2026-05-20 19:46:24 - INFO - [patch-mgmt] DNS query processed: avg latency=23ms
+2026-05-20 19:47:38 - INFO - [dns-resolver] SNMP poll completed: 20 devices OK
+2026-05-20 19:48:26 - INFO - [dns-resolver] RADIUS auth success: user@corp.com
+2026-05-20 19:49:19 - INFO - [switch-mgmt] Syslog buffer: 0 drops
+2026-05-20 19:50:50 - INFO - [dhcp-server] Firewall rule matched: ALLOW 192.168.2.114 -> 8.8.8.8:53
+2026-05-20 19:54:21 - INFO - [config-mgmt] Syslog buffer: 0 drops
+2026-05-20 19:55:49 - INFO - [dns-resolver] Syslog buffer: 0 drops
+2026-05-20 19:57:45 - INFO - [patch-mgmt] DHCP lease renewed: 192.168.1.80
+2026-05-20 20:00:00 - INFO - [monitoring-server] Nightly health check: all critical services nominal

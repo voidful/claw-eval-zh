@@ -1,0 +1,110 @@
+{
+  "wifi_audit_metadata": {
+    "site": "Corporate Office - Main Building",
+    "generated": "2026-05-20",
+    "last_audit": "2026-01-15",
+    "auditor": "netops@office.local",
+    "total_ssids": 5
+  },
+  "password_policy": {
+    "min_length": 12,
+    "require_special": true,
+    "require_digit": true,
+    "require_uppercase": true,
+    "no_ssid_fragment": true,
+    "max_age_days": 180,
+    "disallow_common_words": true,
+    "description": "All SSID passwords must be >= 12 chars, include special char, digit, uppercase, and must NOT contain any fragment of the SSID name. Passwords older than 180 days must be rotated."
+  },
+  "ssids": [
+    {
+      "ssid": "Corp-Main",
+      "bssid": "AA:BB:CC:DD:EE:01",
+      "encryption": "WPA2-PSK",
+      "password": "Corp123!",
+      "channel": 6,
+      "band": "2.4GHz",
+      "enabled": true,
+      "last_changed": "2025-10-01",
+      "vlan_id": 10,
+      "notes": "Primary corporate SSID. Password violates policy: contains SSID name fragment 'Corp'. Also length=8 < min_length=12."
+    },
+    {
+      "ssid": "Corp-Guest",
+      "bssid": "AA:BB:CC:DD:EE:02",
+      "encryption": "WPA2-PSK",
+      "password": "Guest2024",
+      "channel": 11,
+      "band": "2.4GHz",
+      "enabled": true,
+      "last_changed": "2025-09-15",
+      "vlan_id": 20,
+      "notes": "Guest network. Password violates policy: no special character, length=9 < min_length=12."
+    },
+    {
+      "ssid": "Corp-IoT",
+      "bssid": "AA:BB:CC:DD:EE:03",
+      "encryption": "WPA2-PSK",
+      "password": "IoT@Secure#2026",
+      "channel": 1,
+      "band": "2.4GHz",
+      "enabled": true,
+      "last_changed": "2026-03-10",
+      "vlan_id": 30,
+      "notes": "IoT device SSID. Password meets all policy requirements."
+    },
+    {
+      "ssid": "Corp-Legacy",
+      "bssid": "AA:BB:CC:DD:EE:04",
+      "encryption": "WEP",
+      "password": "A1B2C3D4E5",
+      "channel": 3,
+      "band": "2.4GHz",
+      "enabled": true,
+      "last_changed": "2023-06-01",
+      "vlan_id": 40,
+      "notes": "CRITICAL: WEP encryption is broken and completely insecure. Should be disabled or upgraded to WPA2/WPA3 immediately."
+    },
+    {
+      "ssid": "Corp-Executive",
+      "bssid": "AA:BB:CC:DD:EE:05",
+      "encryption": "WPA3-SAE",
+      "password": "Exec#Secure@2026!",
+      "channel": 36,
+      "band": "5GHz",
+      "enabled": true,
+      "last_changed": "2026-04-01",
+      "vlan_id": 50,
+      "notes": "Executive SSID. WPA3-SAE encryption with strong password. Compliant."
+    }
+  ],
+  "access_points": [
+    {
+      "ap_id": "AP-001",
+      "location": "Floor 1 - Lobby",
+      "model": "Cisco AIR-AP2802I",
+      "firmware": "8.10.162.0",
+      "managed_ssids": ["Corp-Main", "Corp-Guest", "Corp-Legacy"]
+    },
+    {
+      "ap_id": "AP-002",
+      "location": "Floor 2 - Open Office",
+      "model": "Cisco AIR-AP2802I",
+      "firmware": "8.10.162.0",
+      "managed_ssids": ["Corp-Main", "Corp-IoT", "Corp-Guest"]
+    },
+    {
+      "ap_id": "AP-003",
+      "location": "Floor 3 - Executive Suite",
+      "model": "Cisco AIR-AP3802I",
+      "firmware": "17.6.3",
+      "managed_ssids": ["Corp-Executive", "Corp-Main"]
+    }
+  ],
+  "compliance_status": {
+    "last_check": "2026-01-15",
+    "framework": "ISO 27001 A.10.1",
+    "overall": "NON-COMPLIANT",
+    "open_findings": 4
+  }
+}

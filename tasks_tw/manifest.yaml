@@ -2,27 +2,6 @@
 # Mirrors tasks/manifest.yaml, filtered to tasks present in tasks_tw/.
 run_first:
 - task_sanity
-core:
-- task_sanity
-- task_calendar
-- task_stock
-- task_market_research
-- task_email
-- task_humanizer
-- task_weather
-- task_shell_command_generator
-- task_multi_file_refactoring
-- task_summary
-- task_spreadsheet_summary
-- task_csv_stock_trend
-- task_csv_iris_summary
-- task_log_apache_top_errors
-- task_log_syslog_boot
-- task_meeting_tldr
-- task_meeting_council_votes
-- task_memory
-- task_files
-- task_skill_search
 categories:
   productivity:
   - task_sanity
@@ -108,6 +87,12 @@ categories:
   - task_csv_pension_ranking
   - task_csv_pension_liability
   - task_csv_pension_risk
+  - task_tw_stock_correlation_sector
+  - task_tw_stock_event_study
+  - task_tw_stock_buy_signal
+  - task_tw_stock_factor_backtest
+  - task_tw_stock_portfolio_optimization
+  - task_network_interface_state
   log_analysis:
   - task_log_apache_client_issues
   - task_log_apache_top_errors
@@ -139,6 +124,12 @@ categories:
   - task_log_syslog_services
   - task_log_syslog_cron
   - task_log_syslog_auth_failures
+  - task_log_capacity_planning
+  - task_log_distributed_trace
+  - task_log_service_health_summary
+  - task_log_microservice_sla
+  - task_microservice_incident_analysis
+  - task_dns_fault_diagnosis
   meeting_analysis:
   - task_meeting_council_votes
   - task_meeting_council_public_comment
@@ -177,3 +168,39 @@ categories:
   - task_clawdhub
   - task_skill_search
   - task_gh_issue_triage
+  cross_file_analysis:
+  - task_cross_asset_dual_screen
+  cross_format_analysis:
+  - task_05_dns_rollback_decision
+  - task_08_incident_report_root_cause
+  - task_10_multi_fault_triage
+  - task_cross_format_business_intelligence
+  docx_analysis:
+  - task_docx_contract_audit
+  json_analysis:
+  - task_ecommerce_basic_kpi
+  - task_ecommerce_basket_association
+  - task_ecommerce_clv_rfm
+  - task_ecommerce_json_analytics
+  - task_ecommerce_json_anomaly_detection
+  - task_wifi_password_reset_plan
+  - task_07_proxy_cert_expiry
+  - task_review_fake_detection
+  - task_review_sentiment_product_insights
+  markdown_analysis:
+  - task_semiconductor_supply_chain_risk
+  - task_semiconductor_md_valuation
+  - task_09_network_recovery_checklist
+  pdf_analysis:
+  - task_pdf_financial_report_analysis
+  pptx_analysis:
+  - task_pptx_strategy_evaluation
+  txt_analysis:
+  - task_dhcp_config_audit
+  - task_06_firewall_rule_dry_run
+  - task_ux_interview_thematic_analysis
+  - task_supply_chain_timeline_analysis
+  web_search_analysis:
+  - task_web_search_market_research
+  xlsx_analysis:
+  - task_xlsx_hr_analytics
